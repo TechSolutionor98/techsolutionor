@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+html,
+body {
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+.shine-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: rgba(255,255,255,0.5);
+  transform: skewX(-25deg);
+}
+
+.shine-btn:hover::before {
+  animation: shine 0.8s forwards;
+}
+
+@keyframes shine {
+  100% {
+    left: 125%;
+  }
+}
+
+
+

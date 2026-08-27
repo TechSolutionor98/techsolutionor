@@ -1,0 +1,6 @@
+# Target modern baseline browsers to eliminate legacy polyfills (Array.at, Array.flat, Object.fromEntries, Object.hasOwn)
+chrome >= 100
+safari >= 15
+edge >= 100
+firefox >= 100
+not dead

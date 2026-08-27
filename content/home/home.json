@@ -1,0 +1,344 @@
+{
+  "seo": {
+    "metaTitle": "TechSolutionor | Web Development, SEO & Digital Growth Services",
+    "metaDescription": "TechSolutionor delivers web development, SEO, app development, and digital marketing solutions to help businesses scale with measurable growth.",
+    "metaKeywords": [
+      "web development",
+      "seo services",
+      "digital marketing",
+      "app development",
+      "software solutions",
+      "TechSolutionor"
+    ],
+    "canonicalUrl": "",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "ogTitle": "",
+    "ogDescription": "",
+    "ogImage": "",
+    "twitterCard": "summary_large_image",
+    "twitterTitle": "",
+    "twitterDescription": "",
+    "twitterImage": ""
+  },
+  "hero": {
+    "title": "Web Development & SEO Services to Grow Your Business",
+    "description": "Serving businesses worldwide with tailored digital solutions,\nwith a strong focus on delivering high-impact results for\ncompanies across the UAE.",
+    "buttonText": "Get a Free Quote",
+    "imageUrl": "/uploads/herooo.webp"
+  },
+  "whatWeDo": {
+    "sectionTitle": "WHAT WE DO",
+    "cards": [
+      {
+        "iconUrl": "",
+        "title": "Cooperative Expert Team",
+        "description": "Our cooperative team of experienced developers, designers, and digital strategists works closely to deliver custom technology solutions tailored to your business goals. By combining technical expertise with clear communication, we ensure smooth execution at every stage, from planning and development to testing and final deployment, for clients worldwide, including the UAE."
+      },
+      {
+        "iconUrl": "",
+        "title": "Goals Achiever",
+        "description": "We turn ideas into measurable results. Our goal-focused approach is built on strategic planning, smart problem-solving, and continuous optimization. Whether it's web development, app development, or digital growth solutions, we set ambitious targets and consistently exceed them to help businesses scale faster and smarter."
+      },
+      {
+        "iconUrl": "",
+        "title": "Business Grow",
+        "description": "We help businesses grow with innovative IT services and scalable digital solutions designed to improve efficiency, boost productivity, and increase revenue. Using modern technologies and industry best practices, we build future-ready systems that adapt to your evolving needs, trusted by startups and enterprises across the UAE and global markets."
+      }
+    ]
+  },
+  "goodServices": {
+    "headingLine1": "You Can Rely on Us for",
+    "headingLine2": "High-Quality Digital & IT Services",
+    "paragraph1": "TECHSOLUTIONOR was founded to address the growing demand for expert IT advisory, web development, and digital solutions for businesses worldwide. Our mission is to help companies improve efficiency, maximize productivity, and achieve sustainable growth through cutting-edge technology and data-driven strategies.",
+    "paragraph2": "We believe in long-term partnerships, not one-time projects. By understanding your business challenges, goals, and market, especially within the UAE and global landscape, we deliver customized solutions that drive real results. Partner with TECHSOLUTIONOR to innovate, scale, and stay ahead in a competitive digital world.",
+    "serviceExcellenceTitle": "Service Excellence",
+    "serviceExcellencePercent": 90,
+    "getInTouchTitle": "Get In Touch",
+    "clientSatisfactionText": "90% Client Satisfaction",
+    "quoteButtonText": "Get a Quote",
+    "rightImageUrl": "",
+    "cards": [
+      {
+        "iconUrl": "",
+        "title": "Our Values",
+        "list": [
+          "Awareness",
+          "Automation",
+          "Growth",
+          "Success",
+          "Achievement",
+          "Ease of Access"
+        ]
+      },
+      {
+        "iconUrl": "",
+        "title": "Our Mission",
+        "list": [
+          "Trust",
+          "Responsibility",
+          "Professionalism",
+          "Client Satisfaction",
+          "24/7 Support",
+          "Customization"
+        ]
+      },
+      {
+        "iconUrl": "",
+        "title": "Our Goals",
+        "list": [
+          "Cooperation",
+          "Quick Services",
+          "Fast Response",
+          "Honesty",
+          "Efficiency",
+          "Integrity"
+        ]
+      }
+    ]
+  },
+  "servicesWeOffer": {
+    "titleTop": "Services",
+    "titleBottom": "We Offer",
+    "backgroundImageUrl": "",
+    "description": "We deliver innovative digital and IT solutions tailored to your business needs, helping you improve efficiency, scale operations, and accelerate growth. Our services combine advanced technologies, strategic execution, and dedicated customer support to ensure measurable results for businesses worldwide, with a strong focus on the UAE market.",
+    "exploreButtonText": "Explore More",
+    "cards": [
+      {
+        "imageUrl": "",
+        "titleLine1": "Search Engine",
+        "titleLine2": "Optimization",
+        "link": "/services/seo"
+      },
+      {
+        "imageUrl": "",
+        "titleLine1": "Social Media",
+        "titleLine2": "Marketing",
+        "link": "/services/social-media"
+      },
+      {
+        "imageUrl": "",
+        "titleLine1": "Content Writing",
+        "titleLine2": "& Marketing",
+        "link": "/services/content-writing"
+      },
+      {
+        "imageUrl": "",
+        "titleLine1": "App",
+        "titleLine2": "Development",
+        "link": "/services/app-development"
+      },
+      {
+        "imageUrl": "",
+        "titleLine1": "Graphics",
+        "titleLine2": "Designing",
+        "link": "/services/graphics-designing"
+      },
+      {
+        "imageUrl": "",
+        "titleLine1": "Web",
+        "titleLine2": "Development",
+        "link": "/services/web-development"
+      }
+    ]
+  },
+  "projects": {
+    "title": "Projects & Results",
+    "description": "At TechSolutionor, we focus on delivering real, measurable outcomes for businesses worldwide. We recently enhanced a client's data analysis capabilities, achieving a 30% increase in operational efficiency. In another project, we implemented an AI-powered customer support system, which reduced response times by 40% and significantly improved customer satisfaction. Our project-driven approach ensures that every solution we deliver not only meets client expectations but also provides long-term scalability, efficiency, and value, making us a trusted technology partner for businesses across the UAE and global markets.",
+    "logos": [
+      {
+        "imageUrl": ""
+      },
+      {
+        "imageUrl": ""
+      },
+      {
+        "imageUrl": ""
+      },
+      {
+        "imageUrl": ""
+      },
+      {
+        "imageUrl": ""
+      },
+      {
+        "imageUrl": ""
+      },
+      {
+        "imageUrl": ""
+      },
+      {
+        "imageUrl": ""
+      },
+      {
+        "imageUrl": ""
+      },
+      {
+        "imageUrl": ""
+      },
+      {
+        "imageUrl": ""
+      },
+      {
+        "imageUrl": ""
+      },
+      {
+        "imageUrl": ""
+      },
+      {
+        "imageUrl": ""
+      },
+      {
+        "imageUrl": ""
+      },
+      {
+        "imageUrl": ""
+      },
+      {
+        "imageUrl": ""
+      }
+    ]
+  },
+  "technology": {
+    "sectionTitle": "Technology",
+    "description": "We leverage modern web and software development technologies to create high-performance digital solutions tailored to your business goals. Our technology-first approach ensures that every project is not only scalable, supporting long-term growth, but also secure, protecting critical data and systems. By optimizing for speed, performance, and user experience, we deliver seamless solutions that engage users and drive results. From dynamic front-end interfaces to robust back-end systems, we follow industry best practices and use proven frameworks to deliver future-ready web and application solutions trusted by businesses globally and across the UAE.",
+    "exploreButtonText": "Explore More",
+    "cards": [
+      {
+        "imageUrl": "/uploads/Laravel.png",
+        "cardBackgroundImageUrl": "",
+        "title": "Laravel",
+        "desc": "Laravel is a powerful PHP framework for building secure and scalable web applications. Our Laravel development services create custom backend systems, enterprise platforms, and high-performance web solutions with clean architecture."
+      },
+      {
+        "imageUrl": "",
+        "cardBackgroundImageUrl": "",
+        "title": "JavaScript",
+        "desc": "JavaScript powers dynamic and interactive web experiences. Our JavaScript development services build responsive websites, scalable web applications, and custom frontend solutions optimized for performance and user engagement."
+      },
+      {
+        "imageUrl": "",
+        "cardBackgroundImageUrl": "",
+        "title": "React",
+        "desc": "React is a leading JavaScript library for building fast, interactive user interfaces. Our React development services deliver scalable single-page applications (SPAs), custom web apps, and enterprise frontend solutions optimized for performance and maintainability."
+      },
+      {
+        "imageUrl": "",
+        "cardBackgroundImageUrl": "",
+        "title": "Python",
+        "desc": "Python is a versatile programming language ideal for web development and advanced technologies. Our Python development services deliver scalable backend systems, AI solutions, automation tools, and high-performance web applications."
+      },
+      {
+        "imageUrl": "",
+        "cardBackgroundImageUrl": "",
+        "title": "Swift",
+        "desc": "Swift is a powerful programming language for building high-performance Apple applications. Our Swift development services help businesses create secure, scalable apps for iOS, macOS, watchOS, and tvOS with seamless user experience and optimized performance."
+      },
+      {
+        "imageUrl": "",
+        "cardBackgroundImageUrl": "",
+        "title": "PHP",
+        "desc": "PHP is a reliable server-side scripting language for dynamic web applications. Our PHP development services deliver secure, scalable, and custom backend solutions tailored to business requirements."
+      }
+    ]
+  },
+  "newsletter": {
+    "titleLine1": "Ready to scale your digital presence?",
+    "titleLine2": "Hire the TechSolutionor team to",
+    "titleLine3": "handle your project.",
+    "buttonText": "Hire Us"
+  },
+  "testimonials": {
+    "titlePrefix": "Customer",
+    "titleHighlight": "Reviews",
+    "logoImageUrl": "",
+    "companyName": "Tech Solutionor",
+    "ratingText": "5.0",
+    "poweredByText": "powered by Google",
+    "reviewButtonText": "review us on",
+    "reviews": [
+      {
+        "name": "DreamCatcherTV",
+        "initial": "D",
+        "color": "bg-[#f47413]",
+        "time": "10 days ago",
+        "review": "We hired TechSolutionor to develop our eCommerce platform, and the outcome exceeded expectations. The website is fast, easy to manage, and optimized for conversions. We appreciate their professional approach."
+      },
+      {
+        "name": "Bellanoir",
+        "initial": "B",
+        "color": "bg-[#912d91]",
+        "time": "10 days ago",
+        "review": "Very professional team. Our social media engagement improved noticeably after working with them."
+      },
+      {
+        "name": "Endless Data",
+        "initial": "E",
+        "color": "bg-[#2b6daa]",
+        "time": "a year ago",
+        "review": "good experience"
+      },
+      {
+        "name": "Salam Bin Sultan",
+        "initial": "S",
+        "color": "bg-[#43b949]",
+        "time": "2 months ago",
+        "review": "Our partnership with Techsolutionor has exceeded our expectations. Their innovative solutions and reliable support have been crucial in driving our branch technology initiatives forward."
+      }
+    ]
+  },
+  "challengeAccepted": {
+    "titleBlack": "CHALLENGE",
+    "titleGreen": "ACCEPTED",
+    "subtitle": "TechSolutionor Helps You Fix What's Holding Your Growth Back",
+    "exploreText": "Explore This Service",
+    "cards": [
+      {
+        "title": "My Website Isn't Getting Enough Traffic",
+        "desc": "Without consistent website traffic, you're missing out on valuable visitors, leads, and potential revenue. Our custom SEO services are designed to increase your search engine rankings, attract qualified visitors, and build long-term organic growth. By optimizing your website for both users and search engines, we help your business get discovered globally, with a strong focus on the UAE market.",
+        "list": [
+          "Boost visibility in search results",
+          "Capture targeted, high-intent traffic",
+          "Convert visitors into leads and customers"
+        ]
+      },
+      {
+        "title": "My CPL From Digital Ad Campaigns Is Too High",
+        "desc": "Tired of wasting dollars on ad campaigns? Our paid advertising experts optimize your campaigns by refining audience targeting, improving bidding strategies, and maximizing ROI across platforms like Google Ads and social media.",
+        "list": [
+          "Refine ad targeting for better ROI",
+          "Reach your audience where they browse online",
+          "Maximize paid ad performance"
+        ]
+      },
+      {
+        "title": "My Website Isn't Generating Enough Leads",
+        "desc": "Struggling to get qualified leads in your pipeline? We design data-driven lead generation strategies that turn visitors into qualified prospects. Our tailored digital marketing plans are built around your goals, budget, and target audience, ensuring consistent lead flow.",
+        "list": [
+          "Fill your lead pipeline with qualified prospects",
+          "Reach your most valuable audience",
+          "Maximize conversion opportunities"
+        ]
+      }
+    ]
+  },
+  "counter": {
+    "stats": [
+      {
+        "value": 100,
+        "suffix": "+",
+        "label": "Satisfied Clients"
+      },
+      {
+        "value": 150,
+        "suffix": "+",
+        "label": "Completed Projects"
+      },
+      {
+        "value": 90,
+        "suffix": "%",
+        "label": "Success Rate"
+      }
+    ]
+  }
+}
