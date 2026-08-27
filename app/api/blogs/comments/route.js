@@ -93,25 +93,27 @@ export async function POST(req) {
     const comment = (body.comment || '').toString().trim();
     const otp = (body.otp || '').toString().trim();
 
-    if (!blogId || !authorName || !comment || !authorEmail || !otp) {
-      return jsonResponse({ error: 'blogId, authorName, authorEmail, comment, and otp are required' }, 400);
+    if (!blogId || !authorName || !comment) {
+      return jsonResponse({ error: 'blogId, authorName, and comment are required' }, 400);
     }
 
     const db = await getDb();
 
-    // Verify OTP
-    const otpRecord = await db.collection('otps').findOne({ email: authorEmail, otp });
-    if (!otpRecord) {
-      return jsonResponse({ error: 'Invalid or incorrect OTP code.' }, 400);
-    }
+    // If OTP is provided, verify it
+    if (otp && authorEmail) {
+      const otpRecord = await db.collection('otps').findOne({ email: authorEmail, otp });
+      if (!otpRecord) {
+        return jsonResponse({ error: 'Invalid or incorrect OTP code.' }, 400);
+      }
 
-    if (new Date() > new Date(otpRecord.expiresAt)) {
+      if (new Date() > new Date(otpRecord.expiresAt)) {
+        await db.collection('otps').deleteOne({ _id: otpRecord._id });
+        return jsonResponse({ error: 'OTP has expired. Please request a new one.' }, 400);
+      }
+
+      // Delete OTP after successful verification
       await db.collection('otps').deleteOne({ _id: otpRecord._id });
-      return jsonResponse({ error: 'OTP has expired. Please request a new one.' }, 400);
     }
-
-    // Delete OTP after successful verification
-    await db.collection('otps').deleteOne({ _id: otpRecord._id });
     
     // Verify blog exists
     const blogsCol = db.collection('cms_blogs');

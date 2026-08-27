@@ -1,67 +1,58 @@
-import React from 'react'
-import Image from 'next/image'
-import Link from 'next/link'
+import React from 'react';
+import Link from 'next/link';
 
-const BlogCard = ({ post, isFeatured = false }) => {
-    if (isFeatured) {
-        return (
-            <div className="flex flex-col lg:flex-row bg-white rounded-[20px] overflow-hidden shadow-lg border border-gray-100 mb-12 hover:shadow-2xl transition-all duration-300 group">
-                <div className="lg:w-1/2 relative min-h-[300px] overflow-hidden">
-                    <Image
-                        src={post.image}
-                        alt={post.title}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                </div>
-                <div className="lg:w-1/2 p-8 md:p-12 flex flex-col justify-center">
-                    <div className="text-[#41b349] font-bold text-[14px] uppercase tracking-widest mb-4">
-                        {post.category}
-                    </div>
-                    <h2 className="text-[28px] md:text-[36px] font-bold text-black mb-6 leading-tight group-hover:text-[#41b349] transition-colors duration-300">
-                        {post.title}
-                    </h2>
-                    <p className="text-gray-600 text-[16px] leading-[28px] mb-8">
-                        {post.excerpt}
-                    </p>
-                    <Link href={`/blog/${post.slug}`}>
-                        <button className="bg-[#41b349] text-white px-8 py-3 rounded-full text-[15px] font-semibold hover:bg-black transition-all duration-300 w-fit">
-                            Read More
-                        </button>
-                    </Link>
-                </div>
-            </div>
-        )
-    }
+export const resolveImageUrl = (img) => {
+  if (!img) return '/images/blogabout.png';
+  if (typeof img === 'string') return img;
+  if (img.src) return img.src;
+  return '/images/blogabout.png';
+};
 
-    return (
-        <div className="bg-white rounded-[20px] overflow-hidden shadow-md border border-gray-100 hover:shadow-xl transition-all duration-300 group flex flex-col h-full">
-            <div className="relative h-[240px] overflow-hidden">
-                <Image
-                    src={post.image}
-                    alt={post.title}
-                    fill
-                    className="object-cover group-hover:scale-110 transition-transform duration-500"
-                />
-            </div>
-            <div className="p-6 md:p-8 flex flex-col flex-grow">
-                <div className="text-[#41b349] font-bold text-[12px] uppercase tracking-widest mb-3">
-                    {post.category}
-                </div>
-                <h3 className="text-[20px] md:text-[22px] font-bold text-black mb-4 leading-snug line-clamp-2 group-hover:text-[#41b349] transition-colors duration-300">
-                    {post.title}
-                </h3>
-                <p className="text-gray-600 text-[14px] leading-[24px] mb-6 line-clamp-3 flex-grow">
-                    {post.excerpt}
-                </p>
-                <Link href={`/blog/${post.slug}`} className="mt-auto">
-                    <button className="bg-transparent border border-[#41b349] text-[#41b349] px-6 py-2 rounded-full text-[14px] font-semibold hover:bg-[#41b349] hover:text-white transition-all duration-300">
-                        Read More
-                    </button>
-                </Link>
-            </div>
+export const formatDate = (dateVal) => {
+  if (!dateVal) return '';
+  try {
+    const d = new Date(dateVal);
+    if (isNaN(d.getTime())) return String(dateVal);
+    return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  } catch (e) {
+    return String(dateVal);
+  }
+};
+
+const BlogCard = ({ post }) => {
+  if (!post) return null;
+  const imageSrc = resolveImageUrl(post.coverImage || post.image);
+  const formattedDate = formatDate(post.createdAt || post.date);
+
+  return (
+    <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 group flex flex-col h-full">
+      <Link href={`/blog/${post.slug}`} className="block relative h-[240px] overflow-hidden bg-gray-100">
+        <img
+          src={imageSrc}
+          alt={post.title}
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+        />
+      </Link>
+      <div className="p-5 sm:p-6 flex flex-col flex-grow">
+        <h3 className="text-[18px] sm:text-[20px] font-bold text-gray-900 mb-2 leading-snug line-clamp-2 group-hover:text-[#41b349] transition-colors">
+          <Link href={`/blog/${post.slug}`}>
+            {post.title}
+          </Link>
+        </h3>
+        <div className="flex items-center gap-1.5 text-xs text-gray-500 mb-3">
+          <span className="text-[#41b349] font-medium">{post.author || 'admin'}</span>
+          <span>•</span>
+          <span>{formattedDate}</span>
         </div>
-    )
-}
+        <p className="text-gray-600 text-xs sm:text-sm leading-relaxed mb-4 line-clamp-3 flex-grow">
+          {post.excerpt || (post.content ? post.content.replace(/<[^>]+>/g, '').slice(0, 140) + '...' : '')}
+        </p>
+        <Link href={`/blog/${post.slug}`} className="text-[#41b349] font-semibold text-xs sm:text-sm hover:underline mt-auto inline-block">
+          Explore More
+        </Link>
+      </div>
+    </div>
+  );
+};
 
-export default BlogCard
+export default BlogCard;
