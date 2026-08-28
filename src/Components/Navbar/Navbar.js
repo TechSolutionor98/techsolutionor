@@ -135,90 +135,87 @@ const Navbar = () => {
                     <Link href='/'><Image src={Logo} alt="Logo" width={200} height={56} className='w-[80px] h-[50px]' /></Link>
                 </div>
                 {/* Desktop links/buttons */}
-                <div className="hidden lg:flex navbar-links gap-6">
+                <div className="hidden lg:flex navbar-links items-center gap-1 ml-15">
                     {navLinks.map((link, idx) => (
                         <div
                             key={link.label}
                             className="relative"
-                            onMouseEnter={() => (idx === 0 || idx === 1 || link.subLinks) && setDropdownIndex(idx)}
-                            onMouseLeave={() => setDropdownIndex(null)}
+                            onMouseEnter={() => link.subLinks && setDropdownIndex(idx)}
+                            onMouseLeave={() => link.subLinks && setDropdownIndex(null)}
                         >
-                            {/* Mega Dropdown for Technologies (idx === 0) */}
                             {idx === 0 ? (
+                                // Technologies dropdown with grid cards
                                 <>
-                                    <div
+                                    <Link
+                                        href={link.href}
                                         className={`${montserrat.className} cursor-pointer text-[15px] font-medium text-white px-3 py-2 flex items-center gap-1 transition-colors duration-200 hover:text-[#41B349] ${isActive(link) ? 'text-[#41B349]' : ''
                                             }`}
                                     >
                                         {link.label}
                                         <FaChevronDown className="ml-1 text-xs mt-1" />
-                                    </div>
+                                    </Link>
                                     <div
-                                        className={`absolute left-0 mt-0 pt-2 bg-[#262323] shadow-lg z-10 w-[700px] transition-all duration-200
-                      ${dropdownIndex === 0 ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}
+                                        className={`absolute -left-60 mt-1.5 bg-white shadow-2xl rounded-xl z-20 min-w-[1020px] px-8 py-8 transition-all duration-200
+                      ${dropdownIndex === idx ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}
                     `}
-                                        style={{ minWidth: '700px' }}
+                                        style={{ top: '60px' }}
                                     >
-                                        <div className="grid grid-cols-3 gap-6 p-6">
-                                            {techSubLinks.map((tech) => (
+                                        <div className="grid grid-cols-6 gap-6">
+                                            {techSubLinks.map((sub, i) => (
                                                 <Link
-                                                    key={tech.label}
-                                                    href={tech.href}
-                                                    className="flex items-center gap-4 text-white hover:text-[#41B349] transition-colors duration-200"
+                                                    key={sub.label}
+                                                    href={sub.href}
+                                                    className={`flex flex-col items-center justify-center h-[120px] w-[150px] bg-white ${sub.border} border-2 rounded-xl p-4 transition-shadow duration-200 hover:shadow-lg hover:border-[#41B349]`}
                                                 >
-                                                    <div className={`border ${tech.border} w-[45px] h-[45px] flex items-center justify-center rounded-[5px]`}>
-                                                        <Image
-                                                            src={tech.Image}
-                                                            alt={tech.label}
-                                                            width={30}
-                                                            height={30}
-                                                            className="w-[20px] h-[20px] object-contain rounded"
-                                                        />
+                                                    {/* Placeholder for image */}
+                                                    <div className="mb-2 w-[48px] h-[48px] flex items-center justify-center">
+                                                        {/* Add image here later */}
+                                                        <Image src={sub.Image} alt={sub.label} width={40} height={40} className='object-contain' />
                                                     </div>
-                                                    <span className="text-sm font-medium">{tech.label}</span>
+                                                    <span className="text-black font-semibold text-lg text-center">{sub.label}</span>
                                                 </Link>
                                             ))}
                                         </div>
                                     </div>
                                 </>
                             ) : idx === 1 ? (
-                                /* Mega Dropdown for Services (idx === 1) */
-                                <>
-                                    <div
+                                // Services dropdown with grid cards
+                                <div className='relative'>
+                                    <Link
+                                        href={link.href || '/services'}
+                                        onClick={() => setDropdownIndex(null)}
                                         className={`${montserrat.className} cursor-pointer text-[15px] font-medium text-white px-3 py-2 flex items-center gap-1 transition-colors duration-200 hover:text-[#41B349] ${isActive(link) ? 'text-[#41B349]' : ''
                                             }`}
                                     >
                                         {link.label}
                                         <FaChevronDown className="ml-1 text-xs mt-1" />
-                                    </div>
+                                    </Link>
                                     <div
-                                        className={`absolute left-0 mt-0 pt-2 bg-[#262323] shadow-lg z-10 w-[700px] transition-all duration-200
-                      ${dropdownIndex === 1 ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}
+                                        className={`absolute -left-90 mt-1.5 bg-white shadow-2xl rounded-xl z-20 min-w-[1020px] px-8 py-8 transition-all duration-200
+                      ${dropdownIndex === idx ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}
                     `}
-                                        style={{ minWidth: '700px' }}
+                                        style={{ top: '60px' }}
                                     >
-                                        <div className="grid grid-cols-3 gap-6 p-6">
-                                            {servicesSubLinks.map((service) => (
-                                                <Link
-                                                    key={service.label}
-                                                    href={service.href}
-                                                    className="flex items-center gap-4 text-white hover:text-[#41B349] transition-colors duration-200"
-                                                >
-                                                    <div className="border border-white/20 w-[45px] h-[45px] flex items-center justify-center rounded-[5px]">
-                                                        <Image
-                                                            src={service.Image}
-                                                            alt={service.label}
-                                                            width={30}
-                                                            height={30}
-                                                            className="w-[20px] h-[20px] object-contain rounded"
-                                                        />
-                                                    </div>
-                                                    <span className="text-sm font-medium">{service.label}</span>
-                                                </Link>
+                                        <div className="grid grid-cols-4 gap-6 ">
+                                            {servicesSubLinks.map((sub, i) => (
+                                                <div key={i} className='border-l-2 border-l-[#41B349] px-2'>
+                                                    <Link
+                                                        key={sub.label}
+                                                        href={sub.href}
+                                                        onClick={() => setDropdownIndex(null)}
+                                                        className={`flex flex-row items-center h-[80px] w-[230px] rounded-[20px]  px-2 bg-white transition-all duration-200 hover:bg-[#41B349]/20`}
+                                                    >
+                                                        {/* Placeholder for image */}
+                                                        <div className="mr-4 w-[80px] h-[48px] flex items-center justify-center">
+                                                            <Image src={sub.Image} alt={sub.label} width={100} height={40} className='object-contain' />
+                                                        </div>
+                                                        <span className="text-black font-semibold text-lg">{sub.label}</span>
+                                                    </Link>
+                                                </div>
                                             ))}
                                         </div>
                                     </div>
-                                </>
+                                </div>
                             ) : link.subLinks ? (
                                 <>
                                     <Link
