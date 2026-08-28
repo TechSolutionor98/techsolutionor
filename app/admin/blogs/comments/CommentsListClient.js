@@ -49,6 +49,18 @@ function formatDateTime(dateStr) {
   }
 }
 
+function formatLatestDate(dateStr) {
+  if (!dateStr) return 'No comments yet.';
+  try {
+    const d = new Date(dateStr);
+    const date = d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+    const time = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+    return `${date}, ${time}`;
+  } catch (e) {
+    return 'No comments yet.';
+  }
+}
+
 // ---- Edit Modal ----
 function EditModal({ comment, onClose, onSave }) {
   const [text, setText] = useState(comment.comment || '');
@@ -246,7 +258,7 @@ export default function CommentsListClient({
     blogs.forEach((b) => {
       const bId = b._id.toString();
       const bSlug = b.slug;
-      map[bId] = { total: 0, pending: 0, approved: 0, spam: 0, trash: 0, mine: 0 };
+      map[bId] = { total: 0, pending: 0, approved: 0, spam: 0, trash: 0, mine: 0, latestCommentAt: null };
       if (bSlug) map[bSlug] = map[bId];
     });
 
@@ -260,6 +272,13 @@ export default function CommentsListClient({
         else if (status === 'spam') stats.spam += 1;
         else if (status === 'trash') stats.trash += 1;
         if (c.isMine || c.authorName?.toLowerCase() === 'admin') stats.mine += 1;
+
+        if (c.createdAt) {
+          const cDate = new Date(c.createdAt);
+          if (!stats.latestCommentAt || cDate > new Date(stats.latestCommentAt)) {
+            stats.latestCommentAt = c.createdAt;
+          }
+        }
       }
     });
 
@@ -541,25 +560,24 @@ export default function CommentsListClient({
             <table className="w-full text-xs text-left table-fixed">
               <thead className="sticky top-0 z-10">
                 <tr className="bg-[#E46704] text-white text-left font-semibold shadow-xs">
-                  <th className="px-4 py-3.5 w-[30%]">Blog Post</th>
-                  <th className="px-3 py-3.5 w-[15%]">Category</th>
-                  <th className="px-3 py-3.5 w-[11%]">Status</th>
-                  <th className="px-3 py-3.5 w-[13%]">Total Comments</th>
-                  <th className="px-3 py-3.5 w-[12%]">Pending Review</th>
-                  <th className="px-3 py-3.5 w-[10%]">Approved</th>
-                  <th className="px-4 py-3.5 text-right w-[14%]">Actions</th>
+                  <th className="px-4 py-3.5 w-[32%]">Blog Post</th>
+                  <th className="px-3 py-3.5 w-[16%]">Category</th>
+                  <th className="px-3 py-3.5 w-[12%]">Status</th>
+                  <th className="px-3 py-3.5 w-[14%]">Total Comments</th>
+                  <th className="px-3 py-3.5 w-[14%]">Latest Comment</th>
+                  <th className="px-4 py-3.5 text-right w-[12%]">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 bg-white">
                 {filteredBlogs.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="px-4 py-12 text-center text-gray-400 font-medium">
+                    <td colSpan={6} className="px-4 py-12 text-center text-gray-400 font-medium">
                       No blog posts found.
                     </td>
                   </tr>
                 ) : (
                   filteredBlogs.map((b) => {
-                    const stats = blogStats[b._id.toString()] || { total: 0, pending: 0, approved: 0 };
+                    const stats = blogStats[b._id.toString()] || { total: 0, pending: 0, approved: 0, latestCommentAt: null };
                     const coverImg = b.coverImage || '/images/blogabout.png';
 
                     return (
@@ -618,22 +636,17 @@ export default function CommentsListClient({
                           </span>
                         </td>
 
-                        {/* Pending Review */}
-                        <td className="px-3 py-3 whitespace-nowrap">
-                          {stats.pending > 0 ? (
-                            <span className="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-yellow-50 text-yellow-700 border border-yellow-200">
-                              ● {stats.pending} Pending
+                        {/* Latest Comment Date & Time */}
+                        <td className="px-3 py-3 whitespace-nowrap text-left">
+                          {stats.latestCommentAt ? (
+                            <span className="text-gray-700 font-semibold text-xs">
+                              {formatLatestDate(stats.latestCommentAt)}
                             </span>
                           ) : (
-                            <span className="text-gray-400 text-[11px]">0</span>
+                            <span className="text-gray-400 italic text-xs">
+                              No comments yet.
+                            </span>
                           )}
-                        </td>
-
-                        {/* Approved */}
-                        <td className="px-3 py-3 whitespace-nowrap">
-                          <span className="text-green-700 font-semibold text-[11px]">
-                            {stats.approved} Approved
-                          </span>
                         </td>
 
                         {/* Actions */}
