@@ -82,71 +82,14 @@ export default async function BlogDetailPage({ params }) {
   const readMinutes = blog.readMinutes || Math.max(3, Math.ceil((blog.content || '').split(/\s+/).length / 200));
 
   return (
-    <article className="min-h-screen bg-white text-slate-800 pb-20">
-      {/* Top Header / Breadcrumb Bar */}
-      <div className="bg-gray-50 border-b border-gray-100 py-8">
-        <div className="container mx-auto px-5 md:px-10 max-w-[1240px]">
-          {/* Breadcrumbs */}
-          <nav className="flex items-center gap-2 text-xs text-gray-500 mb-4 flex-wrap">
-            <Link href="/" className="hover:text-[#41b349] transition-colors">
-              Home
-            </Link>
-            <span>/</span>
-            <Link href="/blog" className="hover:text-[#41b349] transition-colors">
-              Blog
-            </Link>
-            {blog.category && (
-              <>
-                <span>/</span>
-                <span className="text-[#41b349] font-medium">{blog.category}</span>
-              </>
-            )}
-          </nav>
-
-          {/* Category Badge */}
-          {blog.category && (
-            <span className="inline-block bg-[#41b349]/10 text-[#41b349] text-xs font-bold uppercase tracking-wider px-3.5 py-1 rounded-full mb-3">
-              {blog.category}
-            </span>
-          )}
-
-          {/* Article Title */}
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-bold text-gray-900 leading-tight mb-4 max-w-4xl">
-            {blog.title}
-          </h1>
-
-          {/* Meta Info Bar */}
-          <div className="flex items-center gap-5 text-xs text-gray-500 flex-wrap pt-1">
-            <div className="flex items-center gap-1.5 font-medium text-gray-700">
-              <FaUser className="text-[#41b349]" />
-              <span>{blog.author || 'Admin'}</span>
-            </div>
-            {formattedDate && (
-              <div className="flex items-center gap-1.5">
-                <FaCalendarAlt className="text-gray-400" />
-                <span>{formattedDate}</span>
-              </div>
-            )}
-            <div className="flex items-center gap-1.5">
-              <FaClock className="text-gray-400" />
-              <span>{readMinutes} min read</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <FaComment className="text-gray-400" />
-              <span>{comments.length} {comments.length === 1 ? 'Comment' : 'Comments'}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content Layout */}
-      <div className="container mx-auto px-5 md:px-10 max-w-[1240px] mt-10">
+    <article className="min-h-screen bg-white text-slate-800 py-10 md:py-14">
+      <div className="container mx-auto px-5 md:px-10 max-w-[1240px]">
         <div className="flex flex-col lg:flex-row gap-12">
           {/* Article Main Column */}
           <div className="w-full lg:w-2/3">
-            {/* Featured Cover Image */}
+            {/* 1. Blog Featured / First Image at the top */}
             {coverImage && (
-              <div className="relative w-full h-[300px] sm:h-[400px] md:h-[450px] rounded-2xl overflow-hidden mb-10 shadow-md bg-gray-100">
+              <div className="relative w-full h-[300px] sm:h-[420px] md:h-[480px] rounded-2xl overflow-hidden mb-8 shadow-sm bg-gray-100">
                 <img
                   src={coverImage}
                   alt={blog.title}
@@ -154,6 +97,57 @@ export default async function BlogDetailPage({ params }) {
                 />
               </div>
             )}
+
+            {/* Breadcrumbs */}
+            <nav className="flex items-center gap-2 text-xs text-gray-500 mb-4 flex-wrap">
+              <Link href="/" className="hover:text-[#41b349] transition-colors">
+                Home
+              </Link>
+              <span>/</span>
+              <Link href="/blog" className="hover:text-[#41b349] transition-colors">
+                Blog
+              </Link>
+              {blog.category && (
+                <>
+                  <span>/</span>
+                  <span className="text-[#41b349] font-medium">{blog.category}</span>
+                </>
+              )}
+            </nav>
+
+            {/* Category Badge */}
+            {blog.category && (
+              <span className="inline-block bg-[#41b349]/10 text-[#41b349] text-xs font-bold uppercase tracking-wider px-3.5 py-1 rounded-full mb-3">
+                {blog.category}
+              </span>
+            )}
+
+            {/* 2. Directly below the image: Blog Title */}
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-[38px] font-bold text-gray-900 leading-tight mb-4">
+              {blog.title}
+            </h1>
+
+            {/* Meta Info Bar */}
+            <div className="flex items-center gap-5 text-xs text-gray-500 flex-wrap pb-6 mb-8 border-b border-gray-100">
+              <div className="flex items-center gap-1.5 font-medium text-gray-700">
+                <FaUser className="text-[#41b349]" />
+                <span>{blog.author || 'Admin'}</span>
+              </div>
+              {formattedDate && (
+                <div className="flex items-center gap-1.5">
+                  <FaCalendarAlt className="text-gray-400" />
+                  <span>{formattedDate}</span>
+                </div>
+              )}
+              <div className="flex items-center gap-1.5">
+                <FaClock className="text-gray-400" />
+                <span>{readMinutes} min read</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <FaComment className="text-gray-400" />
+                <span>{comments.length} {comments.length === 1 ? 'Comment' : 'Comments'}</span>
+              </div>
+            </div>
 
             {/* Excerpt Lead */}
             {blog.excerpt && (
