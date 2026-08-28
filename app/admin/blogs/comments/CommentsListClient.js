@@ -506,7 +506,7 @@ export default function CommentsListClient({
       {/* SCREEN 1: BLOGS TABLE LIST (Grouped by Blog, Each Blog Listed Once)       */}
       {/* ========================================================================= */}
       {!selectedBlog ? (
-        <div className="bg-white p-5 rounded-2xl shadow-lg border border-gray-100">
+        <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 min-h-[calc(100vh-230px)] flex flex-col">
           {/* Controls Bar: Refresh & Search Blogs */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
             <div className="flex items-center gap-3">
@@ -537,17 +537,17 @@ export default function CommentsListClient({
           </div>
 
           {/* Blogs Table (Row and Column Wise with Orange Header #E46704) */}
-          <div className="overflow-x-auto max-h-[640px] overflow-y-auto w-full rounded-xl border border-gray-200 shadow-xs">
+          <div className="overflow-x-auto overflow-y-auto w-full rounded-xl border border-gray-200 shadow-xs flex-1 min-h-[420px] max-h-[calc(100vh-310px)]">
             <table className="min-w-full text-xs">
               <thead className="sticky top-0 z-10">
                 <tr className="bg-[#E46704] text-white text-left font-semibold shadow-xs">
-                  <th className="px-4 py-3">Blog Post</th>
-                  <th className="px-4 py-3">Category</th>
-                  <th className="px-4 py-3">Status</th>
-                  <th className="px-4 py-3">Total Comments</th>
-                  <th className="px-4 py-3">Pending Review</th>
-                  <th className="px-4 py-3">Approved</th>
-                  <th className="px-4 py-3 text-right">Actions</th>
+                  <th className="px-4 py-3.5">Blog Post</th>
+                  <th className="px-4 py-3.5">Category</th>
+                  <th className="px-4 py-3.5">Status</th>
+                  <th className="px-4 py-3.5">Total Comments</th>
+                  <th className="px-4 py-3.5">Pending Review</th>
+                  <th className="px-4 py-3.5">Approved</th>
+                  <th className="px-4 py-3.5 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 bg-white">
