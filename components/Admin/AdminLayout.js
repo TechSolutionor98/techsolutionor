@@ -143,22 +143,22 @@ export default function AdminLayout({ children, title = '' }) {
     <div className="min-h-screen flex flex-col md:flex-row bg-white text-black relative">
 
       {/* Top-right Logout */}
-      <div className="absolute top-4 right-4 z-50 flex items-center gap-3">
+      <div className="fixed top-4 right-4 z-50 flex items-center gap-3 bg-white/90 backdrop-blur-xs py-1 px-2 rounded-lg shadow-xs">
         {currentUser && (
           <span className="hidden md:inline-block text-xs text-gray-500 font-medium">
             Logged in as: <strong className="text-[#20507C]">{currentUser.name}</strong> ({role.replace('_', ' ')})
           </span>
         )}
         <LogoutButton>
-          <div className="cursor-pointer flex items-center gap-2 px-4 py-2 bg-[#E46704] text-white text-sm rounded hover:bg-[#E46704] transition-colors duration-200">
+          <div className="cursor-pointer flex items-center gap-2 px-4 py-2 bg-[#E46704] text-white text-sm rounded hover:bg-[#c95a03] transition-colors duration-200 shadow-xs">
             <IoIosLogOut />
             <span>Logout</span>
           </div>
         </LogoutButton>
       </div>
 
-      {/* Sidebar */}
-      <aside className="w-full md:w-64 flex-shrink-0 border-b md:border-b-0 md:border-r border-gray-200 p-6 pt-16 md:pt-6 md:sticky md:top-0 md:h-screen md:overflow-y-auto">
+      {/* Fixed Admin Sidebar */}
+      <aside className="w-full md:w-64 flex-shrink-0 border-b md:border-b-0 md:border-r border-gray-200 p-6 pt-16 md:pt-6 md:fixed md:top-0 md:left-0 md:h-screen md:z-40 bg-white overflow-y-auto">
         <div className="mb-6 flex justify-center items-center">
           <Link href="/admin" className="inline-block group no-underline">
             <Image 
@@ -172,7 +172,7 @@ export default function AdminLayout({ children, title = '' }) {
           </Link>
         </div>
         <hr className='bg-gray-400 text-gray-400 w-full h-[2px] mb-7' />
-        <nav className="flex flex-col gap-1 text-sm">
+        <nav className="flex flex-col gap-1 text-sm pb-10">
           {Object.entries(groupedLinks).map(([group, links]) => {
             if (group === 'Blogs') {
               return (
@@ -240,8 +240,8 @@ export default function AdminLayout({ children, title = '' }) {
         </nav>
       </aside>
 
-      {/* Main content */}
-      <main className="flex-grow p-6 overflow-x-hidden">
+      {/* Main Content Area - Scrollable and Offset by Fixed Sidebar */}
+      <main className="flex-1 md:ml-64 p-6 pt-16 md:pt-6 overflow-x-hidden min-h-screen">
         <header className="mb-6 mt-10 md:mt-0">
           <h1 className="text-2xl font-semibold">{title}</h1>
         </header>
