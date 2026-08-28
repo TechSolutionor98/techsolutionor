@@ -19,12 +19,12 @@ function jsonResponse(data, status = 200) {
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-// GET /api/blogs/comments -> list comments (by blog or all for admin)
+// GET /api/blogs/comments -> list comments
 export async function GET(req) {
   try {
     const url = new URL(req.url);
     const blogId = url.searchParams.get('blogId');
-    const all = url.searchParams.get('all') === 'true'; // admin views all (approved and pending)
+    const all = url.searchParams.get('all') === 'true'; // admin views all statuses
 
     const db = await getDb();
     const col = db.collection('cms_blog_comments');
@@ -51,30 +51,25 @@ export async function GET(req) {
     const cursor = col.find(filter).sort({ createdAt: -1 });
     const comments = await cursor.toArray();
 
-    // Map comments and attach blog title
+    // Attach blog title and slug
     const blogsCol = db.collection('cms_blogs');
-    const enrichedComments = await Promise.all(comments.map(async (c) => {
-      let blogTitle = 'Deleted Blog';
-      if (c.blogId) {
-        try {
-          const blog = await blogsCol.findOne({ _id: new ObjectId(c.blogId) });
-          if (blog) {
-            blogTitle = blog.title;
-          }
-        } catch (err) {
-          const blog = await blogsCol.findOne({ slug: c.blogId });
-          if (blog) {
-            blogTitle = blog.title;
-          }
-        }
-      }
+    const blogs = await blogsCol.find({}).toArray();
+    const blogMap = {};
+    blogs.forEach(b => {
+      blogMap[b._id.toString()] = { title: b.title, slug: b.slug, coverImage: b.coverImage };
+      blogMap[b.slug] = { title: b.title, slug: b.slug, coverImage: b.coverImage };
+    });
 
+    const enrichedComments = comments.map((c) => {
+      const bInfo = blogMap[c.blogId] || { title: 'Deleted Article', slug: '', coverImage: '' };
       return {
         ...c,
         _id: c._id.toString(),
-        blogTitle,
+        blogTitle: bInfo.title,
+        blogSlug: bInfo.slug,
+        blogImage: bInfo.coverImage,
       };
-    }));
+    });
 
     return jsonResponse(enrichedComments);
   } catch (err) {
@@ -83,7 +78,7 @@ export async function GET(req) {
   }
 }
 
-// POST /api/blogs/comments -> submit a verified comment
+// POST /api/blogs/comments -> submit a verified comment or admin reply
 export async function POST(req) {
   try {
     const body = await req.json();
@@ -92,48 +87,49 @@ export async function POST(req) {
     const authorEmail = (body.authorEmail || '').toString().trim().toLowerCase();
     const comment = (body.comment || '').toString().trim();
     const otp = (body.otp || '').toString().trim();
+    const isAdmin = body.isAdmin === true || authorName.toLowerCase() === 'admin';
+    const inReplyTo = body.inReplyTo ? body.inReplyTo.toString() : null;
 
     // Validation checks
     if (!blogId) {
       return jsonResponse({ error: 'Blog ID is required' }, 400);
     }
     if (!authorName) {
-      return jsonResponse({ error: 'Please enter your name' }, 400);
+      return jsonResponse({ error: 'Please enter author name' }, 400);
     }
     if (!authorEmail) {
-      return jsonResponse({ error: 'Please enter your email address' }, 400);
-    }
-    if (!EMAIL_REGEX.test(authorEmail)) {
-      return jsonResponse({ error: 'Please enter a valid email address (e.g. name@domain.com)' }, 400);
+      return jsonResponse({ error: 'Please enter email address' }, 400);
     }
     if (!comment) {
-      return jsonResponse({ error: 'Please enter your comment' }, 400);
-    }
-    if (comment.length < 3) {
-      return jsonResponse({ error: 'Comment must be at least 3 characters long' }, 400);
-    }
-    if (!otp) {
-      return jsonResponse({ error: 'Verification code (OTP) is required. Please check your email.' }, 400);
+      return jsonResponse({ error: 'Please enter comment text' }, 400);
     }
 
     const db = await getDb();
 
-    // Verify OTP strictly
-    const otpsCol = db.collection('otps');
-    const otpRecord = await otpsCol.findOne({ email: authorEmail, otp });
-    
-    if (!otpRecord) {
-      return jsonResponse({ error: 'Invalid verification code. Please check your email or request a new code.' }, 400);
-    }
+    // If submitted by regular user, verify OTP strictly
+    if (!isAdmin) {
+      if (!EMAIL_REGEX.test(authorEmail)) {
+        return jsonResponse({ error: 'Please enter a valid email address' }, 400);
+      }
+      if (!otp) {
+        return jsonResponse({ error: 'Verification code (OTP) is required' }, 400);
+      }
 
-    if (new Date() > new Date(otpRecord.expiresAt)) {
+      const otpsCol = db.collection('otps');
+      const otpRecord = await otpsCol.findOne({ email: authorEmail, otp });
+      
+      if (!otpRecord) {
+        return jsonResponse({ error: 'Invalid verification code.' }, 400);
+      }
+
+      if (new Date() > new Date(otpRecord.expiresAt)) {
+        await otpsCol.deleteOne({ _id: otpRecord._id });
+        return jsonResponse({ error: 'Verification code has expired.' }, 400);
+      }
+
       await otpsCol.deleteOne({ _id: otpRecord._id });
-      return jsonResponse({ error: 'Verification code has expired. Please request a new code.' }, 400);
     }
 
-    // Delete OTP after successful verification to prevent reuse
-    await otpsCol.deleteOne({ _id: otpRecord._id });
-    
     // Verify blog exists
     const blogsCol = db.collection('cms_blogs');
     let blog = null;
@@ -149,25 +145,16 @@ export async function POST(req) {
 
     const col = db.collection('cms_blog_comments');
 
-    // Duplicate comment prevention within 60 seconds
-    const existingRecent = await col.findOne({
-      blogId: blog._id.toString(),
-      authorEmail,
-      comment,
-      createdAt: { $gte: new Date(Date.now() - 60 * 1000) }
-    });
-
-    if (existingRecent) {
-      return jsonResponse({ error: 'You have already submitted this comment recently.' }, 400);
-    }
-
     const doc = {
       blogId: blog._id.toString(),
       authorName,
       authorEmail,
+      authorIp: req.headers.get('x-forwarded-for') || '127.0.0.1',
       comment,
-      approved: false, // Pending admin moderation
-      status: 'pending',
+      inReplyTo,
+      isMine: isAdmin,
+      approved: isAdmin, // Admin replies auto-approved
+      status: isAdmin ? 'approved' : 'pending',
       verified: true,
       createdAt: new Date(),
     };
@@ -178,8 +165,8 @@ export async function POST(req) {
 
     return jsonResponse({ 
       ok: true, 
-      message: 'Comment submitted successfully! It will appear once approved by admin.',
-      comment: { ...doc, _id: result.insertedId.toString() } 
+      message: isAdmin ? 'Reply posted successfully!' : 'Comment submitted successfully and is pending approval.',
+      comment: { ...doc, _id: result.insertedId.toString(), blogTitle: blog.title, blogSlug: blog.slug } 
     }, 201);
   } catch (err) {
     console.error('POST /api/blogs/comments error', err);
@@ -187,24 +174,27 @@ export async function POST(req) {
   }
 }
 
-// PATCH /api/blogs/comments -> update comment (status and/or text)
+// PATCH /api/blogs/comments -> update single or multiple comments (status / comment text)
 export async function PATCH(req) {
   try {
     const body = await req.json();
     const id = body.id;
-    if (!id) return jsonResponse({ error: 'id is required' }, 400);
-    if (!ObjectId.isValid(id)) return jsonResponse({ error: 'Invalid ID format' }, 400);
+    const ids = Array.isArray(body.ids) ? body.ids : null;
+
+    if (!id && (!ids || ids.length === 0)) {
+      return jsonResponse({ error: 'id or ids array is required' }, 400);
+    }
 
     const db = await getDb();
     const col = db.collection('cms_blog_comments');
 
     const updateFields = {};
 
-    // Status update: approved | pending | rejected
+    // Status update: approved | pending | spam | trash | rejected
     if (body.status !== undefined) {
-      const validStatuses = ['approved', 'pending', 'rejected'];
+      const validStatuses = ['approved', 'pending', 'spam', 'trash', 'rejected'];
       if (!validStatuses.includes(body.status)) {
-        return jsonResponse({ error: 'Invalid status. Must be: approved, pending, rejected' }, 400);
+        return jsonResponse({ error: 'Invalid status. Must be: approved, pending, spam, trash, rejected' }, 400);
       }
       updateFields.status = body.status;
       updateFields.approved = body.status === 'approved';
@@ -221,6 +211,19 @@ export async function PATCH(req) {
     if (Object.keys(updateFields).length === 0) {
       return jsonResponse({ error: 'No fields to update' }, 400);
     }
+
+    // Bulk update
+    if (ids && ids.length > 0) {
+      const objectIds = ids.filter(ObjectId.isValid).map(i => new ObjectId(i));
+      await col.updateMany(
+        { _id: { $in: objectIds } },
+        { $set: updateFields }
+      );
+      return jsonResponse({ ok: true, count: objectIds.length });
+    }
+
+    // Single update
+    if (!ObjectId.isValid(id)) return jsonResponse({ error: 'Invalid ID format' }, 400);
 
     const result = await col.updateOne(
       { _id: new ObjectId(id) },
@@ -240,16 +243,25 @@ export async function PATCH(req) {
   }
 }
 
-// DELETE /api/blogs/comments?id=... -> delete a comment
+// DELETE /api/blogs/comments -> delete comment(s)
 export async function DELETE(req) {
   try {
     const url = new URL(req.url);
     const id = url.searchParams.get('id');
-    if (!id) return jsonResponse({ error: 'id is required' }, 400);
-    if (!ObjectId.isValid(id)) return jsonResponse({ error: 'Invalid ID format' }, 400);
+    const idsParam = url.searchParams.get('ids');
 
     const db = await getDb();
     const col = db.collection('cms_blog_comments');
+
+    if (idsParam) {
+      const idsList = idsParam.split(',').filter(ObjectId.isValid).map(i => new ObjectId(i));
+      const res = await col.deleteMany({ _id: { $in: idsList } });
+      return jsonResponse({ ok: true, count: res.deletedCount });
+    }
+
+    if (!id || !ObjectId.isValid(id)) {
+      return jsonResponse({ error: 'Valid id is required' }, 400);
+    }
 
     const result = await col.deleteOne({ _id: new ObjectId(id) });
     if (result.deletedCount === 0) {
