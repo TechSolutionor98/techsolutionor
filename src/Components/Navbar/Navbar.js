@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { FaChevronDown, FaBars, FaTimes } from "react-icons/fa";
 import { usePathname } from 'next/navigation'
 import Link from 'next/link';
+import { Montserrat, Roboto } from 'next/font/google';
 import { useQuote } from '@/app/_context/QuoteContext';
 import Laraval from '@/src/Components/Images/laraval.png'
 import Javascript from '@/src/Components/Images/js.png'
@@ -37,8 +38,14 @@ import Content from '@/src/Components/Images/content.png'
 import Call from '@/src/Components/Images/call.png'
 import Hire from '@/src/Components/Images/hire.png'
 
-const montserrat = { className: "" };
-const roboto = { className: "" };
+const montserrat = Montserrat({
+    subsets: ['latin'],
+    weight: ['500', '600', '700'],
+});
+const roboto = Roboto({
+    subsets: ['latin'],
+    weight: ['500', '700'],
+});
 
 // Navlinks data
 const navLinks = [
@@ -374,4 +381,4 @@ function MobileDropdown({ label, parentHref, subLinks, setMobileOpen }) {
     );
 }
 
-export default Navbar
+export default Navbar;

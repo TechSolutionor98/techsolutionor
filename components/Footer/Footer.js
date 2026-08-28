@@ -1,5 +1,5 @@
 import React from 'react'
-import Map from '../../Components/Images/map.png'
+import Map from '@/src/Components/Images/map.png'
 import Image from 'next/image'
 import { FaFacebookF } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa";
