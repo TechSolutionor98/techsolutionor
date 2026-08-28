@@ -636,12 +636,17 @@ export default function CommentsListClient({
                           </span>
                         </td>
 
-                        {/* Latest Comment Date & Time */}
-                        <td className="px-3 py-3 whitespace-nowrap text-left">
+                        {/* Latest Comment Date & Time (Two Separate Lines) */}
+                        <td className="px-3 py-3 whitespace-nowrap text-left text-xs">
                           {stats.latestCommentAt ? (
-                            <span className="text-gray-700 font-semibold text-xs">
-                              {formatLatestDate(stats.latestCommentAt)}
-                            </span>
+                            <div>
+                              <div className="font-semibold text-gray-800">
+                                {formatDateTime(stats.latestCommentAt).date}
+                              </div>
+                              <div className="text-gray-400 text-[11px] mt-0.5">
+                                {formatDateTime(stats.latestCommentAt).time}
+                              </div>
+                            </div>
                           ) : (
                             <span className="text-gray-400 italic text-xs">
                               No comments yet.
