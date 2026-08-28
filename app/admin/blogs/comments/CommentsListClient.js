@@ -683,7 +683,7 @@ export default function CommentsListClient({
         /* ========================================================================= */
         /* SCREEN 2: SELECTED BLOG'S COMMENTS TABLE (Row-by-Row, Exact Matching)    */
         /* ========================================================================= */
-        <div className="bg-white p-5 rounded-2xl shadow-lg border border-gray-100 space-y-4">
+        <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 space-y-4 min-h-[calc(100vh-230px)] flex flex-col">
           {/* Back Button & Selected Blog Header Bar */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-gray-150">
             <div className="flex items-center gap-3">
@@ -829,7 +829,7 @@ export default function CommentsListClient({
           </div>
 
           {/* Comments Table (Row-by-Row, Exact Matching Screenshot 1 & 3) */}
-          <div className="overflow-x-hidden overflow-y-auto w-full rounded-xl border border-gray-200 shadow-xs flex-1 max-h-[calc(100vh-270px)]">
+          <div className="overflow-x-hidden overflow-y-auto w-full rounded-xl border border-gray-200 shadow-xs flex-1 min-h-[580px] max-h-[calc(100vh-310px)]">
             <table className="w-full text-xs text-left table-fixed">
               <thead className="sticky top-0 z-10">
                 <tr className="bg-[#E46704] text-white text-left font-semibold shadow-xs">
