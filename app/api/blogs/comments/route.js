@@ -17,12 +17,14 @@ function jsonResponse(data, status = 200) {
   return NextResponse.json(data, { status, headers: CORS_HEADERS });
 }
 
+const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
 // GET /api/blogs/comments -> list comments (by blog or all for admin)
 export async function GET(req) {
   try {
     const url = new URL(req.url);
     const blogId = url.searchParams.get('blogId');
-    const all = url.searchParams.get('all') === 'true'; // admin views all (approved and unapproved)
+    const all = url.searchParams.get('all') === 'true'; // admin views all (approved and pending)
 
     const db = await getDb();
     const col = db.collection('cms_blog_comments');
@@ -32,19 +34,18 @@ export async function GET(req) {
       if (ObjectId.isValid(blogId) && blogId.length === 24) {
         filter.blogId = blogId;
       } else {
-        // If it's a slug, we need to lookup the actual blog _id first
         const blogsCol = db.collection('cms_blogs');
         const blog = await blogsCol.findOne({ slug: blogId });
         if (blog) {
           filter.blogId = blog._id.toString();
         } else {
-          return jsonResponse([]); // No blog found, so no comments
+          return jsonResponse([]);
         }
       }
     }
     
     if (!all) {
-      filter.approved = true; // client only sees approved comments
+      filter.$or = [{ approved: true }, { status: 'approved' }];
     }
 
     const cursor = col.find(filter).sort({ createdAt: -1 });
@@ -61,7 +62,6 @@ export async function GET(req) {
             blogTitle = blog.title;
           }
         } catch (err) {
-          // Maybe blogId is not ObjectId format
           const blog = await blogsCol.findOne({ slug: c.blogId });
           if (blog) {
             blogTitle = blog.title;
@@ -83,37 +83,56 @@ export async function GET(req) {
   }
 }
 
-// POST /api/blogs/comments -> submit a new comment
+// POST /api/blogs/comments -> submit a verified comment
 export async function POST(req) {
   try {
     const body = await req.json();
     const blogId = (body.blogId || '').toString().trim();
     const authorName = (body.authorName || '').toString().trim();
-    const authorEmail = (body.authorEmail || '').toString().trim();
+    const authorEmail = (body.authorEmail || '').toString().trim().toLowerCase();
     const comment = (body.comment || '').toString().trim();
     const otp = (body.otp || '').toString().trim();
 
-    if (!blogId || !authorName || !comment) {
-      return jsonResponse({ error: 'blogId, authorName, and comment are required' }, 400);
+    // Validation checks
+    if (!blogId) {
+      return jsonResponse({ error: 'Blog ID is required' }, 400);
+    }
+    if (!authorName) {
+      return jsonResponse({ error: 'Please enter your name' }, 400);
+    }
+    if (!authorEmail) {
+      return jsonResponse({ error: 'Please enter your email address' }, 400);
+    }
+    if (!EMAIL_REGEX.test(authorEmail)) {
+      return jsonResponse({ error: 'Please enter a valid email address (e.g. name@domain.com)' }, 400);
+    }
+    if (!comment) {
+      return jsonResponse({ error: 'Please enter your comment' }, 400);
+    }
+    if (comment.length < 3) {
+      return jsonResponse({ error: 'Comment must be at least 3 characters long' }, 400);
+    }
+    if (!otp) {
+      return jsonResponse({ error: 'Verification code (OTP) is required. Please check your email.' }, 400);
     }
 
     const db = await getDb();
 
-    // If OTP is provided, verify it
-    if (otp && authorEmail) {
-      const otpRecord = await db.collection('otps').findOne({ email: authorEmail, otp });
-      if (!otpRecord) {
-        return jsonResponse({ error: 'Invalid or incorrect OTP code.' }, 400);
-      }
-
-      if (new Date() > new Date(otpRecord.expiresAt)) {
-        await db.collection('otps').deleteOne({ _id: otpRecord._id });
-        return jsonResponse({ error: 'OTP has expired. Please request a new one.' }, 400);
-      }
-
-      // Delete OTP after successful verification
-      await db.collection('otps').deleteOne({ _id: otpRecord._id });
+    // Verify OTP strictly
+    const otpsCol = db.collection('otps');
+    const otpRecord = await otpsCol.findOne({ email: authorEmail, otp });
+    
+    if (!otpRecord) {
+      return jsonResponse({ error: 'Invalid verification code. Please check your email or request a new code.' }, 400);
     }
+
+    if (new Date() > new Date(otpRecord.expiresAt)) {
+      await otpsCol.deleteOne({ _id: otpRecord._id });
+      return jsonResponse({ error: 'Verification code has expired. Please request a new code.' }, 400);
+    }
+
+    // Delete OTP after successful verification to prevent reuse
+    await otpsCol.deleteOne({ _id: otpRecord._id });
     
     // Verify blog exists
     const blogsCol = db.collection('cms_blogs');
@@ -128,21 +147,40 @@ export async function POST(req) {
       return jsonResponse({ error: 'Referenced blog post not found' }, 404);
     }
 
+    const col = db.collection('cms_blog_comments');
+
+    // Duplicate comment prevention within 60 seconds
+    const existingRecent = await col.findOne({
+      blogId: blog._id.toString(),
+      authorEmail,
+      comment,
+      createdAt: { $gte: new Date(Date.now() - 60 * 1000) }
+    });
+
+    if (existingRecent) {
+      return jsonResponse({ error: 'You have already submitted this comment recently.' }, 400);
+    }
+
     const doc = {
       blogId: blog._id.toString(),
       authorName,
-      authorEmail: authorEmail || null,
+      authorEmail,
       comment,
-      approved: false, // Moderated by default
+      approved: false, // Pending admin moderation
+      status: 'pending',
+      verified: true,
       createdAt: new Date(),
     };
 
-    const col = db.collection('cms_blog_comments');
     const result = await col.insertOne(doc);
 
     await logActivity(req, 'create_comment', authorName, { blogId: doc.blogId, id: result.insertedId.toString() });
 
-    return jsonResponse({ ...doc, _id: result.insertedId.toString() }, 201);
+    return jsonResponse({ 
+      ok: true, 
+      message: 'Comment submitted successfully! It will appear once approved by admin.',
+      comment: { ...doc, _id: result.insertedId.toString() } 
+    }, 201);
   } catch (err) {
     console.error('POST /api/blogs/comments error', err);
     return jsonResponse({ error: 'Internal server error' }, 500);
