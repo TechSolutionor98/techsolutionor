@@ -59,52 +59,40 @@ const navLinks = [
         ],
     },
     {
-        label: 'Software Solutions',
-        href: '/pos-development',
-    },
-    {
-        label: 'Career',
-        href: '/career',
+        label: 'About Us',
+        href: '/about-us',
     },
     {
         label: 'Portfolio',
         href: '/our-portfolio',
     },
     {
-        label: 'About Us',
-        href: '/about-us',
+        label: 'Blog',
+        href: '/blog',
     },
     {
         label: 'Contact Us',
         href: '/contact-us',
     },
-    {
-        label: 'Hire Us',
-        href: '/hire-us',
-    },
-    {
-        label: 'Blog',
-        href: '/blog',
-    },
 ];
 
 const techSubLinks = [
-    { Image: Laraval, label: 'Laravel', href: '/technologies/laravel', border: 'border-red-500' },
+    { Image: Laraval, label: 'Laravel', href: '/technologies/laravel', border: 'border-red-400' },
     { Image: Javascript, label: 'JavaScript', href: '/technologies/javascript', border: 'border-yellow-400' },
-    { Image: Reactjs, label: 'React', href: '/technologies/react', border: 'border-blue-400' },
-    { Image: Python, label: 'Python', href: '/technologies/python', border: 'border-blue-600' },
-    { Image: Swift, label: 'Swift', href: '/technologies/swift', border: 'border-orange-500' },
-    { Image: Html, label: 'HTML', href: '/technologies/html', border: 'border-orange-400' },
-    { Image: Php, label: 'PHP', href: '/technologies/php', border: 'border-indigo-400' },
-    { Image: Wp, label: 'WordPress', href: '/technologies/wordpress', border: 'border-blue-500' },
-    { Image: Shopfiy, label: 'Shopify', href: '/technologies/shopify', border: 'border-green-500' },
-    { Image: Magento, label: 'Magento', href: '/technologies/magento', border: 'border-orange-600' },
+    { Image: Reactjs, label: 'React JS', href: '/technologies/react', border: 'border-cyan-400' },
+    { Image: Python, label: 'Python', href: '/technologies/python', border: 'border-blue-400' },
+    { Image: Swift, label: 'Swift', href: '/technologies/swift', border: 'border-red-400' },
+    { Image: Html, label: 'HTML', href: '/technologies/html', border: 'border-red-400' },
+    { Image: Php, label: 'PHP', href: '/technologies/php', border: 'border-blue-400' },
+    { Image: Wp, label: 'Wordpress', href: '/technologies/wordpress', border: 'border-blue-400' },
+    { Image: Shopfiy, label: 'Shopify', href: '/technologies/shopify', border: 'border-green-400' },
+    { Image: Magento, label: 'Magento', href: '/technologies/magento', border: 'border-orange-400' },
     { Image: Css, label: 'CSS', href: '/technologies/css', border: 'border-blue-400' },
-    { Image: Net, label: '.NET', href: '/technologies/net', border: 'border-purple-600' },
-    { Image: Flutter, label: 'Flutter', href: '/technologies/flutter', border: 'border-cyan-400' },
-    { Image: Figma, label: 'Figma', href: '/technologies/figma', border: 'border-pink-500' },
-    { Image: Meta, label: 'Meta', href: '/technologies/meta', border: 'border-blue-600' },
-    { Image: Analytics, label: 'Analytics', href: '/technologies/analytics', border: 'border-amber-400' },
+    { Image: Net, label: '.NET', href: '/technologies/dotnet', border: 'border-purple-400' },
+    { Image: Flutter, label: 'Flutter', href: '/technologies/flutter', border: 'border-blue-400' },
+    { Image: Figma, label: 'Figma', href: '/technologies/figma', border: 'border-purple-400' },
+    { Image: Meta, label: 'Meta', href: '/technologies/meta', border: 'border-blue-400' },
+    { Image: Analytics, label: 'Analytics', href: '/technologies/analytics', border: 'border-orange-400' },
     { Image: GoogleAds, label: 'Google Ads', href: '/technologies/google-ads', border: 'border-blue-400' },
     { Image: Angular, label: 'Angular', href: '/technologies/angular', border: 'border-red-400' },
 ];
@@ -147,87 +135,90 @@ const Navbar = () => {
                     <Link href='/'><Image src={Logo} alt="Logo" width={200} height={56} className='w-[80px] h-[50px]' /></Link>
                 </div>
                 {/* Desktop links/buttons */}
-                <div className="hidden lg:flex navbar-links items-center gap-1 ml-15">
+                <div className="hidden lg:flex navbar-links gap-6">
                     {navLinks.map((link, idx) => (
                         <div
                             key={link.label}
                             className="relative"
-                            onMouseEnter={() => link.subLinks && setDropdownIndex(idx)}
-                            onMouseLeave={() => link.subLinks && setDropdownIndex(null)}
+                            onMouseEnter={() => (idx === 0 || idx === 1 || link.subLinks) && setDropdownIndex(idx)}
+                            onMouseLeave={() => setDropdownIndex(null)}
                         >
+                            {/* Mega Dropdown for Technologies (idx === 0) */}
                             {idx === 0 ? (
-                                // Technologies dropdown with grid cards
                                 <>
-                                    <Link
-                                        href={link.href}
+                                    <div
                                         className={`${montserrat.className} cursor-pointer text-[15px] font-medium text-white px-3 py-2 flex items-center gap-1 transition-colors duration-200 hover:text-[#41B349] ${isActive(link) ? 'text-[#41B349]' : ''
                                             }`}
                                     >
                                         {link.label}
                                         <FaChevronDown className="ml-1 text-xs mt-1" />
-                                    </Link>
+                                    </div>
                                     <div
-                                        className={`absolute -left-60 mt-1.5 bg-white shadow-2xl rounded-xl z-20 min-w-[1020px] px-8 py-8 transition-all duration-200
-                      ${dropdownIndex === idx ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}
+                                        className={`absolute left-0 mt-0 pt-2 bg-[#262323] shadow-lg z-10 w-[700px] transition-all duration-200
+                      ${dropdownIndex === 0 ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}
                     `}
-                                        style={{ top: '60px' }}
+                                        style={{ minWidth: '700px' }}
                                     >
-                                        <div className="grid grid-cols-6 gap-6">
-                                            {techSubLinks.map((sub, i) => (
+                                        <div className="grid grid-cols-3 gap-6 p-6">
+                                            {techSubLinks.map((tech) => (
                                                 <Link
-                                                    key={sub.label}
-                                                    href={sub.href}
-                                                    className={`flex flex-col items-center justify-center h-[120px] w-[150px] bg-white ${sub.border} border-2 rounded-xl p-4 transition-shadow duration-200 hover:shadow-lg hover:border-[#41B349]`}
+                                                    key={tech.label}
+                                                    href={tech.href}
+                                                    className="flex items-center gap-4 text-white hover:text-[#41B349] transition-colors duration-200"
                                                 >
-                                                    {/* Placeholder for image */}
-                                                    <div className="mb-2 w-[48px] h-[48px] flex items-center justify-center">
-                                                        {/* Add image here later */}
-                                                        <Image src={sub.Image} alt={sub.label} width={40} height={40} className='object-contain' />
+                                                    <div className={`border ${tech.border} w-[45px] h-[45px] flex items-center justify-center rounded-[5px]`}>
+                                                        <Image
+                                                            src={tech.Image}
+                                                            alt={tech.label}
+                                                            width={30}
+                                                            height={30}
+                                                            className="w-[20px] h-[20px] object-contain rounded"
+                                                        />
                                                     </div>
-                                                    <span className="text-black font-semibold text-lg text-center">{sub.label}</span>
+                                                    <span className="text-sm font-medium">{tech.label}</span>
                                                 </Link>
                                             ))}
                                         </div>
                                     </div>
                                 </>
                             ) : idx === 1 ? (
-                                // Services dropdown with grid cards
-                                <div className='relative'>
-                                    <Link
-                                        href={link.href || '/services'}
-                                        onClick={() => setDropdownIndex(null)}
+                                /* Mega Dropdown for Services (idx === 1) */
+                                <>
+                                    <div
                                         className={`${montserrat.className} cursor-pointer text-[15px] font-medium text-white px-3 py-2 flex items-center gap-1 transition-colors duration-200 hover:text-[#41B349] ${isActive(link) ? 'text-[#41B349]' : ''
                                             }`}
                                     >
                                         {link.label}
                                         <FaChevronDown className="ml-1 text-xs mt-1" />
-                                    </Link>
+                                    </div>
                                     <div
-                                        className={`absolute -left-90 mt-1.5 bg-white shadow-2xl rounded-xl z-20 min-w-[1020px] px-8 py-8 transition-all duration-200
-                      ${dropdownIndex === idx ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}
+                                        className={`absolute left-0 mt-0 pt-2 bg-[#262323] shadow-lg z-10 w-[700px] transition-all duration-200
+                      ${dropdownIndex === 1 ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}
                     `}
-                                        style={{ top: '60px' }}
+                                        style={{ minWidth: '700px' }}
                                     >
-                                        <div className="grid grid-cols-4 gap-6 ">
-                                            {servicesSubLinks.map((sub, i) => (
-                                                <div key={i} className='border-l-2 border-l-[#41B349] px-2'>
-                                                    <Link
-                                                        key={sub.label}
-                                                        href={sub.href}
-                                                        onClick={() => setDropdownIndex(null)}
-                                                        className={`flex flex-row items-center h-[80px] w-[230px] rounded-[20px]  px-2 bg-white transition-all duration-200 hover:bg-[#41B349]/20`}
-                                                    >
-                                                        {/* Placeholder for image */}
-                                                        <div className="mr-4 w-[80px] h-[48px] flex items-center justify-center">
-                                                            <Image src={sub.Image} alt={sub.label} width={100} height={40} className='object-contain' />
-                                                        </div>
-                                                        <span className="text-black font-semibold text-lg">{sub.label}</span>
-                                                    </Link>
-                                                </div>
+                                        <div className="grid grid-cols-3 gap-6 p-6">
+                                            {servicesSubLinks.map((service) => (
+                                                <Link
+                                                    key={service.label}
+                                                    href={service.href}
+                                                    className="flex items-center gap-4 text-white hover:text-[#41B349] transition-colors duration-200"
+                                                >
+                                                    <div className="border border-white/20 w-[45px] h-[45px] flex items-center justify-center rounded-[5px]">
+                                                        <Image
+                                                            src={service.Image}
+                                                            alt={service.label}
+                                                            width={30}
+                                                            height={30}
+                                                            className="w-[20px] h-[20px] object-contain rounded"
+                                                        />
+                                                    </div>
+                                                    <span className="text-sm font-medium">{service.label}</span>
+                                                </Link>
                                             ))}
                                         </div>
                                     </div>
-                                </div>
+                                </>
                             ) : link.subLinks ? (
                                 <>
                                     <Link
@@ -336,15 +327,6 @@ const Navbar = () => {
                             )}
                         </div>
                     ))}
-
-                    <div className="mt-4 pt-4 border-t border-white/10 flex flex-col gap-3">
-                        <button
-                            onClick={() => { setMobileOpen(false); openQuote(); }}
-                            className={`${roboto.className} w-full bg-[#41B349] text-white text-[16px] font-medium py-3 rounded-full hover:bg-white hover:text-black transition ease-in-out duration-200 cursor-pointer text-center`}
-                        >
-                            Get A Quote
-                        </button>
-                    </div>
                 </div>
             </div>
         </>
