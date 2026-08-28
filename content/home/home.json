@@ -22,10 +22,11 @@
     "twitterImage": ""
   },
   "hero": {
-    "title": "Web Development & SEO Services to Grow Your Business",
-    "description": "Serving businesses worldwide with tailored digital solutions,\nwith a strong focus on delivering high-impact results for\ncompanies across the UAE.",
+    "badge": "",
+    "title": "Digital Marketing Agency in Dubai – Web Development & SEO Services for Business Growth",
+    "description": "Serving businesses across the world, with a strong focus on helping companies in Dubai and the UAE grow through smart digital solutions.",
     "buttonText": "Get a Free Quote",
-    "imageUrl": "/uploads/herooo.webp"
+    "imageUrl": ""
   },
   "whatWeDo": {
     "sectionTitle": "WHAT WE DO",

@@ -110,7 +110,7 @@ export default function AdminLayout({ children, title = '' }) {
   };
 
   const navLinks = [
-    { href: "/admin/quote-submissions", label: "Quote Requests", group: "Management" },
+    { href: "/admin/quote-submissions", label: "Quote Requests", group: "Management", hidden: true },
     { href: "/admin/applications", label: "Job Applications", group: "Management", hidden: true },
     { href: "/admin/contact-submissions", label: "Contact Submissions", group: "Management" },
     { href: "/admin/reviews", label: "Reviews", group: "Management", hidden: true },

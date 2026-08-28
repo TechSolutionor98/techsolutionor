@@ -46,7 +46,7 @@ const WhatWeDo = ({ cmsContent }) => {
   });
 
   return (
-    <div className="-mt-15">
+    <div>
       <div className="heading bg-[#41b349] w-full h-[80px] md:h-[110px] flex justify-center items-center text-white font-bold text-[20px] md:text-[30px]">
         <h1 className="text-[30px] md:text-[50px] font-[800] uppercase">
           {sectionTitle}
