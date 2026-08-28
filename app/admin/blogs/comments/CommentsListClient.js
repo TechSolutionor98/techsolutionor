@@ -537,10 +537,10 @@ export default function CommentsListClient({
           </div>
 
           {/* Blogs Table (Row and Column Wise with Orange Header #E46704) */}
-          <div className="overflow-x-auto w-full rounded-xl border border-gray-200 shadow-xs">
+          <div className="overflow-x-auto max-h-[640px] overflow-y-auto w-full rounded-xl border border-gray-200 shadow-xs">
             <table className="min-w-full text-xs">
-              <thead>
-                <tr className="bg-[#E46704] text-white text-left font-semibold">
+              <thead className="sticky top-0 z-10">
+                <tr className="bg-[#E46704] text-white text-left font-semibold shadow-xs">
                   <th className="px-4 py-3">Blog Post</th>
                   <th className="px-4 py-3">Category</th>
                   <th className="px-4 py-3">Status</th>
@@ -811,10 +811,10 @@ export default function CommentsListClient({
           </div>
 
           {/* Comments Table (Row-by-Row, Exact Matching Screenshot 1 & 3) */}
-          <div className="overflow-x-auto w-full rounded-xl border border-gray-200 shadow-xs">
+          <div className="overflow-x-auto max-h-[640px] overflow-y-auto w-full rounded-xl border border-gray-200 shadow-xs">
             <table className="min-w-full text-xs">
-              <thead>
-                <tr className="bg-[#E46704] text-white text-left font-semibold">
+              <thead className="sticky top-0 z-10">
+                <tr className="bg-[#E46704] text-white text-left font-semibold shadow-xs">
                   <th className="px-3.5 py-3 w-8">
                     <input
                       type="checkbox"
