@@ -98,23 +98,6 @@ export default async function BlogDetailPage({ params }) {
               </div>
             )}
 
-            {/* Breadcrumbs */}
-            <nav className="flex items-center gap-2 text-xs text-gray-500 mb-4 flex-wrap">
-              <Link href="/" className="hover:text-[#41b349] transition-colors">
-                Home
-              </Link>
-              <span>/</span>
-              <Link href="/blog" className="hover:text-[#41b349] transition-colors">
-                Blog
-              </Link>
-              {blog.category && (
-                <>
-                  <span>/</span>
-                  <span className="text-[#41b349] font-medium">{blog.category}</span>
-                </>
-              )}
-            </nav>
-
             {/* Category Badge */}
             {blog.category && (
               <span className="inline-block bg-[#41b349]/10 text-[#41b349] text-xs font-bold uppercase tracking-wider px-3.5 py-1 rounded-full mb-3">
