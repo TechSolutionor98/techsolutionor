@@ -537,17 +537,17 @@ export default function CommentsListClient({
           </div>
 
           {/* Blogs Table (Row and Column Wise with Orange Header #E46704) */}
-          <div className="overflow-x-auto overflow-y-auto w-full rounded-xl border border-gray-200 shadow-xs flex-1 min-h-[420px] max-h-[calc(100vh-310px)]">
-            <table className="min-w-full text-xs">
+          <div className="overflow-x-hidden overflow-y-auto w-full rounded-xl border border-gray-200 shadow-xs flex-1 min-h-[380px] max-h-[calc(100vh-270px)]">
+            <table className="w-full text-xs text-left table-fixed">
               <thead className="sticky top-0 z-10">
                 <tr className="bg-[#E46704] text-white text-left font-semibold shadow-xs">
-                  <th className="px-4 py-3.5">Blog Post</th>
-                  <th className="px-4 py-3.5">Category</th>
-                  <th className="px-4 py-3.5">Status</th>
-                  <th className="px-4 py-3.5">Total Comments</th>
-                  <th className="px-4 py-3.5">Pending Review</th>
-                  <th className="px-4 py-3.5">Approved</th>
-                  <th className="px-4 py-3.5 text-right">Actions</th>
+                  <th className="px-4 py-3.5 w-[30%]">Blog Post</th>
+                  <th className="px-3 py-3.5 w-[15%]">Category</th>
+                  <th className="px-3 py-3.5 w-[11%]">Status</th>
+                  <th className="px-3 py-3.5 w-[13%]">Total Comments</th>
+                  <th className="px-3 py-3.5 w-[12%]">Pending Review</th>
+                  <th className="px-3 py-3.5 w-[10%]">Approved</th>
+                  <th className="px-4 py-3.5 text-right w-[14%]">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 bg-white">
@@ -574,13 +574,13 @@ export default function CommentsListClient({
                         className="hover:bg-orange-50/30 transition-colors align-middle cursor-pointer group"
                       >
                         {/* Blog Post with Thumbnail */}
-                        <td className="px-4 py-3 max-w-[260px] text-left">
-                          <div className="flex items-center gap-3">
-                            <div className="w-12 h-10 rounded-lg overflow-hidden bg-gray-100 shrink-0 border border-gray-200">
+                        <td className="px-4 py-3 min-w-0">
+                          <div className="flex items-center gap-3 min-w-0">
+                            <div className="w-10 h-8 rounded-lg overflow-hidden bg-gray-100 shrink-0 border border-gray-200">
                               <img src={coverImg} alt={b.title} className="w-full h-full object-cover" />
                             </div>
-                            <div className="min-w-0">
-                              <span className="font-bold text-gray-900 group-hover:text-[#E46704] transition-colors block truncate text-xs">
+                            <div className="min-w-0 flex-1">
+                              <span className="font-bold text-gray-900 group-hover:text-[#E46704] transition-colors block truncate text-xs" title={b.title}>
                                 {b.title}
                               </span>
                               {b.slug && (
@@ -598,12 +598,12 @@ export default function CommentsListClient({
                         </td>
 
                         {/* Category */}
-                        <td className="px-4 py-3 whitespace-nowrap text-left text-gray-700 font-medium">
+                        <td className="px-3 py-3 text-gray-700 font-medium truncate" title={b.category}>
                           {b.category || 'General'}
                         </td>
 
                         {/* Status */}
-                        <td className="px-4 py-3 whitespace-nowrap text-left">
+                        <td className="px-3 py-3 whitespace-nowrap">
                           <span className={`inline-block text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full ${
                             b.published ? 'bg-black text-white' : 'bg-yellow-100 text-yellow-800'
                           }`}>
@@ -612,14 +612,14 @@ export default function CommentsListClient({
                         </td>
 
                         {/* Total Comments Count */}
-                        <td className="px-4 py-3 whitespace-nowrap text-left">
+                        <td className="px-3 py-3 whitespace-nowrap">
                           <span className="font-extrabold text-gray-900 text-xs">
                             {stats.total} {stats.total === 1 ? 'Comment' : 'Comments'}
                           </span>
                         </td>
 
                         {/* Pending Review */}
-                        <td className="px-4 py-3 whitespace-nowrap text-left">
+                        <td className="px-3 py-3 whitespace-nowrap">
                           {stats.pending > 0 ? (
                             <span className="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-yellow-50 text-yellow-700 border border-yellow-200">
                               ● {stats.pending} Pending
@@ -630,7 +630,7 @@ export default function CommentsListClient({
                         </td>
 
                         {/* Approved */}
-                        <td className="px-4 py-3 whitespace-nowrap text-left">
+                        <td className="px-3 py-3 whitespace-nowrap">
                           <span className="text-green-700 font-semibold text-[11px]">
                             {stats.approved} Approved
                           </span>
@@ -647,9 +647,9 @@ export default function CommentsListClient({
                               setSelectedIds([]);
                               setSearch('');
                             }}
-                            className="px-3.5 py-1.5 bg-[#E46704] hover:bg-[#c95a03] text-white rounded-lg text-xs font-bold transition-all cursor-pointer shadow-xs inline-flex items-center gap-1"
+                            className="px-3 py-1.5 bg-[#E46704] hover:bg-[#c95a03] text-white rounded-lg text-xs font-bold transition-all cursor-pointer shadow-xs inline-flex items-center gap-1"
                           >
-                            <span>Manage Comments ({stats.total})</span>
+                            <span>Manage ({stats.total})</span>
                             <span>→</span>
                           </button>
                         </td>
@@ -811,11 +811,11 @@ export default function CommentsListClient({
           </div>
 
           {/* Comments Table (Row-by-Row, Exact Matching Screenshot 1 & 3) */}
-          <div className="overflow-x-auto max-h-[640px] overflow-y-auto w-full rounded-xl border border-gray-200 shadow-xs">
-            <table className="min-w-full text-xs">
+          <div className="overflow-x-hidden overflow-y-auto w-full rounded-xl border border-gray-200 shadow-xs flex-1 max-h-[calc(100vh-270px)]">
+            <table className="w-full text-xs text-left table-fixed">
               <thead className="sticky top-0 z-10">
                 <tr className="bg-[#E46704] text-white text-left font-semibold shadow-xs">
-                  <th className="px-3.5 py-3 w-8">
+                  <th className="px-3.5 py-3 w-[4%] text-center">
                     <input
                       type="checkbox"
                       checked={filteredComments.length > 0 && selectedIds.length === filteredComments.length}
@@ -823,12 +823,12 @@ export default function CommentsListClient({
                       className="rounded text-[#E46704] focus:ring-[#E46704] cursor-pointer"
                     />
                   </th>
-                  <th className="px-4 py-3">Blog Post</th>
-                  <th className="px-4 py-3">Author</th>
-                  <th className="px-4 py-3 min-w-[220px]">Comment</th>
-                  <th className="px-4 py-3 whitespace-nowrap">Date & Time</th>
-                  <th className="px-4 py-3">Status</th>
-                  <th className="px-4 py-3 text-right">Actions</th>
+                  <th className="px-3.5 py-3 w-[18%]">Blog Post</th>
+                  <th className="px-3.5 py-3 w-[18%]">Author</th>
+                  <th className="px-3.5 py-3 w-[28%]">Comment</th>
+                  <th className="px-3.5 py-3 w-[14%] whitespace-nowrap">Date & Time</th>
+                  <th className="px-3.5 py-3 w-[10%]">Status</th>
+                  <th className="px-3.5 py-3 text-right w-[8%]">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 bg-white">
