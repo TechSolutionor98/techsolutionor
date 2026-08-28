@@ -842,11 +842,11 @@ export default function CommentsListClient({
                     />
                   </th>
                   <th className="px-3.5 py-3 w-[18%]">Blog Post</th>
-                  <th className="px-3.5 py-3 w-[18%]">Author</th>
-                  <th className="px-3.5 py-3 w-[28%]">Comment</th>
+                  <th className="px-3.5 py-3 w-[16%]">Author</th>
+                  <th className="px-3.5 py-3 w-[26%]">Comment</th>
                   <th className="px-3.5 py-3 w-[14%] whitespace-nowrap">Date & Time</th>
-                  <th className="px-3.5 py-3 w-[10%]">Status</th>
-                  <th className="px-3.5 py-3 text-right w-[8%]">Actions</th>
+                  <th className="px-3.5 py-3 w-[12%]">Status</th>
+                  <th className="px-3.5 py-3 text-right w-[10%]">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 bg-white">
@@ -864,12 +864,12 @@ export default function CommentsListClient({
                     return (
                       <tr
                         key={c._id}
-                        className={`hover:bg-gray-50/80 transition-colors align-top ${
+                        className={`hover:bg-gray-50/80 transition-colors align-middle ${
                           isSelected ? 'bg-orange-50/40' : ''
                         }`}
                       >
                         {/* Checkbox */}
-                        <td className="px-3.5 py-3">
+                        <td className="px-3.5 py-3 text-center">
                           <input
                             type="checkbox"
                             checked={isSelected}
@@ -879,7 +879,7 @@ export default function CommentsListClient({
                         </td>
 
                         {/* Blog Post */}
-                        <td className="px-4 py-3 max-w-[180px] text-left">
+                        <td className="px-3.5 py-3 min-w-0 text-left">
                           <span className="font-bold text-gray-900 block truncate text-xs" title={c.blogTitle || selectedBlog.title}>
                             {c.blogTitle || selectedBlog.title}
                           </span>
@@ -895,17 +895,17 @@ export default function CommentsListClient({
                         </td>
 
                         {/* Author */}
-                        <td className="px-4 py-3 whitespace-nowrap text-left">
-                          <div className="font-bold text-gray-900 text-xs">{c.authorName}</div>
+                        <td className="px-3.5 py-3 min-w-0 text-left">
+                          <div className="font-bold text-gray-900 text-xs truncate">{c.authorName}</div>
                           {c.authorEmail && (
-                            <div className="text-[11px] text-gray-400 font-mono truncate max-w-[140px] mt-0.5">
+                            <div className="text-[11px] text-gray-400 font-mono truncate mt-0.5">
                               {c.authorEmail}
                             </div>
                           )}
                         </td>
 
                         {/* Comment */}
-                        <td className="px-4 py-3 text-left">
+                        <td className="px-3.5 py-3 text-left">
                           {c.inReplyTo && (
                             <span className="text-[10px] text-[#41b349] font-semibold block mb-0.5">
                               In reply to {c.inReplyTo}
@@ -915,25 +915,25 @@ export default function CommentsListClient({
                         </td>
 
                         {/* Date & Time */}
-                        <td className="px-4 py-3 text-xs whitespace-nowrap text-left">
+                        <td className="px-3.5 py-3 text-xs whitespace-nowrap text-left">
                           <div className="font-semibold text-gray-700">{dt.date}</div>
                           <div className="text-gray-400 text-[11px] mt-0.5">{dt.time}</div>
                         </td>
 
                         {/* Status Dropdown */}
-                        <td className="px-4 py-3 text-left">
+                        <td className="px-3.5 py-3 text-left whitespace-nowrap align-middle">
                           <StatusDropdown comment={c} onStatusChange={changeStatus} loading={loading} />
                         </td>
 
-                        {/* Actions: Edit & Delete */}
-                        <td className="px-4 py-3 text-right">
-                          <div className="flex items-center justify-end gap-1.5">
+                        {/* Actions: Edit & Delete (Stacked Vertically) */}
+                        <td className="px-3.5 py-3 text-right whitespace-nowrap align-middle">
+                          <div className="flex flex-col items-end gap-1.5">
                             <button
                               type="button"
                               onClick={() => setEditingComment(c)}
-                              className="px-3 py-1 text-xs font-semibold rounded border border-gray-200 text-gray-700 hover:bg-gray-100 transition cursor-pointer flex items-center gap-1"
+                              className="px-2.5 py-1 text-[11px] font-semibold rounded border border-gray-200 text-gray-700 hover:bg-gray-100 transition cursor-pointer flex items-center justify-center gap-1 w-[68px]"
                             >
-                              <svg className="w-3 h-3 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <svg className="w-2.5 h-2.5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                               </svg>
                               Edit
@@ -943,7 +943,7 @@ export default function CommentsListClient({
                               type="button"
                               onClick={() => deleteComment(c._id)}
                               disabled={loading}
-                              className="px-3 py-1 border border-red-200 text-red-600 hover:bg-red-50 rounded text-xs font-semibold transition cursor-pointer disabled:opacity-50"
+                              className="px-2.5 py-1 border border-red-200 text-red-600 hover:bg-red-50 rounded text-[11px] font-semibold transition cursor-pointer disabled:opacity-50 w-[68px] text-center"
                             >
                               Delete
                             </button>
