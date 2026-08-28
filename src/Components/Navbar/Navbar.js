@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { FaChevronDown, FaBars, FaTimes } from "react-icons/fa";
 import { usePathname } from 'next/navigation'
 import Link from 'next/link';
+import { useQuote } from '@/app/_context/QuoteContext';
 import Laraval from '@/src/Components/Images/laraval.png'
 import Javascript from '@/src/Components/Images/js.png'
 import Reactjs from '@/src/Components/Images/reactjs.png'
@@ -58,40 +59,52 @@ const navLinks = [
         ],
     },
     {
-        label: 'About Us',
-        href: '/about-us',
+        label: 'Software Solutions',
+        href: '/pos-development',
+    },
+    {
+        label: 'Career',
+        href: '/career',
     },
     {
         label: 'Portfolio',
         href: '/our-portfolio',
     },
     {
-        label: 'Blog',
-        href: '/blog',
+        label: 'About Us',
+        href: '/about-us',
     },
     {
         label: 'Contact Us',
         href: '/contact-us',
     },
+    {
+        label: 'Hire Us',
+        href: '/hire-us',
+    },
+    {
+        label: 'Blog',
+        href: '/blog',
+    },
 ];
 
 const techSubLinks = [
-    { Image: Laraval, label: 'Laravel', href: '/technologies/laravel', border: 'border-red-400' },
+    { Image: Laraval, label: 'Laravel', href: '/technologies/laravel', border: 'border-red-500' },
     { Image: Javascript, label: 'JavaScript', href: '/technologies/javascript', border: 'border-yellow-400' },
-    { Image: Reactjs, label: 'React JS', href: '/technologies/react', border: 'border-cyan-400' },
-    { Image: Python, label: 'Python', href: '/technologies/python', border: 'border-blue-400' },
-    { Image: Swift, label: 'Swift', href: '/technologies/swift', border: 'border-red-400' },
-    { Image: Html, label: 'HTML', href: '/technologies/html', border: 'border-red-400' },
-    { Image: Php, label: 'PHP', href: '/technologies/php', border: 'border-blue-400' },
-    { Image: Wp, label: 'Wordpress', href: '/technologies/wordpress', border: 'border-blue-400' },
-    { Image: Shopfiy, label: 'Shopify', href: '/technologies/shopify', border: 'border-green-400' },
-    { Image: Magento, label: 'Magento', href: '/technologies/magento', border: 'border-orange-400' },
+    { Image: Reactjs, label: 'React', href: '/technologies/react', border: 'border-blue-400' },
+    { Image: Python, label: 'Python', href: '/technologies/python', border: 'border-blue-600' },
+    { Image: Swift, label: 'Swift', href: '/technologies/swift', border: 'border-orange-500' },
+    { Image: Html, label: 'HTML', href: '/technologies/html', border: 'border-orange-400' },
+    { Image: Php, label: 'PHP', href: '/technologies/php', border: 'border-indigo-400' },
+    { Image: Wp, label: 'WordPress', href: '/technologies/wordpress', border: 'border-blue-500' },
+    { Image: Shopfiy, label: 'Shopify', href: '/technologies/shopify', border: 'border-green-500' },
+    { Image: Magento, label: 'Magento', href: '/technologies/magento', border: 'border-orange-600' },
     { Image: Css, label: 'CSS', href: '/technologies/css', border: 'border-blue-400' },
-    { Image: Net, label: '.NET', href: '/technologies/dotnet', border: 'border-purple-400' },
-    { Image: Flutter, label: 'Flutter', href: '/technologies/flutter', border: 'border-blue-400' },
-    { Image: Figma, label: 'Figma', href: '/technologies/figma', border: 'border-purple-400' },
-    { Image: Meta, label: 'Meta', href: '/technologies/meta', border: 'border-blue-400' },
-    { Image: Analytics, label: 'Analytics', href: '/technologies/analytics', border: 'border-orange-400' },
+    { Image: Net, label: '.NET', href: '/technologies/net', border: 'border-purple-600' },
+    { Image: Flutter, label: 'Flutter', href: '/technologies/flutter', border: 'border-cyan-400' },
+    { Image: Figma, label: 'Figma', href: '/technologies/figma', border: 'border-pink-500' },
+    { Image: Meta, label: 'Meta', href: '/technologies/meta', border: 'border-blue-600' },
+    { Image: Analytics, label: 'Analytics', href: '/technologies/analytics', border: 'border-amber-400' },
     { Image: GoogleAds, label: 'Google Ads', href: '/technologies/google-ads', border: 'border-blue-400' },
     { Image: Angular, label: 'Angular', href: '/technologies/angular', border: 'border-red-400' },
 ];
@@ -115,6 +128,7 @@ const Navbar = () => {
     const [dropdownIndex, setDropdownIndex] = useState(null);
     const [mobileOpen, setMobileOpen] = useState(false);
     const pathname = usePathname();
+    const { openQuote } = useQuote();
 
     // Helper to check if navlink or any sublink is active
     const isActive = (link) => {
@@ -260,6 +274,7 @@ const Navbar = () => {
                         Get POS
                     </button>
                     <button
+                        onClick={openQuote}
                         className={`${roboto.className} bg-[#41B349] text-white text-[16px] font-medium leading-[20px] w-[130px] h-[40px] rounded-full hover:bg-white hover:text-black transition ease-in-out duration-200 cursor-pointer`}
                     >
                         Get A Quote
@@ -321,6 +336,15 @@ const Navbar = () => {
                             )}
                         </div>
                     ))}
+
+                    <div className="mt-4 pt-4 border-t border-white/10 flex flex-col gap-3">
+                        <button
+                            onClick={() => { setMobileOpen(false); openQuote(); }}
+                            className={`${roboto.className} w-full bg-[#41B349] text-white text-[16px] font-medium py-3 rounded-full hover:bg-white hover:text-black transition ease-in-out duration-200 cursor-pointer text-center`}
+                        >
+                            Get A Quote
+                        </button>
+                    </div>
                 </div>
             </div>
         </>

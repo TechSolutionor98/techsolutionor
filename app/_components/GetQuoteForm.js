@@ -1,20 +1,159 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
-import { FaTimes, FaArrowRight, FaChevronDown } from 'react-icons/fa';
+import { FaTimes, FaArrowRight, FaChevronDown, FaCheckCircle, FaSpinner } from 'react-icons/fa';
 import { useQuote } from '../_context/QuoteContext';
 import formBg from '../../components/Images/formbg.png';
 import ballFrom from '../../components/Images/ballfrom.png';
 
+const COUNTRIES = [
+    "United Arab Emirates",
+    "Saudi Arabia",
+    "Qatar",
+    "Oman",
+    "Kuwait",
+    "Bahrain",
+    "United States",
+    "United Kingdom",
+    "Canada",
+    "Australia",
+    "Pakistan",
+    "India",
+    "Germany",
+    "France",
+    "Singapore",
+    "Other Country"
+];
+
+const SERVICES = [
+    "Web Development",
+    "App Development",
+    "Software Development",
+    "POS Development",
+    "Ecommerce Development",
+    "Graphics & UI/UX",
+    "Digital Marketing",
+    "PPC & Amazon Ads",
+    "Search Engine Optimization (SEO)",
+    "Content Writing",
+    "Call Center",
+    "Hire Dedicated Developer"
+];
+
+const BUDGETS = [
+    "$100 - $500",
+    "$500 - $1,000",
+    "$1,000 - $5,000",
+    "$5,000 - $10,000",
+    "$10,000+"
+];
+
 const GetQuoteForm = () => {
     const { isOpen, closeQuote } = useQuote();
 
+    const [formData, setFormData] = useState({
+        name: '',
+        country: '',
+        phone: '',
+        email: '',
+        service: '',
+        date: '',
+        budget: '',
+        message: ''
+    });
+
+    const [loading, setLoading] = useState(false);
+    const [status, setStatus] = useState({ type: '', message: '' });
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+        if (status.message) setStatus({ type: '', message: '' });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        // Basic client validation
+        if (!formData.name.trim()) {
+            setStatus({ type: 'error', message: 'Please enter your Full Name' });
+            return;
+        }
+        if (!formData.phone.trim()) {
+            setStatus({ type: 'error', message: 'Please enter your Phone Number' });
+            return;
+        }
+        if (!formData.email.trim() || !formData.email.includes('@')) {
+            setStatus({ type: 'error', message: 'Please enter a valid Email Address' });
+            return;
+        }
+
+        setLoading(true);
+        setStatus({ type: '', message: '' });
+
+        try {
+            const res = await fetch('/api/contact-submissions', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: formData.name.trim(),
+                    country: formData.country,
+                    phone: formData.phone.trim(),
+                    email: formData.email.trim().toLowerCase(),
+                    serviceRequired: formData.service,
+                    budget: formData.budget,
+                    preferredDate: formData.date,
+                    message: formData.message.trim(),
+                    source: 'Get A Quote Modal'
+                })
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.error || 'Failed to submit quote request');
+            }
+
+            setStatus({
+                type: 'success',
+                message: 'Thank you! Your quote request has been submitted. We will contact you shortly.'
+            });
+
+            // Reset form
+            setFormData({
+                name: '',
+                country: '',
+                phone: '',
+                email: '',
+                service: '',
+                date: '',
+                budget: '',
+                message: ''
+            });
+
+            // Auto close modal after 3 seconds on success
+            setTimeout(() => {
+                closeQuote();
+                setStatus({ type: '', message: '' });
+            }, 3000);
+
+        } catch (err) {
+            console.error('Quote submission error:', err);
+            setStatus({
+                type: 'error',
+                message: err.message || 'Something went wrong. Please try again.'
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const variants = {
-        hidden: { opacity: 0, scale: 0.9, y: 50 },
+        hidden: { opacity: 0, scale: 0.95, y: 30 },
         visible: { opacity: 1, scale: 1, y: 0 },
-        exit: { opacity: 0, scale: 0.9, y: 50 }
+        exit: { opacity: 0, scale: 0.95, y: 30 }
     };
 
     const backdropVariants = {
@@ -28,121 +167,236 @@ const GetQuoteForm = () => {
     return (
         <AnimatePresence>
             {isOpen && (
-                <div className="fixed inset-0 z-[10000] flex items-center justify-center p-20">
-                    {/* Backdrop - Explicitly no blur and darker for contrast */}
+                <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 sm:p-6 md:p-10 overflow-y-auto">
+                    {/* Dark Backdrop */}
                     <motion.div
-                        className="absolute inset-0 bg-black/80"
+                        className="fixed inset-0 bg-black/85 backdrop-blur-xs"
                         variants={backdropVariants}
                         initial="hidden"
                         animate="visible"
                         exit="exit"
-                        transition={{ duration: 2 }}
-                        onClick={closeQuote}
+                        transition={{ duration: 0.25 }}
+                        onClick={() => {
+                            if (!loading) {
+                                closeQuote();
+                                setStatus({ type: '', message: '' });
+                            }
+                        }}
                     />
 
                     {/* Form Container */}
                     <motion.div
-                        className="relative w-full max-w-[800px] bg-[#0d0d0d] rounded-[24px] overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.8)] border border-white/5"
+                        className="relative w-full max-w-[760px] bg-[#111111] rounded-[24px] overflow-hidden shadow-[0_25px_70px_rgba(0,0,0,0.9)] border border-white/10 my-auto z-10"
                         variants={variants}
                         initial="hidden"
                         animate="visible"
                         exit="exit"
-                        transition={{ duration: 2, ease: [0.16, 1, 0.3, 1] }}
+                        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                     >
-                        {/* Background Image - Made clearer by removing heavy overlay and increasing opacity */}
-                        <div className="absolute inset-0 z-0">
+                        {/* Background Graphic Asset */}
+                        <div className="absolute inset-0 z-0 pointer-events-none opacity-40 mix-blend-screen">
                             <Image
                                 src={formBg}
-                                alt="Background"
+                                alt="Form Background"
                                 fill
-                                className="object-contain object-cover  mix-blend-overlay"
+                                className="object-cover object-right"
                                 priority
                             />
                         </div>
 
-                        {/* Decoration Image (Ball/Chevron) - Positioned to match screenshot */}
-                        <div className="absolute top-25 right-85 z-0 pointer-events-none select-none transform translate-3">
+                        {/* Geometric Ball/Chevron Accent */}
+                        <div className="absolute top-12 right-20 sm:right-32 z-0 pointer-events-none select-none opacity-90 hidden sm:block">
                             <Image
                                 src={ballFrom}
                                 alt="Decoration"
-                                width={600}
-                                height={600}
-                                className="w-[70px] h-auto object-contain opacity-100"
+                                width={120}
+                                height={120}
+                                className="w-[85px] h-auto object-contain"
                             />
                         </div>
 
                         {/* Close Button */}
                         <button
-                            onClick={closeQuote}
-                            className="absolute top-6 right-6 text-white/50 hover:text-white transition-all z-20 p-2 hover:bg-white/10 rounded-full"
+                            onClick={() => {
+                                closeQuote();
+                                setStatus({ type: '', message: '' });
+                            }}
+                            className="absolute top-5 right-5 text-white/70 hover:text-white hover:bg-white/10 transition-all z-30 p-2.5 rounded-full cursor-pointer"
+                            aria-label="Close modal"
                         >
-                            <FaTimes size={20} />
+                            <FaTimes size={18} />
                         </button>
 
-                        {/* Content */}
-                        <div className="relative z-10 p-10 md:p-14 lg:pr-32">
-                            <div className="mb-10">
-                                <h2 className="text-white text-[35px] font-bold mb-3 tracking-wide">Get A Quote"</h2>
-                                <p className="text-[#41B349] text-[20px] font-semibold">Let's Have A Chat</p>
+                        {/* Form Content */}
+                        <div className="relative z-10 p-6 sm:p-10 md:p-12">
+                            {/* Heading */}
+                            <div className="mb-6 sm:mb-8">
+                                <h2 className="text-white text-2xl sm:text-[34px] font-extrabold tracking-wide">
+                                    Get A Quote
+                                </h2>
+                                <p className="text-[#41B349] text-base sm:text-[18px] font-semibold mt-1">
+                                    Let&apos;s Have A Chat
+                                </p>
                             </div>
 
-                            <form className="space-y-4">
-                                <div className="grid grid-cols-1 gap-5">
+                            {/* Status Message Notification */}
+                            {status.message && (
+                                <div className={`mb-6 p-4 rounded-xl text-sm font-medium flex items-center gap-3 ${
+                                    status.type === 'success' 
+                                        ? 'bg-green-950/80 border border-green-500/50 text-green-300' 
+                                        : 'bg-red-950/80 border border-red-500/50 text-red-300'
+                                }`}>
+                                    {status.type === 'success' ? (
+                                        <FaCheckCircle className="text-green-400 text-lg flex-shrink-0" />
+                                    ) : (
+                                        <span className="w-2 h-2 rounded-full bg-red-400 flex-shrink-0" />
+                                    )}
+                                    <span>{status.message}</span>
+                                </div>
+                            )}
+
+                            <form onSubmit={handleSubmit} className="space-y-4">
+                                {/* 1. Full Name */}
+                                <div>
                                     <input
                                         type="text"
-                                        placeholder="Full Name"
-                                        className="w-full max-w-[350px] h-11.5 bg-white rounded-[5px] px-6 text-gray-900  placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#41B349] transition-all shadow-sm"
+                                        name="name"
+                                        value={formData.name}
+                                        onChange={handleChange}
+                                        placeholder="Full Name *"
+                                        required
+                                        className="w-full h-11 bg-white rounded-md px-4 text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs"
                                     />
-                                    <input
-                                        type="tel"
-                                        placeholder="Phone"
-                                        className="w-full max-w-[350px] h-11.5 bg-white rounded-[5px] px-6 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#41B349] transition-all shadow-sm"
-                                    />
-                                    <input
-                                        type="email"
-                                        placeholder="Email"
-                                        className="w-full max-w-[350px] h-11.5 bg-white rounded-[5px] px-6 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#41B349] transition-all shadow-sm"
-                                    />
+                                </div>
 
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
-                                        <div className="relative">
-                                            <select className="w-full max-w-[250px] h-11.5 bg-white rounded-[5px] px-6 text-gray-600 appearance-none focus:outline-none focus:ring-2 focus:ring-[#41B349] transition-all shadow-sm cursor-pointer">
-                                                <option  disabled >Select Service</option>
-                                                <option value="web">Web Development</option>
-                                                <option value="app">App Development</option>
-                                                <option value="pos">POS Development</option>
-                                                <option value="marketing">Digital Marketing</option>
-                                            </select>
-                                            <div className="absolute right-17.5 top-1/2 -translate-y-1/2 pointer-events-none text-black">
-                                                <FaChevronDown size={12} />
-                                            </div>
-                                        </div>
-                                        <div className="relative right-9 ">
-                                            <select className="w-full max-w-[250px] h-11.5 bg-white rounded-[5px] px-6 text-gray-600 appearance-none focus:outline-none focus:ring-2 focus:ring-[#41B349] transition-all shadow-sm cursor-pointer">
-                                                <option value="" disabled selected>Select Budget</option>
-                                                <option value="100-500">$100 - $500</option>
-                                                <option value="500-1000">$500 - $1000</option>
-                                                <option value="1000+">$1000+</option>
-                                            </select>
-                                            <div className="absolute right-17.5 top-1/2 -translate-y-1/2 pointer-events-none text-black">
-                                                <FaChevronDown size={12} />
-                                            </div>
+                                {/* 2. Select Country & Phone */}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div className="relative">
+                                        <select
+                                            name="country"
+                                            value={formData.country}
+                                            onChange={handleChange}
+                                            className="w-full h-11 bg-white rounded-md px-4 pr-10 text-gray-700 text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs cursor-pointer"
+                                        >
+                                            <option value="">Select your Country</option>
+                                            {COUNTRIES.map((c) => (
+                                                <option key={c} value={c}>{c}</option>
+                                            ))}
+                                        </select>
+                                        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+                                            <FaChevronDown size={11} />
                                         </div>
                                     </div>
 
+                                    <div>
+                                        <input
+                                            type="tel"
+                                            name="phone"
+                                            value={formData.phone}
+                                            onChange={handleChange}
+                                            placeholder="Phone *"
+                                            required
+                                            className="w-full h-11 bg-white rounded-md px-4 text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs"
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* 3. Email */}
+                                <div>
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        value={formData.email}
+                                        onChange={handleChange}
+                                        placeholder="Email *"
+                                        required
+                                        className="w-full h-11 bg-white rounded-md px-4 text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs"
+                                    />
+                                </div>
+
+                                {/* 4. Select Service & Select Budget */}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div className="relative">
+                                        <select
+                                            name="service"
+                                            value={formData.service}
+                                            onChange={handleChange}
+                                            className="w-full h-11 bg-white rounded-md px-4 pr-10 text-gray-700 text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs cursor-pointer"
+                                        >
+                                            <option value="">Select Service</option>
+                                            {SERVICES.map((s) => (
+                                                <option key={s} value={s}>{s}</option>
+                                            ))}
+                                        </select>
+                                        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+                                            <FaChevronDown size={11} />
+                                        </div>
+                                    </div>
+
+                                    <div className="relative">
+                                        <select
+                                            name="budget"
+                                            value={formData.budget}
+                                            onChange={handleChange}
+                                            className="w-full h-11 bg-white rounded-md px-4 pr-10 text-gray-700 text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs cursor-pointer"
+                                        >
+                                            <option value="">Select Budget</option>
+                                            {BUDGETS.map((b) => (
+                                                <option key={b} value={b}>{b}</option>
+                                            ))}
+                                        </select>
+                                        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+                                            <FaChevronDown size={11} />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* 5. Select Date */}
+                                <div>
+                                    <input
+                                        type="text"
+                                        name="date"
+                                        value={formData.date}
+                                        onChange={handleChange}
+                                        placeholder="Select Date"
+                                        onFocus={(e) => (e.target.type = 'date')}
+                                        onBlur={(e) => {
+                                            if (!e.target.value) e.target.type = 'text';
+                                        }}
+                                        className="w-full h-11 bg-white rounded-md px-4 text-gray-700 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs"
+                                    />
+                                </div>
+
+                                {/* 6. Note / Message Textarea */}
+                                <div>
                                     <textarea
+                                        name="message"
+                                        value={formData.message}
+                                        onChange={handleChange}
                                         placeholder="Describe your project here..."
-                                        rows={5}
-                                        className="w-full max-w-[525px] bg-white rounded-[5px] p-6 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#41B349] transition-all shadow-sm resize-none"
+                                        rows={4}
+                                        className="w-full bg-white rounded-md p-4 text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs resize-none"
                                     ></textarea>
                                 </div>
 
-                                <div className="mt-6">
+                                {/* 7. Submit Pill Button */}
+                                <div className="pt-2">
                                     <button
                                         type="submit"
-                                        className="bg-[#41B349] text-white px-8 py-3 rounded-full font-bold text-[18px] flex items-center justify-center gap-3 hover:bg-[#41b349]/90  border-2 border-[#41B349] group shadow-lg"
+                                        disabled={loading}
+                                        className="bg-[#41B349] hover:bg-[#369c3d] text-white px-8 py-2.5 rounded-full font-bold text-sm sm:text-base flex items-center justify-center gap-2.5 transition-all duration-200 shadow-md shadow-[#41B349]/30 disabled:opacity-60 cursor-pointer"
                                     >
-                                        Send <FaArrowRight className=" " />
+                                        {loading ? (
+                                            <>
+                                                <FaSpinner className="animate-spin" />
+                                                <span>Sending...</span>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <span>Send</span>
+                                                <FaArrowRight size={13} />
+                                            </>
+                                        )}
                                     </button>
                                 </div>
                             </form>

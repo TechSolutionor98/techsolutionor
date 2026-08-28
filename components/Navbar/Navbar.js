@@ -6,6 +6,7 @@ import { FaChevronDown, FaBars, FaTimes } from "react-icons/fa";
 import { usePathname } from 'next/navigation'
 import Link from 'next/link';
 import { Montserrat, Roboto } from 'next/font/google';
+import { useQuote } from '@/app/_context/QuoteContext';
 import Laraval from '@/src/Components/Images/laraval.png'
 import Javascript from '@/src/Components/Images/js.png'
 import Reactjs from '@/src/Components/Images/reactjs.png'
@@ -122,6 +123,7 @@ const Navbar = () => {
     const [dropdownIndex, setDropdownIndex] = useState(null);
     const [mobileOpen, setMobileOpen] = useState(false);
     const pathname = usePathname();
+    const { openQuote } = useQuote();
 
     // Helper to check if navlink or any sublink is active
     const isActive = (link) => {
@@ -267,6 +269,7 @@ const Navbar = () => {
                         Get POS
                     </button>
                     <button
+                        onClick={openQuote}
                         className={`${roboto.className} bg-[#41B349] text-white text-[16px] font-medium leading-[20px] w-[130px] h-[40px] rounded-full hover:bg-white hover:text-black transition ease-in-out duration-200 cursor-pointer`}
                     >
                         Get A Quote
