@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FiPlus, FiUsers, FiEdit2, FiTrash2, FiShield, FiCheckCircle, FiAlertCircle, FiX, FiUserCheck, FiUserX } from 'react-icons/fi';
 
 const ROLES = [
@@ -21,6 +21,23 @@ export default function UsersClient({ initialUsers = [], websites = [], apiBase 
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
   const [form, setForm] = useState({ name: '', email: '', password: '', role: 'editor', assignedWebsites: [] });
+
+  useEffect(() => {
+    const loadUsers = async () => {
+      try {
+        const res = await fetch(`${apiBase}/api/cms/users`);
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data.users)) {
+            setUsers(data.users);
+          }
+        }
+      } catch (e) {
+        console.error('Failed to load users from API:', e);
+      }
+    };
+    loadUsers();
+  }, [apiBase]);
 
   const showMsg = (msg, type) => {
     setMessage(msg);
