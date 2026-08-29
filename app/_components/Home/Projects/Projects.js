@@ -62,53 +62,54 @@ const Projects = ({ cmsContent }) => {
   });
 
   return (
-    <div className="relative">
-      <Image alt="Projects" src={Eclipse} width={160} height={300} className="absolute -left-10 w-[100px] -top-20 md:w-[160px] md:h-[300px]" />
-      <div className="projects-top flex flex-col items-center justify-center mt-10">
-        <div className="text-area md:w-[950px]">
-          <h1 className="text-center text-[45px] font-[700] text-[#262323]" style={{ fontFamily: "Montserrat, sans-serif" }}>
+    <section className="relative py-16 md:py-24 bg-white overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* Section Header */}
+        <div className="text-center max-w-4xl mx-auto">
+          <h2 
+            className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#262323] tracking-tight"
+            style={{ fontFamily: "Montserrat, sans-serif" }}
+          >
             {title}
-          </h1>
-          <p className="text-[17px] font-[500] mt-5" style={{ fontFamily: "Montserrat, sans-serif" }}>
+          </h2>
+          <p 
+            className="mt-4 text-base md:text-lg text-gray-600 leading-relaxed font-normal"
+            style={{ fontFamily: "Montserrat, sans-serif" }}
+          >
             {description}
           </p>
-          <div className="companies grid grid-cols-3 sm:grid-cols-3 mt-10 gap-8">
-            {logos.map((icon, idx) => {
-              const isImgDynamic = typeof icon.imageUrl === 'string' && (icon.imageUrl.startsWith('http') || icon.imageUrl.startsWith('/'));
-              return (
-                <div key={idx} className="flex items-center justify-center h-[130px] md:h-[170px] py-4">
-                  {isImgDynamic ? (
-                    <img
-                      src={icon.imageUrl}
-                      alt={`Project ${idx + 1}`}
-                      width={icon.width}
-                      height={icon.height}
-                      className="object-contain w-auto h-auto max-w-[90%] max-h-[90%]"
-                      style={{
-                        maxWidth: icon.width,
-                        maxHeight: icon.height,
-                      }}
-                    />
-                  ) : (
-                    <Image
-                      src={icon.Image}
-                      alt={`Project ${idx + 1}`}
-                      width={icon.width}
-                      height={icon.height}
-                      className="object-contain w-auto h-auto max-w-[90%] max-h-[90%]"
-                      style={{
-                        maxWidth: icon.width,
-                        maxHeight: icon.height,
-                      }}
-                    />
-                  )}
-                </div>
-              );
-            })}
-          </div>
+        </div>
+
+        {/* Clean & Balanced Logo Grid */}
+        <div className="mt-12 md:mt-16 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-5 lg:gap-6">
+          {logos.map((icon, idx) => {
+            const isImgDynamic = typeof icon.imageUrl === 'string' && (icon.imageUrl.startsWith('http') || icon.imageUrl.startsWith('/'));
+            return (
+              <div
+                key={idx}
+                className="group relative bg-white border border-[#34953C]/40 rounded-xl p-4 sm:p-5 h-28 sm:h-32 flex items-center justify-center transition-all duration-300 ease-in-out hover:shadow-lg hover:border-[#34953C] hover:-translate-y-1"
+              >
+                {isImgDynamic ? (
+                  <img
+                    src={icon.imageUrl}
+                    alt={`Partner Logo ${idx + 1}`}
+                    className="max-h-16 max-w-[85%] w-auto h-auto object-contain transition-all duration-300 opacity-85 group-hover:opacity-100 group-hover:scale-105"
+                  />
+                ) : (
+                  <Image
+                    src={icon.Image}
+                    alt={`Partner Logo ${idx + 1}`}
+                    width={icon.width}
+                    height={icon.height}
+                    className="max-h-16 max-w-[85%] w-auto h-auto object-contain transition-all duration-300 opacity-85 group-hover:opacity-100 group-hover:scale-105"
+                  />
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 
