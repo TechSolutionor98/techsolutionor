@@ -25,10 +25,17 @@ export async function GET() {
       instagram: '',
       linkedin: '',
       googleAnalyticsId: '',
+      googleAnalyticsHeadCode: '',
+      googleAnalyticsBodyCode: '',
       googleTagManagerId: '',
+      googleTagManagerHeadCode: '',
+      googleTagManagerBodyCode: '',
       facebookPixelId: '',
+      facebookPixelHeadCode: '',
+      facebookPixelBodyCode: '',
       customHeadScript: '',
-      customBodyScript: ''
+      customBodyScript: '',
+      thirdPartyApps: []
     };
     
     const result = settings ? { ...defaultSettings, ...settings } : defaultSettings;
