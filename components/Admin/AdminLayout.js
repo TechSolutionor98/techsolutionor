@@ -5,7 +5,7 @@ import Link from 'next/link';
 import LogoutButton from '@/app/admin/components/LogoutButton';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
-import Logo from '@/src/Components/Images/Logo.png';
+import Logo from '@/src/Components/Images/blacklogo.png';
 import { FiLock } from 'react-icons/fi';
 import { IoIosLogOut } from "react-icons/io";
 import { Wrench } from 'lucide-react';
@@ -164,9 +164,9 @@ export default function AdminLayout({ children, title = '' }) {
             <Image 
               src={Logo} 
               alt="TechSolutionor Logo" 
-              width={200} 
-              height={56} 
-              className="h-14 sm:h-16 w-auto object-contain"
+              width={260} 
+              height={80} 
+              className="h-20 sm:h-24 w-auto object-contain"
               priority
             />
           </Link>
