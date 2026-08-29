@@ -23,7 +23,10 @@ export default async function HomePage() {
   let serverContent = null;
   try {
     const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000";
-    const res = await fetch(`${apiBase}/api/admin/content/home`, { cache: 'no-store' });
+    const res = await fetch(`${apiBase}/api/admin/content/home`, { 
+      cache: 'no-store',
+      signal: AbortSignal.timeout(1000)
+    });
     if (res.ok) {
       const result = await res.json();
       if (result.ok) {

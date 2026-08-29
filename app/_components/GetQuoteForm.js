@@ -5,8 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { FaTimes, FaArrowRight, FaChevronDown, FaCheckCircle, FaSpinner } from 'react-icons/fa';
 import { useQuote } from '../_context/QuoteContext';
-import formBg from '../../components/Images/formbg.png';
-import ballFrom from '../../components/Images/ballfrom.png';
+import formBg from '@/components/Images/formbg.png';
+import ballFrom from '@/components/Images/ballfrom.png';
 
 const COUNTRIES = [
     "United Arab Emirates",
@@ -194,7 +194,7 @@ const GetQuoteForm = () => {
                         transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                     >
                         {/* Background Graphic Asset */}
-                        <div className="absolute inset-0 z-0 pointer-events-none opacity-40 mix-blend-screen">
+                        <div className="absolute inset-0 z-0 pointer-events-none opacity-50">
                             <Image
                                 src={formBg}
                                 alt="Form Background"

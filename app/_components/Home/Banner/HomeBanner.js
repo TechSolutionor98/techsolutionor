@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useCallback, useMemo } from "react";
-import Particles from "@tsparticles/react";
+import React, { useEffect, useState, useMemo } from "react";
+import Particles, { initParticlesEngine } from "@tsparticles/react";
 import { loadFull } from "tsparticles";
 import BannerImage from "../../../../public/images/services/image.png";
 import Image from "next/image";
@@ -18,8 +18,14 @@ export const defaultHomeHero = {
 };
 
 const HomeBanner = ({ content, cmsContent }) => {
-  const particlesInit = useCallback(async (engine) => {
-    await loadFull(engine);
+  const [init, setInit] = useState(false);
+
+  useEffect(() => {
+    initParticlesEngine(async (engine) => {
+      await loadFull(engine);
+    }).then(() => {
+      setInit(true);
+    });
   }, []);
 
   const heroContent = useMemo(
@@ -48,16 +54,16 @@ const HomeBanner = ({ content, cmsContent }) => {
     <section className="relative overflow-hidden w-full min-h-[72vh] lg:min-h-[78vh] flex items-center justify-center bg-white">
       {/* Background Particles */}
       <div className="absolute inset-0 w-full h-full z-0 pointer-events-none">
-        <Particles
-          id="tsparticles"
-          className="w-full h-full"
-          init={particlesInit}
-          options={{
-            background: { color: "#ffffff" },
-            fullScreen: { enable: false },
-            particles: {
-              color: { value: "#41B349" },
-              links: {
+        {init && (
+          <Particles
+            id="tsparticles"
+            className="w-full h-full"
+            options={{
+              background: { color: "#ffffff" },
+              fullScreen: { enable: false },
+              particles: {
+                color: { value: "#41B349" },
+                links: {
                 color: "#41B349",
                 enable: true,
                 opacity: 0.28,
@@ -99,6 +105,7 @@ const HomeBanner = ({ content, cmsContent }) => {
           }}
           style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
         />
+      )}
       </div>
 
       {/* Main Content Container */}

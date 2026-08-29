@@ -1,58 +1,65 @@
 "use client"
-import React, { useCallback } from 'react'
-import Particles from "@tsparticles/react";
+import React, { useEffect, useState } from 'react'
+import Particles, { initParticlesEngine } from "@tsparticles/react";
 import { loadLinksPreset } from "@tsparticles/preset-links";
 import Image from 'next/image';
 import HireImg from '../../../../../components/Images/hireusbanner.png'
 
 const HireUsBanner = () => {
-    const particlesInit = useCallback(async (engine) => {
-        await loadLinksPreset(engine);
+    const [init, setInit] = useState(false);
+
+    useEffect(() => {
+        initParticlesEngine(async (engine) => {
+            await loadLinksPreset(engine);
+        }).then(() => {
+            setInit(true);
+        });
     }, []);
 
     return (
         <section className="relative bg-[#41b349] w-full min-h-[500px] flex items-center overflow-hidden font-sans">
             {/* Particles Background */}
             <div className="absolute inset-0 z-0 opacity-40">
-                <Particles
-                    id="hireUsParticles"
-                    className="w-full h-full"
-                    init={particlesInit}
-                    options={{
-                        preset: "links",
-                        fullScreen: { enable: false },
-                        particles: {
-                            color: { value: "#ffffff" },
-                            links: {
-                                color: "#ffffff",
-                                enable: true,
-                                opacity: 0.4,
-                                width: 1,
-                                distance: 150,
+                {init && (
+                    <Particles
+                        id="hireUsParticles"
+                        className="w-full h-full"
+                        options={{
+                            preset: "links",
+                            fullScreen: { enable: false },
+                            particles: {
+                                color: { value: "#ffffff" },
+                                links: {
+                                    color: "#ffffff",
+                                    enable: true,
+                                    opacity: 0.4,
+                                    width: 1,
+                                    distance: 150,
+                                },
+                                move: {
+                                    enable: true,
+                                    speed: 1.5,
+                                    direction: "none",
+                                    outModes: { default: "out" },
+                                },
+                                number: {
+                                    value: 60,
+                                    density: { enable: true, area: 800 }
+                                },
+                                size: { value: 2 }
                             },
-                            move: {
-                                enable: true,
-                                speed: 1.5,
-                                direction: "none",
-                                outModes: { default: "out" },
-                            },
-                            number: {
-                                value: 60,
-                                density: { enable: true, area: 800 }
-                            },
-                            size: { value: 2 }
-                        },
-                        interactivity: {
-                            events: {
-                                onHover: { enable: true, mode: "repulse" },
-                            },
-                            modes: {
-                                repulse: { distance: 100, duration: 0.4 }
+                            interactivity: {
+                                events: {
+                                    onHover: { enable: true, mode: "repulse" },
+                                },
+                                modes: {
+                                    repulse: { distance: 100, duration: 0.4 }
+                                }
                             }
-                        }
-                    }}
-                    style={{ position: "absolute", inset: 0 }}
-                />
+                        }}
+                        style={{ position: "absolute", inset: 0 }}
+                    />
+                )}
             </div>
 
             <div className="relative z-10 max-w-[1280px] mx-auto px-6 py-16 flex flex-col md:flex-row items-center gap-10">
