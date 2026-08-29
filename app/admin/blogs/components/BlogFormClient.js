@@ -732,7 +732,7 @@ export default function BlogFormClient({
           <button
             type="submit"
             disabled={loading}
-            className="px-5 py-2 bg-[#E46704] hover:bg-[#E46704] text-white font-semibold rounded-lg shadow disabled:opacity-60 transition-all cursor-pointer"
+            className="px-5 py-2 bg-[#34953C] hover:bg-[#34953C] text-white font-semibold rounded-lg shadow disabled:opacity-60 transition-all cursor-pointer"
           >
             {loading ? 'Saving...' : isEdit ? 'Update Post' : 'Create Post'}
           </button>
@@ -814,7 +814,7 @@ export default function BlogFormClient({
                           setInputUrl('');
                         }
                       }}
-                      className="px-5 py-2 bg-[#E46704] hover:bg-[#E46704] disabled:opacity-50 text-white font-semibold rounded-lg text-sm shadow transition-all cursor-pointer"
+                      className="px-5 py-2 bg-[#34953C] hover:bg-[#34953C] disabled:opacity-50 text-white font-semibold rounded-lg text-sm shadow transition-all cursor-pointer"
                     >
                       Insert Image
                     </button>
@@ -836,7 +836,7 @@ export default function BlogFormClient({
                   </div>
 
                   <div className="flex gap-2 w-full sm:w-auto justify-end">
-                    <label className="cursor-pointer px-4 py-2 bg-[#E46704] hover:bg-[#E46704] text-white font-semibold rounded-lg text-sm transition-all text-center">
+                    <label className="cursor-pointer px-4 py-2 bg-[#34953C] hover:bg-[#34953C] text-white font-semibold rounded-lg text-sm transition-all text-center">
                       {uploadingImage ? 'Uploading...' : 'Upload New Image'}
                       <input
                         type="file"

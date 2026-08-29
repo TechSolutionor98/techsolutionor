@@ -120,14 +120,14 @@ export default function SeoOverviewClient({ initialPages = [], apiBase }) {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full pl-10 pr-4 py-2 rounded-md border border-gray-300 text-gray-900 text-sm
-                         focus:border-[#20507C] focus:ring-2 focus:ring-[#E46704] focus:outline-none transition"
+                         focus:border-[#20507C] focus:ring-2 focus:ring-[#34953C] focus:outline-none transition"
             />
           </div>
           <select
             value={scoreFilter}
             onChange={(e) => setScoreFilter(e.target.value)}
             className="px-3 py-2 rounded-md border border-gray-300 text-gray-700 text-sm
-                       focus:border-[#20507C] focus:ring-2 focus:ring-[#E46704] focus:outline-none"
+                       focus:border-[#20507C] focus:ring-2 focus:ring-[#34953C] focus:outline-none"
           >
             <option value="all">All Scores</option>
             <option value="good">Good (70%+)</option>
@@ -204,7 +204,7 @@ export default function SeoOverviewClient({ initialPages = [], apiBase }) {
                         <div className="flex items-center justify-end gap-1">
                           <Link
                             href={`/admin/seo/${page._id}`}
-                            className="px-3 py-1.5 text-xs font-semibold text-white bg-[#E46704] rounded hover:bg-[#E46704] transition-colors whitespace-nowrap"
+                            className="px-3 py-1.5 text-xs font-semibold text-white bg-[#34953C] rounded hover:bg-[#34953C] transition-colors whitespace-nowrap"
                           >
                             {canEditSeo ? (page.hasSeo ? 'Edit SEO' : 'Add SEO') : 'View SEO'}
                           </Link>

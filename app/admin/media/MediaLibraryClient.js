@@ -218,14 +218,14 @@ export default function MediaLibraryClient({ initialMedia = [], initialTotal = 0
                 value={search}
                 onChange={handleSearch}
                 className="w-full pl-10 pr-4 py-2 rounded-md border border-gray-300 text-gray-900 text-sm
-                           focus:border-[#20507C] focus:ring-2 focus:ring-[#E46704] focus:outline-none transition"
+                           focus:border-[#20507C] focus:ring-2 focus:ring-[#34953C] focus:outline-none transition"
               />
             </div>
             <select
               value={selectedFolder}
               onChange={(e) => { setSelectedFolder(e.target.value); fetchMedia(1, search, e.target.value); }}
               className="px-3 py-2 rounded-md border border-gray-300 text-gray-700 text-sm
-                         focus:border-[#20507C] focus:ring-2 focus:ring-[#E46704] focus:outline-none"
+                         focus:border-[#20507C] focus:ring-2 focus:ring-[#34953C] focus:outline-none"
             >
               <option value="">All Folders</option>
               {folders.map(f => <option key={f} value={f}>{f}</option>)}
@@ -235,13 +235,13 @@ export default function MediaLibraryClient({ initialMedia = [], initialTotal = 0
             <span className="text-sm text-gray-500">{total} files</span>
             <button
               onClick={() => setView('grid')}
-              className={`p-2 rounded ${view === 'grid' ? 'bg-[#E46704] text-white' : 'text-gray-400 hover:text-gray-600'}`}
+              className={`p-2 rounded ${view === 'grid' ? 'bg-[#34953C] text-white' : 'text-gray-400 hover:text-gray-600'}`}
             >
               <FiGrid size={16} />
             </button>
             <button
               onClick={() => setView('list')}
-              className={`p-2 rounded ${view === 'list' ? 'bg-[#E46704] text-white' : 'text-gray-400 hover:text-gray-600'}`}
+              className={`p-2 rounded ${view === 'list' ? 'bg-[#34953C] text-white' : 'text-gray-400 hover:text-gray-600'}`}
             >
               <FiList size={16} />
             </button>
@@ -406,7 +406,7 @@ export default function MediaLibraryClient({ initialMedia = [], initialTotal = 0
                   <input
                     value={editData.alt}
                     onChange={(e) => setEditData(prev => ({ ...prev, alt: e.target.value }))}
-                    className="w-full rounded border border-gray-300 px-3 py-1.5 text-sm focus:border-[#20507C] focus:ring-1 focus:ring-[#E46704] outline-none"
+                    className="w-full rounded border border-gray-300 px-3 py-1.5 text-sm focus:border-[#20507C] focus:ring-1 focus:ring-[#34953C] outline-none"
                     placeholder="Describe the image..."
                   />
                 </div>
@@ -415,7 +415,7 @@ export default function MediaLibraryClient({ initialMedia = [], initialTotal = 0
                   <input
                     value={editData.title}
                     onChange={(e) => setEditData(prev => ({ ...prev, title: e.target.value }))}
-                    className="w-full rounded border border-gray-300 px-3 py-1.5 text-sm focus:border-[#20507C] focus:ring-1 focus:ring-[#E46704] outline-none"
+                    className="w-full rounded border border-gray-300 px-3 py-1.5 text-sm focus:border-[#20507C] focus:ring-1 focus:ring-[#34953C] outline-none"
                     placeholder="Image title..."
                   />
                 </div>
@@ -438,7 +438,7 @@ export default function MediaLibraryClient({ initialMedia = [], initialTotal = 0
                 <div className="flex gap-2 pt-2">
                   <button
                     onClick={handleUpdateMeta}
-                    className="flex-1 px-4 py-2 bg-[#E46704] text-white text-sm rounded hover:bg-[#E46704] transition font-medium"
+                    className="flex-1 px-4 py-2 bg-[#34953C] text-white text-sm rounded hover:bg-[#34953C] transition font-medium"
                   >
                     Save Changes
                   </button>

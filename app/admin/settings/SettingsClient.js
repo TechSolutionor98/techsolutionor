@@ -38,7 +38,7 @@ const PixelCard = ({ icon, iconBg, iconColor, title, subtitle, inputLabel, field
         onChange={(e) => handleChange(fieldName, e.target.value)}
         placeholder={placeholder}
         className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 shadow-sm
-                   focus:border-[#20507C] focus:ring-2 focus:ring-[#E46704] focus:outline-none transition bg-white"
+                   focus:border-[#20507C] focus:ring-2 focus:ring-[#34953C] focus:outline-none transition bg-white"
       />
       {helperText && <span className="text-[10px] text-gray-400 mt-1 block">{helperText}</span>}
     </div>
@@ -55,7 +55,7 @@ const PixelCard = ({ icon, iconBg, iconColor, title, subtitle, inputLabel, field
           placeholder="<!-- Paste <head> script here -->"
           rows={10}
           className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 shadow-sm font-mono
-                     focus:border-[#20507C] focus:ring-2 focus:ring-[#E46704] focus:outline-none transition bg-gray-50 resize-y"
+                     focus:border-[#20507C] focus:ring-2 focus:ring-[#34953C] focus:outline-none transition bg-gray-50 resize-y"
         />
       </div>
       <div className="w-full">
@@ -69,7 +69,7 @@ const PixelCard = ({ icon, iconBg, iconColor, title, subtitle, inputLabel, field
           placeholder="<!-- Paste <body> noscript/script here -->"
           rows={10}
           className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 shadow-sm font-mono
-                     focus:border-[#20507C] focus:ring-2 focus:ring-[#E46704] focus:outline-none transition bg-gray-50 resize-y"
+                     focus:border-[#20507C] focus:ring-2 focus:ring-[#34953C] focus:outline-none transition bg-gray-50 resize-y"
         />
       </div>
     </div>
@@ -86,7 +86,7 @@ const SocialInput = ({ platform, field, settings, handleChange }) => (
       onChange={(e) => handleChange(field, e.target.value)}
       placeholder={`https://${platform.toLowerCase()}.com/yourpage`}
       className="rounded-md border border-gray-300 px-4 py-2 text-gray-900 placeholder-gray-400 shadow-sm
-                 focus:border-[#20507C] focus:ring-2 focus:ring-[#E46704] focus:outline-none transition"
+                 focus:border-[#20507C] focus:ring-2 focus:ring-[#34953C] focus:outline-none transition"
     />
   </div>
 );
@@ -176,7 +176,7 @@ export default function SettingsClient({ initialSettings = {}, apiBase = process
               onChange={(e) => handleChange('phone', e.target.value)}
               placeholder="+971 4-354 0566"
               className="rounded-md border border-gray-300 px-4 py-2 text-gray-900 placeholder-gray-400 shadow-sm
-                         focus:border-[#20507C] focus:ring-2 focus:ring-[#E46704] focus:outline-none transition"
+                         focus:border-[#20507C] focus:ring-2 focus:ring-[#34953C] focus:outline-none transition"
             />
           </div>
 
@@ -189,7 +189,7 @@ export default function SettingsClient({ initialSettings = {}, apiBase = process
               onChange={(e) => handleChange('email', e.target.value)}
               placeholder="contact@osumfix.ae"
               className="rounded-md border border-gray-300 px-4 py-2 text-gray-900 placeholder-gray-400 shadow-sm
-                         focus:border-[#20507C] focus:ring-2 focus:ring-[#E46704] focus:outline-none transition"
+                         focus:border-[#20507C] focus:ring-2 focus:ring-[#34953C] focus:outline-none transition"
             />
           </div>
 
@@ -202,7 +202,7 @@ export default function SettingsClient({ initialSettings = {}, apiBase = process
               placeholder="Al Jahra Building, 2nd floor, 18th St – Al Raffa – Dubai"
               rows={3}
               className="rounded-md border border-gray-300 px-4 py-2 text-gray-900 placeholder-gray-400 shadow-sm resize-none
-                         focus:border-[#20507C] focus:ring-2 focus:ring-[#E46704] focus:outline-none transition"
+                         focus:border-[#20507C] focus:ring-2 focus:ring-[#34953C] focus:outline-none transition"
             />
           </div>
         </div>
@@ -329,14 +329,14 @@ export default function SettingsClient({ initialSettings = {}, apiBase = process
                         value={app.name}
                         onChange={(e) => updateApp(app.id, 'name', e.target.value)}
                         placeholder="App Name (e.g. Microsoft Clarity)"
-                        className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm font-bold text-gray-800 focus:border-[#20507C] focus:ring-1 focus:ring-[#E46704] outline-none"
+                        className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm font-bold text-gray-800 focus:border-[#20507C] focus:ring-1 focus:ring-[#34953C] outline-none"
                       />
                       <input
                         type="text"
                         value={app.appId || ''}
                         onChange={(e) => updateApp(app.id, 'appId', e.target.value)}
                         placeholder="App ID (Optional, e.g. clarity-123)"
-                        className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm text-gray-700 focus:border-[#20507C] focus:ring-1 focus:ring-[#E46704] outline-none"
+                        className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm text-gray-700 focus:border-[#20507C] focus:ring-1 focus:ring-[#34953C] outline-none"
                       />
                     </div>
                   </div>
@@ -373,7 +373,7 @@ export default function SettingsClient({ initialSettings = {}, apiBase = process
                       onChange={(e) => updateApp(app.id, 'headCode', e.target.value)}
                       placeholder="<!-- Paste <head> script here -->"
                       rows={8}
-                      className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm font-mono focus:border-[#20507C] focus:ring-2 focus:ring-[#E46704] outline-none resize-y bg-gray-50"
+                      className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm font-mono focus:border-[#20507C] focus:ring-2 focus:ring-[#34953C] outline-none resize-y bg-gray-50"
                     />
                   </div>
                   <div className="w-full">
@@ -383,7 +383,7 @@ export default function SettingsClient({ initialSettings = {}, apiBase = process
                       onChange={(e) => updateApp(app.id, 'bodyCode', e.target.value)}
                       placeholder="<!-- Paste <body> noscript/script here -->"
                       rows={8}
-                      className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm font-mono focus:border-[#20507C] focus:ring-2 focus:ring-[#E46704] outline-none resize-y bg-gray-50"
+                      className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm font-mono focus:border-[#20507C] focus:ring-2 focus:ring-[#34953C] outline-none resize-y bg-gray-50"
                     />
                   </div>
                 </div>
@@ -401,7 +401,7 @@ export default function SettingsClient({ initialSettings = {}, apiBase = process
           className={`px-8 py-3 rounded-md text-white font-semibold transition
                       ${loading
               ? 'bg-gray-400 cursor-not-allowed'
-              : 'bg-[#E46704] hover:bg-[#E46704] focus:outline-none focus:ring-2 focus:ring-[#E46704]'}`}
+              : 'bg-[#34953C] hover:bg-[#34953C] focus:outline-none focus:ring-2 focus:ring-[#34953C]'}`}
         >
           {loading ? 'Saving...' : 'Save Settings'}
         </button>

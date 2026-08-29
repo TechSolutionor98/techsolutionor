@@ -185,7 +185,7 @@ export default function AppointmentsClient({ initialLinks = [], apiBase = '' }) 
         </div>
         <button
           onClick={openAddModal}
-          className="flex items-center gap-2 px-4 py-2 bg-[#E46704] text-white text-sm rounded hover:bg-[#E46704] transition-colors duration-200 cursor-pointer font-semibold"
+          className="flex items-center gap-2 px-4 py-2 bg-[#34953C] text-white text-sm rounded hover:bg-[#34953C] transition-colors duration-200 cursor-pointer font-semibold"
         >
           <FiPlus size={14} />
           Add Appointment Slot
@@ -236,7 +236,7 @@ export default function AppointmentsClient({ initialLinks = [], apiBase = '' }) 
                 <tr key={link.id} className="hover:bg-gray-50 transition-colors">
                   {/* Index */}
                   <td className="px-4 py-4">
-                    <span className="w-6 h-6 flex items-center justify-center rounded-full bg-[#E46704]/10 text-[#20507C] text-xs font-bold">
+                    <span className="w-6 h-6 flex items-center justify-center rounded-full bg-[#34953C]/10 text-[#20507C] text-xs font-bold">
                       {idx + 1}
                     </span>
                   </td>
@@ -251,7 +251,7 @@ export default function AppointmentsClient({ initialLinks = [], apiBase = '' }) 
                           className="w-10 h-10 rounded-full object-cover border border-gray-200 shrink-0 bg-gray-50"
                         />
                       ) : (
-                        <div className="w-10 h-10 rounded-full bg-[#E46704]/10 flex items-center justify-center text-[#20507C] text-sm font-bold shrink-0">
+                        <div className="w-10 h-10 rounded-full bg-[#34953C]/10 flex items-center justify-center text-[#20507C] text-sm font-bold shrink-0">
                           {link.name ? link.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() : 'AP'}
                         </div>
                       )}
@@ -312,7 +312,7 @@ export default function AppointmentsClient({ initialLinks = [], apiBase = '' }) 
                       <button
                         onClick={() => openEditModal(link)}
                         title="Edit Details"
-                        className="p-1.5 text-[#20507C] hover:text-[#173A5A] hover:bg-[#E46704]/10 rounded transition-colors cursor-pointer border-0 bg-transparent"
+                        className="p-1.5 text-[#20507C] hover:text-[#173A5A] hover:bg-[#34953C]/10 rounded transition-colors cursor-pointer border-0 bg-transparent"
                       >
                         <FiEdit2 size={14} />
                       </button>
@@ -561,7 +561,7 @@ export default function AppointmentsClient({ initialLinks = [], apiBase = '' }) 
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 bg-[#E46704] hover:bg-[#E46704] text-white rounded-lg text-sm font-semibold flex items-center gap-1 cursor-pointer border-0"
+                  className="px-5 py-2 bg-[#34953C] hover:bg-[#34953C] text-white rounded-lg text-sm font-semibold flex items-center gap-1 cursor-pointer border-0"
                 >
                   <FiCheck size={14} />
                   Save Profile

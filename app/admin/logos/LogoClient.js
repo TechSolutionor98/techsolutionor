@@ -53,7 +53,7 @@ export default function LogoUploader() {
           <div className="text-sm text-gray-700 mb-2">Site Logo</div>
           <form onSubmit={handleUpload} className="flex items-center gap-2">
             <input type="file" accept="image/*" onChange={e => setFile(e.target.files?.[0] ?? null)} />
-            <button type="submit" disabled={loading} className="px-3 py-1 bg-[#E46704] text-white rounded">{loading ? 'Uploading...' : 'Upload'}</button>
+            <button type="submit" disabled={loading} className="px-3 py-1 bg-[#34953C] text-white rounded">{loading ? 'Uploading...' : 'Upload'}</button>
           </form>
           {error && <div className="text-red-600 text-sm mt-2">{error}</div>}
         </div>

@@ -77,7 +77,7 @@ function EditModal({ comment, onClose, onSave }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs transition-all duration-300">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden border border-gray-100 flex flex-col text-gray-900">
         {/* Header */}
-        <div className="bg-[#E46704] px-6 py-4 flex items-center justify-between">
+        <div className="bg-[#34953C] px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -94,11 +94,11 @@ function EditModal({ comment, onClose, onSave }) {
 
         {/* Body */}
         <div className="p-6 space-y-5 text-left">
-          <div className="bg-[#E46704]/5 rounded-xl border border-[#E46704]/20 p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="bg-[#34953C]/5 rounded-xl border border-[#34953C]/20 p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-1">
               <span className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider">Comment Author</span>
               <div className="flex items-center gap-2 mt-1">
-                <div className="w-8 h-8 bg-[#E46704] text-white rounded-full flex items-center justify-center font-bold text-sm">
+                <div className="w-8 h-8 bg-[#34953C] text-white rounded-full flex items-center justify-center font-bold text-sm">
                   {comment.authorName ? comment.authorName.charAt(0).toUpperCase() : 'U'}
                 </div>
                 <div>
@@ -124,7 +124,7 @@ function EditModal({ comment, onClose, onSave }) {
               value={text}
               onChange={(e) => setText(e.target.value)}
               rows={6}
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#E46704]/50 focus:border-[#E46704] transition bg-gray-50/30 focus:bg-white resize-y"
+              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#34953C]/50 focus:border-[#34953C] transition bg-gray-50/30 focus:bg-white resize-y"
               placeholder="Write the comment text..."
             />
           </div>
@@ -143,7 +143,7 @@ function EditModal({ comment, onClose, onSave }) {
             type="button"
             onClick={handleSave}
             disabled={saving || !text.trim()}
-            className="px-6 py-2 bg-[#E46704] hover:bg-[#c95a03] text-white rounded-lg text-xs font-bold transition-all cursor-pointer disabled:opacity-50 shadow-sm"
+            className="px-6 py-2 bg-[#34953C] hover:bg-[#2b7e32] text-white rounded-lg text-xs font-bold transition-all cursor-pointer disabled:opacity-50 shadow-sm"
           >
             {saving ? 'Saving...' : 'Save Changes'}
           </button>
@@ -550,16 +550,16 @@ export default function CommentsListClient({
                 value={blogSearch}
                 onChange={(e) => setBlogSearch(e.target.value)}
                 placeholder="Search blog posts..."
-                className="w-full px-3.5 py-1.5 border border-gray-300 rounded-lg text-xs text-gray-800 focus:ring-2 focus:ring-[#E46704]/40 focus:border-[#E46704] outline-none transition"
+                className="w-full px-3.5 py-1.5 border border-gray-300 rounded-lg text-xs text-gray-800 focus:ring-2 focus:ring-[#34953C]/40 focus:border-[#34953C] outline-none transition"
               />
             </div>
           </div>
 
-          {/* Blogs Table (Row and Column Wise with Orange Header #E46704) */}
+          {/* Blogs Table (Row and Column Wise with Orange Header #34953C) */}
           <div className="overflow-x-hidden overflow-y-auto w-full rounded-xl border border-gray-200 shadow-xs flex-1 min-h-[380px] max-h-[calc(100vh-270px)]">
             <table className="w-full text-xs text-left table-fixed">
               <thead className="sticky top-0 z-10">
-                <tr className="bg-[#E46704] text-white text-left font-semibold shadow-xs">
+                <tr className="bg-[#34953C] text-white text-left font-semibold shadow-xs">
                   <th className="px-4 py-3.5 w-[32%]">Blog Post</th>
                   <th className="px-3 py-3.5 w-[16%]">Category</th>
                   <th className="px-3 py-3.5 w-[12%]">Status</th>
@@ -598,7 +598,7 @@ export default function CommentsListClient({
                               <img src={coverImg} alt={b.title} className="w-full h-full object-cover" />
                             </div>
                             <div className="min-w-0 flex-1">
-                              <span className="font-bold text-gray-900 group-hover:text-[#E46704] transition-colors block truncate text-xs" title={b.title}>
+                              <span className="font-bold text-gray-900 group-hover:text-[#34953C] transition-colors block truncate text-xs" title={b.title}>
                                 {b.title}
                               </span>
                               {b.slug && (
@@ -665,7 +665,7 @@ export default function CommentsListClient({
                               setSelectedIds([]);
                               setSearch('');
                             }}
-                            className="px-3 py-1.5 bg-[#E46704] hover:bg-[#c95a03] text-white rounded-lg text-xs font-bold transition-all cursor-pointer shadow-xs inline-flex items-center gap-1"
+                            className="px-3 py-1.5 bg-[#34953C] hover:bg-[#2b7e32] text-white rounded-lg text-xs font-bold transition-all cursor-pointer shadow-xs inline-flex items-center gap-1"
                           >
                             <span>Manage ({stats.total})</span>
                             <span>→</span>
@@ -698,7 +698,7 @@ export default function CommentsListClient({
                 ← Back to All Blogs
               </button>
               <div>
-                <span className="text-[10px] font-bold text-[#E46704] uppercase tracking-wider block">
+                <span className="text-[10px] font-bold text-[#34953C] uppercase tracking-wider block">
                   Blog Selected:
                 </span>
                 <h2 className="text-sm sm:text-base font-bold text-gray-900 line-clamp-1">
@@ -777,7 +777,7 @@ export default function CommentsListClient({
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search comments, authors..."
-                className="w-full px-3.5 py-1.5 border border-gray-300 rounded-lg text-xs text-gray-800 focus:ring-2 focus:ring-[#E46704]/40 focus:border-[#E46704] outline-none transition"
+                className="w-full px-3.5 py-1.5 border border-gray-300 rounded-lg text-xs text-gray-800 focus:ring-2 focus:ring-[#34953C]/40 focus:border-[#34953C] outline-none transition"
               />
             </div>
           </div>
@@ -789,7 +789,7 @@ export default function CommentsListClient({
               <select
                 value={bulkAction}
                 onChange={(e) => setBulkAction(e.target.value)}
-                className="bg-white border border-gray-300 rounded-lg px-3 py-1.5 text-xs text-gray-700 outline-none focus:border-[#E46704]"
+                className="bg-white border border-gray-300 rounded-lg px-3 py-1.5 text-xs text-gray-700 outline-none focus:border-[#34953C]"
               >
                 <option value="">Bulk actions</option>
                 <option value="approve">Approve</option>
@@ -812,7 +812,7 @@ export default function CommentsListClient({
               <select
                 value={commentType}
                 onChange={(e) => setCommentType(e.target.value)}
-                className="bg-white border border-gray-300 rounded-lg px-3 py-1.5 text-xs text-gray-700 outline-none focus:border-[#E46704] ml-1"
+                className="bg-white border border-gray-300 rounded-lg px-3 py-1.5 text-xs text-gray-700 outline-none focus:border-[#34953C] ml-1"
               >
                 <option value="all">All comment types</option>
                 <option value="comments">Comments</option>
@@ -822,7 +822,7 @@ export default function CommentsListClient({
             {/* Counter info */}
             <div className="text-xs text-gray-500 font-semibold">
               {selectedIds.length > 0 && (
-                <span className="text-[#E46704] mr-2 font-bold">{selectedIds.length} selected</span>
+                <span className="text-[#34953C] mr-2 font-bold">{selectedIds.length} selected</span>
               )}
               <span>Showing {filteredComments.length} of {currentBlogComments.length} comments</span>
             </div>
@@ -832,13 +832,13 @@ export default function CommentsListClient({
           <div className="overflow-x-hidden overflow-y-auto w-full rounded-xl border border-gray-200 shadow-xs flex-1 min-h-[580px] max-h-[calc(100vh-310px)]">
             <table className="w-full text-xs text-left table-fixed">
               <thead className="sticky top-0 z-10">
-                <tr className="bg-[#E46704] text-white text-left font-semibold shadow-xs">
+                <tr className="bg-[#34953C] text-white text-left font-semibold shadow-xs">
                   <th className="px-3.5 py-3 w-[4%] text-center">
                     <input
                       type="checkbox"
                       checked={filteredComments.length > 0 && selectedIds.length === filteredComments.length}
                       onChange={handleSelectAll}
-                      className="rounded text-[#E46704] focus:ring-[#E46704] cursor-pointer"
+                      className="rounded text-[#34953C] focus:ring-[#34953C] cursor-pointer"
                     />
                   </th>
                   <th className="px-3.5 py-3 w-[18%]">Blog Post</th>
@@ -874,7 +874,7 @@ export default function CommentsListClient({
                             type="checkbox"
                             checked={isSelected}
                             onChange={() => handleToggleSelect(c._id)}
-                            className="rounded text-[#E46704] focus:ring-[#E46704] cursor-pointer"
+                            className="rounded text-[#34953C] focus:ring-[#34953C] cursor-pointer"
                           />
                         </td>
 

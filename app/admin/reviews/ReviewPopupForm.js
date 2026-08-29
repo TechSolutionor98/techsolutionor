@@ -294,7 +294,7 @@ export default function ReviewPopupForm({ apiBase, onClose, onSuccess }) {
             marginTop: 24,
             width: "100%",
             padding: "12px 0",
-            background: "#E46704",
+            background: "#34953C",
             color: "#fff",
             border: "none",
             borderRadius: 8,

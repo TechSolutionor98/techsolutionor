@@ -80,7 +80,7 @@ export default function BlogsListClient({ initialData = [], apiBase = '' }) {
         <div className="flex items-center gap-2 w-full sm:w-auto">
           <Link
             href="/admin/blogs/add"
-            className="px-4 py-2 bg-[#E46704] hover:bg-[#E46704] text-white font-semibold rounded-lg shadow transition-all duration-200 text-sm cursor-pointer"
+            className="px-4 py-2 bg-[#34953C] hover:bg-[#34953C] text-white font-semibold rounded-lg shadow transition-all duration-200 text-sm cursor-pointer"
           >
             Add Blog Post
           </Link>
@@ -111,7 +111,7 @@ export default function BlogsListClient({ initialData = [], apiBase = '' }) {
       <div className="overflow-x-auto w-full rounded-lg border border-gray-150 shadow-xs">
         <table className="min-w-full text-sm">
           <thead>
-            <tr className="bg-[#E46704] text-white text-left font-semibold">
+            <tr className="bg-[#34953C] text-white text-left font-semibold">
               <th className="px-4 py-3">Cover</th>
               <th className="px-4 py-3">Title & Info</th>
               <th className="px-4 py-3">Author</th>
@@ -199,7 +199,7 @@ export default function BlogsListClient({ initialData = [], apiBase = '' }) {
                     <div className="flex items-center justify-end gap-2">
                       <Link
                         href={`/admin/blogs/edit/${blog._id}`}
-                        className="px-3 py-1 bg-[#E46704] hover:bg-[#E46704] text-white rounded text-xs font-semibold shadow-xs transition-all"
+                        className="px-3 py-1 bg-[#34953C] hover:bg-[#34953C] text-white rounded text-xs font-semibold shadow-xs transition-all"
                       >
                         Edit
                       </Link>

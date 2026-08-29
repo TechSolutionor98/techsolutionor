@@ -25,7 +25,7 @@ export default async function EditBlogPage({ params }) {
       <div className="text-center py-20 bg-white rounded-xl border border-gray-150">
         <h2 className="text-xl font-bold text-gray-700 mb-2">Blog Post Not Found</h2>
         <p className="text-gray-500 text-sm mb-6">The blog post you are trying to edit does not exist or has been deleted.</p>
-        <Link href="/admin/blogs" className="px-4 py-2 bg-[#E46704] text-white rounded font-medium hover:bg-[#E46704]">
+        <Link href="/admin/blogs" className="px-4 py-2 bg-[#34953C] text-white rounded font-medium hover:bg-[#34953C]">
           Back to Blog List
         </Link>
       </div>
