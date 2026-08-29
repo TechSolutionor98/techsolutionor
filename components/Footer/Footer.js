@@ -107,8 +107,8 @@ const Footer = () => {
                     <FaPinterest className='text-[25px] p-1 rounded-full border hover:bg-[#066AAb] cursor-pointer transition ease-in-out duration-200'/>
                 </div>
                 {/* Contact Info */}
-                <div className="text-[16] font-[400]">
-                    Call now: <span className="">+971 54 3502 460</span>
+                <div className="text-[16px] font-[400]">
+                    <a href="mailto:info@techsolutionor.com" className="hover:underline">info@techsolutionor.com</a>
                 </div>
                 {/* Copyright */}
                 <div className="text-[15px] font-[400] md:text-right">
