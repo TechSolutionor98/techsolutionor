@@ -97,8 +97,8 @@ const ContactForm = () => {
                 <div className="flex flex-col lg:flex-row gap-12 lg:gap-2">
 
                     {/* Left Side: Text and Image */}
-                    <div className="w-full lg:w-[50%] shadow-xl">
-                        <div className="inline-flex items-center gap-2 bg-[#41b349] text-white px-6 py-2 text-sm font-semibold mb-6 shadow-xl">
+                    <div className="w-full lg:w-[50%]">
+                        <div className="inline-flex items-center gap-2 bg-[#41b349] text-white px-6 py-2 text-sm font-semibold mb-6">
                             Contact Us
                         </div>
                         <h2 className="text-[#262323] text-[32px] md:text-[38px] font-bold leading-tight tracking-wide mb-8 uppercase">
