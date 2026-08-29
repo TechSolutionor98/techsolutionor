@@ -98,9 +98,7 @@ export default function LoginPage() {
             {error}
           </div>
         )}
-        <div style={{ textAlign: "center", color: "#666", fontSize: "13px", marginTop: "10px" }}>
-          <span>Login: <strong>admin@techsolutionor.com</strong> / <strong>admin123</strong></span>
-        </div>
+
       </form>
     </div>
   );
