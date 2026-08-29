@@ -1,4 +1,4 @@
-import { getApiBase } from '@/lib/api-helper';
+import { getApiBase, getServerApiBase } from '@/lib/api-helper';
 import AppointmentsClient from './AppointmentsClient';
 
 export const metadata = {
@@ -9,10 +9,14 @@ export const revalidate = 0;
 
 export default async function AppointmentsPage() {
   const apiBase = getApiBase();
+  const serverApiBase = getServerApiBase();
   let links = [];
 
   try {
-    const res = await fetch(`${apiBase}/api/appointments`, { cache: 'no-store' });
+    const res = await fetch(`${serverApiBase}/api/appointments`, { 
+      cache: 'no-store',
+      signal: AbortSignal.timeout(1000)
+    });
     if (res.ok) {
       const data = await res.json();
       links = data.links || [];

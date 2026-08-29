@@ -11,20 +11,16 @@ import GetQuoteForm from '@/app/_components/GetQuoteForm';
 
 export default function UserLayoutWrapper({ children }) {
   const pathname = usePathname();
-  const isAdmin = pathname?.startsWith('/admin');
-
-  if (isAdmin) {
-    return <>{children}</>;
-  }
+  const isAdmin = Boolean(pathname && pathname.startsWith('/admin'));
 
   return (
     <QuoteProvider>
-      <Navbar />
-      <SideIcons />
-      <ScrollToTopButton />
+      {!isAdmin && <Navbar />}
+      {!isAdmin && <SideIcons />}
+      {!isAdmin && <ScrollToTopButton />}
       <main>{children}</main>
-      <GetQuoteForm />
-      <Footer />
+      {!isAdmin && <GetQuoteForm />}
+      {!isAdmin && <Footer />}
     </QuoteProvider>
   );
 }

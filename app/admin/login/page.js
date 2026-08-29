@@ -20,6 +20,7 @@ export default function LoginPage() {
       const { token, user } = await res.json();
       localStorage.setItem("jwt", token);
       localStorage.setItem("user", JSON.stringify(user || { role: 'super_admin' }));
+      document.cookie = `jwt=${token}; path=/; max-age=86400; SameSite=Lax`;
       window.location.href = "/admin"; // Force reload and navigate to admin
     } else {
       setError("Invalid email or password");

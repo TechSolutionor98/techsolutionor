@@ -16,12 +16,12 @@ const routes = [
 ];
 
 async function testAll() {
-  console.log('Testing routes with 60s timeout on http://localhost:3002 ...');
+  console.log('Testing routes on http://localhost:3002 ...');
   for (const r of routes) {
     const url = `http://localhost:3002${r}`;
     const start = Date.now();
     try {
-      const res = await fetch(url, { signal: AbortSignal.timeout(60000) });
+      const res = await fetch(url, { signal: AbortSignal.timeout(5000) });
       const elapsed = Date.now() - start;
       console.log(`[${res.status}] ${r} (${elapsed}ms)`);
     } catch (err) {

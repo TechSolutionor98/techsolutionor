@@ -40,18 +40,28 @@ function calculateSeoScore(seo) {
 }
 
 export async function getDashboardCounts() {
-  const db = await getDb();
-  const [contactCount, mediaCount, routesList] = await Promise.all([
-    db.collection('submissions').countDocuments({}),
-    db.collection('media').countDocuments({}),
-    getRoutesList()
-  ]);
-  return {
-    contactCount,
-    pagesCount: routesList.length,
-    mediaCount,
-    websitesCount: 0,
-  };
+  try {
+    const db = await getDb();
+    const [contactCount, mediaCount, routesList] = await Promise.all([
+      db.collection('submissions').countDocuments({}),
+      db.collection('media').countDocuments({}),
+      getRoutesList().catch(() => [])
+    ]);
+    return {
+      contactCount,
+      pagesCount: routesList.length,
+      mediaCount,
+      websitesCount: 1,
+    };
+  } catch (err) {
+    console.error('Error fetching dashboard counts:', err);
+    return {
+      contactCount: 0,
+      pagesCount: 0,
+      mediaCount: 0,
+      websitesCount: 1,
+    };
+  }
 }
 
 export async function scanRoutes() {
@@ -122,25 +132,32 @@ export async function getRoutesList() {
 }
 
 export async function getSeoList() {
-  const db = await getDb();
-  const seoEntries = await db.collection('cms_seo').find({}).sort({ path: 1 }).toArray();
-  const routes = await getRoutesList();
+  try {
+    const db = await getDb();
+    const seoEntries = await db.collection('cms_seo').find({}).sort({ path: 1 }).toArray();
+    const routes = await getRoutesList().catch(() => []);
 
-  return routes.map(route => {
-    const seo = seoEntries.find(s => s.routeId?.toString() === route._id.toString() || s.path === route.path);
-    return {
-      _id: route._id.toString(),
-      path: route.path,
-      type: route.type,
-      status: route.status,
-      hasSeo: !!seo,
-      seoScore: calculateSeoScore(seo),
-      metaTitle: seo?.metaTitle || '',
-      metaDescription: seo?.metaDescription || '',
-      seoId: seo?._id?.toString() || null,
-      updatedAt: seo?.updatedAt || null,
-    };
-  });
+    return routes
+      .filter(route => route.path !== '/technologies/react')
+      .map(route => {
+        const seo = seoEntries.find(s => s.routeId?.toString() === route._id.toString() || s.path === route.path);
+        return {
+          _id: route._id.toString(),
+          path: route.path,
+          type: route.type,
+          status: route.status,
+          hasSeo: !!seo,
+          seoScore: calculateSeoScore(seo),
+          metaTitle: seo?.metaTitle || '',
+          metaDescription: seo?.metaDescription || '',
+          seoId: seo?._id?.toString() || null,
+          updatedAt: seo?.updatedAt || null,
+        };
+      });
+  } catch (err) {
+    console.error('Error fetching SEO list:', err);
+    return [];
+  }
 }
 
 export async function getSeoEntry(routeId) {
