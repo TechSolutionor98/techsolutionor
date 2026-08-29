@@ -1,13 +1,14 @@
 import { getDashboardCounts } from '@/lib/cms-service';
 
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export default async function AdminDashboard() {
-  const { applicationCount, contactCount, reviewCount, pagesCount, mediaCount, websitesCount } = await getDashboardCounts();
+  const { contactCount, pagesCount, mediaCount, websitesCount } = await getDashboardCounts();
 
   return (
     <div className="space-y-6 overflow-x-hidden">
-      {/* Stats */}
+      {/* Header */}
       <h1 className="text-[30px] font-bold">ADMIN DASHBOARD</h1>
       
       {/* Stats Overview */}
@@ -77,4 +78,3 @@ export default async function AdminDashboard() {
     </div>
   );
 }
-
