@@ -34,7 +34,7 @@ const BlogList = ({ posts = [], categories = [], recentPosts = [] }) => {
       {/* Top Section: Latest Published Blog Post (Replaces Why SEO Audit Matters) */}
       {latestPost && !isFiltering && (
         <div className="container mx-auto px-5 md:px-10 mb-16 max-w-[1240px]">
-          <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-14 bg-white rounded-3xl p-4 md:p-6 shadow-xs border border-gray-100">
+          <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-14 bg-white">
             {/* Left: Featured Image */}
             <div className="w-full lg:w-1/2">
               <Link href={`/blog/${latestPost.slug}`} className="block group">
