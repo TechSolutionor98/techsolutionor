@@ -393,10 +393,40 @@ export async function getLogo() {
   return logo ? logo.value : null;
 }
 
-export async function getMediaLibrary() {
-  const db = await getDb();
-  const media = await db.collection('media').find({}).sort({ createdAt: -1 }).toArray();
-  return media.map(m => ({ ...m, _id: m._id.toString() }));
+export async function getMediaLibrary(limit = 24, folder = '', search = '') {
+  try {
+    const db = await getDb();
+    const collection = db.collection('cms_media');
+
+    const filter = {};
+    if (folder) filter.folder = folder;
+    if (search) {
+      filter.$or = [
+        { fileName: { $regex: search, $options: 'i' } },
+        { originalName: { $regex: search, $options: 'i' } },
+        { alt: { $regex: search, $options: 'i' } },
+        { tags: { $regex: search, $options: 'i' } },
+      ];
+    }
+
+    const total = await collection.countDocuments(filter);
+    const media = await collection
+      .find(filter)
+      .sort({ createdAt: -1 })
+      .limit(limit)
+      .toArray();
+
+    const folders = await collection.distinct('folder');
+
+    return {
+      total,
+      folders: (folders || []).filter(Boolean),
+      media: (media || []).map(m => ({ ...m, _id: m._id.toString() })),
+    };
+  } catch (err) {
+    console.error('Error in getMediaLibrary:', err);
+    return { total: 0, folders: [], media: [] };
+  }
 }
 
 export async function getReviewsList() {

@@ -40,7 +40,13 @@ export async function GET(request) {
     const db = await getDb();
     const collection = db.collection('cms_media');
 
-    const filter = { websiteId };
+    const filter = {};
+    if (websiteId && websiteId !== 'all') {
+      filter.$or = [
+        { websiteId: websiteId },
+        { websiteId: { $exists: false } }
+      ];
+    }
     if (search) {
       filter.$or = [
         { fileName: { $regex: search, $options: 'i' } },
