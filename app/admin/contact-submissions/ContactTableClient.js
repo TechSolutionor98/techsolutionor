@@ -140,13 +140,13 @@ export default function ContactTableClient({ initialData = [], apiBase = process
                 onClick={() => { setSourceFilter(tab.key); setPage(1); }}
                 className={`px-3 py-1.5 rounded-md transition-all cursor-pointer flex items-center gap-1.5 ${
                   sourceFilter === tab.key
-                    ? 'bg-white text-[#20507C] shadow-xs font-bold'
+                    ? 'bg-white text-[#34953C] shadow-xs font-bold'
                     : 'text-gray-600 hover:text-gray-900'
                 }`}
               >
                 <span>{tab.label}</span>
                 <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded-full ${
-                  sourceFilter === tab.key ? 'bg-gray-100 text-[#20507C]' : 'bg-gray-200 text-gray-600'
+                  sourceFilter === tab.key ? 'bg-gray-100 text-[#34953C]' : 'bg-gray-200 text-gray-600'
                 }`}>
                   {tab.count}
                 </span>
@@ -160,7 +160,7 @@ export default function ContactTableClient({ initialData = [], apiBase = process
               value={query}
               onChange={e => { setQuery(e.target.value); setPage(1); }}
               placeholder="Search name, email, phone, service, budget..."
-              className="border border-[#20507C] focus:border-[#20507C] px-3 py-1.5 rounded-lg w-72 text-xs outline-none transition-all"
+              className="border border-[#34953C] focus:border-[#34953C] px-3 py-1.5 rounded-lg w-72 text-xs outline-none transition-all"
             />
             {query && (
               <button
@@ -176,7 +176,7 @@ export default function ContactTableClient({ initialData = [], apiBase = process
         <div className="flex items-center gap-2">
           <button
             onClick={refresh}
-            className={`px-3.5 py-1.5 rounded-lg bg-[#20507C] hover:bg-[#34953C] text-white font-semibold text-xs shadow-xs ${loading ? 'opacity-60' : ''} transition-all cursor-pointer`}
+            className={`px-3.5 py-1.5 rounded-lg bg-[#34953C] hover:bg-[#2b7e32] text-white font-semibold text-xs shadow-xs ${loading ? 'opacity-60' : ''} transition-all cursor-pointer`}
           >
             {loading ? 'Refreshing...' : 'Refresh'}
           </button>
@@ -196,7 +196,7 @@ export default function ContactTableClient({ initialData = [], apiBase = process
           <select
             value={pageSize}
             onChange={e => { setPageSize(Number(e.target.value)); setPage(1); }}
-            className="border border-gray-300 rounded-md px-2 py-1 text-xs outline-none focus:border-[#20507C] cursor-pointer"
+            className="border border-gray-300 rounded-md px-2 py-1 text-xs outline-none focus:border-[#34953C] cursor-pointer"
           >
             {[10, 25, 50, 100].map(n => (
               <option key={n} value={n}>{n}</option>
@@ -212,16 +212,16 @@ export default function ContactTableClient({ initialData = [], apiBase = process
       {/* Submissions Table */}
       <div style={{ overflowX: "auto", maxHeight: "540px", overflowY: "auto" }} className="w-full rounded-lg border border-gray-200">
         <table style={{ whiteSpace: "nowrap" }} className="w-full text-xs text-left">
-          <thead className="bg-[#20507C] text-white sticky top-0 z-10">
+          <thead className="bg-[#34953C] text-white sticky top-0 z-10">
             <tr>
               <th className="px-3.5 py-3 text-left font-semibold w-12">#</th>
               <th className="px-3.5 py-3 text-left font-semibold">Source</th>
-              <th className="px-3.5 py-3 text-left font-semibold">Name</th>
+              <th className="px-3.5 py-3 text-left font-semibold">Customer Name</th>
               <th className="px-3.5 py-3 text-left font-semibold">Phone</th>
               <th className="px-3.5 py-3 text-left font-semibold">Email</th>
               <th className="px-3.5 py-3 text-left font-semibold">Service</th>
               <th className="px-3.5 py-3 text-left font-semibold">Budget</th>
-              <th className="px-3.5 py-3 text-left font-semibold">Date</th>
+              <th className="px-3.5 py-3 text-left font-semibold">Preferred Date</th>
               <th className="px-3.5 py-3 text-left font-semibold max-w-[220px]">Message</th>
               <th className="px-3.5 py-3 text-left font-semibold w-36">Submitted At</th>
               <th className="px-3.5 py-3 text-right font-semibold w-20">Action</th>
@@ -243,7 +243,7 @@ export default function ContactTableClient({ initialData = [], apiBase = process
 
                 return (
                   <tr key={s.id ?? s._id ?? idx} className="hover:bg-gray-50/80 align-middle transition-all">
-                    <td className="px-3.5 py-3 font-semibold text-[#20507C]">{getGlobalIndex(idx)}</td>
+                    <td className="px-3.5 py-3 font-semibold text-[#34953C]">{getGlobalIndex(idx)}</td>
 
                     {/* Source Badge */}
                     <td className="px-3.5 py-3">
@@ -258,7 +258,7 @@ export default function ContactTableClient({ initialData = [], apiBase = process
                       )}
                     </td>
 
-                    {/* Name */}
+                    {/* Customer Name */}
                     <td className="px-3.5 py-3 font-bold text-gray-900">{s.name || '—'}</td>
 
                     {/* Phone */}
@@ -278,7 +278,7 @@ export default function ContactTableClient({ initialData = [], apiBase = process
                     </td>
 
                     {/* Preferred Date */}
-                    <td className="px-3.5 py-3 text-gray-600">
+                    <td className="px-3.5 py-3 text-gray-600 font-medium">
                       {s.preferredDate || '—'}
                     </td>
 
