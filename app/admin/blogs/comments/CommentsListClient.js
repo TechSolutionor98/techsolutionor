@@ -935,43 +935,49 @@ export default function CommentsListClient({
 
                       {/* Blog Column (Rendered only on Main View) */}
                       {!selectedBlog && (
-                        <td className="px-3.5 py-3.5 min-w-0 text-left">
-                          <span className="font-bold text-gray-900 block truncate text-xs" title={blogTitle}>
-                            {blogTitle}
-                          </span>
-                          {blogSlug && (
+                        <td className="px-3.5 py-3.5 min-w-0 text-left align-top">
+                          <div className="flex flex-col space-y-1">
+                            {/* Line 1: Blog Title Link -> Admin Edit Page (Clamped up to 3 lines) */}
                             <Link
-                              href={`/blog/${blogSlug}`}
-                              target="_blank"
-                              className="text-[10px] text-[#41b349] hover:underline inline-block mt-0.5 font-medium"
+                              href={`/admin/blogs/edit/${c.blogId}`}
+                              className="font-bold text-gray-900 hover:text-[#34953C] block line-clamp-3 break-words leading-snug text-xs transition-colors"
+                              title={`Edit "${blogTitle}" in Admin`}
                             >
-                              View Post ↗
+                              {blogTitle}
                             </Link>
-                          )}
 
-                          {/* Blog Comment Count Badge/Link */}
-                          <div className="mt-1.5">
-                            <button
-                              type="button"
-                              onClick={() => openSpecificBlog(c.blogId, blogTitle, blogSlug)}
-                              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#34953C]/10 hover:bg-[#34953C]/20 text-[#34953C] text-[11px] font-bold transition cursor-pointer group-hover:shadow-xs"
-                              title="Click to view all comments for this blog"
-                            >
-                              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                              </svg>
-                              <span>{bStats.total} {bStats.total === 1 ? 'Comment' : 'Comments'}</span>
-                            </button>
-                          </div>
+                            {/* Line 2: View Post Link -> Frontend Blog Page */}
+                            <div>
+                              {blogSlug ? (
+                                <Link
+                                  href={`/blog/${blogSlug}`}
+                                  target="_blank"
+                                  className="text-[10px] text-[#41b349] hover:underline font-semibold inline-flex items-center gap-0.5"
+                                >
+                                  <span>View Post</span>
+                                  <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                  </svg>
+                                </Link>
+                              ) : (
+                                <span className="text-[10px] text-gray-400 font-medium">No live link</span>
+                              )}
+                            </div>
 
-                          {/* Comment count and date/time at bottom of blog info */}
-                          <div className="text-[10px] text-gray-500 mt-1.5 font-medium border-t border-gray-100 pt-1">
-                            Total: <span className="font-semibold text-gray-700">{bStats.total}</span>
-                            {bStats.latestCommentAt && (
-                              <span className="ml-1 text-gray-400">
-                                • Latest: {formatDateTime(bStats.latestCommentAt).date}
-                              </span>
-                            )}
+                            {/* Line 3: Blog Comment Count Badge -> Specific Blog Comments View */}
+                            <div className="pt-0.5">
+                              <button
+                                type="button"
+                                onClick={() => openSpecificBlog(c.blogId, blogTitle, blogSlug)}
+                                className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-[#34953C]/10 hover:bg-[#34953C]/20 text-[#34953C] text-[11px] font-bold transition cursor-pointer group-hover:shadow-xs"
+                                title="Click to view all comments for this blog"
+                              >
+                                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                </svg>
+                                <span>{bStats.total} {bStats.total === 1 ? 'Comment' : 'Comments'}</span>
+                              </button>
+                            </div>
                           </div>
                         </td>
                       )}
