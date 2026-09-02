@@ -700,7 +700,16 @@ export default function CommentsListClient({
                   Blog Selected:
                 </span>
                 <h2 className="text-sm sm:text-base font-bold text-gray-900 line-clamp-1">
-                  {selectedBlog.title} ({activeComments.length} Comments)
+                  <Link
+                    href={`/admin/blogs/edit/${selectedBlog._id}`}
+                    className="hover:text-[#34953C] transition-colors cursor-pointer"
+                    title={`Edit "${selectedBlog.title}" in Admin Panel`}
+                  >
+                    {selectedBlog.title}
+                  </Link>
+                  <span className="text-gray-500 font-medium ml-1.5">
+                    ({activeComments.length} {activeComments.length === 1 ? 'Comment' : 'Comments'})
+                  </span>
                 </h2>
               </div>
             </div>
