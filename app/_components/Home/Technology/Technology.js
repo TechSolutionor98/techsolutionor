@@ -229,9 +229,6 @@ const Technology = ({ cmsContent }) => {
                   <div className={`absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-transparent ${cfg.topAccent} to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
                   
                   <div className="relative z-10">
-                    <span className={`text-xs font-bold uppercase tracking-wider block mb-2 ${cfg.badgeColor}`}>
-                      STACK 0{(i % 6) + 1}
-                    </span>
                     <h3 
                       className={`text-xl sm:text-2xl font-black leading-tight tracking-tight transition-colors duration-200 ${cfg.titleColor}`}
                       style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}

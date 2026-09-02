@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -53,6 +53,18 @@ const serviceImages = [
 const ServicesWeOffer = ({ cmsContent }) => {
   const [activeIdx, setActiveIdx] = useState(null);
   const [isPaused, setIsPaused] = useState(false);
+  const [radius, setRadius] = useState(270);
+
+  useEffect(() => {
+    const updateRadius = () => {
+      if (typeof window !== "undefined") {
+        setRadius(window.innerWidth < 640 ? 150 : window.innerWidth < 768 ? 230 : 270);
+      }
+    };
+    updateRadius();
+    window.addEventListener("resize", updateRadius);
+    return () => window.removeEventListener("resize", updateRadius);
+  }, []);
 
   const titleTop = getCmsVal(cmsContent, defaultServicesWeOffer.titleTop, "servicesweoffer");
   const titleBottom = getCmsVal(cmsContent, defaultServicesWeOffer.titleBottom, "servicesweoffer");
@@ -168,14 +180,9 @@ const ServicesWeOffer = ({ cmsContent }) => {
               const total = cardsData.length;
               const angleDeg = (i * 360) / total;
               const angleRad = (angleDeg * Math.PI) / 180;
-              
-              // Generous Radius positioning:
-              const radius = typeof window !== 'undefined' 
-                ? (window.innerWidth < 640 ? 150 : window.innerWidth < 768 ? 230 : 270)
-                : 270;
 
-              const x = Math.cos(angleRad) * radius;
-              const y = Math.sin(angleRad) * radius;
+              const x = (Math.cos(angleRad) * radius).toFixed(3);
+              const y = (Math.sin(angleRad) * radius).toFixed(3);
 
               const isActive = activeIdx === i;
               const isImgDynamic = typeof item.image === 'string' && (item.image.startsWith('http') || item.image.startsWith('/'));
