@@ -842,10 +842,10 @@ export default function CommentsListClient({
                 </th>
 
                 {/* Author Column */}
-                <th className="px-3.5 py-3 w-[20%]">Author</th>
+                <th className={selectedBlog ? "px-3.5 py-3 w-[24%]" : "px-3.5 py-3 w-[22%]"}>Author</th>
 
                 {/* Comments Column */}
-                <th className={selectedBlog ? "px-3.5 py-3 w-[56%]" : "px-3.5 py-3 w-[40%]"}>
+                <th className={selectedBlog ? "px-3.5 py-3 w-[58%]" : "px-3.5 py-3 w-[38%]"}>
                   Comments
                 </th>
 
@@ -891,25 +891,32 @@ export default function CommentsListClient({
                         />
                       </td>
 
-                      {/* Author Column */}
-                      <td className="px-3.5 py-3.5 min-w-0 text-left">
-                        <div className="flex items-start gap-2.5">
-                          <div className="w-7 h-7 bg-gray-200 text-gray-600 rounded-full flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
-                            {c.authorName ? c.authorName.charAt(0).toUpperCase() : 'U'}
+                      {/* Author Column: Profile image on left, Author name inline, Email on next line below wrapping naturally */}
+                      <td className="px-3.5 py-3.5 text-left align-top min-w-0">
+                        <div className="flex flex-col space-y-1">
+                          {/* Top Row: Profile avatar on left + Author name inline */}
+                          <div className="flex items-center gap-2 min-w-0">
+                            <div className="w-7 h-7 bg-gray-200 text-gray-700 rounded-full flex items-center justify-center font-bold text-xs shrink-0 border border-gray-300">
+                              {c.authorName ? c.authorName.charAt(0).toUpperCase() : 'U'}
+                            </div>
+                            <span className="font-bold text-gray-900 text-xs break-words min-w-0 leading-tight">
+                              {c.authorName}
+                            </span>
                           </div>
-                          <div className="min-w-0 flex-1">
-                            <div className="font-bold text-gray-900 text-xs truncate">{c.authorName}</div>
-                            {c.authorEmail && (
-                              <div className="text-[11px] text-gray-500 font-mono truncate mt-0.5">
-                                {c.authorEmail}
-                              </div>
-                            )}
-                            {c.authorIp && (
-                              <div className="text-[10px] text-gray-400 font-mono truncate mt-0.5">
-                                {c.authorIp}
-                              </div>
-                            )}
-                          </div>
+
+                          {/* Bottom Row: Email address on next line below profile image/name, wrapping naturally */}
+                          {c.authorEmail && (
+                            <div className="text-[11px] text-gray-500 font-mono break-all leading-normal">
+                              {c.authorEmail}
+                            </div>
+                          )}
+
+                          {/* IP Address */}
+                          {c.authorIp && (
+                            <div className="text-[10px] text-gray-400 font-mono break-all leading-tight">
+                              {c.authorIp}
+                            </div>
+                          )}
                         </div>
                       </td>
 
