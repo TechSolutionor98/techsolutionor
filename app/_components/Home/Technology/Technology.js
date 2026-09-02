@@ -209,6 +209,12 @@ const Technology = ({ cmsContent }) => {
                   onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = cfg.hoverBg; }}
                   onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = cfg.bgColor; }}
                 >
+                  {/* Card Background Pattern Image */}
+                  <div 
+                    className="absolute inset-0 z-0 bg-no-repeat bg-cover bg-bottom pointer-events-none opacity-100"
+                    style={{ backgroundImage: "url('/images/ines.png')" }}
+                  />
+
                   {/* SVG Corner-to-Corner Perimeter Border Line on Hover */}
                   <div className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 p-[1px]">
                     <svg className="w-full h-full overflow-visible">
