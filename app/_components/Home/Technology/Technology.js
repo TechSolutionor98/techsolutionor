@@ -264,7 +264,7 @@ const Technology = ({ cmsContent }) => {
                     )}
                   </div>
 
-                  <div className={`flex items-center justify-between pt-3 border-t ${cfg.borderDivider} relative z-10`}>
+                  <div className="flex items-center justify-between pt-1 relative z-10">
                     <span className={`text-xs font-extrabold uppercase tracking-wider transition-colors duration-200 ${cfg.footerTextColor}`}>
                       Explore Tech
                     </span>
