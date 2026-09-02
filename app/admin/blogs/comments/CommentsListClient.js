@@ -49,18 +49,6 @@ function formatDateTime(dateStr) {
   }
 }
 
-function formatLatestDate(dateStr) {
-  if (!dateStr) return 'No comments yet.';
-  try {
-    const d = new Date(dateStr);
-    const date = d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-    const time = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
-    return `${date}, ${time}`;
-  } catch (e) {
-    return 'No comments yet.';
-  }
-}
-
 // ---- Edit Modal ----
 function EditModal({ comment, onClose, onSave }) {
   const [text, setText] = useState(comment.comment || '');
@@ -143,7 +131,7 @@ function EditModal({ comment, onClose, onSave }) {
             type="button"
             onClick={handleSave}
             disabled={saving || !text.trim()}
-            className="px-6 py-2 bg-[#34953C] hover:bg-[#2b7e32] text-white rounded-lg text-xs font-bold transition-all cursor-pointer disabled:opacity-50 shadow-sm"
+            className="px-6 py-2 bg-[#34953C] hover:bg-[#2b7e32] text-white rounded-lg text-xs font-bold transition-all cursor-pointer disabled:opacity-50 shadow-xs"
           >
             {saving ? 'Saving...' : 'Save Changes'}
           </button>
@@ -153,77 +141,200 @@ function EditModal({ comment, onClose, onSave }) {
   );
 }
 
-// ---- Status Dropdown ----
-function StatusDropdown({ comment, onStatusChange, loading }) {
-  const [open, setOpen] = useState(false);
-  const current = getStatus(comment);
-  const cfg = STATUS_CONFIG[current] || STATUS_CONFIG.pending;
+// ---- WordPress-Style Comment Cell with Hover Actions & Inline Edit/Reply ----
+function CommentRowContent({
+  comment,
+  onStatusChange,
+  onOpenEditModal,
+  onQuickEditSave,
+  onReplySubmit,
+  onDelete,
+  loading
+}) {
+  const [isReplying, setIsReplying] = useState(false);
+  const [replyText, setReplyText] = useState('');
+  const [replySubmitting, setReplySubmitting] = useState(false);
 
-  const options = ['approved', 'pending', 'spam', 'trash'].filter((s) => s !== current);
+  const [isQuickEditing, setIsQuickEditing] = useState(false);
+  const [quickEditText, setQuickEditText] = useState(comment.comment || '');
+  const [quickEditSaving, setQuickEditSaving] = useState(false);
+
+  const currentStatus = getStatus(comment);
+
+  const handleReply = async () => {
+    if (!replyText.trim()) return;
+    setReplySubmitting(true);
+    await onReplySubmit(comment, replyText.trim());
+    setReplySubmitting(false);
+    setReplyText('');
+    setIsReplying(false);
+  };
+
+  const handleQuickEditSave = async () => {
+    if (!quickEditText.trim()) return;
+    setQuickEditSaving(true);
+    await onQuickEditSave(comment._id, quickEditText.trim());
+    setQuickEditSaving(false);
+    setIsQuickEditing(false);
+  };
 
   return (
-    <div className="relative inline-block text-left">
-      <button
-        onClick={() => setOpen((o) => !o)}
-        disabled={loading}
-        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold border uppercase cursor-pointer hover:shadow-xs transition ${cfg.pill}`}
-      >
-        <span className={`w-2 h-2 rounded-full ${cfg.dot}`}></span>
-        {cfg.label}
-        <svg className="w-2.5 h-2.5 ml-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
-        </svg>
-      </button>
-
-      {open && (
-        <>
-          <div className="fixed inset-0 z-20" onClick={() => setOpen(false)} />
-          <div className="absolute left-0 top-full mt-1 z-30 bg-white border border-gray-200 rounded-xl shadow-xl overflow-hidden min-w-[130px]">
-            {options.map((status) => {
-              const c = STATUS_CONFIG[status] || STATUS_CONFIG.pending;
-              return (
-                <button
-                  key={status}
-                  onClick={() => {
-                    onStatusChange(comment._id, status);
-                    setOpen(false);
-                  }}
-                  className={`w-full flex items-center gap-2 px-3 py-2 text-xs font-semibold hover:bg-gray-50 transition cursor-pointer text-left ${c.pill.split(' ')[1]}`}
-                >
-                  <span className={`w-2 h-2 rounded-full ${c.dot}`}></span>
-                  {c.label}
-                </button>
-              );
-            })}
-          </div>
-        </>
+    <div className="flex flex-col text-left space-y-1.5 py-1">
+      {comment.inReplyTo && (
+        <span className="text-[10px] text-[#34953C] font-semibold block">
+          In reply to {comment.inReplyTo}
+        </span>
       )}
-    </div>
-  );
-}
 
-// ---- Truncated Comment Cell ----
-function CommentCell({ text }) {
-  const [hovered, setHovered] = useState(false);
-  const isLong = text?.length > 90;
+      {isQuickEditing ? (
+        <div className="space-y-2 mt-1 bg-gray-50 p-2.5 rounded-lg border border-gray-200">
+          <textarea
+            value={quickEditText}
+            onChange={(e) => setQuickEditText(e.target.value)}
+            rows={3}
+            className="w-full p-2 border border-gray-300 rounded text-xs text-gray-800 focus:ring-1 focus:ring-[#34953C] outline-none bg-white"
+          />
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleQuickEditSave}
+              disabled={quickEditSaving || !quickEditText.trim()}
+              className="px-3 py-1 bg-[#34953C] hover:bg-[#2b7e32] text-white text-xs font-bold rounded cursor-pointer disabled:opacity-50"
+            >
+              {quickEditSaving ? 'Updating...' : 'Update Comment'}
+            </button>
+            <button
+              onClick={() => {
+                setIsQuickEditing(false);
+                setQuickEditText(comment.comment || '');
+              }}
+              className="px-3 py-1 bg-gray-200 hover:bg-gray-300 text-gray-700 text-xs font-semibold rounded cursor-pointer"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      ) : (
+        <p className="text-gray-800 text-xs sm:text-sm leading-relaxed break-words">
+          {comment.comment}
+        </p>
+      )}
 
-  return (
-    <div className="relative group max-w-xs md:max-w-sm text-left">
-      <p className="text-gray-700 text-sm leading-5 break-words line-clamp-2">
-        {text}
-      </p>
-      {isLong && (
-        <div
-          onMouseEnter={() => setHovered(true)}
-          onMouseLeave={() => setHovered(false)}
-          className="absolute -top-1 left-0 w-full h-full cursor-default"
-        >
-          {hovered && (
-            <div className="absolute z-30 left-0 top-full mt-2 w-80 bg-white border border-gray-200 rounded-xl shadow-2xl p-4 text-xs text-gray-700 leading-relaxed whitespace-pre-wrap break-words text-left">
-              <span className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Full Comment</span>
-              {text}
-            </div>
+      {/* WordPress-style Hover Actions Underneath Comment */}
+      {!isQuickEditing && !isReplying && (
+        <div className="flex items-center gap-1.5 text-[11px] font-medium pt-1 opacity-90 sm:opacity-0 group-hover:opacity-100 transition-opacity flex-wrap select-none">
+          {currentStatus === 'approved' ? (
+            <button
+              onClick={() => onStatusChange(comment._id, 'pending')}
+              disabled={loading}
+              className="text-amber-600 hover:underline cursor-pointer"
+            >
+              Unapprove
+            </button>
+          ) : (
+            <button
+              onClick={() => onStatusChange(comment._id, 'approved')}
+              disabled={loading}
+              className="text-green-700 hover:underline cursor-pointer font-semibold"
+            >
+              Approve
+            </button>
           )}
+          <span className="text-gray-300">|</span>
+
+          <button
+            onClick={() => setIsReplying(true)}
+            className="text-blue-600 hover:underline cursor-pointer"
+          >
+            Reply
+          </button>
+          <span className="text-gray-300">|</span>
+
+          <button
+            onClick={() => setIsQuickEditing(true)}
+            className="text-blue-600 hover:underline cursor-pointer"
+          >
+            Quick Edit
+          </button>
+          <span className="text-gray-300">|</span>
+
+          <button
+            onClick={() => onOpenEditModal(comment)}
+            className="text-blue-600 hover:underline cursor-pointer"
+          >
+            Edit
+          </button>
+          <span className="text-gray-300">|</span>
+
+          {currentStatus === 'spam' ? (
+            <button
+              onClick={() => onStatusChange(comment._id, 'pending')}
+              disabled={loading}
+              className="text-amber-600 hover:underline cursor-pointer"
+            >
+              Not Spam
+            </button>
+          ) : (
+            <button
+              onClick={() => onStatusChange(comment._id, 'spam')}
+              disabled={loading}
+              className="text-red-600 hover:underline cursor-pointer"
+            >
+              Spam
+            </button>
+          )}
+          <span className="text-gray-300">|</span>
+
+          {currentStatus === 'trash' ? (
+            <button
+              onClick={() => onDelete(comment._id)}
+              disabled={loading}
+              className="text-red-700 hover:underline cursor-pointer font-bold"
+            >
+              Delete Permanently
+            </button>
+          ) : (
+            <button
+              onClick={() => onStatusChange(comment._id, 'trash')}
+              disabled={loading}
+              className="text-red-600 hover:underline cursor-pointer"
+            >
+              Trash
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Inline Reply Form */}
+      {isReplying && (
+        <div className="space-y-2 mt-2 bg-blue-50/50 p-2.5 rounded-lg border border-blue-200">
+          <span className="text-[11px] font-bold text-blue-800 block">
+            Replying to {comment.authorName}:
+          </span>
+          <textarea
+            value={replyText}
+            onChange={(e) => setReplyText(e.target.value)}
+            placeholder="Write admin reply..."
+            rows={3}
+            className="w-full p-2 border border-blue-300 rounded text-xs text-gray-800 focus:ring-1 focus:ring-blue-500 outline-none bg-white"
+          />
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleReply}
+              disabled={replySubmitting || !replyText.trim()}
+              className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded cursor-pointer disabled:opacity-50"
+            >
+              {replySubmitting ? 'Posting...' : 'Submit Reply'}
+            </button>
+            <button
+              onClick={() => {
+                setIsReplying(false);
+                setReplyText('');
+              }}
+              className="px-3 py-1 bg-gray-200 hover:bg-gray-300 text-gray-700 text-xs font-semibold rounded cursor-pointer"
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       )}
     </div>
@@ -238,13 +349,13 @@ export default function CommentsListClient({
   const [blogs] = useState(initialBlogs);
   const [comments, setComments] = useState(initialComments);
 
-  // When selectedBlog is null, show Blogs List Table. When set, show that blog's comments table.
+  // When selectedBlog is null, show Main Table (all comments from all blogs).
+  // When set, show that specific blog's comments table (without Blog column).
   const [selectedBlog, setSelectedBlog] = useState(null);
 
   // Filters state for comments view
   const [statusTab, setStatusTab] = useState('all'); // 'all' | 'mine' | 'pending' | 'approved' | 'spam' | 'trash'
   const [search, setSearch] = useState('');
-  const [blogSearch, setBlogSearch] = useState('');
   const [commentType, setCommentType] = useState('all'); // 'all' | 'comments'
   const [selectedIds, setSelectedIds] = useState([]);
   const [bulkAction, setBulkAction] = useState('');
@@ -252,32 +363,45 @@ export default function CommentsListClient({
   const [loading, setLoading] = useState(false);
   const [editingComment, setEditingComment] = useState(null);
 
+  // Map of blogs for fast lookup
+  const blogsMap = useMemo(() => {
+    const map = {};
+    blogs.forEach((b) => {
+      if (b._id) map[b._id.toString()] = b;
+      if (b.slug) map[b.slug] = b;
+    });
+    return map;
+  }, [blogs]);
+
   // Calculate live comment stats for each blog
   const blogStats = useMemo(() => {
     const map = {};
     blogs.forEach((b) => {
-      const bId = b._id.toString();
+      const bId = b._id ? b._id.toString() : '';
       const bSlug = b.slug;
-      map[bId] = { total: 0, pending: 0, approved: 0, spam: 0, trash: 0, mine: 0, latestCommentAt: null };
-      if (bSlug) map[bSlug] = map[bId];
+      const initial = { total: 0, pending: 0, approved: 0, spam: 0, trash: 0, mine: 0, latestCommentAt: null };
+      if (bId) map[bId] = { ...initial };
+      if (bSlug) map[bSlug] = map[bId] || { ...initial };
     });
 
     comments.forEach((c) => {
-      const stats = map[c.blogId];
-      if (stats) {
-        stats.total += 1;
-        const status = getStatus(c);
-        if (status === 'approved') stats.approved += 1;
-        else if (status === 'pending') stats.pending += 1;
-        else if (status === 'spam') stats.spam += 1;
-        else if (status === 'trash') stats.trash += 1;
-        if (c.isMine || c.authorName?.toLowerCase() === 'admin') stats.mine += 1;
+      let stats = map[c.blogId];
+      if (!stats) {
+        map[c.blogId] = { total: 0, pending: 0, approved: 0, spam: 0, trash: 0, mine: 0, latestCommentAt: null };
+        stats = map[c.blogId];
+      }
+      stats.total += 1;
+      const status = getStatus(c);
+      if (status === 'approved') stats.approved += 1;
+      else if (status === 'pending') stats.pending += 1;
+      else if (status === 'spam') stats.spam += 1;
+      else if (status === 'trash') stats.trash += 1;
+      if (c.isMine || c.authorName?.toLowerCase() === 'admin') stats.mine += 1;
 
-        if (c.createdAt) {
-          const cDate = new Date(c.createdAt);
-          if (!stats.latestCommentAt || cDate > new Date(stats.latestCommentAt)) {
-            stats.latestCommentAt = c.createdAt;
-          }
+      if (c.createdAt) {
+        const cDate = new Date(c.createdAt);
+        if (!stats.latestCommentAt || cDate > new Date(stats.latestCommentAt)) {
+          stats.latestCommentAt = c.createdAt;
         }
       }
     });
@@ -285,18 +409,18 @@ export default function CommentsListClient({
     return map;
   }, [blogs, comments]);
 
-  // Comments belonging strictly to the currently selected blog
-  const currentBlogComments = useMemo(() => {
-    if (!selectedBlog) return [];
-    const bId = selectedBlog._id.toString();
+  // Determine active dataset (All comments OR Specific blog's comments)
+  const activeComments = useMemo(() => {
+    if (!selectedBlog) return comments;
+    const bId = selectedBlog._id ? selectedBlog._id.toString() : '';
     const bSlug = selectedBlog.slug;
     return comments.filter((c) => c.blogId === bId || c.blogId === bSlug);
   }, [comments, selectedBlog]);
 
-  // Tab counts for the currently selected blog
+  // Tab counts for the currently active dataset
   const tabCounts = useMemo(() => {
     const counts = { all: 0, mine: 0, pending: 0, approved: 0, spam: 0, trash: 0 };
-    currentBlogComments.forEach((c) => {
+    activeComments.forEach((c) => {
       const status = getStatus(c);
       counts.all += 1;
       if (status === 'approved') counts.approved += 1;
@@ -306,11 +430,11 @@ export default function CommentsListClient({
       if (c.isMine || c.authorName?.toLowerCase() === 'admin') counts.mine += 1;
     });
     return counts;
-  }, [currentBlogComments]);
+  }, [activeComments]);
 
-  // Filtered comments for the selected blog
+  // Filtered comments based on status tab, type, search
   const filteredComments = useMemo(() => {
-    return currentBlogComments.filter((c) => {
+    return activeComments.filter((c) => {
       const status = getStatus(c);
 
       // Status Tab filter
@@ -336,16 +460,7 @@ export default function CommentsListClient({
 
       return true;
     });
-  }, [currentBlogComments, statusTab, commentType, search]);
-
-  // Filtered blogs for Blog List View
-  const filteredBlogs = useMemo(() => {
-    if (!blogSearch.trim()) return blogs;
-    return blogs.filter((b) =>
-      b.title.toLowerCase().includes(blogSearch.toLowerCase()) ||
-      b.category?.toLowerCase().includes(blogSearch.toLowerCase())
-    );
-  }, [blogs, blogSearch]);
+  }, [activeComments, statusTab, commentType, search]);
 
   // Refresh list
   const refresh = async () => {
@@ -360,6 +475,15 @@ export default function CommentsListClient({
     } finally {
       setLoading(false);
     }
+  };
+
+  // Open specific blog view
+  const openSpecificBlog = (blogId, blogTitle = '', blogSlug = '') => {
+    const blogObj = blogsMap[blogId] || { _id: blogId, title: blogTitle || 'Blog Post', slug: blogSlug };
+    setSelectedBlog(blogObj);
+    setStatusTab('all');
+    setSelectedIds([]);
+    setSearch('');
   };
 
   // Change single status
@@ -401,6 +525,39 @@ export default function CommentsListClient({
       setEditingComment(null);
     } catch (err) {
       alert('Failed to save: ' + err.message);
+    }
+  };
+
+  // Submit Admin Reply
+  const handleReplySubmit = async (parentComment, replyText) => {
+    try {
+      setLoading(true);
+      const res = await fetch(`${apiBase}/api/blogs/comments`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          blogId: parentComment.blogId,
+          authorName: 'Admin',
+          authorEmail: 'admin@osumfix.com',
+          comment: replyText,
+          inReplyTo: parentComment.authorName,
+          isAdmin: true,
+        }),
+      });
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData.error || 'Failed to post reply');
+      }
+      const data = await res.json();
+      if (data.comment) {
+        setComments((prev) => [data.comment, ...prev]);
+      } else {
+        await refresh();
+      }
+    } catch (err) {
+      alert('Failed to post reply: ' + err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -499,7 +656,7 @@ export default function CommentsListClient({
   };
 
   return (
-    <div className="w-full flex flex-col">
+    <div className="w-full flex flex-col space-y-6">
       {/* Edit Modal */}
       {editingComment && (
         <EditModal
@@ -510,7 +667,7 @@ export default function CommentsListClient({
       )}
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-[28px] sm:text-[30px] font-bold text-gray-900 font-sans tracking-tight">
             BLOG COMMENTS
@@ -521,170 +678,10 @@ export default function CommentsListClient({
         </div>
       </div>
 
-      {/* ========================================================================= */}
-      {/* SCREEN 1: BLOGS TABLE LIST (Grouped by Blog, Each Blog Listed Once)       */}
-      {/* ========================================================================= */}
-      {!selectedBlog ? (
-        <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 min-h-[calc(100vh-230px)] flex flex-col">
-          {/* Controls Bar: Refresh & Search Blogs */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
-            <div className="flex items-center gap-3">
-              <button
-                onClick={refresh}
-                disabled={loading}
-                className={`flex items-center gap-1.5 px-3.5 py-1.5 bg-gray-100 hover:bg-gray-200 border border-gray-300 text-gray-700 font-semibold rounded-lg text-xs transition cursor-pointer ${loading ? 'opacity-60' : ''}`}
-              >
-                <svg className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-                {loading ? 'Refreshing...' : 'Refresh'}
-              </button>
-              <span className="text-xs font-semibold text-gray-600">
-                Total: {filteredBlogs.length} Blogs ({comments.length} Comments)
-              </span>
-            </div>
-
-            <div className="w-full sm:w-80">
-              <input
-                type="text"
-                value={blogSearch}
-                onChange={(e) => setBlogSearch(e.target.value)}
-                placeholder="Search blog posts..."
-                className="w-full px-3.5 py-1.5 border border-gray-300 rounded-lg text-xs text-gray-800 focus:ring-2 focus:ring-[#34953C]/40 focus:border-[#34953C] outline-none transition"
-              />
-            </div>
-          </div>
-
-          {/* Blogs Table (Row and Column Wise with Orange Header #34953C) */}
-          <div className="overflow-x-hidden overflow-y-auto w-full rounded-xl border border-gray-200 shadow-xs flex-1 min-h-[380px] max-h-[calc(100vh-270px)]">
-            <table className="w-full text-xs text-left table-fixed">
-              <thead className="sticky top-0 z-10">
-                <tr className="bg-[#34953C] text-white text-left font-semibold shadow-xs">
-                  <th className="px-4 py-3.5 w-[32%]">Blog Post</th>
-                  <th className="px-3 py-3.5 w-[16%]">Category</th>
-                  <th className="px-3 py-3.5 w-[12%]">Status</th>
-                  <th className="px-3 py-3.5 w-[14%]">Total Comments</th>
-                  <th className="px-3 py-3.5 w-[14%]">Latest Comment</th>
-                  <th className="px-4 py-3.5 text-right w-[12%]">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100 bg-white">
-                {filteredBlogs.length === 0 ? (
-                  <tr>
-                    <td colSpan={6} className="px-4 py-12 text-center text-gray-400 font-medium">
-                      No blog posts found.
-                    </td>
-                  </tr>
-                ) : (
-                  filteredBlogs.map((b) => {
-                    const stats = blogStats[b._id.toString()] || { total: 0, pending: 0, approved: 0, latestCommentAt: null };
-                    const coverImg = b.coverImage || '/images/blogabout.png';
-
-                    return (
-                      <tr
-                        key={b._id}
-                        onClick={() => {
-                          setSelectedBlog(b);
-                          setStatusTab('all');
-                          setSelectedIds([]);
-                          setSearch('');
-                        }}
-                        className="hover:bg-orange-50/30 transition-colors align-middle cursor-pointer group"
-                      >
-                        {/* Blog Post with Thumbnail */}
-                        <td className="px-4 py-3 min-w-0">
-                          <div className="flex items-center gap-3 min-w-0">
-                            <div className="w-10 h-8 rounded-lg overflow-hidden bg-gray-100 shrink-0 border border-gray-200">
-                              <img src={coverImg} alt={b.title} className="w-full h-full object-cover" />
-                            </div>
-                            <div className="min-w-0 flex-1">
-                              <span className="font-bold text-gray-900 group-hover:text-[#34953C] transition-colors block truncate text-xs" title={b.title}>
-                                {b.title}
-                              </span>
-                              {b.slug && (
-                                <Link
-                                  href={`/blog/${b.slug}`}
-                                  target="_blank"
-                                  onClick={(e) => e.stopPropagation()}
-                                  className="text-[10px] text-[#41b349] hover:underline inline-block mt-0.5"
-                                >
-                                  View Live Post ↗
-                                </Link>
-                              )}
-                            </div>
-                          </div>
-                        </td>
-
-                        {/* Category */}
-                        <td className="px-3 py-3 text-gray-700 font-medium truncate" title={b.category}>
-                          {b.category || 'General'}
-                        </td>
-
-                        {/* Status */}
-                        <td className="px-3 py-3 whitespace-nowrap">
-                          <span className={`inline-block text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full ${
-                            b.published ? 'bg-black text-white' : 'bg-yellow-100 text-yellow-800'
-                          }`}>
-                            {b.published ? 'Published' : 'Draft'}
-                          </span>
-                        </td>
-
-                        {/* Total Comments Count */}
-                        <td className="px-3 py-3 whitespace-nowrap">
-                          <span className="font-extrabold text-gray-900 text-xs">
-                            {stats.total} {stats.total === 1 ? 'Comment' : 'Comments'}
-                          </span>
-                        </td>
-
-                        {/* Latest Comment Date & Time (Two Separate Lines) */}
-                        <td className="px-3 py-3 whitespace-nowrap text-left text-xs">
-                          {stats.latestCommentAt ? (
-                            <div>
-                              <div className="font-semibold text-gray-800">
-                                {formatDateTime(stats.latestCommentAt).date}
-                              </div>
-                              <div className="text-gray-400 text-[11px] mt-0.5">
-                                {formatDateTime(stats.latestCommentAt).time}
-                              </div>
-                            </div>
-                          ) : (
-                            <span className="text-gray-400 italic text-xs">
-                              No comments yet.
-                            </span>
-                          )}
-                        </td>
-
-                        {/* Actions */}
-                        <td className="px-4 py-3 text-right whitespace-nowrap">
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSelectedBlog(b);
-                              setStatusTab('all');
-                              setSelectedIds([]);
-                              setSearch('');
-                            }}
-                            className="px-3 py-1.5 bg-[#34953C] hover:bg-[#2b7e32] text-white rounded-lg text-xs font-bold transition-all cursor-pointer shadow-xs inline-flex items-center gap-1"
-                          >
-                            <span>Manage ({stats.total})</span>
-                            <span>→</span>
-                          </button>
-                        </td>
-                      </tr>
-                    );
-                  })
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      ) : (
-        /* ========================================================================= */
-        /* SCREEN 2: SELECTED BLOG'S COMMENTS TABLE (Row-by-Row, Exact Matching)    */
-        /* ========================================================================= */
-        <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 space-y-4 min-h-[calc(100vh-230px)] flex flex-col">
-          {/* Back Button & Selected Blog Header Bar */}
+      {/* Main Comments Container Card */}
+      <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 space-y-4 min-h-[calc(100vh-230px)] flex flex-col">
+        {/* Specific Blog Back Header (Only when a specific blog is selected) */}
+        {selectedBlog && (
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-gray-150">
             <div className="flex items-center gap-3">
               <button
@@ -692,17 +689,18 @@ export default function CommentsListClient({
                 onClick={() => {
                   setSelectedBlog(null);
                   setSelectedIds([]);
+                  setStatusTab('all');
                 }}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-bold rounded-lg border border-gray-300 transition-colors cursor-pointer"
               >
-                ← Back to All Blogs
+                ← Back to All Comments
               </button>
               <div>
                 <span className="text-[10px] font-bold text-[#34953C] uppercase tracking-wider block">
                   Blog Selected:
                 </span>
                 <h2 className="text-sm sm:text-base font-bold text-gray-900 line-clamp-1">
-                  {selectedBlog.title} ({currentBlogComments.length} Comments)
+                  {selectedBlog.title} ({activeComments.length} Comments)
                 </h2>
               </div>
             </div>
@@ -717,247 +715,273 @@ export default function CommentsListClient({
               </Link>
             )}
           </div>
+        )}
 
-          {/* Row 1: Refresh Button | Status Filter Tabs | Search Input */}
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-            <div className="flex items-center gap-3 flex-wrap">
-              {/* Refresh */}
-              <button
-                onClick={refresh}
-                disabled={loading}
-                className={`flex items-center gap-1.5 px-3.5 py-1.5 bg-gray-100 hover:bg-gray-200 border border-gray-300 text-gray-700 font-semibold rounded-lg text-xs transition cursor-pointer ${loading ? 'opacity-60' : ''}`}
-              >
-                <svg className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-                {loading ? 'Refreshing...' : 'Refresh'}
-              </button>
+        {/* Top Controls Row 1: Refresh Button | Status Tabs | Search Input */}
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div className="flex items-center gap-3 flex-wrap">
+            {/* Refresh */}
+            <button
+              onClick={refresh}
+              disabled={loading}
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 bg-gray-100 hover:bg-gray-200 border border-gray-300 text-gray-700 font-semibold rounded-lg text-xs transition cursor-pointer ${loading ? 'opacity-60' : ''}`}
+            >
+              <svg className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              {loading ? 'Refreshing...' : 'Refresh'}
+            </button>
 
-              {/* Status Tabs: All | Mine | Pending | Approved | Spam | Trash */}
-              <div className="flex bg-gray-100 p-0.5 rounded-lg text-xs flex-wrap">
-                {[
-                  { key: 'all', label: 'All', count: tabCounts.all },
-                  { key: 'mine', label: 'Mine', count: tabCounts.mine },
-                  { key: 'pending', label: 'Pending', count: tabCounts.pending },
-                  { key: 'approved', label: 'Approved', count: tabCounts.approved },
-                  { key: 'spam', label: 'Spam', count: tabCounts.spam },
-                  { key: 'trash', label: 'Trash', count: tabCounts.trash },
-                ].map((tab) => (
-                  <button
-                    key={tab.key}
-                    type="button"
-                    onClick={() => setStatusTab(tab.key)}
-                    className={`px-3 py-1.5 rounded-md font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
-                      statusTab === tab.key
-                        ? tab.key === 'approved'
-                          ? 'bg-white text-green-700 shadow-xs'
-                          : tab.key === 'pending'
-                          ? 'bg-white text-yellow-700 shadow-xs'
-                          : tab.key === 'spam' || tab.key === 'trash'
-                          ? 'bg-white text-red-600 shadow-xs'
-                          : 'bg-white text-gray-900 shadow-xs font-bold'
-                        : 'text-gray-500 hover:text-gray-900'
-                    }`}
-                  >
-                    <span>{tab.label}</span>
-                    <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded-full ${
-                      statusTab === tab.key ? 'bg-gray-100 text-gray-800' : 'bg-gray-200 text-gray-600'
-                    }`}>
-                      {tab.count}
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Search Box */}
-            <div className="w-full sm:w-80">
-              <input
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search comments, authors..."
-                className="w-full px-3.5 py-1.5 border border-gray-300 rounded-lg text-xs text-gray-800 focus:ring-2 focus:ring-[#34953C]/40 focus:border-[#34953C] outline-none transition"
-              />
+            {/* Status Tabs: All | Mine | Pending | Approved | Spam | Trash */}
+            <div className="flex bg-gray-100 p-0.5 rounded-lg text-xs flex-wrap">
+              {[
+                { key: 'all', label: 'All', count: tabCounts.all },
+                { key: 'mine', label: 'Mine', count: tabCounts.mine },
+                { key: 'pending', label: 'Pending', count: tabCounts.pending },
+                { key: 'approved', label: 'Approved', count: tabCounts.approved },
+                { key: 'spam', label: 'Spam', count: tabCounts.spam },
+                { key: 'trash', label: 'Trash', count: tabCounts.trash },
+              ].map((tab) => (
+                <button
+                  key={tab.key}
+                  type="button"
+                  onClick={() => setStatusTab(tab.key)}
+                  className={`px-3 py-1.5 rounded-md font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+                    statusTab === tab.key
+                      ? tab.key === 'approved'
+                        ? 'bg-white text-green-700 shadow-xs'
+                        : tab.key === 'pending'
+                        ? 'bg-white text-yellow-700 shadow-xs'
+                        : tab.key === 'spam' || tab.key === 'trash'
+                        ? 'bg-white text-red-600 shadow-xs'
+                        : 'bg-white text-gray-900 shadow-xs font-bold'
+                      : 'text-gray-500 hover:text-gray-900'
+                  }`}
+                >
+                  <span>{tab.label}</span>
+                  <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded-full ${
+                    statusTab === tab.key ? 'bg-gray-100 text-gray-800' : 'bg-gray-200 text-gray-600'
+                  }`}>
+                    {tab.count}
+                  </span>
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* Row 2: Bulk Actions & Filter by Comment Type */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
-            <div className="flex items-center gap-2.5 flex-wrap">
-              {/* Bulk Actions Dropdown */}
-              <select
-                value={bulkAction}
-                onChange={(e) => setBulkAction(e.target.value)}
-                className="bg-white border border-gray-300 rounded-lg px-3 py-1.5 text-xs text-gray-700 outline-none focus:border-[#34953C]"
-              >
-                <option value="">Bulk actions</option>
-                <option value="approve">Approve</option>
-                <option value="unapprove">Unapprove</option>
-                <option value="spam">Mark as Spam</option>
-                <option value="trash">Move to Trash</option>
-                <option value="delete">Delete Permanently</option>
-              </select>
+          {/* Search Box */}
+          <div className="w-full sm:w-80">
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search comments, authors, blogs..."
+              className="w-full px-3.5 py-1.5 border border-gray-300 rounded-lg text-xs text-gray-800 focus:ring-2 focus:ring-[#34953C]/40 focus:border-[#34953C] outline-none transition"
+            />
+          </div>
+        </div>
 
-              <button
-                type="button"
-                onClick={handleApplyBulkAction}
-                disabled={loading || selectedIds.length === 0}
-                className="border border-gray-300 bg-gray-100 hover:bg-gray-200 text-gray-700 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer disabled:opacity-50"
-              >
-                Apply
-              </button>
+        {/* Top Controls Row 2: Bulk Actions & Filter by Comment Type */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
+          <div className="flex items-center gap-2.5 flex-wrap">
+            {/* Bulk Actions Dropdown */}
+            <select
+              value={bulkAction}
+              onChange={(e) => setBulkAction(e.target.value)}
+              className="bg-white border border-gray-300 rounded-lg px-3 py-1.5 text-xs text-gray-700 outline-none focus:border-[#34953C]"
+            >
+              <option value="">Bulk actions</option>
+              <option value="approve">Approve</option>
+              <option value="unapprove">Unapprove</option>
+              <option value="spam">Mark as Spam</option>
+              <option value="trash">Move to Trash</option>
+              <option value="delete">Delete Permanently</option>
+            </select>
 
-              {/* Filter by Comment Type */}
-              <select
-                value={commentType}
-                onChange={(e) => setCommentType(e.target.value)}
-                className="bg-white border border-gray-300 rounded-lg px-3 py-1.5 text-xs text-gray-700 outline-none focus:border-[#34953C] ml-1"
-              >
-                <option value="all">All comment types</option>
-                <option value="comments">Comments</option>
-              </select>
-            </div>
+            <button
+              type="button"
+              onClick={handleApplyBulkAction}
+              disabled={loading || selectedIds.length === 0}
+              className="border border-gray-300 bg-gray-100 hover:bg-gray-200 text-gray-700 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer disabled:opacity-50"
+            >
+              Apply
+            </button>
 
-            {/* Counter info */}
-            <div className="text-xs text-gray-500 font-semibold">
-              {selectedIds.length > 0 && (
-                <span className="text-[#34953C] mr-2 font-bold">{selectedIds.length} selected</span>
-              )}
-              <span>Showing {filteredComments.length} of {currentBlogComments.length} comments</span>
-            </div>
+            {/* Filter by Comment Type */}
+            <select
+              value={commentType}
+              onChange={(e) => setCommentType(e.target.value)}
+              className="bg-white border border-gray-300 rounded-lg px-3 py-1.5 text-xs text-gray-700 outline-none focus:border-[#34953C] ml-1"
+            >
+              <option value="all">All comment types</option>
+              <option value="comments">Comments</option>
+            </select>
           </div>
 
-          {/* Comments Table (Row-by-Row, Exact Matching Screenshot 1 & 3) */}
-          <div className="overflow-x-hidden overflow-y-auto w-full rounded-xl border border-gray-200 shadow-xs flex-1 min-h-[580px] max-h-[calc(100vh-310px)]">
-            <table className="w-full text-xs text-left table-fixed">
-              <thead className="sticky top-0 z-10">
-                <tr className="bg-[#34953C] text-white text-left font-semibold shadow-xs">
-                  <th className="px-3.5 py-3 w-[4%] text-center">
-                    <input
-                      type="checkbox"
-                      checked={filteredComments.length > 0 && selectedIds.length === filteredComments.length}
-                      onChange={handleSelectAll}
-                      className="rounded text-[#34953C] focus:ring-[#34953C] cursor-pointer"
-                    />
-                  </th>
-                  <th className="px-3.5 py-3 w-[18%]">Blog Post</th>
-                  <th className="px-3.5 py-3 w-[16%]">Author</th>
-                  <th className="px-3.5 py-3 w-[26%]">Comment</th>
-                  <th className="px-3.5 py-3 w-[14%] whitespace-nowrap">Date & Time</th>
-                  <th className="px-3.5 py-3 w-[12%]">Status</th>
-                  <th className="px-3.5 py-3 text-right w-[10%]">Actions</th>
+          {/* Counter info */}
+          <div className="text-xs text-gray-500 font-semibold">
+            {selectedIds.length > 0 && (
+              <span className="text-[#34953C] mr-2 font-bold">{selectedIds.length} selected</span>
+            )}
+            <span>Showing {filteredComments.length} of {activeComments.length} comments</span>
+          </div>
+        </div>
+
+        {/* COMMENTS TABLE (Main Table: Shows All Comments from All Blogs || Specific Blog Table) */}
+        <div className="overflow-x-hidden overflow-y-auto w-full rounded-xl border border-gray-200 shadow-xs flex-1 min-h-[480px] max-h-[calc(100vh-310px)]">
+          <table className="w-full text-xs text-left table-fixed">
+            <thead className="sticky top-0 z-10">
+              <tr className="bg-[#34953C] text-white text-left font-semibold shadow-xs">
+                <th className="px-3.5 py-3 w-[4%] text-center">
+                  <input
+                    type="checkbox"
+                    checked={filteredComments.length > 0 && selectedIds.length === filteredComments.length}
+                    onChange={handleSelectAll}
+                    className="rounded text-[#34953C] focus:ring-[#34953C] cursor-pointer"
+                  />
+                </th>
+
+                {/* Author Column */}
+                <th className="px-3.5 py-3 w-[20%]">Author</th>
+
+                {/* Comments Column */}
+                <th className={selectedBlog ? "px-3.5 py-3 w-[56%]" : "px-3.5 py-3 w-[40%]"}>
+                  Comments
+                </th>
+
+                {/* Blog Column (Only rendered when in Main All-Comments View) */}
+                {!selectedBlog && (
+                  <th className="px-3.5 py-3 w-[22%]">Blog</th>
+                )}
+
+                {/* Time / Date Column */}
+                <th className="px-3.5 py-3 w-[14%] whitespace-nowrap">Time / Date</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100 bg-white">
+              {filteredComments.length === 0 ? (
+                <tr>
+                  <td colSpan={selectedBlog ? 4 : 5} className="px-4 py-12 text-center text-gray-400 font-medium">
+                    No comments found.
+                  </td>
                 </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100 bg-white">
-                {filteredComments.length === 0 ? (
-                  <tr>
-                    <td colSpan={7} className="px-4 py-12 text-center text-gray-400 font-medium">
-                      No comments found for this blog.
-                    </td>
-                  </tr>
-                ) : (
-                  filteredComments.map((c) => {
-                    const dt = formatDateTime(c.createdAt);
-                    const isSelected = selectedIds.includes(c._id);
+              ) : (
+                filteredComments.map((c) => {
+                  const dt = formatDateTime(c.createdAt);
+                  const isSelected = selectedIds.includes(c._id);
+                  const bObj = blogsMap[c.blogId];
+                  const blogTitle = c.blogTitle || bObj?.title || 'Blog Post';
+                  const blogSlug = c.blogSlug || bObj?.slug || '';
+                  const bStats = blogStats[c.blogId] || { total: 0, latestCommentAt: null };
 
-                    return (
-                      <tr
-                        key={c._id}
-                        className={`hover:bg-gray-50/80 transition-colors align-middle ${
-                          isSelected ? 'bg-orange-50/40' : ''
-                        }`}
-                      >
-                        {/* Checkbox */}
-                        <td className="px-3.5 py-3 text-center">
-                          <input
-                            type="checkbox"
-                            checked={isSelected}
-                            onChange={() => handleToggleSelect(c._id)}
-                            className="rounded text-[#34953C] focus:ring-[#34953C] cursor-pointer"
-                          />
-                        </td>
+                  return (
+                    <tr
+                      key={c._id}
+                      className={`group hover:bg-gray-50/80 transition-colors align-top ${
+                        isSelected ? 'bg-orange-50/40' : ''
+                      }`}
+                    >
+                      {/* Checkbox */}
+                      <td className="px-3.5 py-3.5 text-center">
+                        <input
+                          type="checkbox"
+                          checked={isSelected}
+                          onChange={() => handleToggleSelect(c._id)}
+                          className="rounded text-[#34953C] focus:ring-[#34953C] cursor-pointer mt-0.5"
+                        />
+                      </td>
 
-                        {/* Blog Post */}
-                        <td className="px-3.5 py-3 min-w-0 text-left">
-                          <span className="font-bold text-gray-900 block truncate text-xs" title={c.blogTitle || selectedBlog.title}>
-                            {c.blogTitle || selectedBlog.title}
+                      {/* Author Column */}
+                      <td className="px-3.5 py-3.5 min-w-0 text-left">
+                        <div className="flex items-start gap-2.5">
+                          <div className="w-7 h-7 bg-gray-200 text-gray-600 rounded-full flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
+                            {c.authorName ? c.authorName.charAt(0).toUpperCase() : 'U'}
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <div className="font-bold text-gray-900 text-xs truncate">{c.authorName}</div>
+                            {c.authorEmail && (
+                              <div className="text-[11px] text-gray-500 font-mono truncate mt-0.5">
+                                {c.authorEmail}
+                              </div>
+                            )}
+                            {c.authorIp && (
+                              <div className="text-[10px] text-gray-400 font-mono truncate mt-0.5">
+                                {c.authorIp}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </td>
+
+                      {/* Comments Column (Includes WordPress Hover Actions & Inline Quick Edit/Reply) */}
+                      <td className="px-3.5 py-3.5 text-left">
+                        <CommentRowContent
+                          comment={c}
+                          onStatusChange={changeStatus}
+                          onOpenEditModal={setEditingComment}
+                          onQuickEditSave={saveEdit}
+                          onReplySubmit={handleReplySubmit}
+                          onDelete={deleteComment}
+                          loading={loading}
+                        />
+                      </td>
+
+                      {/* Blog Column (Rendered only on Main View) */}
+                      {!selectedBlog && (
+                        <td className="px-3.5 py-3.5 min-w-0 text-left">
+                          <span className="font-bold text-gray-900 block truncate text-xs" title={blogTitle}>
+                            {blogTitle}
                           </span>
-                          {selectedBlog.slug && (
+                          {blogSlug && (
                             <Link
-                              href={`/blog/${selectedBlog.slug}`}
+                              href={`/blog/${blogSlug}`}
                               target="_blank"
-                              className="text-[10px] text-[#41b349] hover:underline block truncate mt-0.5"
+                              className="text-[10px] text-[#41b349] hover:underline inline-block mt-0.5 font-medium"
                             >
                               View Post ↗
                             </Link>
                           )}
-                        </td>
 
-                        {/* Author */}
-                        <td className="px-3.5 py-3 min-w-0 text-left">
-                          <div className="font-bold text-gray-900 text-xs truncate">{c.authorName}</div>
-                          {c.authorEmail && (
-                            <div className="text-[11px] text-gray-400 font-mono truncate mt-0.5">
-                              {c.authorEmail}
-                            </div>
-                          )}
-                        </td>
-
-                        {/* Comment */}
-                        <td className="px-3.5 py-3 text-left">
-                          {c.inReplyTo && (
-                            <span className="text-[10px] text-[#41b349] font-semibold block mb-0.5">
-                              In reply to {c.inReplyTo}
-                            </span>
-                          )}
-                          <CommentCell text={c.comment} />
-                        </td>
-
-                        {/* Date & Time */}
-                        <td className="px-3.5 py-3 text-xs whitespace-nowrap text-left">
-                          <div className="font-semibold text-gray-700">{dt.date}</div>
-                          <div className="text-gray-400 text-[11px] mt-0.5">{dt.time}</div>
-                        </td>
-
-                        {/* Status Dropdown */}
-                        <td className="px-3.5 py-3 text-left whitespace-nowrap align-middle">
-                          <StatusDropdown comment={c} onStatusChange={changeStatus} loading={loading} />
-                        </td>
-
-                        {/* Actions: Edit & Delete (Stacked Vertically) */}
-                        <td className="px-3.5 py-3 text-right whitespace-nowrap align-middle">
-                          <div className="flex flex-col items-end gap-1.5">
+                          {/* Blog Comment Count Badge/Link */}
+                          <div className="mt-1.5">
                             <button
                               type="button"
-                              onClick={() => setEditingComment(c)}
-                              className="px-2.5 py-1 text-[11px] font-semibold rounded border border-gray-200 text-gray-700 hover:bg-gray-100 transition cursor-pointer flex items-center justify-center gap-1 w-[68px]"
+                              onClick={() => openSpecificBlog(c.blogId, blogTitle, blogSlug)}
+                              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#34953C]/10 hover:bg-[#34953C]/20 text-[#34953C] text-[11px] font-bold transition cursor-pointer group-hover:shadow-xs"
+                              title="Click to view all comments for this blog"
                             >
-                              <svg className="w-2.5 h-2.5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                               </svg>
-                              Edit
-                            </button>
-
-                            <button
-                              type="button"
-                              onClick={() => deleteComment(c._id)}
-                              disabled={loading}
-                              className="px-2.5 py-1 border border-red-200 text-red-600 hover:bg-red-50 rounded text-[11px] font-semibold transition cursor-pointer disabled:opacity-50 w-[68px] text-center"
-                            >
-                              Delete
+                              <span>{bStats.total} {bStats.total === 1 ? 'Comment' : 'Comments'}</span>
                             </button>
                           </div>
+
+                          {/* Comment count and date/time at bottom of blog info */}
+                          <div className="text-[10px] text-gray-500 mt-1.5 font-medium border-t border-gray-100 pt-1">
+                            Total: <span className="font-semibold text-gray-700">{bStats.total}</span>
+                            {bStats.latestCommentAt && (
+                              <span className="ml-1 text-gray-400">
+                                • Latest: {formatDateTime(bStats.latestCommentAt).date}
+                              </span>
+                            )}
+                          </div>
                         </td>
-                      </tr>
-                    );
-                  })
-                )}
-              </tbody>
-            </table>
-          </div>
+                      )}
+
+                      {/* Time / Date Column */}
+                      <td className="px-3.5 py-3.5 text-xs whitespace-nowrap text-left">
+                        <div className="font-semibold text-gray-700">{dt.date}</div>
+                        <div className="text-gray-400 text-[11px] mt-0.5">{dt.time}</div>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
         </div>
-      )}
+      </div>
     </div>
   );
 }
