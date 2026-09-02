@@ -146,8 +146,8 @@ const Technology = ({ cmsContent }) => {
                 titleColor: "text-white group-hover:text-[#FFF0E6]",
                 badgeColor: "text-white font-extrabold",
                 footerTextColor: "text-white font-extrabold group-hover:text-white",
-                arrowClass: "bg-white/20 text-white group-hover:bg-white group-hover:text-[#D96520]",
-                borderDivider: "border-white/30",
+                arrowClass: "bg-white/30 text-white group-hover:bg-white group-hover:text-[#D96520]",
+                borderDivider: "border-white/60",
               },
               {
                 bgColor: "#FFB904",
@@ -158,8 +158,8 @@ const Technology = ({ cmsContent }) => {
                 titleColor: "text-[#261A00] group-hover:text-black",
                 badgeColor: "text-[#382600] font-extrabold",
                 footerTextColor: "text-[#261A00] font-extrabold group-hover:text-black",
-                arrowClass: "bg-black/10 text-[#261A00] group-hover:bg-[#261A00] group-hover:text-white",
-                borderDivider: "border-black/20",
+                arrowClass: "bg-black/20 text-[#261A00] group-hover:bg-[#261A00] group-hover:text-white",
+                borderDivider: "border-black/50",
               },
               {
                 bgColor: "#215A34",
@@ -170,8 +170,8 @@ const Technology = ({ cmsContent }) => {
                 titleColor: "text-white group-hover:text-[#88F293]",
                 badgeColor: "text-white font-extrabold",
                 footerTextColor: "text-white font-extrabold group-hover:text-[#88F293]",
-                arrowClass: "bg-white/20 text-white group-hover:bg-[#6BE874] group-hover:text-[#184527]",
-                borderDivider: "border-white/30",
+                arrowClass: "bg-white/30 text-white group-hover:bg-[#6BE874] group-hover:text-[#184527]",
+                borderDivider: "border-white/60",
               },
               {
                 bgColor: "#0E0707",
@@ -182,8 +182,8 @@ const Technology = ({ cmsContent }) => {
                 titleColor: "text-white group-hover:text-[#FFE0E0]",
                 badgeColor: "text-[#FFE7A8] font-extrabold",
                 footerTextColor: "text-[#FFE7A8] font-extrabold group-hover:text-white",
-                arrowClass: "bg-white/10 text-white group-hover:bg-white group-hover:text-[#0E0707]",
-                borderDivider: "border-gray-800",
+                arrowClass: "bg-white/20 text-white group-hover:bg-white group-hover:text-[#0E0707]",
+                borderDivider: "border-gray-700",
               },
               {
                 bgColor: "#FFF0CF",
@@ -194,8 +194,8 @@ const Technology = ({ cmsContent }) => {
                 titleColor: "text-[#3D2800] group-hover:text-[#1F1400]",
                 badgeColor: "text-[#593900] font-extrabold",
                 footerTextColor: "text-[#3D2800] font-extrabold group-hover:text-[#1F1400]",
-                arrowClass: "bg-black/10 text-[#3D2800] group-hover:bg-[#593900] group-hover:text-white",
-                borderDivider: "border-black/20",
+                arrowClass: "bg-black/20 text-[#3D2800] group-hover:bg-[#593900] group-hover:text-white",
+                borderDivider: "border-black/50",
               },
             ];
 
@@ -204,7 +204,7 @@ const Technology = ({ cmsContent }) => {
             return (
               <Link key={i} href={item.link} className="block group shrink-0">
                 <div 
-                  className={`w-[280px] sm:w-[320px] md:w-[350px] h-[400px] sm:h-[430px] rounded-3xl border border-gray-800/20 p-6 sm:p-7 flex flex-col justify-between transform group-hover:-translate-y-2.5 transition-all duration-300 relative overflow-hidden shadow-md ${cfg.borderHover}`}
+                  className={`w-[280px] sm:w-[320px] md:w-[350px] h-[400px] sm:h-[430px] rounded-3xl border border-transparent p-6 sm:p-7 flex flex-col justify-between transform group-hover:-translate-y-2.5 transition-all duration-300 relative overflow-hidden shadow-md ${cfg.borderHover}`}
                   style={{ backgroundColor: cfg.bgColor }}
                   onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = cfg.hoverBg; }}
                   onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = cfg.bgColor; }}
