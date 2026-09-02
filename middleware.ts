@@ -1,3 +1,7 @@
+if (typeof self === "undefined") {
+  (globalThis as any).self = globalThis;
+}
+
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 

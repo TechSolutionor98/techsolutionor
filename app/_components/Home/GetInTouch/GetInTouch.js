@@ -2,11 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Image from 'next/image';
-import { FaTimes, FaChevronDown, FaCheckCircle, FaSpinner, FaChevronLeft, FaChevronRight, FaArrowRight, FaArrowLeft, FaPaperPlane, FaEnvelopeOpenText, FaEdit } from 'react-icons/fa';
-import { useQuote } from '../_context/QuoteContext';
-import formBg from '@/components/Images/formbg.png';
-import ballFrom from '@/components/Images/ballfrom.png';
+import { FaChevronDown, FaCheckCircle, FaSpinner, FaPaperPlane, FaChevronLeft, FaChevronRight, FaArrowRight, FaArrowLeft, FaEnvelopeOpenText, FaEdit } from 'react-icons/fa';
+import { getCmsVal } from "@/lib/api-helper";
 
 const COUNTRY_DIAL_CODES = [
     { name: "United Arab Emirates", code: "+971", minDigits: 9, maxDigits: 9, sample: "50 123 4567" },
@@ -57,18 +54,16 @@ const MONTH_NAMES = [
 
 const DAY_NAMES_SHORT = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
-const GetQuoteForm = () => {
-    const { isOpen, closeQuote } = useQuote();
-
-    // Multi-Step State: 1: Calendar, 2: Personal Info, 3: Email OTP Verification, 4: Project Details
-    const [step, setStep] = useState(1);
-
+const GetInTouch = ({ cmsContent }) => {
     // Dynamic Date Setup & Past Restrictions
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
     const [currentDate, setCurrentDate] = useState(() => new Date(today.getFullYear(), today.getMonth(), 1));
     const [selectedDay, setSelectedDay] = useState(today.getDate());
+    
+    // Step State: 1: Calendar, 2: Personal Info, 3: Email OTP Verification, 4: Project Details
+    const [step, setStep] = useState(1); 
 
     // Form Data State
     const [formData, setFormData] = useState({
@@ -96,7 +91,7 @@ const GetQuoteForm = () => {
     // Selected country object
     const selectedCountryObj = COUNTRY_DIAL_CODES.find(c => c.name === formData.country);
 
-    // Countdown Timer for OTP
+    // Resend OTP Countdown Timer
     useEffect(() => {
         if (resendCooldown <= 0) return;
         const timer = setInterval(() => {
@@ -118,7 +113,10 @@ const GetQuoteForm = () => {
             setCurrentDate(new Date(year, month - 1, 1));
         }
     };
-    const handleNextMonth = () => setCurrentDate(new Date(year, month + 1, 1));
+
+    const handleNextMonth = () => {
+        setCurrentDate(new Date(year, month + 1, 1));
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -160,13 +158,13 @@ const GetQuoteForm = () => {
 
     const formattedSelectedDateString = `${getSelectedDayOfWeekShort()} ${formatOrdinal(selectedDay)} ${MONTH_NAMES[month].slice(0, 3)} ${year}`;
 
-    // Step Navigators
+    // Step 1 -> Step 2
     const goToStep2 = (dayToSelect = selectedDay) => {
         if (!dayToSelect) {
             setStatus({ type: 'error', message: 'Please select a date from the calendar.' });
             return;
         }
-
+        
         const checkDate = new Date(year, month, dayToSelect);
         checkDate.setHours(0, 0, 0, 0);
         if (checkDate < today) {
@@ -339,22 +337,22 @@ const GetQuoteForm = () => {
                     preferredDate: formattedSelectedDateString,
                     message: (formData.message || '').trim(),
                     emailVerified: otpVerified,
-                    source: 'Get A Quote Modal'
+                    source: 'Get In Touch Multi-Step Booking'
                 })
             });
 
             const data = await res.json();
 
             if (!res.ok) {
-                throw new Error(data.error || 'Failed to submit quote request');
+                throw new Error(data.error || 'Failed to submit booking');
             }
 
             setStatus({
                 type: 'success',
-                message: 'Thank you! Your booking request has been submitted. We will contact you shortly.'
+                message: 'Thank you! Your booking request has been submitted successfully. We will get in touch with you shortly.'
             });
 
-            // Reset form
+            // Reset Form & Return to Step 1 after success
             setFormData({
                 name: '',
                 country: '',
@@ -368,13 +366,11 @@ const GetQuoteForm = () => {
             setOtpVerified(false);
 
             setTimeout(() => {
-                closeQuote();
                 setStep(1);
-                setStatus({ type: '', message: '' });
-            }, 3000);
+            }, 3500);
 
         } catch (err) {
-            console.error('Quote submission error:', err);
+            console.error('Booking submission error:', err);
             setStatus({
                 type: 'error',
                 message: err.message || 'Something went wrong. Please try again.'
@@ -384,157 +380,105 @@ const GetQuoteForm = () => {
         }
     };
 
-    const modalVariants = {
-        hidden: { opacity: 0, scale: 0.95, y: 30 },
-        visible: { opacity: 1, scale: 1, y: 0 },
-        exit: { opacity: 0, scale: 0.95, y: 30 }
-    };
-
-    const backdropVariants = {
-        hidden: { opacity: 0 },
-        visible: { opacity: 1 },
-        exit: { opacity: 0 }
-    };
-
-    if (!isOpen) return null;
+    const sectionSubtitle = getCmsVal(
+        cmsContent, 
+        "Schedule a short chat with our Director to see if Voltaria is a good fit for your company.", 
+        "getintouch"
+    );
 
     return (
-        <AnimatePresence>
-            {isOpen && (
-                <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
-                    {/* Backdrop */}
-                    <motion.div
-                        className="fixed inset-0 bg-black/85 backdrop-blur-xs"
-                        variants={backdropVariants}
-                        initial="hidden"
-                        animate="visible"
-                        exit="exit"
-                        transition={{ duration: 0.25 }}
-                        onClick={() => {
-                            if (!loading) {
-                                closeQuote();
-                                setStatus({ type: '', message: '' });
-                            }
-                        }}
-                    />
+        <section id="get-in-touch" className="relative overflow-hidden bg-[#171717] py-12 md:py-16 text-white select-none">
+            {/* Background Glow Accents */}
+            <div className="absolute top-1/2 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] bg-[#41B349]/10 blur-[150px] rounded-full pointer-events-none" />
+            <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[#41B349]/5 blur-[120px] rounded-full pointer-events-none" />
 
-                    {/* Modal Form Container */}
-                    <motion.div
-                        className="relative w-full max-w-[460px] max-h-[94vh] bg-[#171717] rounded-[24px] overflow-hidden shadow-[0_25px_70px_rgba(0,0,0,0.9)] border-2 border-white my-auto z-10"
-                        variants={modalVariants}
-                        initial="hidden"
-                        animate="visible"
-                        exit="exit"
-                        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                    >
-                        {/* Background Graphic Asset */}
-                        <div className="absolute inset-0 z-0 pointer-events-none opacity-40">
-                            <Image
-                                src={formBg}
-                                alt="Form Background"
-                                fill
-                                className="object-cover object-right"
-                                priority
-                            />
-                        </div>
-
-                        {/* Geometric Accent */}
-                        <div className="absolute top-6 right-16 z-0 pointer-events-none select-none opacity-80 hidden sm:block">
-                            <Image
-                                src={ballFrom}
-                                alt="Decoration"
-                                width={80}
-                                height={80}
-                                className="w-[60px] h-auto object-contain"
-                            />
-                        </div>
-
-                        {/* Close Button */}
-                        <button
-                            onClick={() => {
-                                closeQuote();
-                                setStatus({ type: '', message: '' });
-                            }}
-                            className="absolute top-4 right-4 text-white/70 hover:text-white hover:bg-white/10 transition-all z-30 p-2 rounded-full cursor-pointer"
-                            aria-label="Close modal"
+            <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+                    
+                    {/* Left Column: Heading & Info */}
+                    <div className="lg:col-span-5 flex flex-col items-start justify-center text-left">
+                        <h2 
+                            className="text-4xl sm:text-5xl md:text-6xl font-black text-white uppercase tracking-tight leading-none mb-4"
+                            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
                         >
-                            <FaTimes size={16} />
-                        </button>
+                            <span>GET IN </span>
+                            <span className="block text-[#41B349]">TOUCH</span>
+                        </h2>
 
-                        {/* Modal Body */}
-                        <div className="relative z-10 p-5 sm:p-6 overflow-y-auto max-h-[90vh]">
+                        <p className="text-gray-300 text-base sm:text-lg leading-relaxed max-w-md font-medium">
+                            {sectionSubtitle}
+                        </p>
+                    </div>
+
+                    {/* Right Column: Calendar & Booking Card */}
+                    <div className="lg:col-span-7 flex justify-center lg:justify-end w-full">
+                        <div className="relative w-full max-w-[460px] bg-[#171717] rounded-3xl p-6 sm:p-7 border-2 border-white shadow-[0_25px_60px_rgba(0,0,0,0.8)]">
                             
-                            {/* Header */}
-                            <div className="mb-3">
-                                <h2 className="text-white text-xl sm:text-2xl font-extrabold tracking-wide leading-tight">
-                                    Get A Quote
-                                </h2>
-                            </div>
-
                             {/* Status Banner */}
                             {status.message && (
-                                <div className={`mb-4 p-3 rounded-xl text-xs font-medium flex items-center gap-2.5 ${
+                                <div className={`mb-4 p-3.5 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-2.5 ${
                                     status.type === 'success' 
-                                        ? 'bg-green-950/80 border border-green-500/50 text-green-300' 
-                                        : 'bg-red-950/80 border border-red-500/50 text-red-300'
+                                        ? 'bg-green-950/90 border border-green-500/50 text-green-300' 
+                                        : 'bg-red-950/90 border border-red-500/50 text-red-300'
                                 }`}>
                                     {status.type === 'success' ? (
-                                        <FaCheckCircle className="text-green-400 text-base flex-shrink-0" />
+                                        <FaCheckCircle className="text-green-400 text-lg flex-shrink-0" />
                                     ) : (
-                                        <span className="w-2 h-2 rounded-full bg-red-400 flex-shrink-0" />
+                                        <span className="w-2.5 h-2.5 rounded-full bg-red-400 flex-shrink-0" />
                                     )}
                                     <span>{status.message}</span>
                                 </div>
                             )}
 
-                            {/* ================= STEP 1: CALENDAR ================= */}
+                            {/* ================= STEP 1: CALENDAR (SELECT DATE) ================= */}
                             {step === 1 && (
                                 <motion.div 
                                     initial={{ opacity: 0, scale: 0.98 }}
                                     animate={{ opacity: 1, scale: 1 }}
                                     exit={{ opacity: 0, scale: 0.98 }}
-                                    className="space-y-3.5"
+                                    transition={{ duration: 0.2 }}
+                                    className="space-y-4"
                                 >
                                     {/* Month Navigation */}
-                                    <div className="flex items-center justify-between mb-1">
-                                        <h3 className="text-base sm:text-lg font-black text-white tracking-tight flex items-center gap-2">
+                                    <div className="flex items-center justify-between mb-2">
+                                        <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight flex items-center gap-2">
                                             <span>{MONTH_NAMES[month]}</span>
-                                            <span className="text-[#FFC700] font-normal">{year}</span>
+                                            <span className="text-gray-400 font-normal">{year}</span>
                                         </h3>
-                                        <div className="flex items-center gap-1">
+                                        <div className="flex items-center gap-2">
                                             <button 
                                                 type="button" 
                                                 disabled={isPrevMonthDisabled}
                                                 onClick={handlePrevMonth}
-                                                className={`p-1.5 rounded-lg bg-white/5 transition ${
+                                                className={`p-2 rounded-xl bg-white/5 transition ${
                                                     isPrevMonthDisabled 
                                                         ? 'opacity-20 cursor-not-allowed text-gray-500' 
-                                                        : 'hover:bg-white/10 text-gray-400 hover:text-white cursor-pointer'
+                                                        : 'hover:bg-white/10 text-gray-300 hover:text-white cursor-pointer'
                                                 }`}
                                             >
-                                                <FaChevronLeft size={10} />
+                                                <FaChevronLeft size={12} />
                                             </button>
                                             <button 
                                                 type="button" 
                                                 onClick={handleNextMonth}
-                                                className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition cursor-pointer"
+                                                className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white transition cursor-pointer"
                                             >
-                                                <FaChevronRight size={10} />
+                                                <FaChevronRight size={12} />
                                             </button>
                                         </div>
                                     </div>
 
-                                    {/* Days Header */}
-                                    <div className="grid grid-cols-7 gap-1 text-center text-[10px] font-black text-gray-400 uppercase tracking-wider pb-1 border-b border-white/10">
+                                    {/* Days of Week Header */}
+                                    <div className="grid grid-cols-7 gap-1 text-center text-xs font-black text-gray-400 uppercase tracking-widest pb-2 border-b border-white/15">
                                         {DAY_NAMES_SHORT.map(d => (
                                             <div key={d} className="py-0.5">{d}</div>
                                         ))}
                                     </div>
 
-                                    {/* Calendar Days */}
-                                    <div className="grid grid-cols-7 gap-1 sm:gap-1.5">
+                                    {/* Calendar Days Grid */}
+                                    <div className="grid grid-cols-7 gap-1.5 sm:gap-2">
                                         {Array.from({ length: firstDayOfWeek }).map((_, idx) => (
-                                            <div key={`blank-${idx}`} className="h-8" />
+                                            <div key={`blank-${idx}`} className="h-10 sm:h-11" />
                                         ))}
 
                                         {Array.from({ length: daysInMonth }).map((_, idx) => {
@@ -551,17 +495,17 @@ const GetQuoteForm = () => {
                                                     type="button"
                                                     disabled={isPast}
                                                     onClick={() => !isPast && setSelectedDay(dayNum)}
-                                                    className={`h-8 sm:h-9 rounded-lg text-xs font-bold flex flex-col items-center justify-center relative transition-all ${
+                                                    className={`h-10 sm:h-11 rounded-xl text-sm font-bold flex flex-col items-center justify-center relative transition-all ${
                                                         isPast
-                                                            ? 'text-gray-600 opacity-30 cursor-not-allowed bg-transparent'
+                                                            ? 'text-gray-600 opacity-25 cursor-not-allowed bg-transparent'
                                                             : isSelected 
-                                                                ? 'bg-white text-black font-extrabold shadow-md scale-105 z-10 cursor-pointer' 
-                                                                : 'bg-[#252930] hover:bg-[#323742] text-white cursor-pointer'
+                                                                ? 'bg-white text-black font-black shadow-xl scale-105 z-10 cursor-pointer' 
+                                                                : 'bg-[#2A2E35] hover:bg-[#3B424E] text-white cursor-pointer'
                                                     }`}
                                                 >
                                                     <span>{dayNum}</span>
                                                     {isSelected && (
-                                                        <span className="w-1 h-1 rounded-full bg-black mt-0.5" />
+                                                        <span className="w-1.5 h-1.5 rounded-full bg-black mt-0.5" />
                                                     )}
                                                 </button>
                                             );
@@ -570,14 +514,14 @@ const GetQuoteForm = () => {
 
                                     {/* Next Button */}
                                     {selectedDay && (
-                                        <div className="pt-2 flex justify-end">
+                                        <div className="pt-3 flex justify-end">
                                             <button
                                                 type="button"
                                                 onClick={() => goToStep2()}
-                                                className="bg-[#41B349] hover:bg-[#369c3d] text-white px-6 py-2.5 rounded-full font-bold text-xs sm:text-sm flex items-center gap-2 transition shadow-md shadow-[#41B349]/30 cursor-pointer"
+                                                className="bg-[#41B349] hover:bg-[#369c3d] text-white px-7 py-3 rounded-full font-extrabold text-xs sm:text-sm flex items-center gap-2 transition-all shadow-lg shadow-[#41B349]/30 hover:scale-[1.02] cursor-pointer"
                                             >
                                                 <span>Next</span>
-                                                <FaArrowRight size={11} />
+                                                <FaArrowRight size={12} />
                                             </button>
                                         </div>
                                     )}
@@ -590,92 +534,109 @@ const GetQuoteForm = () => {
                                     initial={{ opacity: 0, x: 10 }}
                                     animate={{ opacity: 1, x: 0 }}
                                     exit={{ opacity: 0, x: -10 }}
-                                    className="space-y-3.5"
+                                    transition={{ duration: 0.2 }}
+                                    className="space-y-4"
                                 >
                                     <div className="mb-2">
-                                        <h3 className="text-lg font-bold text-white tracking-tight">
-                                            Personal Details
+                                        <h3 className="text-xl font-black text-white tracking-tight">
+                                            Enter Your Details
                                         </h3>
-                                        <p className="text-gray-400 text-xs mt-0.5">
+                                        <p className="text-gray-400 text-xs sm:text-sm mt-0.5">
                                             Selected Date: <span className="text-[#FFC700] font-bold">{formattedSelectedDateString}</span>
                                         </p>
                                     </div>
 
                                     <div>
+                                        <label className="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1">
+                                            Full Name <span className="text-[#41B349]">*</span>
+                                        </label>
                                         <input
                                             type="text"
                                             name="name"
                                             value={formData.name}
                                             onChange={handleChange}
-                                            placeholder="Full Name *"
+                                            placeholder="Enter your full name"
                                             required
-                                            className="w-full h-10 bg-white rounded-md px-3.5 text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs"
+                                            className="w-full h-11 bg-white rounded-xl px-4 text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs"
                                         />
                                     </div>
 
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                        <div className="relative">
-                                            <select
-                                                name="country"
-                                                value={formData.country}
-                                                onChange={handleCountryChange}
-                                                className="w-full h-10 bg-white rounded-md px-3.5 pr-10 text-gray-700 text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs cursor-pointer"
-                                            >
-                                                <option value="">Select your Country *</option>
-                                                {COUNTRY_DIAL_CODES.map((c) => (
-                                                    <option key={c.name} value={c.name}>{c.name} ({c.code})</option>
-                                                ))}
-                                            </select>
-                                            <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
-                                                <FaChevronDown size={11} />
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                                        <div>
+                                            <label className="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1">
+                                                Country <span className="text-[#41B349]">*</span>
+                                            </label>
+                                            <div className="relative">
+                                                <select
+                                                    name="country"
+                                                    value={formData.country}
+                                                    onChange={handleCountryChange}
+                                                    className="w-full h-11 bg-white rounded-xl px-4 pr-10 text-gray-800 text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs cursor-pointer"
+                                                >
+                                                    <option value="">Select your Country</option>
+                                                    {COUNTRY_DIAL_CODES.map((c) => (
+                                                        <option key={c.name} value={c.name}>{c.name} ({c.code})</option>
+                                                    ))}
+                                                </select>
+                                                <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+                                                    <FaChevronDown size={11} />
+                                                </div>
                                             </div>
                                         </div>
 
-                                        <div className="relative flex items-center">
-                                            {/* Uneditable Country Dial Code Badge */}
-                                            {selectedCountryObj?.code && (
-                                                <div className="bg-gray-100 border-r border-gray-300 text-gray-900 font-extrabold text-xs px-2.5 h-10 flex items-center justify-center rounded-l-md select-none flex-shrink-0">
-                                                    {selectedCountryObj.code}
-                                                </div>
-                                            )}
-                                            <input
-                                                type="tel"
-                                                name="phoneDigits"
-                                                value={phoneDigits}
-                                                onChange={(e) => {
-                                                    const val = e.target.value.replace(/[^0-9]/g, '');
-                                                    const max = selectedCountryObj?.maxDigits || 15;
-                                                    setPhoneDigits(val.slice(0, max));
-                                                    if (status.message) setStatus({ type: '', message: '' });
-                                                }}
-                                                disabled={!formData.country}
-                                                maxLength={selectedCountryObj?.maxDigits || 15}
-                                                placeholder={
-                                                    !formData.country 
-                                                        ? "Select country *" 
-                                                        : `Enter ${selectedCountryObj?.minDigits === selectedCountryObj?.maxDigits ? `${selectedCountryObj?.maxDigits} digits *` : 'phone number *'}`
-                                                }
-                                                required
-                                                className={`w-full h-10 text-sm transition shadow-xs ${
-                                                    selectedCountryObj?.code ? 'rounded-r-md px-2.5' : 'rounded-md px-3.5'
-                                                } ${
-                                                    !formData.country 
-                                                        ? 'bg-gray-200/80 text-gray-500 cursor-not-allowed opacity-70 placeholder-gray-500' 
-                                                        : 'bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#41B349]'
-                                                }`}
-                                            />
+                                        <div>
+                                            <label className="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1">
+                                                Phone Number <span className="text-[#41B349]">*</span>
+                                            </label>
+                                            <div className="relative flex items-center">
+                                                {/* Uneditable Country Dial Code Badge */}
+                                                {selectedCountryObj?.code && (
+                                                    <div className="bg-gray-100 border-r border-gray-300 text-gray-900 font-extrabold text-xs sm:text-sm px-3 h-11 flex items-center justify-center rounded-l-xl select-none flex-shrink-0">
+                                                        {selectedCountryObj.code}
+                                                    </div>
+                                                )}
+                                                <input
+                                                    type="tel"
+                                                    name="phoneDigits"
+                                                    value={phoneDigits}
+                                                    onChange={(e) => {
+                                                        const val = e.target.value.replace(/[^0-9]/g, '');
+                                                        const max = selectedCountryObj?.maxDigits || 15;
+                                                        setPhoneDigits(val.slice(0, max));
+                                                        if (status.message) setStatus({ type: '', message: '' });
+                                                    }}
+                                                    disabled={!formData.country}
+                                                    maxLength={selectedCountryObj?.maxDigits || 15}
+                                                    placeholder={
+                                                        !formData.country 
+                                                            ? "Select country first *" 
+                                                            : `Enter ${selectedCountryObj?.minDigits === selectedCountryObj?.maxDigits ? `${selectedCountryObj?.maxDigits} digits` : 'phone number'}`
+                                                    }
+                                                    required
+                                                    className={`w-full h-11 text-sm transition shadow-xs ${
+                                                        selectedCountryObj?.code ? 'rounded-r-xl px-3' : 'rounded-xl px-4'
+                                                    } ${
+                                                        !formData.country 
+                                                            ? 'bg-gray-200/80 text-gray-500 cursor-not-allowed opacity-70 placeholder-gray-500' 
+                                                            : 'bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#41B349]'
+                                                    }`}
+                                                />
+                                            </div>
                                         </div>
                                     </div>
 
                                     <div>
+                                        <label className="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1">
+                                            Email Address <span className="text-[#41B349]">*</span>
+                                        </label>
                                         <input
                                             type="email"
                                             name="email"
                                             value={formData.email || ''}
                                             onChange={handleChange}
-                                            placeholder="Email Address *"
+                                            placeholder="name@company.com"
                                             required
-                                            className="w-full h-10 bg-white rounded-md px-3.5 text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs"
+                                            className="w-full h-11 bg-white rounded-xl px-4 text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs"
                                         />
                                     </div>
 
@@ -684,7 +645,7 @@ const GetQuoteForm = () => {
                                         <button
                                             type="button"
                                             onClick={() => setStep(1)}
-                                            className="px-4 py-2 rounded-full bg-white/10 hover:bg-white/15 text-white font-bold text-xs flex items-center gap-1.5 transition cursor-pointer"
+                                            className="px-5 py-2.5 rounded-full bg-white/10 hover:bg-white/15 text-white font-bold text-xs sm:text-sm flex items-center gap-2 transition cursor-pointer"
                                         >
                                             <FaArrowLeft size={11} />
                                             <span>Back</span>
@@ -693,7 +654,7 @@ const GetQuoteForm = () => {
                                             type="button"
                                             onClick={() => handleSendOtp(false)}
                                             disabled={sendingOtp}
-                                            className="bg-[#41B349] hover:bg-[#369c3d] text-white px-6 py-2.5 rounded-full font-bold text-xs sm:text-sm flex items-center gap-2 transition shadow-md shadow-[#41B349]/30 disabled:opacity-60 cursor-pointer"
+                                            className="bg-[#41B349] hover:bg-[#369c3d] text-white px-7 py-2.5 rounded-full font-extrabold text-xs sm:text-sm flex items-center gap-2 transition shadow-lg shadow-[#41B349]/30 disabled:opacity-60 cursor-pointer"
                                         >
                                             {sendingOtp ? (
                                                 <>
@@ -703,7 +664,7 @@ const GetQuoteForm = () => {
                                             ) : (
                                                 <>
                                                     <span>Next</span>
-                                                    <FaArrowRight size={11} />
+                                                    <FaArrowRight size={12} />
                                                 </>
                                             )}
                                         </button>
@@ -717,33 +678,34 @@ const GetQuoteForm = () => {
                                     initial={{ opacity: 0, x: 10 }}
                                     animate={{ opacity: 1, x: 0 }}
                                     exit={{ opacity: 0, x: -10 }}
-                                    className="space-y-3.5 text-center"
+                                    transition={{ duration: 0.2 }}
+                                    className="space-y-4 text-center"
                                 >
-                                    <div className="flex flex-col items-center justify-center pt-1">
-                                        <div className="w-12 h-12 rounded-xl bg-[#41B349]/15 border border-[#41B349]/30 flex items-center justify-center text-[#41B349] mb-2">
-                                            <FaEnvelopeOpenText size={22} />
+                                    <div className="flex flex-col items-center justify-center pt-2">
+                                        <div className="w-14 h-14 rounded-2xl bg-[#41B349]/15 border border-[#41B349]/30 flex items-center justify-center text-[#41B349] mb-3">
+                                            <FaEnvelopeOpenText size={26} />
                                         </div>
-                                        <h3 className="text-lg font-bold text-white tracking-tight">
+                                        <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
                                             Verify Your Email
                                         </h3>
-                                        <p className="text-gray-300 text-xs mt-0.5 max-w-xs leading-relaxed">
+                                        <p className="text-gray-300 text-xs sm:text-sm mt-1 max-w-xs leading-relaxed">
                                             We sent a 6-digit verification code to:
                                         </p>
-                                        <div className="flex items-center justify-center gap-1.5 mt-1 bg-white/5 border border-white/10 px-3 py-1 rounded-full">
-                                            <span className="text-[#FFC700] font-bold text-xs">{formData.email}</span>
+                                        <div className="flex items-center justify-center gap-2 mt-1 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-full">
+                                            <span className="text-[#FFC700] font-bold text-xs sm:text-sm">{formData.email}</span>
                                             <button 
                                                 type="button"
                                                 onClick={() => setStep(2)}
                                                 className="text-gray-400 hover:text-white transition cursor-pointer"
                                                 title="Edit Email"
                                             >
-                                                <FaEdit size={11} />
+                                                <FaEdit size={12} />
                                             </button>
                                         </div>
                                     </div>
 
                                     {/* 6-Digit Code Input */}
-                                    <div className="py-1">
+                                    <div className="py-2">
                                         <input
                                             type="text"
                                             maxLength={6}
@@ -754,12 +716,12 @@ const GetQuoteForm = () => {
                                                 if (status.message) setStatus({ type: '', message: '' });
                                             }}
                                             placeholder="• • • • • •"
-                                            className="w-full max-w-[240px] mx-auto h-11 bg-white rounded-xl text-center text-gray-900 text-lg font-extrabold tracking-[0.35em] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#41B349] shadow-xs"
+                                            className="w-full max-w-[260px] mx-auto h-12 bg-white rounded-2xl text-center text-gray-900 text-xl font-extrabold tracking-[0.4em] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#41B349] shadow-md"
                                         />
                                     </div>
 
                                     {/* Resend Timer */}
-                                    <div className="text-[11px] text-gray-400">
+                                    <div className="text-xs text-gray-400">
                                         Didn't receive the code?{' '}
                                         {resendCooldown > 0 ? (
                                             <span className="text-gray-500 font-semibold">Resend code in {resendCooldown}s</span>
@@ -776,11 +738,11 @@ const GetQuoteForm = () => {
                                     </div>
 
                                     {/* Navigation Buttons: Back & Verify Code */}
-                                    <div className="pt-2 flex items-center justify-between gap-3">
+                                    <div className="pt-3 flex items-center justify-between gap-3">
                                         <button
                                             type="button"
                                             onClick={() => setStep(2)}
-                                            className="px-4 py-2 rounded-full bg-white/10 hover:bg-white/15 text-white font-bold text-xs flex items-center gap-1.5 transition cursor-pointer"
+                                            className="px-5 py-2.5 rounded-full bg-white/10 hover:bg-white/15 text-white font-bold text-xs sm:text-sm flex items-center gap-2 transition cursor-pointer"
                                         >
                                             <FaArrowLeft size={11} />
                                             <span>Back</span>
@@ -789,7 +751,7 @@ const GetQuoteForm = () => {
                                             type="button"
                                             onClick={handleVerifyOtp}
                                             disabled={verifyingOtp || otpCode.length !== 6}
-                                            className="bg-[#41B349] hover:bg-[#369c3d] text-white px-6 py-2.5 rounded-full font-bold text-xs sm:text-sm flex items-center gap-2 transition shadow-md shadow-[#41B349]/30 disabled:opacity-50 cursor-pointer"
+                                            className="bg-[#41B349] hover:bg-[#369c3d] text-white px-7 py-2.5 rounded-full font-extrabold text-xs sm:text-sm flex items-center gap-2 transition shadow-lg shadow-[#41B349]/30 disabled:opacity-50 cursor-pointer"
                                         >
                                             {verifyingOtp ? (
                                                 <>
@@ -799,7 +761,7 @@ const GetQuoteForm = () => {
                                             ) : (
                                                 <>
                                                     <span>Verify & Proceed</span>
-                                                    <FaArrowRight size={11} />
+                                                    <FaArrowRight size={12} />
                                                 </>
                                             )}
                                         </button>
@@ -813,69 +775,84 @@ const GetQuoteForm = () => {
                                     initial={{ opacity: 0, x: 10 }}
                                     animate={{ opacity: 1, x: 0 }}
                                     exit={{ opacity: 0, x: -10 }}
-                                    className="space-y-3.5"
+                                    transition={{ duration: 0.2 }}
+                                    className="space-y-4"
                                 >
                                     <div className="mb-2">
-                                        <h3 className="text-lg font-bold text-white tracking-tight">
-                                            Remaining Details
+                                        <h3 className="text-xl font-black text-white tracking-tight">
+                                            Project Details
                                         </h3>
-                                        <p className="text-gray-400 text-xs mt-0.5">
-                                            Select service & budget to complete your quote request.
+                                        <p className="text-gray-400 text-xs sm:text-sm mt-0.5">
+                                            Almost done! Provide your service & budget preferences.
                                         </p>
                                     </div>
 
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                        <div className="relative">
-                                            <select
-                                                name="service"
-                                                value={formData.service}
-                                                onChange={handleChange}
-                                                className="w-full h-10 bg-white rounded-md px-3.5 pr-10 text-gray-700 text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs cursor-pointer"
-                                            >
-                                                <option value="">Select Service *</option>
-                                                {SERVICES.map((s) => (
-                                                    <option key={s} value={s}>{s}</option>
-                                                ))}
-                                            </select>
-                                            <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
-                                                <FaChevronDown size={11} />
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                                        <div>
+                                            <label className="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1">
+                                                Service Required <span className="text-[#41B349]">*</span>
+                                            </label>
+                                            <div className="relative">
+                                                <select
+                                                    name="service"
+                                                    value={formData.service}
+                                                    onChange={handleChange}
+                                                    className="w-full h-11 bg-white rounded-xl px-4 pr-10 text-gray-800 text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs cursor-pointer"
+                                                >
+                                                    <option value="">Select Service</option>
+                                                    {SERVICES.map((s) => (
+                                                        <option key={s} value={s}>{s}</option>
+                                                    ))}
+                                                </select>
+                                                <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+                                                    <FaChevronDown size={11} />
+                                                </div>
                                             </div>
                                         </div>
 
-                                        <div className="relative">
-                                            <select
-                                                name="budget"
-                                                value={formData.budget}
-                                                onChange={handleChange}
-                                                className="w-full h-10 bg-white rounded-md px-3.5 pr-10 text-gray-700 text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs cursor-pointer"
-                                            >
-                                                <option value="">Select Budget *</option>
-                                                {BUDGETS.map((b) => (
-                                                    <option key={b} value={b}>{b}</option>
-                                                ))}
-                                            </select>
-                                            <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
-                                                <FaChevronDown size={11} />
+                                        <div>
+                                            <label className="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1">
+                                                Estimated Budget <span className="text-[#41B349]">*</span>
+                                            </label>
+                                            <div className="relative">
+                                                <select
+                                                    name="budget"
+                                                    value={formData.budget}
+                                                    onChange={handleChange}
+                                                    className="w-full h-11 bg-white rounded-xl px-4 pr-10 text-gray-800 text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs cursor-pointer"
+                                                >
+                                                    <option value="">Select Budget</option>
+                                                    {BUDGETS.map((b) => (
+                                                        <option key={b} value={b}>{b}</option>
+                                                    ))}
+                                                </select>
+                                                <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+                                                    <FaChevronDown size={11} />
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div>
+                                        <label className="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1">
+                                            Message / Additional Notes
+                                        </label>
                                         <textarea
                                             name="message"
                                             value={formData.message}
                                             onChange={handleChange}
-                                            placeholder="Describe your project here..."
+                                            placeholder="Tell us about your project requirements..."
                                             rows={3}
-                                            className="w-full bg-white rounded-md p-3 text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs resize-none"
+                                            className="w-full bg-white rounded-xl p-3.5 text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs resize-none"
                                         ></textarea>
                                     </div>
 
+                                    {/* Navigation Buttons: Back & Submit */}
                                     <div className="pt-2 flex items-center justify-between gap-3">
                                         <button
                                             type="button"
                                             onClick={() => setStep(3)}
-                                            className="px-4 py-2 rounded-full bg-white/10 hover:bg-white/15 text-white font-bold text-xs flex items-center gap-1.5 transition cursor-pointer"
+                                            className="px-5 py-2.5 rounded-full bg-white/10 hover:bg-white/15 text-white font-bold text-xs sm:text-sm flex items-center gap-2 transition cursor-pointer"
                                         >
                                             <FaArrowLeft size={11} />
                                             <span>Back</span>
@@ -884,16 +861,16 @@ const GetQuoteForm = () => {
                                             type="button"
                                             onClick={handleSubmit}
                                             disabled={loading}
-                                            className="bg-[#41B349] hover:bg-[#369c3d] text-white px-7 py-2.5 rounded-full font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition shadow-md shadow-[#41B349]/30 disabled:opacity-60 cursor-pointer"
+                                            className="bg-[#41B349] hover:bg-[#369c3d] text-white px-8 py-3 rounded-full font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-lg shadow-[#41B349]/30 disabled:opacity-60 cursor-pointer"
                                         >
                                             {loading ? (
                                                 <>
                                                     <FaSpinner className="animate-spin" />
-                                                    <span>Sending...</span>
+                                                    <span>Submitting...</span>
                                                 </>
                                             ) : (
                                                 <>
-                                                    <span>Submit Request</span>
+                                                    <span>Submit Booking</span>
                                                     <FaPaperPlane size={12} />
                                                 </>
                                             )}
@@ -903,11 +880,12 @@ const GetQuoteForm = () => {
                             )}
 
                         </div>
-                    </motion.div>
+                    </div>
+
                 </div>
-            )}
-        </AnimatePresence>
+            </div>
+        </section>
     );
 };
 
-export default GetQuoteForm;
+export default GetInTouch;

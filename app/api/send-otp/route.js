@@ -72,7 +72,7 @@ export async function POST(request) {
         <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 520px; margin: 0 auto; padding: 32px 24px; background: #ffffff; border: 1px solid #eaeaea; border-radius: 16px;">
           <div style="text-align: center; margin-bottom: 24px;">
             <h1 style="color: #41b349; font-size: 26px; font-weight: 800; margin: 0; letter-spacing: -0.5px;">Tech Solutionor</h1>
-            <p style="color: #64748b; font-size: 14px; margin-top: 4px;">Email Verification for Blog Comment</p>
+            <p style="color: #64748b; font-size: 14px; margin-top: 4px;">Email Verification Code</p>
           </div>
 
           <div style="background: #f8fafc; border: 1px solid #f1f5f9; border-radius: 12px; padding: 24px; text-align: center; margin: 24px 0;">
@@ -88,7 +88,7 @@ export async function POST(request) {
           </div>
 
           <p style="color: #64748b; font-size: 13px; line-height: 1.5; margin: 0; text-align: center;">
-            If you did not attempt to post a comment on Tech Solutionor, you can safely ignore this email.
+            If you did not request this verification code, you can safely ignore this email.
           </p>
         </div>
       `,
