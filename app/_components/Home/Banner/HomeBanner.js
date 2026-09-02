@@ -1,16 +1,13 @@
 "use client";
 
-import React, { useEffect, useState, useMemo } from "react";
-import Particles, { initParticlesEngine } from "@tsparticles/react";
-import { loadFull } from "tsparticles";
-import BannerImage from "../../../../public/images/services/image.png";
-import Image from "next/image";
+import React, { useMemo } from "react";
 import Link from "next/link";
 import { FaArrowRight } from "react-icons/fa6";
+import { motion } from "framer-motion";
 import { getCmsVal } from "@/lib/api-helper";
 
 export const defaultHomeHero = {
-  badge: "",
+  badge: "⚡ #1 Digital Marketing & Tech Agency in Dubai",
   title: "Digital Marketing Agency in Dubai – Web Development & SEO Services for Business Growth",
   description:
     "Serving businesses across the world, with a strong focus on helping companies in Dubai and the UAE grow through smart digital solutions.",
@@ -18,22 +15,13 @@ export const defaultHomeHero = {
 };
 
 const HomeBanner = ({ content, cmsContent }) => {
-  const [init, setInit] = useState(false);
-
-  useEffect(() => {
-    initParticlesEngine(async (engine) => {
-      await loadFull(engine);
-    }).then(() => {
-      setInit(true);
-    });
-  }, []);
 
   const heroContent = useMemo(
     () => ({ ...defaultHomeHero, ...(content || {}) }),
     [content]
   );
 
-  const rawBadge = heroContent.badge?.trim() || "";
+  const rawBadge = heroContent.badge?.trim() || defaultHomeHero.badge;
   const rawTitle = heroContent.title?.trim() || defaultHomeHero.title;
   const rawDescription = heroContent.description?.trim() || defaultHomeHero.description;
   const rawButtonText = heroContent.buttonText?.trim() || defaultHomeHero.buttonText;
@@ -42,140 +30,116 @@ const HomeBanner = ({ content, cmsContent }) => {
   const bannerTitle = getCmsVal(cmsContent, rawTitle, "homebanner") || getCmsVal(cmsContent, rawTitle, "hero");
   const bannerDescription = getCmsVal(cmsContent, rawDescription, "homebanner") || getCmsVal(cmsContent, rawDescription, "hero");
   const bannerButtonText = getCmsVal(cmsContent, rawButtonText, "homebanner") || getCmsVal(cmsContent, rawButtonText, "hero");
+  const defaultOnlineVideo = "https://assets.mixkit.co/videos/preview/mixkit-dubai-skyline-at-night-41528-large.mp4";
+  const bannerVideoUrl = getCmsVal(cmsContent, defaultOnlineVideo, "homebanner") || getCmsVal(cmsContent, defaultOnlineVideo, "hero") || defaultOnlineVideo;
 
-  const cmsImageVal = getCmsVal(cmsContent, BannerImage, "homebanner") || getCmsVal(cmsContent, BannerImage, "hero");
-  const isRemoteImage = typeof cmsImageVal === "string" && (cmsImageVal.startsWith("http") || cmsImageVal.startsWith("/"));
-
-  const descriptionLines = typeof bannerDescription === "string" 
-    ? bannerDescription.split("\n").filter(Boolean) 
+  const descriptionLines = typeof bannerDescription === "string"
+    ? bannerDescription.split("\n").filter(Boolean)
     : [bannerDescription];
 
-  return (
-    <section className="relative overflow-hidden w-full min-h-[72vh] lg:min-h-[78vh] flex items-center justify-center bg-white">
-      {/* Background Particles */}
-      <div className="absolute inset-0 w-full h-full z-0 pointer-events-none">
-        {init && (
-          <Particles
-            id="tsparticles"
-            className="w-full h-full"
-            options={{
-              background: { color: "#ffffff" },
-              fullScreen: { enable: false },
-              particles: {
-                color: { value: "#41B349" },
-                links: {
-                color: "#41B349",
-                enable: true,
-                opacity: 0.28,
-                width: 1.2,
-                distance: 150,
-              },
-              move: {
-                enable: true,
-                speed: 1.6,
-                direction: "none",
-                outModes: { default: "out" },
-                random: false,
-                straight: false,
-                attract: { enable: false },
-              },
-              number: {
-                value: 60,
-                density: { enable: true, area: 800 },
-              },
-              opacity: {
-                value: 0.4,
-                random: false,
-              },
-              shape: { type: "circle" },
-              size: {
-                value: 3,
-                random: true,
-              },
-            },
-            interactivity: {
-              events: {
-                onHover: { enable: true, mode: "repulse" },
-                onClick: { enable: false },
-              },
-              modes: {
-                repulse: { distance: 180, duration: 0.8 },
-              },
-            },
-          }}
-          style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
-        />
-      )}
-      </div>
+  // Helper to format title with matching Toonbee reference pill badge & heavy typography style
+  const renderTitle = (titleString) => {
+    if (!titleString) return null;
 
-      {/* Main Content Container */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-14 pt-8 sm:pt-10 md:pt-12 lg:pt-10 pb-8 sm:pb-10 md:pb-12 lg:pb-12 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
-        {/* Left Column: Heading, Subtitle & CTA */}
-        <div className="lg:col-span-7 flex flex-col items-start text-left space-y-3.5 md:space-y-4">
-          {/* Main Headline */}
-          <h1
-            className="text-3xl sm:text-4xl md:text-[38px] lg:text-[42px] xl:text-[46px] font-extrabold text-[#111111] leading-[1.18] tracking-tight"
-            style={{ fontFamily: "Montserrat, sans-serif" }}
+    // Check if title includes delimiter " – " (or default string format)
+    if (titleString.includes(" – ")) {
+      const parts = titleString.split(" – ");
+      const firstLine = parts[0];
+      const secondLineRaw = parts[1] || "";
+
+      let middlePillText = secondLineRaw;
+      let bottomLineText = "";
+
+      if (secondLineRaw.toLowerCase().includes(" for ")) {
+        const idx = secondLineRaw.toLowerCase().indexOf(" for ");
+        middlePillText = secondLineRaw.substring(0, idx).trim();
+        bottomLineText = secondLineRaw.substring(idx).trim();
+      }
+
+      return (
+        <div className="flex flex-col items-center justify-center text-center space-y-2 sm:space-y-3">
+          {/* Top Line */}
+          <span className="block text-3xl sm:text-5xl md:text-6xl lg:text-[62px] font-black text-[#0D0F12] leading-[1.1] tracking-tight">
+            {firstLine}
+          </span>
+
+          {/* Middle Line inside Pill Badge with Gentle, Subtle Left-Entrance Animation */}
+          <motion.div 
+            initial={{ opacity: 0, x: -28 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+            className="relative inline-flex items-center justify-center my-1.5 sm:my-2.5 group"
           >
-            {bannerTitle === defaultHomeHero.title ? (
-              <>
-                <span className="block text-[#111111]">
-                  Digital Marketing Agency in Dubai <span className="text-[#41B349] font-medium">–</span>
-                </span>
-                <span className="block mt-1 sm:mt-1.5">
-                  Web Development &amp; <span className="text-[#41B349]">SEO Services</span>
-                </span>
-                <span className="block mt-0.5 sm:mt-1 text-[#111111]">
-                  for Business Growth
-                </span>
-              </>
-            ) : (
-              bannerTitle
-            )}
-          </h1>
+            <span className="px-5 sm:px-9 py-2 sm:py-3.5 rounded-full bg-[#41B349] text-[#FCFCFC] shadow-[0_12px_35px_rgba(65,179,73,0.35)] border-2 sm:border-[3px] border-[#FFE7A8] text-2xl sm:text-4xl md:text-5xl lg:text-[54px] font-black tracking-tight leading-none inline-block transform hover:scale-[1.02] transition-transform duration-300">
+              {middlePillText}
+            </span>
+          </motion.div>
 
-          {/* Description */}
-          <div className="text-[#4B5563] text-sm sm:text-base md:text-[16px] leading-relaxed max-w-xl font-normal space-y-1">
-            {descriptionLines.map((line, index) => (
-              <p key={`${line}-${index}`}>
-                {line}
-              </p>
-            ))}
-          </div>
+          {/* Bottom Line */}
+          {bottomLineText && (
+            <span className="block text-3xl sm:text-5xl md:text-6xl lg:text-[62px] font-black text-[#0D0F12] leading-[1.1] tracking-tight relative">
+              <span className="text-[#41B349] text-3xl sm:text-5xl font-serif mr-1 sm:mr-2">&apos;</span>
+              {bottomLineText}
+              <span className="text-[#41B349] text-3xl sm:text-5xl font-serif ml-1 sm:ml-2">&apos;</span>
+            </span>
+          )}
+        </div>
+      );
+    }
 
-          {/* CTA Action */}
-          <div className="pt-1.5 sm:pt-2">
-            <Link href="/claim-your-free-seo-audit" className="inline-block group">
-              <button className="inline-flex items-center justify-center gap-3 bg-[#41B349] hover:bg-[#34953c] text-white text-[15px] sm:text-[16px] font-bold px-7 sm:px-8 py-3 sm:py-3.5 rounded-full shadow-lg shadow-[#41B349]/25 hover:shadow-xl hover:shadow-[#41B349]/40 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer">
-                <span>{bannerButtonText}</span>
-                <FaArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
-              </button>
-            </Link>
-          </div>
+    // Fallback for custom title strings without " – "
+    return (
+      <span className="block text-3xl sm:text-5xl md:text-6xl lg:text-[62px] font-black text-[#0D0F12] leading-[1.15] tracking-tight">
+        {titleString}
+      </span>
+    );
+  };
+
+  return (
+    <section 
+      className="relative overflow-hidden w-full flex items-center justify-center py-10 lg:py-16 select-none"
+      style={{
+        background: "linear-gradient(135deg, #41B349 0%, rgba(65, 179, 73, 0.45) 30%, rgba(255, 231, 168, 0.2) 60%, #FFFFFF 100%)",
+      }}
+    >
+      {/* Main Centered Content Layout */}
+      <div className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center">
+
+        {/* Main Headline */}
+        <div
+          className="w-full flex justify-center text-center"
+          style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', 'Montserrat', sans-serif" }}
+        >
+          {renderTitle(bannerTitle)}
         </div>
 
-        {/* Right Column: Clean Hero Image (Without any green background shapes/circles) */}
-        <div className="lg:col-span-5 flex justify-center items-center relative mt-4 lg:mt-0">
-          <div className="relative w-full max-w-[340px] sm:max-w-[400px] md:max-w-[440px] lg:max-w-[480px] flex items-center justify-center">
-            {isRemoteImage ? (
-              <img
-                src={cmsImageVal}
-                alt="Digital Marketing & Web Development Services"
-                className="w-full h-auto max-h-[400px] lg:max-h-[440px] object-contain drop-shadow-xl select-none"
-              />
-            ) : (
-              <Image
-                src={BannerImage}
-                alt="Digital Marketing & Web Development Services"
-                priority
-                className="w-full h-auto max-h-[400px] lg:max-h-[440px] object-contain drop-shadow-xl select-none"
-              />
-            )}
-          </div>
+        {/* Sub-headline / Description */}
+        <div 
+          className="mt-4 sm:mt-5 text-[#4A5568] text-base sm:text-lg md:text-xl leading-relaxed max-w-3xl font-medium space-y-1.5 text-center"
+        >
+          {descriptionLines.map((line, index) => (
+            <p key={`${line}-${index}`} className="flex items-center justify-center gap-2">
+              <span>{line}</span>
+            </p>
+          ))}
         </div>
+
+        {/* Primary CTA Button */}
+        <div 
+          className="mt-5 sm:mt-6 flex flex-col items-center gap-4 w-full sm:w-auto"
+        >
+          <Link href="/claim-your-free-seo-audit" className="w-full sm:w-auto group">
+            <button className="w-full sm:w-auto inline-flex items-center justify-center gap-3 bg-[#41B349] text-[#FCFCFC] text-base sm:text-lg font-bold px-9 sm:px-11 py-4 sm:py-4.5 rounded-full shadow-[0_10px_30px_rgba(65,179,73,0.35)] hover:shadow-[0_15px_40px_rgba(65,179,73,0.5)] hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer border-2 border-[#FFE7A8]/60 shine-btn relative overflow-hidden">
+              <span>{bannerButtonText}</span>
+              <FaArrowRight size={17} className="transition-transform group-hover:translate-x-1.5" />
+            </button>
+          </Link>
+        </div>
+
       </div>
     </section>
   );
 };
 
 export default HomeBanner;
+

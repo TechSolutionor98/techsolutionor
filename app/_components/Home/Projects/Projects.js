@@ -1,5 +1,8 @@
-import Image from "next/image";
+"use client";
+
 import React from "react";
+import Image from "next/image";
+import { motion } from "framer-motion";
 import Eclipse from '../../../../components/Images/eclipse.png';
 import Grab from '../../../../components/Images/grab.png';
 import Protein from '../../../../components/Images/protein.png';
@@ -61,53 +64,122 @@ const Projects = ({ cmsContent }) => {
     };
   });
 
+  const row1Logos = logos.slice(0, 9);
+  const row2Logos = logos.slice(9);
+
+  // Duplicate arrays for 100% seamless marquee looping
+  const marqueeRow1 = [...row1Logos, ...row1Logos, ...row1Logos];
+  const marqueeRow2 = [...row2Logos, ...row2Logos, ...row2Logos];
+
   return (
-    <section className="relative py-16 md:py-24 bg-white overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <section className="relative overflow-hidden py-16 md:py-24 bg-[#000000] select-none">
+      {/* Background Ambient Glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#41B349]/10 blur-3xl rounded-full pointer-events-none" />
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
         {/* Section Header */}
         <div className="text-center max-w-4xl mx-auto">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#41B349]/15 border border-[#41B349]/30 text-[#41B349] font-extrabold text-xs uppercase tracking-widest mb-3">
+            <span className="w-2 h-2 rounded-full bg-[#41B349] animate-pulse" />
+            <span>PROVEN IMPACT & CLIENT SUCCESS</span>
+          </div>
+
           <h2 
-            className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#262323] tracking-tight"
-            style={{ fontFamily: "Montserrat, sans-serif" }}
+            className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight leading-tight"
+            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
           >
             {title}
           </h2>
-          <p 
-            className="mt-4 text-base md:text-lg text-gray-600 leading-relaxed font-normal"
-            style={{ fontFamily: "Montserrat, sans-serif" }}
-          >
+
+          <p className="mt-4 text-gray-300 text-base sm:text-lg leading-relaxed font-medium">
             {description}
           </p>
         </div>
+      </div>
 
-        {/* Clean & Balanced Logo Grid */}
-        <div className="mt-12 md:mt-16 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-5 lg:gap-6">
-          {logos.map((icon, idx) => {
-            const isImgDynamic = typeof icon.imageUrl === 'string' && (icon.imageUrl.startsWith('http') || icon.imageUrl.startsWith('/'));
-            return (
-              <div
-                key={idx}
-                className="group relative bg-white border border-[#34953C]/40 rounded-xl p-4 sm:p-5 h-28 sm:h-32 flex items-center justify-center transition-all duration-300 ease-in-out hover:shadow-lg hover:border-[#34953C] hover:-translate-y-1"
-              >
-                {isImgDynamic ? (
-                  <img
-                    src={icon.imageUrl}
-                    alt={`Partner Logo ${idx + 1}`}
-                    className="max-h-16 max-w-[85%] w-auto h-auto object-contain transition-all duration-300 opacity-85 group-hover:opacity-100 group-hover:scale-105"
-                  />
-                ) : (
-                  <Image
-                    src={icon.Image}
-                    alt={`Partner Logo ${idx + 1}`}
-                    width={icon.width}
-                    height={icon.height}
-                    className="max-h-16 max-w-[85%] w-auto h-auto object-contain transition-all duration-300 opacity-85 group-hover:opacity-100 group-hover:scale-105"
-                  />
-                )}
-              </div>
-            );
-          })}
+      {/* Dual-Row Smooth Infinite Auto-Moving Marquee Track */}
+      <div className="relative w-full space-y-6 py-4 overflow-hidden">
+
+        {/* MARQUEE ROW 1: Forward Motion (Left) */}
+        <div className="relative w-full overflow-hidden">
+          <motion.div
+            className="flex gap-5 sm:gap-7 w-max cursor-grab active:cursor-grabbing"
+            animate={{ x: ["0%", "-33.3333%"] }}
+            transition={{
+              repeat: Infinity,
+              repeatType: "loop",
+              duration: 34,
+              ease: "linear",
+            }}
+          >
+            {marqueeRow1.map((icon, idx) => {
+              const isImgDynamic = typeof icon.imageUrl === 'string' && (icon.imageUrl.startsWith('http') || icon.imageUrl.startsWith('/'));
+              return (
+                <div
+                  key={`r1-${idx}`}
+                  className="w-56 h-28 sm:w-64 sm:h-32 shrink-0 bg-white border border-gray-100/90 rounded-2xl p-6 flex items-center justify-center shadow-[0_10px_30px_rgba(0,0,0,0.35)] hover:border-[#41B349]/60 hover:shadow-[0_15px_40px_rgba(65,179,73,0.3)] transition-all duration-300 group"
+                >
+                  {isImgDynamic ? (
+                    <img
+                      src={icon.imageUrl}
+                      alt={`Client Logo ${idx + 1}`}
+                      className="max-h-16 sm:max-h-20 max-w-[85%] w-auto h-auto object-contain transition-transform duration-300 group-hover:scale-105"
+                    />
+                  ) : (
+                    <Image
+                      src={icon.Image}
+                      alt={`Client Logo ${idx + 1}`}
+                      width={icon.width}
+                      height={icon.height}
+                      className="max-h-16 sm:max-h-20 max-w-[85%] w-auto h-auto object-contain transition-transform duration-300 group-hover:scale-105"
+                    />
+                  )}
+                </div>
+              );
+            })}
+          </motion.div>
         </div>
+
+        {/* MARQUEE ROW 2: Reverse Motion (Right) */}
+        <div className="relative w-full overflow-hidden">
+          <motion.div
+            className="flex gap-5 sm:gap-7 w-max cursor-grab active:cursor-grabbing"
+            animate={{ x: ["-33.3333%", "0%"] }}
+            transition={{
+              repeat: Infinity,
+              repeatType: "loop",
+              duration: 38,
+              ease: "linear",
+            }}
+          >
+            {marqueeRow2.map((icon, idx) => {
+              const isImgDynamic = typeof icon.imageUrl === 'string' && (icon.imageUrl.startsWith('http') || icon.imageUrl.startsWith('/'));
+              return (
+                <div
+                  key={`r2-${idx}`}
+                  className="w-56 h-28 sm:w-64 sm:h-32 shrink-0 bg-white border border-gray-100/90 rounded-2xl p-6 flex items-center justify-center shadow-[0_10px_30px_rgba(0,0,0,0.35)] hover:border-[#41B349]/60 hover:shadow-[0_15px_40px_rgba(65,179,73,0.3)] transition-all duration-300 group"
+                >
+                  {isImgDynamic ? (
+                    <img
+                      src={icon.imageUrl}
+                      alt={`Client Logo ${idx + 1}`}
+                      className="max-h-16 sm:max-h-20 max-w-[85%] w-auto h-auto object-contain transition-transform duration-300 group-hover:scale-105"
+                    />
+                  ) : (
+                    <Image
+                      src={icon.Image}
+                      alt={`Client Logo ${idx + 1}`}
+                      width={icon.width}
+                      height={icon.height}
+                      className="max-h-16 sm:max-h-20 max-w-[85%] w-auto h-auto object-contain transition-transform duration-300 group-hover:scale-105"
+                    />
+                  )}
+                </div>
+              );
+            })}
+          </motion.div>
+        </div>
+
       </div>
     </section>
   );

@@ -22,27 +22,29 @@ if (fs.existsSync(envPath)) {
 const { getCmsData } = require('../lib/cms-fetch.js');
 const { getCmsVal } = require('../lib/api-helper.js');
 
-async function testServicesWeOfferCms() {
-  console.log('=== TESTING SERVICES WE OFFER CMS FLOW ===\n');
+async function testGoodServicesCms() {
+  console.log('=== TESTING GOOD SERVICES CMS FLOW ===\n');
 
   const cmsData = await getCmsData('/');
   
-  const titleTop = getCmsVal(cmsData.content, "Services", "servicesweoffer");
-  const titleBottom = getCmsVal(cmsData.content, "We Offer", "servicesweoffer");
+  const headingLine1 = getCmsVal(cmsData.content, "You Can Rely on Us for", "goodservices");
+  const headingLine2 = getCmsVal(cmsData.content, "High-Quality Digital & IT Services", "goodservices");
+  const percent = getCmsVal(cmsData.content, "90", "goodservices");
 
-  console.log(`Title Top: ${titleTop}`);
-  console.log(`Title Bottom: ${titleBottom}`);
+  console.log(`Heading Line 1: ${headingLine1}`);
+  console.log(`Heading Line 2: ${headingLine2}`);
+  console.log(`Percent: ${percent}`);
 
-  if (titleTop && titleBottom) {
-    console.log('\n🎉 --- SERVICES WE OFFER CMS VERIFIED PASSED --- 🎉');
+  if (headingLine1 && headingLine2) {
+    console.log('\n🎉 --- GOOD SERVICES CMS VERIFIED PASSED --- 🎉');
     process.exit(0);
   } else {
-    console.error('\n❌ Services We Offer CMS check failed');
+    console.error('\n❌ Good Services CMS check failed');
     process.exit(1);
   }
 }
 
-testServicesWeOfferCms().catch(err => {
+testGoodServicesCms().catch(err => {
   console.error(err);
   process.exit(1);
 });

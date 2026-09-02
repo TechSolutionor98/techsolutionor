@@ -48,38 +48,48 @@ const Newsletter = ({ content, cmsContent }) => {
   const { line1, line2, line3 } = formatNewsletterTitle(title);
 
   return (
-    <div className="w-full flex justify-center py-8">
-      <div
-        className="w-full md:w-[950px] h-[80px] md:h-[150px] flex rounded-[30px] overflow-hidden"
-        style={{
-          boxShadow: "0px 9px 21px 0px rgba(58,155,65,0.68)",
-        }}
-      >
-        <div className="flex-[3] bg-[#43b949] flex items-center px-6 md:mx-auto lg:pl-24">
-          <h2 className="text-white text-center text-[14px] md:text-[27px] font-[700] leading-[1.15]" style={{ fontFamily: "Montserrat, sans-serif" }}>
-            <span className="text-[#232323]">
-              {line1}
-            </span>
-            {line2 && <br className="" />}
+    <section className="w-full bg-[#FFFFFF] py-14 sm:py-20 px-4 sm:px-6 lg:px-8 select-none">
+      {/* Main Glassmorphic CTA Card Container */}
+      <div className="relative z-10 max-w-6xl mx-auto rounded-3xl bg-[#0D0F12] border border-gray-800 p-8 sm:p-12 md:p-16 flex flex-col md:flex-row items-center justify-between gap-8 sm:gap-12 relative overflow-hidden">
+        
+        {/* Top Glowing Green Accent Line */}
+        <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-transparent via-[#41B349] to-transparent opacity-90" />
+
+        {/* Left Column: Heading & Pill Badge */}
+        <div className="max-w-2xl text-center md:text-left z-10">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#41B349]/15 border border-[#41B349]/30 text-[#41B349] font-black text-xs uppercase tracking-widest mb-4">
+            <span className="w-2 h-2 rounded-full bg-[#41B349] animate-pulse" />
+            <span>READY TO SCALE YOUR BUSINESS?</span>
+          </div>
+
+          <h2 
+            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight tracking-tight"
+            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+          >
+            <span>{line1}</span>
             {line2 && (
-              <span className="text-center tracking-tight">
-                {line2}
-                {line3 && <br />}
-                {line3 && <span>{line3}</span>}
+              <span className="text-[#41B349] block mt-1.5">
+                {line2} {line3 && <span>{line3}</span>}
               </span>
             )}
           </h2>
         </div>
-        <div onClick={openQuote} className="flex-[1] bg-[#232323] flex items-center justify-center cursor-pointer">
-          <button className="text-white text-[12px] md:text-[20px] font-semibold flex items-center gap-3 group cursor-pointer">
+
+        {/* Right Column: CTA Button */}
+        <div className="shrink-0 z-10">
+          <button
+            onClick={openQuote}
+            className="inline-flex items-center gap-4 bg-[#41B349] hover:bg-[#36963d] text-[#FCFCFC] text-base sm:text-lg font-extrabold px-8 sm:px-10 py-4 sm:py-5 rounded-full hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer border-2 border-white/60 group"
+          >
             <span>{buttonText}</span>
-            <span className="bg-white rounded-full w-5 text-[14px] text-center flex items-center justify-center h-5 cursor-pointer">
-              <FaArrowRight className="text-black" />
-            </span>
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white text-[#0D0F12] flex items-center justify-center shadow-md group-hover:translate-x-1 transition-transform duration-300">
+              <FaArrowRight size={14} className="text-[#0D0F12]" />
+            </div>
           </button>
         </div>
+
       </div>
-    </div>
+    </section>
   );
 };
 

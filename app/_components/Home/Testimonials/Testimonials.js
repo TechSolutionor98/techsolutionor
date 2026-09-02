@@ -1,16 +1,8 @@
 'use client'
 
-import React, { useRef } from 'react'
-import { Swiper, SwiperSlide } from 'swiper/react'
-import { Navigation, Pagination, Autoplay } from 'swiper/modules'
-import { LiaStarSolid } from 'react-icons/lia'
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
-import { FcGoogle } from 'react-icons/fc'
-import 'swiper/css'
-import 'swiper/css/navigation'
-import 'swiper/css/pagination'
-import Logo from '../../../../components/Images/Logo.png';
-import Image from 'next/image'
+import React from 'react'
+import { FaThumbsUp, FaHeart, FaSmile } from 'react-icons/fa'
+import { getCmsVal } from '@/lib/api-helper'
 
 export const defaultTestimonials = {
   titlePrefix: 'Customer',
@@ -22,9 +14,9 @@ export const defaultTestimonials = {
   reviewButtonText: 'review us on',
   reviews: [
     {
-      name: 'Bellanoir',
+      name: 'DreamCatcherTV',
       initial: 'D',
-      color: 'bg-[#f47413]',
+      color: 'bg-[#F47413]',
       time: '10 days ago',
       review:
         'We hired TechSolutionor to develop our eCommerce platform, and the outcome exceeded expectations. The website is fast, easy to manage, and optimized for conversions. We appreciate their professional approach.',
@@ -32,162 +24,223 @@ export const defaultTestimonials = {
     {
       name: 'Bellanoir',
       initial: 'B',
-      color: 'bg-[#912d91]',
+      color: 'bg-[#912D91]',
       time: '10 days ago',
       review: 'Very professional team. Our social media engagement improved noticeably after working with them.',
     },
     {
-      name: 'Bellanoir',
+      name: 'Endless Data',
       initial: 'E',
-      color: 'bg-[#2b6daa]',
+      color: 'bg-[#2B6DAA]',
       time: 'a year ago',
       review: 'good experience',
     },
     {
-      name: 'Bellanoir',
+      name: 'Salam Bin Sultan',
       initial: 'S',
-      color: 'bg-[#43b949]',
+      color: 'bg-[#43B949]',
       time: '2 months ago',
       review:
         'Our partnership with Techsolutionor has exceeded our expectations. Their innovative solutions and reliable support have been crucial in driving our branch technology initiatives forward.',
     },
   ],
 }
-const resolveAssetUrl = (url) => {
-  if (!url) return ''
-  if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('/')) return url
-  return `/${url.replace(/^\/+/, '')}`
+
+const colorPalette = [
+  'bg-[#1877F2]',
+  'bg-[#F47413]',
+  'bg-[#912D91]',
+  'bg-[#2B6DAA]',
+  'bg-[#43B949]',
+  'bg-[#EF7A35]',
+  'bg-[#D9961A]',
+  'bg-[#0E0707]',
+]
+
+const reactionPresets = [
+  { icon: <FaThumbsUp size={12} className="text-white" />, bg: 'bg-[#1877F2]', pos: '-bottom-3 left-28', action: 'Like', color: 'text-[#1877F2]', badges: ['👍', '❤️'], count: '6' },
+  { icon: <FaHeart size={13} className="text-white" />, bg: 'bg-[#E41E3F]', pos: '-top-3 right-8', action: 'Love', color: 'text-[#E41E3F]', badges: ['❤️'], count: '4' },
+  { icon: <FaSmile size={14} className="text-white" />, bg: 'bg-[#FFC017]', pos: '-bottom-3 -left-3', action: 'Like', color: 'text-[#1877F2]', badges: ['👍'], count: '2' },
+  { icon: <FaThumbsUp size={13} className="text-white" />, bg: 'bg-[#1877F2]', pos: '-bottom-3 right-20', action: 'Like', color: 'text-[#1877F2]', badges: ['👍', '❤️'], count: '8' },
+  { icon: <FaSmile size={15} className="text-white" />, bg: 'bg-[#FFC017]', pos: '-bottom-4 -left-4', action: 'Love', color: 'text-[#E41E3F]', badges: ['😍', '👍'], count: '20' },
+]
+
+function dataReviewsFromCms(cmsContent) {
+  if (!cmsContent) return null
+  if (Array.isArray(cmsContent.testimonials?.reviews)) return cmsContent.testimonials.reviews
+  if (Array.isArray(cmsContent.reviews)) return cmsContent.reviews
+  return null
 }
 
-const Testimonials = ({ content }) => {
-  const swiperRef = useRef(null)
-  const data = { ...defaultTestimonials, ...(content || {}) }
-  const reviews = Array.isArray(data.reviews) && data.reviews.length ? data.reviews : defaultTestimonials.reviews
+const Testimonials = ({ content, cmsContent }) => {
+  // Parse section titles dynamically from CMS / API
+  const sectionTitlePrefix = getCmsVal(cmsContent, content?.titlePrefix || defaultTestimonials.titlePrefix, 'testimonials')
+  const sectionTitleHighlight = getCmsVal(cmsContent, content?.titleHighlight || defaultTestimonials.titleHighlight, 'testimonials')
+
+  // Parse reviews array dynamically from CMS / API / Props
+  const rawReviews = content?.reviews || dataReviewsFromCms(cmsContent) || defaultTestimonials.reviews
+  const reviewsList = Array.isArray(rawReviews) && rawReviews.length > 0 ? rawReviews : defaultTestimonials.reviews
+
+  // Format reviews dynamically
+  const formattedReviews = reviewsList.map((item, idx) => {
+    const name = item.name || item.author || item.clientName || 'Verified Client'
+    const initial = item.initial || (name ? name.charAt(0).toUpperCase() : 'C')
+    const color = item.color || colorPalette[idx % colorPalette.length]
+    const time = item.time || item.date || 'Recently'
+    const reviewText = item.review || item.text || item.comment || ''
+    const rx = reactionPresets[idx % reactionPresets.length]
+
+    return {
+      name,
+      initial,
+      color,
+      time,
+      review: reviewText,
+      rx,
+    }
+  })
+
+  // Distribute dynamically into 2 balanced columns
+  const halfIndex = Math.ceil(formattedReviews.length / 2)
+  const leftColCards = formattedReviews.slice(0, halfIndex)
+  const rightColCards = formattedReviews.slice(halfIndex)
 
   return (
-    <div className="py-0 bg-white">
-      <div className="container mx-auto px-5 md:px-20">
-        <h1 className="text-center text-[30px] md:text-[40px] font-bold -mt-3 mb-7" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-          <span>{data.titlePrefix}</span>{' '}
-          <span className="text-[#43b949]">
-            {data.titleHighlight}
-          </span>
-        </h1>
-
-        <div className="w-full max-w-[1180px] flex flex-col md:flex-row gap-10 md:gap-8 items-start justify-between">
-          <div className="w-full md:w-[340px] flex flex-col items-start space-y-4 pt-6 md:pt-10">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full border border-gray-200 p-2 flex items-center justify-center">
-                {resolveAssetUrl(data.logoImageUrl) ? (
-                  <img src={resolveAssetUrl(data.logoImageUrl)} alt="TechSolutionor" width={32} height={32} />
-                ) : (
-                  <Image src={Logo} alt="TechSolutionor" width={32} height={32} />
-                )}
-              </div>
-              <div className="w-[170px]">
-                <h3 className="text-[18px] font-bold text-black whitespace-nowrap w-full" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-                  {data.companyName}
-                </h3>
-                <div className="flex items-center gap-2 w-full">
-                  <span className="text-[17px] font-bold text-[#fbd033]">
-                    {data.ratingText}
-                  </span>
-                  <div className="flex">
-                    {[...Array(5)].map((_, i) => (
-                      <LiaStarSolid key={i} className="text-[#fbd033] text-[19px]" />
-                    ))}
-                  </div>
-                </div>
-                <p className="text-[14px] text-gray-500 w-full mt-1">
-                  {data.poweredByText}
-                </p>
-              </div>
-            </div>
-
-            <button className="flex items-center -mt-1 justify-center w-[150px] md:ml-[50px] gap-2 bg-[#4285f4] text-white px-3 py-2 rounded-full text-[14px] font-semibold hover:bg-blue-600 transition shadow-sm">
-              <span>{data.reviewButtonText}</span> <FcGoogle />
-            </button>
-          </div>
-
-          <div className="flex flex-wrap max-w-[840px] w-full relative group">
-            <button
-              onClick={() => swiperRef.current?.slidePrev()}
-              className="absolute left-[-20px] top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white border border-gray-100 shadow-md flex items-center justify-center text-gray-400 hover:text-[#43b949] transition"
+    <section className="py-20 md:py-28 bg-[#FFFFFF] relative overflow-hidden select-none">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* Header Speech Bubble Banner */}
+        <div className="flex justify-center mb-16">
+          <div className="relative bg-[#FDE047]/90 border border-[#FACC15] rounded-3xl px-8 sm:px-12 py-5 text-center shadow-sm max-w-3xl">
+            <h2 
+              className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#1C1E21] tracking-tight leading-snug"
+              style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
             >
-              <FaChevronLeft size={16} />
-            </button>
-            <button
-              onClick={() => swiperRef.current?.slideNext()}
-              className="absolute -right-[20px] top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white border border-gray-100 shadow-md flex items-center justify-center text-gray-400 hover:text-[#43b949] transition"
-            >
-              <FaChevronRight size={16} />
-            </button>
+              <span>{sectionTitlePrefix}</span> <span>{sectionTitleHighlight}</span>: Real Feedback From Our Clients
+            </h2>
 
-            <Swiper
-              modules={[Navigation, Pagination, Autoplay]}
-              onSwiper={(swiper) => (swiperRef.current = swiper)}
-              spaceBetween={20}
-              slidesPerView={1}
-              breakpoints={{
-                768: { slidesPerView: 2 },
-                1024: { slidesPerView: 3 },
-              }}
-              pagination={{ clickable: true, el: '.custom-pagination' }}
-              autoplay={{ delay: 5000 }}
-              loop={true}
-              className="pb-16"
-            >
-              {reviews.map((item, i) => (
-                <SwiperSlide key={i}>
-                  <div className="bg-white border border-gray-200 rounded-xl p-4 h-[320px] flex flex-col shadow-none" style={{ boxShadow: 'none' }}>
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-3">
-                        <div className={`w-10 h-10 rounded-full ${item.color || 'bg-[#43b949]'} flex items-center justify-center text-white font-bold text-[18px]`}>
-                          {item.initial}
-                        </div>
-                        <div>
-                          <h4 className="text-[16px] font-bold text-black leading-tight">
-                            {item.name}
-                          </h4>
-                          <p className="text-[12px] text-gray-400 mt-2">
-                            {item.time}
-                          </p>
-                        </div>
-                      </div>
-                      <FcGoogle className="text-gray-300 -mt-6" />
-                    </div>
-
-                    <div className="flex mb-3">
-                      {[...Array(5)].map((_, idx) => (
-                        <LiaStarSolid key={idx} className="text-[#fbd033] text-[18px]" />
-                      ))}
-                    </div>
-
-                    <p className="text-gray-600 text-[14px] leading-[22px] overflow-hidden">
-                      {item.review}
-                    </p>
-                  </div>
-                </SwiperSlide>
-              ))}
-            </Swiper>
-
-            <div className="custom-pagination flex justify-center items-center w-full gap-2 mt-3"></div>
+            {/* Pointer Arrow */}
+            <div className="absolute -bottom-3 left-16 w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-t-[14px] border-t-[#FDE047]/90" />
           </div>
         </div>
-      </div>
 
-      <style jsx global>{`
-        .custom-pagination .swiper-pagination-bullet {
-          width: 8px;
-          height: 8px;
-          background: gray;
-          opacity: 1;
-        }
-        .custom-pagination .swiper-pagination-bullet-active {
-          background: #f47413;
-        }
-      `}</style>
-    </div>
+        {/* 2-Column Dynamic Social Comment Wall */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-start max-w-6xl mx-auto">
+          
+          {/* Left Column Stack */}
+          <div className="flex flex-col space-y-6">
+            {leftColCards.map((item, idx) => (
+              <div key={idx} className="relative group">
+                
+                {/* Floating Reaction Badge */}
+                {item.rx && (
+                  <div className={`absolute ${item.rx.pos} z-20 w-8 h-8 rounded-full ${item.rx.bg} flex items-center justify-center shadow-md border-2 border-white transform group-hover:scale-110 transition-transform duration-200`}>
+                    {item.rx.icon}
+                  </div>
+                )}
+
+                {/* Comment Box */}
+                <div className="bg-white border-2 border-[#FDE68A]/80 rounded-2xl p-5 shadow-[0_6px_20px_rgba(0,0,0,0.05)] hover:shadow-[0_12px_30px_rgba(245,158,11,0.12)] hover:border-[#F59E0B]/60 transition-all duration-300 relative">
+                  
+                  <div className="flex items-start gap-3.5">
+                    <div className={`w-10 h-10 rounded-full ${item.color} flex items-center justify-center text-white font-black text-base shadow-xs shrink-0 mt-0.5 border border-white/60`}>
+                      {item.initial}
+                    </div>
+                    
+                    <div className="flex-1 min-w-0">
+                      <div className="inline">
+                        <span 
+                          className="font-bold text-[#2B6DAA] text-sm sm:text-base mr-2 hover:underline cursor-pointer inline-block"
+                          style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+                        >
+                          {item.name}
+                        </span>
+                        <span className="text-[#1C1E21] text-xs sm:text-sm leading-relaxed font-normal inline">
+                          {item.review}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center justify-between mt-3 pt-2 border-t border-gray-100 text-xs font-semibold text-[#65676B]">
+                        <div className="flex items-center gap-2 sm:gap-3">
+                          <button className={`hover:underline cursor-pointer ${item.rx.color}`}>{item.rx.action}</button>
+                          <span>·</span>
+                          <button className="hover:underline cursor-pointer">Reply</button>
+                          <span>·</span>
+                          <span className="text-[#8A8D91] font-normal">{item.time}</span>
+                        </div>
+
+                        <div className="flex items-center gap-1 bg-gray-50 border border-gray-200/60 rounded-full px-2 py-0.5 shadow-2xs">
+                          <span className="text-xs">{item.rx.badges.join('')}</span>
+                          <span className="text-[11px] font-bold text-gray-500">{item.rx.count}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Right Column Stack */}
+          <div className="flex flex-col space-y-6">
+            {rightColCards.map((item, idx) => (
+              <div key={idx} className="relative group">
+                
+                {/* Floating Reaction Badge */}
+                {item.rx && (
+                  <div className={`absolute ${item.rx.pos} z-20 w-8 h-8 rounded-full ${item.rx.bg} flex items-center justify-center shadow-md border-2 border-white transform group-hover:scale-110 transition-transform duration-200`}>
+                    {item.rx.icon}
+                  </div>
+                )}
+
+                {/* Comment Box */}
+                <div className="bg-white border-2 border-[#FDE68A]/80 rounded-2xl p-5 shadow-[0_6px_20px_rgba(0,0,0,0.05)] hover:shadow-[0_12px_30px_rgba(245,158,11,0.12)] hover:border-[#F59E0B]/60 transition-all duration-300 relative">
+                  
+                  <div className="flex items-start gap-3.5">
+                    <div className={`w-10 h-10 rounded-full ${item.color} flex items-center justify-center text-white font-black text-base shadow-xs shrink-0 mt-0.5 border border-white/60`}>
+                      {item.initial}
+                    </div>
+                    
+                    <div className="flex-1 min-w-0">
+                      <div className="inline">
+                        <span 
+                          className="font-bold text-[#2B6DAA] text-sm sm:text-base mr-2 hover:underline cursor-pointer inline-block"
+                          style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+                        >
+                          {item.name}
+                        </span>
+                        <span className="text-[#1C1E21] text-xs sm:text-sm leading-relaxed font-normal inline">
+                          {item.review}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center justify-between mt-3 pt-2 border-t border-gray-100 text-xs font-semibold text-[#65676B]">
+                        <div className="flex items-center gap-2 sm:gap-3">
+                          <button className={`hover:underline cursor-pointer ${item.rx.color}`}>{item.rx.action}</button>
+                          <span>·</span>
+                          <button className="hover:underline cursor-pointer">Reply</button>
+                          <span>·</span>
+                          <span className="text-[#8A8D91] font-normal">{item.time}</span>
+                        </div>
+
+                        <div className="flex items-center gap-1 bg-gray-50 border border-gray-200/60 rounded-full px-2 py-0.5 shadow-2xs">
+                          <span className="text-xs">{item.rx.badges.join('')}</span>
+                          <span className="text-[11px] font-bold text-gray-500">{item.rx.count}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            ))}
+          </div>
+
+        </div>
+
+      </div>
+    </section>
   )
 }
 

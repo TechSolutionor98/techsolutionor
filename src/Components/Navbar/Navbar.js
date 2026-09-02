@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { FaChevronDown, FaBars, FaTimes } from "react-icons/fa";
 import { usePathname } from 'next/navigation'
 import Link from 'next/link';
-import { Montserrat, Roboto } from 'next/font/google';
+import { Montserrat, Roboto, Plus_Jakarta_Sans } from 'next/font/google';
 import { useQuote } from '@/app/_context/QuoteContext';
 import Laraval from '@/src/Components/Images/laraval.png'
 import Javascript from '@/src/Components/Images/js.png'
@@ -37,6 +37,11 @@ import Seo from '@/src/Components/Images/seo.png'
 import Content from '@/src/Components/Images/content.png'
 import Call from '@/src/Components/Images/call.png'
 import Hire from '@/src/Components/Images/hire.png'
+
+const plusJakarta = Plus_Jakarta_Sans({
+    subsets: ['latin'],
+    weight: ['500', '600', '700', '800'],
+});
 
 const montserrat = Montserrat({
     subsets: ['latin'],
@@ -136,8 +141,8 @@ const Navbar = () => {
     return (
         <>
             {/* Desktop Navbar */}
-            <nav className='bg-[#262323] w-full h-[90px] flex items-center justify-between px-10 lg:px-20 lg:pl-40 py-10'
-                style={{ boxShadow: "0px 5px 15px 0px #262323" }}>
+            <nav className='bg-[#000000] w-full h-[90px] flex items-center justify-between px-10 lg:px-20 lg:pl-40 py-10'
+                style={{ boxShadow: "0px 5px 15px 0px rgba(0, 0, 0, 0.4)" }}>
                 <div className="navbar-logo">
                     <Link href='/'><Image src={Logo} alt="Logo" width={200} height={56} className='w-[80px] h-[50px]' /></Link>
                 </div>
@@ -155,11 +160,11 @@ const Navbar = () => {
                                 <>
                                     <Link
                                         href={link.href}
-                                        className={`${montserrat.className} cursor-pointer text-[15px] font-medium text-white px-3 py-2 flex items-center gap-1 transition-colors duration-200 hover:text-[#41B349] ${isActive(link) ? 'text-[#41B349]' : ''
+                                        className={`${plusJakarta.className} cursor-pointer text-[15px] font-semibold tracking-wide text-white/90 px-3.5 py-2 flex items-center gap-1.5 transition-colors duration-200 hover:text-[#E86927] ${isActive(link) ? 'text-[#E86927] font-bold' : ''
                                             }`}
                                     >
                                         {link.label}
-                                        <FaChevronDown className="ml-1 text-xs mt-1" />
+                                        <FaChevronDown className="ml-0.5 text-xs opacity-80" />
                                     </Link>
                                     <div
                                         className={`absolute -left-60 mt-1.5 bg-white shadow-2xl rounded-xl z-20 min-w-[1020px] px-8 py-8 transition-all duration-200
@@ -172,14 +177,14 @@ const Navbar = () => {
                                                 <Link
                                                     key={sub.label}
                                                     href={sub.href}
-                                                    className={`flex flex-col items-center justify-center h-[120px] w-[150px] bg-white ${sub.border} border-2 rounded-xl p-4 transition-shadow duration-200 hover:shadow-lg hover:border-[#41B349]`}
+                                                    className={`flex flex-col items-center justify-center h-[120px] w-[150px] bg-white ${sub.border} border-2 rounded-xl p-4 transition-shadow duration-200 hover:shadow-lg hover:border-[#E86927]`}
                                                 >
                                                     {/* Placeholder for image */}
                                                     <div className="mb-2 w-[48px] h-[48px] flex items-center justify-center">
                                                         {/* Add image here later */}
                                                         <Image src={sub.Image} alt={sub.label} width={40} height={40} className='object-contain' />
                                                     </div>
-                                                    <span className="text-black font-semibold text-lg text-center">{sub.label}</span>
+                                                    <span className={`${plusJakarta.className} text-black font-semibold text-base text-center`}>{sub.label}</span>
                                                 </Link>
                                             ))}
                                         </div>
@@ -191,11 +196,11 @@ const Navbar = () => {
                                     <Link
                                         href={link.href || '/services'}
                                         onClick={() => setDropdownIndex(null)}
-                                        className={`${montserrat.className} cursor-pointer text-[15px] font-medium text-white px-3 py-2 flex items-center gap-1 transition-colors duration-200 hover:text-[#41B349] ${isActive(link) ? 'text-[#41B349]' : ''
+                                        className={`${plusJakarta.className} cursor-pointer text-[15px] font-semibold tracking-wide text-white/90 px-3.5 py-2 flex items-center gap-1.5 transition-colors duration-200 hover:text-[#E86927] ${isActive(link) ? 'text-[#E86927] font-bold' : ''
                                             }`}
                                     >
                                         {link.label}
-                                        <FaChevronDown className="ml-1 text-xs mt-1" />
+                                        <FaChevronDown className="ml-0.5 text-xs opacity-80" />
                                     </Link>
                                     <div
                                         className={`absolute -left-90 mt-1.5 bg-white shadow-2xl rounded-xl z-20 min-w-[1020px] px-8 py-8 transition-all duration-200
@@ -205,18 +210,18 @@ const Navbar = () => {
                                     >
                                         <div className="grid grid-cols-4 gap-6 ">
                                             {servicesSubLinks.map((sub, i) => (
-                                                <div key={i} className='border-l-2 border-l-[#41B349] px-2'>
+                                                <div key={i} className='border-l-2 border-l-[#E86927] px-2'>
                                                     <Link
                                                         key={sub.label}
                                                         href={sub.href}
                                                         onClick={() => setDropdownIndex(null)}
-                                                        className={`flex flex-row items-center h-[80px] w-[230px] rounded-[20px]  px-2 bg-white transition-all duration-200 hover:bg-[#41B349]/20`}
+                                                        className={`flex flex-row items-center h-[80px] w-[230px] rounded-[20px] px-2 bg-white transition-all duration-200 hover:bg-[#E86927]/10`}
                                                     >
                                                         {/* Placeholder for image */}
                                                         <div className="mr-4 w-[80px] h-[48px] flex items-center justify-center">
                                                             <Image src={sub.Image} alt={sub.label} width={100} height={40} className='object-contain' />
                                                         </div>
-                                                        <span className="text-black font-semibold text-lg">{sub.label}</span>
+                                                        <span className={`${plusJakarta.className} text-black font-semibold text-base`}>{sub.label}</span>
                                                     </Link>
                                                 </div>
                                             ))}
@@ -227,14 +232,14 @@ const Navbar = () => {
                                 <>
                                     <Link
                                         href={link.href}
-                                        className={`${montserrat.className} cursor-pointer text-[15px] font-medium text-white px-3 py-2 flex items-center gap-1 transition-colors duration-200 hover:text-[#41B349] ${isActive(link) ? 'text-[#41B349]' : ''
+                                        className={`${plusJakarta.className} cursor-pointer text-[15px] font-semibold tracking-wide text-white/90 px-3.5 py-2 flex items-center gap-1.5 transition-colors duration-200 hover:text-[#E86927] ${isActive(link) ? 'text-[#E86927] font-bold' : ''
                                             }`}
                                     >
                                         {link.label}
-                                        <FaChevronDown className="ml-1 text-xs mt-1" />
+                                        <FaChevronDown className="ml-0.5 text-xs opacity-80" />
                                     </Link>
                                     <div
-                                        className={`absolute left-0 mt-2 bg-[#262323] shadow-lg rounded z-10 min-w-[160px] transition-all duration-200
+                                        className={`absolute left-0 mt-2 bg-[#000000] border border-gray-800 shadow-xl rounded-lg z-10 min-w-[160px] transition-all duration-200
                       ${dropdownIndex === idx ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}
                     `}
                                     >
@@ -242,7 +247,7 @@ const Navbar = () => {
                                             <Link
                                                 key={sub.label}
                                                 href={sub.href}
-                                                className={`block px-4 py-2 text-white transition-colors duration-200 hover:text-[#41B349] hover:bg-gray-700 ${pathname === sub.href ? 'text-[#41B349]' : ''
+                                                className={`${plusJakarta.className} block px-4 py-2.5 text-[14px] font-medium text-white/90 transition-colors duration-200 hover:text-[#E86927] hover:bg-white/5 ${pathname === sub.href ? 'text-[#E86927] font-bold' : ''
                                                     }`}
                                             >
                                                 {sub.label}
@@ -253,7 +258,7 @@ const Navbar = () => {
                             ) : (
                                 <Link
                                     href={link.href}
-                                    className={`${montserrat.className} text-[15px] font-medium text-white px-3 py-2 transition-colors duration-200 hover:text-[#41B349] ${isActive(link) ? 'text-[#41B349]' : ''
+                                    className={`${plusJakarta.className} text-[15px] font-semibold tracking-wide text-white/90 px-3.5 py-2 transition-colors duration-200 hover:text-[#E86927] ${isActive(link) ? 'text-[#E86927] font-bold' : ''
                                         }`}
                                 >
                                     {link.label}
@@ -293,7 +298,7 @@ const Navbar = () => {
                         : '-translate-x-full opacity-0 invisible'
                 }`}
                 style={{
-                    background: '#262323',
+                    background: '#000000',
                 }}
             >
                 <div className="flex items-center justify-between px-6 py-6">
