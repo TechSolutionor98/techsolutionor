@@ -167,7 +167,7 @@ const Navbar = () => {
     return (
         <>
             {/* Desktop Navbar */}
-            <nav className='bg-[#000000] w-full h-[90px] flex items-center justify-between px-10 lg:px-20 lg:pl-40 py-10'
+            <nav className='bg-[#181918] w-full h-[90px] flex items-center justify-between px-10 lg:px-20 lg:pl-40 py-10'
                 style={{ boxShadow: "0px 5px 15px 0px rgba(0, 0, 0, 0.4)" }}>
                 <div className="navbar-logo">
                     <Link href='/'><Image src={Logo} alt="Logo" width={200} height={56} className='w-[80px] h-[50px]' /></Link>
@@ -283,7 +283,7 @@ const Navbar = () => {
                                     <div
                                         onMouseEnter={() => handleMouseEnter(idx)}
                                         onMouseLeave={handleMouseLeave}
-                                        className={`absolute left-0 mt-2 bg-[#000000] border border-gray-800 shadow-xl rounded-lg z-10 min-w-[160px] transition-all duration-200
+                                        className={`absolute left-0 mt-2 bg-[#181918] border border-gray-800 shadow-xl rounded-lg z-10 min-w-[160px] transition-all duration-200
                       ${dropdownIndex === idx ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}
                     `}
                                         style={{ top: '55px' }}
@@ -344,7 +344,7 @@ const Navbar = () => {
                         : '-translate-x-full opacity-0 invisible'
                 }`}
                 style={{
-                    background: '#000000',
+                    background: '#181918',
                 }}
             >
                 <div className="flex items-center justify-between px-6 py-6">
