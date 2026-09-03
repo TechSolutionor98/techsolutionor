@@ -1,11 +1,21 @@
 "use client";
 
 import React from 'react';
-import Map from '@/src/Components/Images/map.png';
-import Image from 'next/image';
 import Link from 'next/link';
-import { FaFacebookF, FaInstagram, FaLinkedin, FaPinterest } from "react-icons/fa";
+import { Plus_Jakarta_Sans } from 'next/font/google';
+import { 
+    FaYoutube, 
+    FaLinkedinIn, 
+    FaInstagram, 
+    FaFacebookF 
+} from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
+
+const plusJakarta = Plus_Jakarta_Sans({
+    subsets: ['latin'],
+    weight: ['400', '500', '600', '700', '800'],
+    display: 'swap'
+});
 
 const Footer = () => {
     const footerLinks = {
@@ -54,31 +64,49 @@ const Footer = () => {
     };
 
     return (
-        <footer className="w-full bg-[#000000] text-white overflow-hidden border-t border-white/10 select-none">
-            {/* Top Links Section */}
-            <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-12 md:py-16">
+        <footer className={`${plusJakarta.className} w-full bg-[#171717] text-white relative overflow-hidden`}>
+            {/* Background Glow Accents (Matching Get In Touch section) */}
+            <div className="absolute top-1/2 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] bg-[#41B349]/10 blur-[150px] rounded-full pointer-events-none" />
+            <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[#41B349]/5 blur-[120px] rounded-full pointer-events-none" />
+
+            <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-12 md:py-16">
+                
+                {/* ================= 4 EQUAL COLUMNS ================= */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12 items-start">
                     {Object.entries(footerLinks).map(([section, links]) => (
                         <div key={section} className="flex flex-col">
-                            <h2 
-                                className="text-lg sm:text-xl text-[#41B349] font-extrabold tracking-tight mb-4 uppercase"
-                                style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-                            >
-                                {section}
-                            </h2>
-                            <ul className="space-y-2.5">
-                                {links.map((linkItem, index) => {
+                            {/* Heading / Title */}
+                            <div className="flex items-center gap-2 mb-4 sm:mb-5">
+                                <span className="w-2 h-2 rounded-full bg-[#41B349] shadow-[0_0_8px_rgba(65,179,73,0.8)] flex-shrink-0" />
+                                <h3 
+                                    className="text-base sm:text-[17px] font-extrabold text-[#41B349] uppercase tracking-wider"
+                                    style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+                                >
+                                    {section}
+                                </h3>
+                            </div>
+
+                            {/* Links List */}
+                            <ul className="space-y-1.5">
+                                {links.slice(0, 8).map((linkItem, index) => {
                                     const isObj = typeof linkItem === 'object';
                                     const label = isObj ? linkItem.name : linkItem;
                                     const href = isObj ? linkItem.href : '#';
 
                                     return (
-                                        <li key={index}>
+                                        <li key={index} className="flex items-center">
                                             <Link 
                                                 href={href} 
-                                                className="text-gray-400 hover:text-[#41B349] text-xs sm:text-sm font-medium transition-colors duration-200 block"
+                                                className="group relative inline-flex items-center gap-2 text-xs sm:text-[13px] text-gray-300 hover:text-white transition-colors duration-200 py-0.5"
                                             >
-                                                {label}
+                                                {/* Dot / Icon next to link */}
+                                                <span className="w-1.5 h-1.5 rounded-full bg-[#41B349] opacity-70 group-hover:opacity-100 group-hover:scale-125 group-hover:shadow-[0_0_6px_rgba(65,179,73,0.9)] transition-all duration-200 flex-shrink-0" />
+                                                
+                                                {/* Label with smooth animated bottom border/underline */}
+                                                <span className="relative inline-block leading-snug">
+                                                    {label}
+                                                    <span className="absolute left-0 -bottom-0.5 w-0 h-[1.5px] bg-[#41B349] transition-all duration-300 ease-out group-hover:w-full" />
+                                                </span>
                                             </Link>
                                         </li>
                                     );
@@ -87,105 +115,59 @@ const Footer = () => {
                         </div>
                     ))}
                 </div>
-            </div>
 
-            {/* Middle Section: We'd Love To Hear From You & Map */}
-            <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-8 flex flex-col items-center justify-center text-center">
-                <h3 
-                    className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight mb-8"
-                    style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-                >
-                    We'd Love To Hear From You
-                </h3>
-
-                <div className="w-full max-w-4xl mx-auto overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-2 shadow-2xl mb-10">
-                    <Image 
-                        src={Map} 
-                        alt="Global Presence Map" 
-                        width={1024} 
-                        height={350} 
-                        className="w-full h-auto object-cover rounded-xl filter contrast-[1.05] brightness-95" 
-                    />
-                </div>
-
-                {/* Form Section */}
-                <div className="w-full max-w-4xl mx-auto mb-6">
-                    <form 
-                        action="" 
-                        onSubmit={(e) => e.preventDefault()}
-                        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3.5"
-                    >
-                        <input 
-                            type="text" 
-                            className="h-11 bg-white text-gray-900 px-4 rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#41B349] transition-all duration-200 placeholder-gray-400" 
-                            placeholder="Name" 
-                        />
-                        <input 
-                            type="email" 
-                            className="h-11 bg-white text-gray-900 px-4 rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#41B349] transition-all duration-200 placeholder-gray-400" 
-                            placeholder="Email" 
-                        />
-                        <input 
-                            type="text" 
-                            className="h-11 bg-white text-gray-900 px-4 rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#41B349] transition-all duration-200 placeholder-gray-400" 
-                            placeholder="Website URL" 
-                        />
-                        <div className="relative">
-                            <select 
-                                name="services" 
-                                className="h-11 w-full bg-white text-gray-700 px-4 rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#41B349] transition-all duration-200 cursor-pointer appearance-none"
-                            >
-                                <option value="">Select Services</option>
-                                <option value="App Development">App Development</option>
-                                <option value="Web Development">Web Development</option>
-                                <option value="Software Development">Digital Marketing</option>
-                                <option value="POS Development">Graphics Designing</option>
-                            </select>
-                        </div>
-                        <button 
-                            type="submit" 
-                            className="h-11 bg-[#41B349] hover:bg-[#369c3d] text-white font-extrabold text-sm rounded-xl transition-all shadow-md shadow-[#41B349]/20 cursor-pointer flex items-center justify-center"
-                        >
-                            Submit
-                        </button>
-                    </form>
-                </div>
-            </div>
-
-            {/* Bottom Bar: Social, Contact & Copyright */}
-            <div className="border-t border-white/10 mt-6">
-                <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-6 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
-                    {/* Social Icons */}
-                    <div className="flex items-center gap-3">
-                        {[
-                            { icon: FaFacebookF, href: "#" },
-                            { icon: FaInstagram, href: "#" },
-                            { icon: FaXTwitter, href: "#" },
-                            { icon: FaLinkedin, href: "#" },
-                            { icon: FaPinterest, href: "#" }
-                        ].map(({ icon: Icon, href }, idx) => (
-                            <a 
-                                key={idx} 
-                                href={href} 
-                                className="w-9 h-9 rounded-full border border-white/20 flex items-center justify-center text-gray-300 hover:text-white hover:bg-[#41B349] hover:border-[#41B349] transition-all duration-200"
-                            >
-                                <Icon size={14} />
-                            </a>
-                        ))}
+                {/* ================= BOTTOM BAR WITH CENTERED SOCIAL ICONS ================= */}
+                <div className="border-t border-white/10 mt-12 pt-6 flex flex-col md:flex-row items-center justify-between text-xs text-gray-400 gap-4 text-center md:text-left">
+                    {/* Left: Copyright */}
+                    <div>
+                        © {new Date().getFullYear()} <span className="text-white font-semibold">TECH SOLUTIONOR</span>. All rights reserved.
                     </div>
 
-                    {/* Contact Info */}
-                    <div className="text-sm font-medium text-gray-300">
-                        <a href="mailto:info@techsolutionor.com" className="hover:text-[#41B349] transition-colors">
-                            info@techsolutionor.com
+                    {/* Center: Social Media Icons */}
+                    <div className="flex items-center justify-center gap-3 text-white">
+                        <a 
+                            href="#" 
+                            aria-label="YouTube" 
+                            className="w-8 h-8 rounded-full bg-white/5 border border-white/10 hover:bg-[#41B349] hover:border-[#41B349] hover:text-white flex items-center justify-center transition-all duration-200"
+                        >
+                            <FaYoutube size={14} />
+                        </a>
+                        <a 
+                            href="#" 
+                            aria-label="LinkedIn" 
+                            className="w-8 h-8 rounded-full bg-white/5 border border-white/10 hover:bg-[#41B349] hover:border-[#41B349] hover:text-white flex items-center justify-center transition-all duration-200"
+                        >
+                            <FaLinkedinIn size={13} />
+                        </a>
+                        <a 
+                            href="#" 
+                            aria-label="Instagram" 
+                            className="w-8 h-8 rounded-full bg-white/5 border border-white/10 hover:bg-[#41B349] hover:border-[#41B349] hover:text-white flex items-center justify-center transition-all duration-200"
+                        >
+                            <FaInstagram size={13} />
+                        </a>
+                        <a 
+                            href="#" 
+                            aria-label="Facebook" 
+                            className="w-8 h-8 rounded-full bg-white/5 border border-white/10 hover:bg-[#41B349] hover:border-[#41B349] hover:text-white flex items-center justify-center transition-all duration-200"
+                        >
+                            <FaFacebookF size={13} />
+                        </a>
+                        <a 
+                            href="#" 
+                            aria-label="Twitter" 
+                            className="w-8 h-8 rounded-full bg-white/5 border border-white/10 hover:bg-[#41B349] hover:border-[#41B349] hover:text-white flex items-center justify-center transition-all duration-200"
+                        >
+                            <FaXTwitter size={13} />
                         </a>
                     </div>
 
-                    {/* Copyright */}
-                    <div className="text-xs sm:text-sm text-gray-400 font-medium">
-                        All rights reserved | <span className="font-extrabold text-white">TECH SOLUTIONOR</span>
+                    {/* Right: Tagline */}
+                    <div>
+                        Empowering Global Technology Solutions
                     </div>
                 </div>
+
             </div>
         </footer>
     );
