@@ -7,7 +7,6 @@ import { motion } from "framer-motion";
 import { getCmsVal } from "@/lib/api-helper";
 
 export const defaultHomeHero = {
-  badge: "⚡ #1 Digital Marketing & Tech Agency in Dubai",
   title: "Digital Marketing Agency in Dubai – Web Development & SEO Services for Business Growth",
   description:
     "Serving businesses across the world, with a strong focus on helping companies in Dubai and the UAE grow through smart digital solutions.",
@@ -21,17 +20,14 @@ const HomeBanner = ({ content, cmsContent }) => {
     [content]
   );
 
-  const rawBadge = heroContent.badge?.trim() || defaultHomeHero.badge;
   const rawTitle = heroContent.title?.trim() || defaultHomeHero.title;
   const rawDescription = heroContent.description?.trim() || defaultHomeHero.description;
   const rawButtonText = heroContent.buttonText?.trim() || defaultHomeHero.buttonText;
 
-  const bannerBadge = getCmsVal(cmsContent, rawBadge, "homebanner") || getCmsVal(cmsContent, rawBadge, "hero");
   const bannerTitle = getCmsVal(cmsContent, rawTitle, "homebanner") || getCmsVal(cmsContent, rawTitle, "hero");
   const bannerDescription = getCmsVal(cmsContent, rawDescription, "homebanner") || getCmsVal(cmsContent, rawDescription, "hero");
   const bannerButtonText = getCmsVal(cmsContent, rawButtonText, "homebanner") || getCmsVal(cmsContent, rawButtonText, "hero");
-  const defaultOnlineVideo = "https://assets.mixkit.co/videos/preview/mixkit-dubai-skyline-at-night-41528-large.mp4";
-  const bannerVideoUrl = getCmsVal(cmsContent, defaultOnlineVideo, "homebanner") || getCmsVal(cmsContent, defaultOnlineVideo, "hero") || defaultOnlineVideo;
+  const bannerButtonLink = "/claim-your-free-seo-audit";
 
   const descriptionLines = typeof bannerDescription === "string"
     ? bannerDescription.split("\n").filter(Boolean)
@@ -78,9 +74,9 @@ const HomeBanner = ({ content, cmsContent }) => {
           {/* Bottom Line */}
           {bottomLineText && (
             <span className="block text-3xl sm:text-5xl md:text-6xl lg:text-[62px] font-black text-[#0D0F12] leading-[1.1] tracking-tight relative">
-              <span className="text-[#41B349] text-3xl sm:text-5xl font-serif mr-1 sm:mr-2">&apos;</span>
+              <span className="text-[#41B349] text-3xl sm:text-5xl font-serif mr-1 sm:mr-2" aria-hidden="true">&lsquo;</span>
               {bottomLineText}
-              <span className="text-[#41B349] text-3xl sm:text-5xl font-serif ml-1 sm:ml-2">&apos;</span>
+              <span className="text-[#41B349] text-3xl sm:text-5xl font-serif ml-1 sm:ml-2" aria-hidden="true">&rsquo;</span>
             </span>
           )}
         </div>
@@ -128,7 +124,7 @@ const HomeBanner = ({ content, cmsContent }) => {
         <div 
           className="mt-5 sm:mt-6 flex flex-col items-center gap-4 w-full sm:w-auto"
         >
-          <Link href="/claim-your-free-seo-audit" className="w-full sm:w-auto group">
+          <Link href={bannerButtonLink} className="w-full sm:w-auto group">
             <button className="w-full sm:w-auto inline-flex items-center justify-center gap-3 bg-[#41B349] text-[#FCFCFC] text-base sm:text-lg font-bold px-9 sm:px-11 py-4 sm:py-4.5 rounded-full shadow-[0_10px_30px_rgba(65,179,73,0.35)] hover:shadow-[0_15px_40px_rgba(65,179,73,0.5)] hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer border-2 border-[#FFE7A8]/60 shine-btn relative overflow-hidden">
               <span>{bannerButtonText}</span>
               <FaArrowRight size={17} className="transition-transform group-hover:translate-x-1.5" />

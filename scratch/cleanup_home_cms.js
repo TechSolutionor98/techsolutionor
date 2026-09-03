@@ -35,20 +35,35 @@ async function cleanupHomeCms() {
 
   console.log(`Found Home route: ${route._id.toString()} (${route.path})`);
 
-  // Parse fresh clean sections from code files using upgraded parser
-  const freshSections = parsePageContent(path.join(process.cwd(), route.filePath));
+  // Parse fresh clean sections from HomeClientPage.js
+  const targetPath = route.path === '/' ? 'app/Home/HomeClientPage.js' : route.filePath;
+  const freshSections = parsePageContent(path.join(process.cwd(), targetPath));
   console.log(`Parsed ${freshSections.length} clean sections for Home page.`);
 
   for (const sec of freshSections) {
-    console.log(`\nSection: ${sec.sectionName} (${sec.sectionId})`);
-    for (const [fieldKey, field] of Object.entries(sec.fields || {})) {
-      console.log(`  - [${field.type}] ${fieldKey} -> ${field.label}`);
-    }
+    console.log(`\nSection: ${sec.sectionName} (${sec.sectionId}) [${Object.keys(sec.fields || {}).length} fields]`);
   }
 
   // Fetch current DB content and merge
   const { content } = await getPageContent(route._id.toString());
-  await savePageContent(route._id.toString(), content);
+  console.log(`\nMerged sections from getPageContent: ${content.sections.length}`);
+  content.sections.forEach((s, i) => console.log(`  ${i + 1}. [${s.sectionId}] ${s.sectionName} (${Object.keys(s.fields || {}).length} fields)`));
+
+  // Save to database
+  await db.collection('cms_page_content').updateOne(
+    { path: '/' },
+    {
+      $set: {
+        routeId: route._id.toString(),
+        path: '/',
+        sections: content.sections,
+        status: 'published',
+        version: (content.version || 1) + 1,
+        updatedAt: new Date().toISOString()
+      }
+    },
+    { upsert: true }
+  );
 
   console.log('\n✅ Successfully cleaned up and saved Home page CMS content in MongoDB!');
   console.log('🎉 --- HOME PAGE CMS CLEANUP PASSED --- 🎉');

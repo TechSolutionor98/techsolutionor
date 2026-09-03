@@ -1,30 +1,23 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
 import { motion } from "framer-motion";
-import coorprate from "../../../../components/Images/coorporative.png";
-import goal from '../../../../components/Images/goal.png';
-import rocket from '../../../../components/Images/rocket.png';
 import { getCmsVal } from "@/lib/api-helper";
 
 export const defaultWhatWeDo = {
   sectionTitle: "WHAT WE DO",
   cards: [
     {
-      icon: coorprate,
       title: "Cooperative Expert Team",
       description:
         "Our cooperative team of experienced developers, designers, and digital strategists works closely to deliver custom technology solutions tailored to your business goals. By combining technical expertise with clear communication, we ensure smooth execution at every stage, from planning and development to testing and final deployment, for clients worldwide, including the UAE.",
     },
     {
-      icon: goal,
       title: "Goals Achiever",
       description:
         "We turn ideas into measurable results. Our goal-focused approach is built on strategic planning, smart problem-solving, and continuous optimization. Whether it's web development, app development, or digital growth solutions, we set ambitious targets and consistently exceed them to help businesses scale faster and smarter.",
     },
     {
-      icon: rocket,
       title: "Business Grow",
       description:
         "We help businesses grow with innovative IT services and scalable digital solutions designed to improve efficiency, boost productivity, and increase revenue. Using modern technologies and industry best practices, we build future-ready systems that adapt to your evolving needs, trusted by startups and enterprises across the UAE and global markets.",

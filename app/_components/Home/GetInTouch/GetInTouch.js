@@ -8,22 +8,22 @@ import { getCmsVal } from "@/lib/api-helper";
 import getInTouchImg from '@/components/Images/getintouch.png';
 
 const COUNTRY_DIAL_CODES = [
-    { name: "United Arab Emirates", code: "+971", minDigits: 9, maxDigits: 9, sample: "50 123 4567" },
-    { name: "Saudi Arabia", code: "+966", minDigits: 9, maxDigits: 9, sample: "50 123 4567" },
-    { name: "Qatar", code: "+974", minDigits: 8, maxDigits: 8, sample: "3312 3456" },
-    { name: "Oman", code: "+968", minDigits: 8, maxDigits: 8, sample: "9123 4567" },
-    { name: "Kuwait", code: "+965", minDigits: 8, maxDigits: 8, sample: "9123 4567" },
-    { name: "Bahrain", code: "+973", minDigits: 8, maxDigits: 8, sample: "3912 3456" },
-    { name: "United States", code: "+1", minDigits: 10, maxDigits: 10, sample: "202 555 0123" },
-    { name: "United Kingdom", code: "+44", minDigits: 10, maxDigits: 10, sample: "7911 123456" },
-    { name: "Canada", code: "+1", minDigits: 10, maxDigits: 10, sample: "416 555 0123" },
-    { name: "Australia", code: "+61", minDigits: 9, maxDigits: 9, sample: "412 345 678" },
-    { name: "Pakistan", code: "+92", minDigits: 10, maxDigits: 10, sample: "300 1234567" },
-    { name: "India", code: "+91", minDigits: 10, maxDigits: 10, sample: "98765 43210" },
-    { name: "Germany", code: "+49", minDigits: 10, maxDigits: 11, sample: "151 12345678" },
-    { name: "France", code: "+33", minDigits: 9, maxDigits: 9, sample: "6 12 34 56 78" },
-    { name: "Singapore", code: "+65", minDigits: 8, maxDigits: 8, sample: "9123 4567" },
-    { name: "Other Country", code: "+", minDigits: 7, maxDigits: 15, sample: "12345678" }
+    { dialCountry: "United Arab Emirates", code: "+971", minDigits: 9, maxDigits: 9, sample: "50 123 4567" },
+    { dialCountry: "Saudi Arabia", code: "+966", minDigits: 9, maxDigits: 9, sample: "50 123 4567" },
+    { dialCountry: "Qatar", code: "+974", minDigits: 8, maxDigits: 8, sample: "3312 3456" },
+    { dialCountry: "Oman", code: "+968", minDigits: 8, maxDigits: 8, sample: "9123 4567" },
+    { dialCountry: "Kuwait", code: "+965", minDigits: 8, maxDigits: 8, sample: "9123 4567" },
+    { dialCountry: "Bahrain", code: "+973", minDigits: 8, maxDigits: 8, sample: "3912 3456" },
+    { dialCountry: "United States", code: "+1", minDigits: 10, maxDigits: 10, sample: "202 555 0123" },
+    { dialCountry: "United Kingdom", code: "+44", minDigits: 10, maxDigits: 10, sample: "7911 123456" },
+    { dialCountry: "Canada", code: "+1", minDigits: 10, maxDigits: 10, sample: "416 555 0123" },
+    { dialCountry: "Australia", code: "+61", minDigits: 9, maxDigits: 9, sample: "412 345 678" },
+    { dialCountry: "Pakistan", code: "+92", minDigits: 10, maxDigits: 10, sample: "300 1234567" },
+    { dialCountry: "India", code: "+91", minDigits: 10, maxDigits: 10, sample: "98765 43210" },
+    { dialCountry: "Germany", code: "+49", minDigits: 10, maxDigits: 11, sample: "151 12345678" },
+    { dialCountry: "France", code: "+33", minDigits: 9, maxDigits: 9, sample: "6 12 34 56 78" },
+    { dialCountry: "Singapore", code: "+65", minDigits: 8, maxDigits: 8, sample: "9123 4567" },
+    { dialCountry: "Other Country", code: "+", minDigits: 7, maxDigits: 15, sample: "12345678" }
 ];
 
 const SERVICES = [
@@ -91,7 +91,7 @@ const GetInTouch = ({ cmsContent }) => {
     const [status, setStatus] = useState({ type: '', message: '' });
 
     // Selected country object
-    const selectedCountryObj = COUNTRY_DIAL_CODES.find(c => c.name === formData.country);
+    const selectedCountryObj = COUNTRY_DIAL_CODES.find(c => (c.country || c.name) === formData.country);
 
     // Resend OTP Countdown Timer
     useEffect(() => {
@@ -382,11 +382,14 @@ const GetInTouch = ({ cmsContent }) => {
         }
     };
 
+    const headingPrefix = getCmsVal(cmsContent, "GET IN", "getintouch");
+    const headingHighlight = getCmsVal(cmsContent, "TOUCH", "getintouch");
     const sectionSubtitle = getCmsVal(
         cmsContent, 
         "Have a project in mind or looking to scale your digital capabilities? Connect with our technology experts at Tech Solutionor to discuss custom web, software, and IT solutions tailored to your business goals.", 
         "getintouch"
     );
+    const illustrationImg = getCmsVal(cmsContent, getInTouchImg, "getintouch");
 
     return (
         <section id="get-in-touch" className="relative overflow-hidden bg-[#171717] py-12 md:py-16 text-white select-none">
@@ -403,8 +406,8 @@ const GetInTouch = ({ cmsContent }) => {
                             className="text-3xl sm:text-4xl lg:text-5xl font-black text-white uppercase tracking-tight leading-tight mb-2 sm:mb-3"
                             style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
                         >
-                            <span>GET IN </span>
-                            <span className="text-[#41B349]">TOUCH</span>
+                            <span>{headingPrefix} </span>
+                            <span className="text-[#41B349]">{headingHighlight}</span>
                         </h2>
 
                         <p className="text-gray-300 text-sm sm:text-base leading-relaxed max-w-md font-medium">
@@ -412,12 +415,20 @@ const GetInTouch = ({ cmsContent }) => {
                         </p>
 
                         <div className="mt-5 sm:mt-6 w-full max-w-[240px] sm:max-w-[280px]">
-                            <Image
-                                src={getInTouchImg}
-                                alt="Get In Touch"
-                                priority
-                                className="w-full h-auto object-contain"
-                            />
+                            {typeof illustrationImg === 'string' && (illustrationImg.startsWith('http') || illustrationImg.startsWith('/')) ? (
+                                <img
+                                    src={illustrationImg}
+                                    alt="Get In Touch"
+                                    className="w-full h-auto object-contain"
+                                />
+                            ) : (
+                                <Image
+                                    src={getInTouchImg}
+                                    alt="Get In Touch"
+                                    priority
+                                    className="w-full h-auto object-contain"
+                                />
+                            )}
                         </div>
                     </div>
 
@@ -585,9 +596,12 @@ const GetInTouch = ({ cmsContent }) => {
                                                     className="w-full h-11 bg-white rounded-xl px-4 pr-10 text-gray-800 text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs cursor-pointer"
                                                 >
                                                     <option value="">Select your Country</option>
-                                                    {COUNTRY_DIAL_CODES.map((c) => (
-                                                        <option key={c.name} value={c.name}>{c.name} ({c.code})</option>
-                                                    ))}
+                                                    {COUNTRY_DIAL_CODES.map((c) => {
+                                                        const countryName = c.dialCountry || c.country || c.name;
+                                                        return (
+                                                            <option key={countryName} value={countryName}>{countryName} ({c.code})</option>
+                                                        );
+                                                    })}
                                                 </select>
                                                 <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
                                                     <FaChevronDown size={11} />

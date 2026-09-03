@@ -210,9 +210,9 @@ export async function GET(request) {
       const sid = (sectionId || '').toLowerCase();
       const sname = (sectionName || '').toLowerCase();
 
-      // Exclude page content/main only on the Home page (/) to clean up old DB remnants
-      const isHomePage = route && route.path === '/';
-      if (isHomePage && (sid === 'page_content' || sid === 'main' || sname === 'page content' || sname === 'main')) {
+      // Exclude page content/main/counter only on the Home page (/) to clean up old DB remnants
+      const isHomePage = (route && route.path === '/') || pathParam === '/' || routeId === '/';
+      if (isHomePage && (sid === 'page_content' || sid === 'main' || sid === 'counter' || sname === 'page content' || sname === 'main' || sname.includes('counter'))) {
         return true;
       }
 
@@ -245,10 +245,18 @@ export async function GET(request) {
     const serviceSlug = serviceMatch ? serviceMatch[1] : null;
 
     let parsedSections = [];
-    if (route && route.filePath) {
+    let targetFilePath = route && route.filePath ? route.filePath : null;
+    const isHomePage = (route && route.path === '/') || pathParam === '/' || routeId === '/';
+    if (isHomePage) {
+      targetFilePath = 'app/Home/HomeClientPage.js';
+    }
+
+    if (targetFilePath) {
       try {
-        const absoluteFilePath = path.join(process.cwd(), route.filePath);
-        parsedSections = parsePageContent(absoluteFilePath, serviceSlug);
+        const absoluteFilePath = path.join(process.cwd(), targetFilePath);
+        if (fs.existsSync(absoluteFilePath)) {
+          parsedSections = parsePageContent(absoluteFilePath, serviceSlug);
+        }
       } catch (parseErr) {
         console.error('Failed to parse page content dynamically:', parseErr);
       }
@@ -385,7 +393,7 @@ export async function GET(request) {
             sectionName: existingSec.sectionName || parsedSec.sectionName,
           };
           
-          mergedSec.fields = { ...parsedSec.fields };
+          mergedSec.fields = {};
           for (const [key, parsedField] of Object.entries(parsedSec.fields || {})) {
             let dbField = null;
             if (existingSec.fields) {
@@ -430,11 +438,13 @@ export async function GET(request) {
         }
       }
 
-      // 2. Append any sections that exist in the DB but are not found in the parsed files
-      for (const dbSec of content.sections) {
-        const existsInParsed = parsedSections.some(s => isMatchingSection(s, dbSec));
-        if (!existsInParsed) {
-          mergedSections.push(dbSec);
+      // 2. Append any sections that exist in the DB but are not found in the parsed files (except for Home page /)
+      if (!isHomePage) {
+        for (const dbSec of content.sections) {
+          const existsInParsed = parsedSections.some(s => isMatchingSection(s, dbSec));
+          if (!existsInParsed) {
+            mergedSections.push(dbSec);
+          }
         }
       }
     } else {

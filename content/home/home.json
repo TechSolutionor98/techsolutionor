@@ -323,23 +323,9 @@
       }
     ]
   },
-  "counter": {
-    "stats": [
-      {
-        "value": 100,
-        "suffix": "+",
-        "label": "Satisfied Clients"
-      },
-      {
-        "value": 150,
-        "suffix": "+",
-        "label": "Completed Projects"
-      },
-      {
-        "value": 90,
-        "suffix": "%",
-        "label": "Success Rate"
-      }
-    ]
+  "getInTouch": {
+    "heading": "GET IN TOUCH",
+    "subtitle": "Have a project in mind or looking to scale your digital capabilities? Connect with our technology experts at Tech Solutionor to discuss custom web, software, and IT solutions tailored to your business goals.",
+    "illustration": ""
   }
 }

@@ -1,20 +1,21 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaArrowRight, FaBriefcase } from "react-icons/fa";
-import Seo from '../../../../components/Images/seo.png';
-import Social from '../../../../components/Images/socialmedia.png';
-import Content from '../../../../components/Images/content.png';
-import App from '../../../../components/Images/app.png';
-import Graphics from '../../../../components/Images/graphics.png';
-import Web from '../../../../components/Images/web.png';
-import Software from '../../../../components/Images/software.png';
-import Ecommerce from '../../../../components/Images/ecommerce.png';
-import Digital from '../../../../components/Images/digital.png';
-import PPC from '../../../../components/Images/ppc.png';
+import {
+  FaGlobe,
+  FaMobileScreenButton,
+  FaLaptopCode,
+  FaCartShopping,
+  FaPalette,
+  FaShareNodes,
+  FaBullhorn,
+  FaBullseye,
+  FaMagnifyingGlassChart,
+  FaPenNib,
+} from "react-icons/fa6";
 import { getCmsVal } from "@/lib/api-helper";
 
 export const defaultServicesWeOffer = {
@@ -37,17 +38,17 @@ export const defaultServicesWeOffer = {
   ],
 };
 
-const serviceImages = [
-  Web,
-  App,
-  Software,
-  Ecommerce,
-  Graphics,
-  Social,
-  Digital,
-  PPC,
-  Seo,
-  Content,
+const serviceIcons = [
+  FaGlobe,
+  FaMobileScreenButton,
+  FaLaptopCode,
+  FaCartShopping,
+  FaPalette,
+  FaShareNodes,
+  FaBullhorn,
+  FaBullseye,
+  FaMagnifyingGlassChart,
+  FaPenNib,
 ];
 
 const ServicesWeOffer = ({ cmsContent }) => {
@@ -72,13 +73,12 @@ const ServicesWeOffer = ({ cmsContent }) => {
   const exploreButtonText = getCmsVal(cmsContent, defaultServicesWeOffer.exploreButtonText, "servicesweoffer");
 
   const cardsData = defaultServicesWeOffer.cards.map((defaultCard, index) => {
-    const staticImage = serviceImages[index];
-    const imageVal = getCmsVal(cmsContent, staticImage, "servicesweoffer");
     const fullTitle = getCmsVal(cmsContent, defaultCard.title, "servicesweoffer");
+    const IconComponent = serviceIcons[index] || FaGlobe;
 
     return {
       id: index,
-      image: imageVal,
+      icon: IconComponent,
       title: fullTitle,
       link: defaultCard.link || "/services",
     };
@@ -88,16 +88,8 @@ const ServicesWeOffer = ({ cmsContent }) => {
 
   return (
     <section className="relative overflow-hidden bg-[#FFFFFF] py-16 md:py-24 select-none">
-      {/* CSS Rules for Icon Colors and Dead-Still Hover Pause */}
+      {/* CSS Rules for Dead-Still Hover Pause */}
       <style jsx>{`
-        .icon-green-filter {
-          filter: invert(53%) sepia(93%) saturate(394%) hue-rotate(80deg) brightness(92%) contrast(88%);
-          transition: filter 0.3s ease, transform 0.3s ease;
-        }
-        .icon-white-filter {
-          filter: brightness(0) invert(1);
-          transition: filter 0.3s ease, transform 0.3s ease;
-        }
         @keyframes orbitRotate {
           0% {
             transform: rotate(0deg);
@@ -185,7 +177,7 @@ const ServicesWeOffer = ({ cmsContent }) => {
               const y = (Math.sin(angleRad) * radius).toFixed(3);
 
               const isActive = activeIdx === i;
-              const isImgDynamic = typeof item.image === 'string' && (item.image.startsWith('http') || item.image.startsWith('/'));
+              const IconComponent = item.icon;
 
               return (
                 <div
@@ -213,23 +205,11 @@ const ServicesWeOffer = ({ cmsContent }) => {
                           : "bg-white border-2 border-gray-200 group-hover:bg-[#41B349] group-hover:border-white group-hover:scale-110"
                       }`}
                     >
-                      {isImgDynamic ? (
-                        <img
-                          src={item.image}
-                          alt={item.title}
-                          className={`w-6 h-6 sm:w-8 sm:h-8 object-contain transition-all duration-300 ${
-                            isActive ? "icon-white-filter" : "icon-green-filter group-hover:icon-white-filter"
-                          }`}
-                        />
-                      ) : (
-                        <Image
-                          src={item.image}
-                          alt={item.title}
-                          className={`w-6 h-6 sm:w-8 sm:h-8 object-contain transition-all duration-300 ${
-                            isActive ? "icon-white-filter" : "icon-green-filter group-hover:icon-white-filter"
-                          }`}
-                        />
-                      )}
+                      <IconComponent
+                        className={`w-5 h-5 sm:w-7 sm:h-7 transition-colors duration-300 ${
+                          isActive ? "text-white" : "text-black group-hover:text-white"
+                        }`}
+                      />
                     </div>
 
                     {/* Node Title Label with Clear Margin */}
@@ -269,10 +249,8 @@ const ServicesWeOffer = ({ cmsContent }) => {
                   className="flex flex-col items-center justify-center"
                 >
                   <div className="w-10 h-10 sm:w-13 sm:h-13 rounded-full bg-[#41B349] border-2 border-white flex items-center justify-center mb-2 shadow-md">
-                    {typeof activeService.image === 'string' && (activeService.image.startsWith('http') || activeService.image.startsWith('/')) ? (
-                      <img src={activeService.image} alt={activeService.title} className="w-6 h-6 sm:w-7 sm:h-7 object-contain icon-white-filter" />
-                    ) : (
-                      <Image src={activeService.image} alt={activeService.title} className="w-6 h-6 sm:w-7 sm:h-7 object-contain icon-white-filter" />
+                    {activeService.icon && (
+                      <activeService.icon className="w-5 h-5 sm:w-7 sm:h-7 text-white transition-colors duration-300" />
                     )}
                   </div>
 

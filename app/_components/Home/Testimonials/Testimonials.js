@@ -7,7 +7,6 @@ import { getCmsVal } from '@/lib/api-helper'
 export const defaultTestimonials = {
   titlePrefix: 'Customer',
   titleHighlight: 'Reviews',
-  logoImageUrl: '',
   companyName: 'Tech Solutionor',
   ratingText: '5.0',
   poweredByText: 'powered by Google',
