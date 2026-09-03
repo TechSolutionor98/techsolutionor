@@ -127,8 +127,34 @@ const servicesSubLinks = [
 const Navbar = () => {
     const [dropdownIndex, setDropdownIndex] = useState(null);
     const [mobileOpen, setMobileOpen] = useState(false);
+    const timeoutRef = React.useRef(null);
     const pathname = usePathname();
     const { openQuote } = useQuote();
+
+    const handleMouseEnter = (idx) => {
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+            timeoutRef.current = null;
+        }
+        setDropdownIndex(idx);
+    };
+
+    const handleMouseLeave = () => {
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+        }
+        timeoutRef.current = setTimeout(() => {
+            setDropdownIndex(null);
+        }, 250);
+    };
+
+    React.useEffect(() => {
+        return () => {
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            }
+        };
+    }, []);
 
     // Helper to check if navlink or any sublink is active
     const isActive = (link) => {
@@ -152,8 +178,8 @@ const Navbar = () => {
                         <div
                             key={link.label}
                             className="relative"
-                            onMouseEnter={() => link.subLinks && setDropdownIndex(idx)}
-                            onMouseLeave={() => link.subLinks && setDropdownIndex(null)}
+                            onMouseEnter={() => link.subLinks ? handleMouseEnter(idx) : handleMouseLeave()}
+                            onMouseLeave={handleMouseLeave}
                         >
                             {idx === 0 ? (
                                 // Technologies dropdown with clean 3-column list
@@ -167,7 +193,9 @@ const Navbar = () => {
                                         <FaChevronDown className="ml-0.5 text-xs opacity-80" />
                                     </Link>
                                     <div
-                                        className={`fixed left-1/2 -translate-x-1/2 top-[70px] pt-3 z-50 w-[900px] max-w-[calc(100vw-2rem)] transition-all duration-200
+                                        onMouseEnter={() => handleMouseEnter(idx)}
+                                        onMouseLeave={handleMouseLeave}
+                                        className={`fixed left-1/2 -translate-x-1/2 top-[65px] pt-4 z-50 w-[900px] max-w-[calc(100vw-2rem)] transition-all duration-200
                       ${dropdownIndex === idx ? 'opacity-100 visible translate-y-0 pointer-events-auto' : 'opacity-0 invisible -translate-y-2 pointer-events-none'}
                     `}
                                     >
@@ -210,7 +238,9 @@ const Navbar = () => {
                                         <FaChevronDown className="ml-0.5 text-xs opacity-80" />
                                     </Link>
                                     <div
-                                        className={`fixed left-1/2 -translate-x-1/2 top-[70px] pt-3 z-50 w-[900px] max-w-[calc(100vw-2rem)] transition-all duration-200
+                                        onMouseEnter={() => handleMouseEnter(idx)}
+                                        onMouseLeave={handleMouseLeave}
+                                        className={`fixed left-1/2 -translate-x-1/2 top-[65px] pt-4 z-50 w-[900px] max-w-[calc(100vw-2rem)] transition-all duration-200
                       ${dropdownIndex === idx ? 'opacity-100 visible translate-y-0 pointer-events-auto' : 'opacity-0 invisible -translate-y-2 pointer-events-none'}
                     `}
                                     >
@@ -251,6 +281,8 @@ const Navbar = () => {
                                         <FaChevronDown className="ml-0.5 text-xs opacity-80" />
                                     </Link>
                                     <div
+                                        onMouseEnter={() => handleMouseEnter(idx)}
+                                        onMouseLeave={handleMouseLeave}
                                         className={`absolute left-0 mt-2 bg-[#000000] border border-gray-800 shadow-xl rounded-lg z-10 min-w-[160px] transition-all duration-200
                       ${dropdownIndex === idx ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}
                     `}
@@ -260,6 +292,7 @@ const Navbar = () => {
                                             <Link
                                                 key={sub.label}
                                                 href={sub.href}
+                                                onClick={() => setDropdownIndex(null)}
                                                 className={`${plusJakarta.className} block px-4 py-2.5 text-[14px] font-medium text-white/90 transition-colors duration-200 hover:text-[#41B349] hover:bg-white/5 ${pathname === sub.href ? 'text-[#41B349] font-bold' : ''
                                                     }`}
                                             >
@@ -271,7 +304,7 @@ const Navbar = () => {
                             ) : (
                                 <Link
                                     href={link.href}
-                                    className={`${plusJakarta.className} text-[15px] font-semibold tracking-wide text-white/90 px-3.5 py-2 transition-colors duration-200 hover:text-[#E86927] ${isActive(link) ? 'text-[#E86927] font-bold' : ''
+                                    className={`${plusJakarta.className} text-[15px] font-semibold tracking-wide text-white/90 px-3.5 py-2 transition-colors duration-200 hover:text-[#41B349] ${isActive(link) ? 'text-[#41B349] font-bold' : ''
                                         }`}
                                 >
                                     {link.label}
