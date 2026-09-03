@@ -1,3 +1,5 @@
+"use client";
+
 import React from 'react';
 import Map from '@/src/Components/Images/map.png';
 import Image from 'next/image';
@@ -109,7 +111,8 @@ const Footer = () => {
                 {/* Form Section */}
                 <div className="w-full max-w-4xl mx-auto mb-6">
                     <form 
-                        onSubmit={(e) => e.preventDefault()} 
+                        action="" 
+                        onSubmit={(e) => e.preventDefault()}
                         className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3.5"
                     >
                         <input 
