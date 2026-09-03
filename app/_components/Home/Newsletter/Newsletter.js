@@ -63,7 +63,7 @@ const Newsletter = ({ content, cmsContent }) => {
           </div>
 
           <h2 
-            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight tracking-tight"
+            className="text-3xl sm:text-4xl md:text-5xl font-black text-white leading-tight tracking-tight"
             style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
           >
             <span>{line1}</span>

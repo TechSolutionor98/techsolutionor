@@ -112,7 +112,7 @@ const Testimonials = ({ content, cmsContent }) => {
         <div className="flex justify-center mb-16">
           <div className="relative bg-[#FDE047]/90 border border-[#FACC15] rounded-3xl px-8 sm:px-12 py-5 text-center shadow-sm max-w-3xl">
             <h2 
-              className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#1C1E21] tracking-tight leading-snug"
+              className="text-2xl sm:text-3xl md:text-4xl font-black text-[#1C1E21] tracking-tight leading-tight"
               style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
             >
               <span>{sectionTitlePrefix}</span> <span>{sectionTitleHighlight}</span>: Real Feedback From Our Clients

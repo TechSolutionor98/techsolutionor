@@ -84,7 +84,7 @@ const ChallengeAccepted = ({ content, cmsContent }) => {
           </div>
 
           <h2 
-            className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#0D0F12] tracking-tight leading-tight"
+            className="text-3xl sm:text-4xl md:text-5xl font-black text-[#0D0F12] tracking-tight leading-tight"
             style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
           >
             {titleBlack} <span className="text-[#41B349]">{titleGreen}</span>

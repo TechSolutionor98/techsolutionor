@@ -53,7 +53,10 @@ const HomeBanner = ({ content, cmsContent }) => {
       }
 
       return (
-        <div className="flex flex-col items-center justify-center text-center space-y-2 sm:space-y-3">
+        <div 
+          className="flex flex-col items-center justify-center text-center space-y-2 sm:space-y-3"
+          style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+        >
           {/* Top Line */}
           <span className="block text-3xl sm:text-5xl md:text-6xl lg:text-[62px] font-black text-[#0D0F12] leading-[1.1] tracking-tight">
             {firstLine}

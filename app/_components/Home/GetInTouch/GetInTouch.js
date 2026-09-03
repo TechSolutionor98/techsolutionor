@@ -403,7 +403,7 @@ const GetInTouch = ({ cmsContent }) => {
                     {/* Left Column: Heading, Subtitle & Illustration */}
                     <div className="lg:col-span-5 flex flex-col items-start justify-center text-left">
                         <h2 
-                            className="text-3xl sm:text-4xl lg:text-5xl font-black text-white uppercase tracking-tight leading-tight mb-2 sm:mb-3"
+                            className="text-3xl sm:text-4xl md:text-5xl font-black text-white uppercase tracking-tight leading-tight mb-2 sm:mb-3"
                             style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
                         >
                             <span>{headingPrefix} </span>
