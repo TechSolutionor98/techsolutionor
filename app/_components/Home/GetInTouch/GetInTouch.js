@@ -1,9 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaChevronDown, FaCheckCircle, FaSpinner, FaPaperPlane, FaChevronLeft, FaChevronRight, FaArrowRight, FaArrowLeft, FaEnvelopeOpenText, FaEdit } from 'react-icons/fa';
 import { getCmsVal } from "@/lib/api-helper";
+import getInTouchImg from '@/components/Images/getintouch.png';
 
 const COUNTRY_DIAL_CODES = [
     { name: "United Arab Emirates", code: "+971", minDigits: 9, maxDigits: 9, sample: "50 123 4567" },
@@ -382,7 +384,7 @@ const GetInTouch = ({ cmsContent }) => {
 
     const sectionSubtitle = getCmsVal(
         cmsContent, 
-        "Schedule a short chat with our Director to see if Voltaria is a good fit for your company.", 
+        "Have a project in mind or looking to scale your digital capabilities? Connect with our technology experts at Tech Solutionor to discuss custom web, software, and IT solutions tailored to your business goals.", 
         "getintouch"
     );
 
@@ -395,19 +397,28 @@ const GetInTouch = ({ cmsContent }) => {
             <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
                     
-                    {/* Left Column: Heading & Info */}
+                    {/* Left Column: Heading, Subtitle & Illustration */}
                     <div className="lg:col-span-5 flex flex-col items-start justify-center text-left">
                         <h2 
-                            className="text-4xl sm:text-5xl md:text-6xl font-black text-white uppercase tracking-tight leading-none mb-4"
+                            className="text-3xl sm:text-4xl lg:text-5xl font-black text-white uppercase tracking-tight leading-tight mb-2 sm:mb-3"
                             style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
                         >
                             <span>GET IN </span>
-                            <span className="block text-[#41B349]">TOUCH</span>
+                            <span className="text-[#41B349]">TOUCH</span>
                         </h2>
 
-                        <p className="text-gray-300 text-base sm:text-lg leading-relaxed max-w-md font-medium">
+                        <p className="text-gray-300 text-sm sm:text-base leading-relaxed max-w-md font-medium">
                             {sectionSubtitle}
                         </p>
+
+                        <div className="mt-5 sm:mt-6 w-full max-w-[240px] sm:max-w-[280px]">
+                            <Image
+                                src={getInTouchImg}
+                                alt="Get In Touch"
+                                priority
+                                className="w-full h-auto object-contain"
+                            />
+                        </div>
                     </div>
 
                     {/* Right Column: Calendar & Booking Card */}
