@@ -123,24 +123,7 @@ const GoodServices = ({ cmsContent }) => {
               </div>
             </div>
 
-            <div className="mt-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div>
-                <h3 className="text-[35px] font-[700] mb-0 text-[#0D0F12]">
-                  {getInTouchTitle}
-                </h3>
-                <p className="text-[15px] text-black font-normal mt-1">
-                  {clientSatisfactionText}
-                </p>
-              </div>
 
-              <button
-                onClick={openQuote}
-                className="flex items-center gap-2 bg-[#232323] hover:bg-[#333] text-white font-semibold px-6 py-3 rounded transition-all duration-200 text-[14px]"
-              >
-                <CiUser size={18} />
-                <span>{quoteButtonText}</span>
-              </button>
-            </div>
           </motion.div>
 
           {/* Right Column: Dynamic Showcase Image */}
