@@ -89,39 +89,39 @@ const navLinks = [
 ];
 
 const techSubLinks = [
-    { Image: Laraval, label: 'Laravel', href: '/technologies/laravel', border: 'border-red-400' },
-    { Image: Javascript, label: 'JavaScript', href: '/technologies/javascript', border: 'border-yellow-400' },
-    { Image: Reactjs, label: 'React JS', href: '/technologies/react', border: 'border-cyan-400' },
-    { Image: Python, label: 'Python', href: '/technologies/python', border: 'border-blue-400' },
-    { Image: Swift, label: 'Swift', href: '/technologies/swift', border: 'border-red-400' },
-    { Image: Html, label: 'HTML', href: '/technologies/html', border: 'border-red-400' },
-    { Image: Php, label: 'PHP', href: '/technologies/php', border: 'border-blue-400' },
-    { Image: Wp, label: 'Wordpress', href: '/technologies/wordpress', border: 'border-blue-400' },
-    { Image: Shopfiy, label: 'Shopify', href: '/technologies/shopify', border: 'border-green-400' },
-    { Image: Magento, label: 'Magento', href: '/technologies/magento', border: 'border-orange-400' },
-    { Image: Css, label: 'CSS', href: '/technologies/css', border: 'border-blue-400' },
-    { Image: Net, label: '.NET', href: '/technologies/dotnet', border: 'border-purple-400' },
-    { Image: Flutter, label: 'Flutter', href: '/technologies/flutter', border: 'border-blue-400' },
-    { Image: Figma, label: 'Figma', href: '/technologies/figma', border: 'border-purple-400' },
-    { Image: Meta, label: 'Meta', href: '/technologies/meta', border: 'border-blue-400' },
-    { Image: Analytics, label: 'Analytics', href: '/technologies/analytics', border: 'border-orange-400' },
-    { Image: GoogleAds, label: 'Google Ads', href: '/technologies/google-ads', border: 'border-blue-400' },
-    { Image: Angular, label: 'Angular', href: '/technologies/angular', border: 'border-red-400' },
+    { Image: Laraval, label: 'Laravel', href: '/technologies/laravel', desc: 'PHP Web Framework' },
+    { Image: Javascript, label: 'JavaScript', href: '/technologies/javascript', desc: 'Modern Web Scripting' },
+    { Image: Reactjs, label: 'React JS', href: '/technologies/react', desc: 'Interactive Frontend UIs' },
+    { Image: Python, label: 'Python', href: '/technologies/python', desc: 'AI, ML & Backend Systems' },
+    { Image: Swift, label: 'Swift', href: '/technologies/swift', desc: 'Native iOS & Apple Apps' },
+    { Image: Html, label: 'HTML', href: '/technologies/html', desc: 'Semantic Web Structure' },
+    { Image: Php, label: 'PHP', href: '/technologies/php', desc: 'Dynamic Server Solutions' },
+    { Image: Wp, label: 'Wordpress', href: '/technologies/wordpress', desc: 'Custom CMS & Portals' },
+    { Image: Shopfiy, label: 'Shopify', href: '/technologies/shopify', desc: 'E-Commerce Storefronts' },
+    { Image: Magento, label: 'Magento', href: '/technologies/magento', desc: 'Enterprise E-Commerce' },
+    { Image: Css, label: 'CSS', href: '/technologies/css', desc: 'Responsive Modern Styling' },
+    { Image: Net, label: '.NET', href: '/technologies/dotnet', desc: 'Enterprise Applications' },
+    { Image: Flutter, label: 'Flutter', href: '/technologies/flutter', desc: 'Cross-Platform Mobile' },
+    { Image: Figma, label: 'Figma', href: '/technologies/figma', desc: 'UI/UX & Prototyping' },
+    { Image: Meta, label: 'Meta', href: '/technologies/meta', desc: 'Social Ads & Marketing' },
+    { Image: Analytics, label: 'Analytics', href: '/technologies/analytics', desc: 'Data & Performance Tracking' },
+    { Image: GoogleAds, label: 'Google Ads', href: '/technologies/google-ads', desc: 'PPC & Search Campaigns' },
+    { Image: Angular, label: 'Angular', href: '/technologies/angular', desc: 'Scalable Web Platforms' },
 ];
 
 const servicesSubLinks = [
-    {Image: Web, label: 'Web Development', href: '/services/web-development' },
-    {Image: App, label: 'App Development', href: '/services/app-development' },
-    {Image: Software, label: 'Software Development', href: '/services/software-development' },
-    {Image: Ecommerce, label: 'Ecommerce Development', href: '/services/ecommerce-development' },
-    {Image: Graphics, label: 'Graphics & UI/UX', href: '/services/graphic-design' },
-    {Image: SocialMedia, label: 'Social Media', href: '/services/social-media' },
-    {Image: Digital, label: 'Digital Marketing', href: '/services/digital-marketing' },
-    {Image: Ppc, label: 'PPC & Amazon', href: '/services/ppc-amazon-ads' },
-    {Image: Seo, label: 'Search Engine Optimization', href: '/services/search-engine-optimization' },
-    {Image: Content, label: 'Content Writing', href: '/services/content-writing' },
-    {Image: Call, label: 'Call Center', href: '/services/call-center' },
-    {Image: Hire, label: 'Hire Us', href: '/services/hire-us' },
+    { Image: Web, label: 'Web Development', href: '/services/web-development', desc: 'Custom websites & web apps' },
+    { Image: App, label: 'App Development', href: '/services/app-development', desc: 'iOS & Android mobile apps' },
+    { Image: Software, label: 'Software Development', href: '/services/software-development', desc: 'Enterprise custom systems' },
+    { Image: Ecommerce, label: 'Ecommerce Development', href: '/services/ecommerce-development', desc: 'Scalable online stores' },
+    { Image: Graphics, label: 'Graphics & UI/UX', href: '/services/graphic-design', desc: 'Brand identity & product design' },
+    { Image: SocialMedia, label: 'Social Media', href: '/services/social-media', desc: 'Audience growth & engagement' },
+    { Image: Digital, label: 'Digital Marketing', href: '/services/digital-marketing', desc: 'Full-funnel marketing strategy' },
+    { Image: Ppc, label: 'PPC & Amazon', href: '/services/ppc-amazon-ads', desc: 'Targeted ads & campaign ROI' },
+    { Image: Seo, label: 'Search Engine Optimization', href: '/services/search-engine-optimization', desc: 'Organic ranking & visibility' },
+    { Image: Content, label: 'Content Writing', href: '/services/content-writing', desc: 'SEO copywriting & articles' },
+    { Image: Call, label: 'Call Center', href: '/services/call-center', desc: '24/7 inbound & support' },
+    { Image: Hire, label: 'Hire Us', href: '/services/hire-us', desc: 'Dedicated developer teams' },
 ];
 
 const Navbar = () => {
@@ -156,75 +156,87 @@ const Navbar = () => {
                             onMouseLeave={() => link.subLinks && setDropdownIndex(null)}
                         >
                             {idx === 0 ? (
-                                // Technologies dropdown with grid cards
+                                // Technologies dropdown with clean 3-column list
                                 <>
                                     <Link
                                         href={link.href}
-                                        className={`${plusJakarta.className} cursor-pointer text-[15px] font-semibold tracking-wide text-white/90 px-3.5 py-2 flex items-center gap-1.5 transition-colors duration-200 hover:text-[#E86927] ${isActive(link) ? 'text-[#E86927] font-bold' : ''
+                                        className={`${plusJakarta.className} cursor-pointer text-[15px] font-semibold tracking-wide text-white/90 px-3.5 py-2 flex items-center gap-1.5 transition-colors duration-200 hover:text-[#41B349] ${isActive(link) ? 'text-[#41B349] font-bold' : ''
                                             }`}
                                     >
                                         {link.label}
                                         <FaChevronDown className="ml-0.5 text-xs opacity-80" />
                                     </Link>
                                     <div
-                                        className={`absolute -left-60 mt-1.5 bg-white shadow-2xl rounded-xl z-20 min-w-[1020px] px-8 py-8 transition-all duration-200
-                      ${dropdownIndex === idx ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}
+                                        className={`fixed left-1/2 -translate-x-1/2 top-[70px] pt-3 z-50 w-[900px] max-w-[calc(100vw-2rem)] transition-all duration-200
+                      ${dropdownIndex === idx ? 'opacity-100 visible translate-y-0 pointer-events-auto' : 'opacity-0 invisible -translate-y-2 pointer-events-none'}
                     `}
-                                        style={{ top: '60px' }}
                                     >
-                                        <div className="grid grid-cols-6 gap-6">
-                                            {techSubLinks.map((sub, i) => (
-                                                <Link
-                                                    key={sub.label}
-                                                    href={sub.href}
-                                                    className={`flex flex-col items-center justify-center h-[120px] w-[150px] bg-white ${sub.border} border-2 rounded-xl p-4 transition-shadow duration-200 hover:shadow-lg hover:border-[#E86927]`}
-                                                >
-                                                    {/* Placeholder for image */}
-                                                    <div className="mb-2 w-[48px] h-[48px] flex items-center justify-center">
-                                                        {/* Add image here later */}
-                                                        <Image src={sub.Image} alt={sub.label} width={40} height={40} className='object-contain' />
-                                                    </div>
-                                                    <span className={`${plusJakarta.className} text-black font-semibold text-base text-center`}>{sub.label}</span>
-                                                </Link>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </>
-                            ) : idx === 1 ? (
-                                // Services dropdown with grid cards
-                                <div className='relative'>
-                                    <Link
-                                        href={link.href || '/services'}
-                                        onClick={() => setDropdownIndex(null)}
-                                        className={`${plusJakarta.className} cursor-pointer text-[15px] font-semibold tracking-wide text-white/90 px-3.5 py-2 flex items-center gap-1.5 transition-colors duration-200 hover:text-[#E86927] ${isActive(link) ? 'text-[#E86927] font-bold' : ''
-                                            }`}
-                                    >
-                                        {link.label}
-                                        <FaChevronDown className="ml-0.5 text-xs opacity-80" />
-                                    </Link>
-                                    <div
-                                        className={`absolute -left-90 mt-1.5 bg-white shadow-2xl rounded-xl z-20 min-w-[1020px] px-8 py-8 transition-all duration-200
-                      ${dropdownIndex === idx ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}
-                    `}
-                                        style={{ top: '60px' }}
-                                    >
-                                        <div className="grid grid-cols-4 gap-6 ">
-                                            {servicesSubLinks.map((sub, i) => (
-                                                <div key={i} className='border-l-2 border-l-[#E86927] px-2'>
+                                        <div className="bg-white shadow-[0_25px_60px_rgba(0,0,0,0.18)] border border-gray-100 rounded-2xl p-6">
+                                            <div className="grid grid-cols-3 gap-x-5 gap-y-2.5">
+                                                {techSubLinks.map((sub) => (
                                                     <Link
                                                         key={sub.label}
                                                         href={sub.href}
                                                         onClick={() => setDropdownIndex(null)}
-                                                        className={`flex flex-row items-center h-[80px] w-[230px] rounded-[20px] px-2 bg-white transition-all duration-200 hover:bg-[#E86927]/10`}
+                                                        className="group flex items-center gap-3.5 p-2.5 rounded-xl transition-all duration-200 hover:bg-[#41B349] hover:shadow-md hover:shadow-[#41B349]/25 cursor-pointer"
                                                     >
-                                                        {/* Placeholder for image */}
-                                                        <div className="mr-4 w-[80px] h-[48px] flex items-center justify-center">
-                                                            <Image src={sub.Image} alt={sub.label} width={100} height={40} className='object-contain' />
+                                                        <div className="w-11 h-11 rounded-xl bg-gray-50 border border-gray-200/80 flex items-center justify-center flex-shrink-0 group-hover:bg-white group-hover:scale-105 transition-all p-2 shadow-xs">
+                                                            <Image src={sub.Image} alt={sub.label} width={28} height={28} className="object-contain" />
                                                         </div>
-                                                        <span className={`${plusJakarta.className} text-black font-semibold text-base`}>{sub.label}</span>
+                                                        <div className="flex flex-col min-w-0">
+                                                            <span className={`${plusJakarta.className} text-[13.5px] font-bold text-gray-900 group-hover:text-white transition-colors duration-200 truncate`}>
+                                                                {sub.label}
+                                                            </span>
+                                                            <span className="text-[11px] text-gray-500 group-hover:text-white/90 transition-colors duration-200 truncate">
+                                                                {sub.desc}
+                                                            </span>
+                                                        </div>
                                                     </Link>
-                                                </div>
-                                            ))}
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </>
+                            ) : idx === 1 ? (
+                                // Services dropdown with clean 3-column list
+                                <div className='relative'>
+                                    <Link
+                                        href={link.href || '/services'}
+                                        onClick={() => setDropdownIndex(null)}
+                                        className={`${plusJakarta.className} cursor-pointer text-[15px] font-semibold tracking-wide text-white/90 px-3.5 py-2 flex items-center gap-1.5 transition-colors duration-200 hover:text-[#41B349] ${isActive(link) ? 'text-[#41B349] font-bold' : ''
+                                            }`}
+                                    >
+                                        {link.label}
+                                        <FaChevronDown className="ml-0.5 text-xs opacity-80" />
+                                    </Link>
+                                    <div
+                                        className={`fixed left-1/2 -translate-x-1/2 top-[70px] pt-3 z-50 w-[900px] max-w-[calc(100vw-2rem)] transition-all duration-200
+                      ${dropdownIndex === idx ? 'opacity-100 visible translate-y-0 pointer-events-auto' : 'opacity-0 invisible -translate-y-2 pointer-events-none'}
+                    `}
+                                    >
+                                        <div className="bg-white shadow-[0_25px_60px_rgba(0,0,0,0.18)] border border-gray-100 rounded-2xl p-6">
+                                            <div className="grid grid-cols-3 gap-x-5 gap-y-2.5">
+                                                {servicesSubLinks.map((sub) => (
+                                                    <Link
+                                                        key={sub.label}
+                                                        href={sub.href}
+                                                        onClick={() => setDropdownIndex(null)}
+                                                        className="group flex items-center gap-3.5 p-2.5 rounded-xl transition-all duration-200 hover:bg-[#41B349] hover:shadow-md hover:shadow-[#41B349]/25 cursor-pointer"
+                                                    >
+                                                        <div className="w-11 h-11 rounded-xl bg-gray-50 border border-gray-200/80 flex items-center justify-center flex-shrink-0 group-hover:bg-white group-hover:scale-105 transition-all p-2 shadow-xs">
+                                                            <Image src={sub.Image} alt={sub.label} width={28} height={28} className="object-contain" />
+                                                        </div>
+                                                        <div className="flex flex-col min-w-0">
+                                                            <span className={`${plusJakarta.className} text-[13.5px] font-bold text-gray-900 group-hover:text-white transition-colors duration-200 truncate`}>
+                                                                {sub.label}
+                                                            </span>
+                                                            <span className="text-[11px] text-gray-500 group-hover:text-white/90 transition-colors duration-200 truncate">
+                                                                {sub.desc}
+                                                            </span>
+                                                        </div>
+                                                    </Link>
+                                                ))}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -232,7 +244,7 @@ const Navbar = () => {
                                 <>
                                     <Link
                                         href={link.href}
-                                        className={`${plusJakarta.className} cursor-pointer text-[15px] font-semibold tracking-wide text-white/90 px-3.5 py-2 flex items-center gap-1.5 transition-colors duration-200 hover:text-[#E86927] ${isActive(link) ? 'text-[#E86927] font-bold' : ''
+                                        className={`${plusJakarta.className} cursor-pointer text-[15px] font-semibold tracking-wide text-white/90 px-3.5 py-2 flex items-center gap-1.5 transition-colors duration-200 hover:text-[#41B349] ${isActive(link) ? 'text-[#41B349] font-bold' : ''
                                             }`}
                                     >
                                         {link.label}
@@ -242,12 +254,13 @@ const Navbar = () => {
                                         className={`absolute left-0 mt-2 bg-[#000000] border border-gray-800 shadow-xl rounded-lg z-10 min-w-[160px] transition-all duration-200
                       ${dropdownIndex === idx ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}
                     `}
+                                        style={{ top: '55px' }}
                                     >
                                         {link.subLinks.map((sub) => (
                                             <Link
                                                 key={sub.label}
                                                 href={sub.href}
-                                                className={`${plusJakarta.className} block px-4 py-2.5 text-[14px] font-medium text-white/90 transition-colors duration-200 hover:text-[#E86927] hover:bg-white/5 ${pathname === sub.href ? 'text-[#E86927] font-bold' : ''
+                                                className={`${plusJakarta.className} block px-4 py-2.5 text-[14px] font-medium text-white/90 transition-colors duration-200 hover:text-[#41B349] hover:bg-white/5 ${pathname === sub.href ? 'text-[#41B349] font-bold' : ''
                                                     }`}
                                             >
                                                 {sub.label}
