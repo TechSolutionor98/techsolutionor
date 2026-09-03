@@ -307,40 +307,7 @@ const GoodServices = ({ cmsContent }) => {
 
           </div>
 
-          {/* Service Excellence Modern Animated Progress Metric Bar */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.25 }}
-            className="mt-12 max-w-2xl mx-auto bg-white border border-gray-100 shadow-[0_15px_35px_rgba(0,0,0,0.06)] rounded-2xl p-6"
-          >
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2.5">
-                <span className="w-7 h-7 rounded-lg bg-[#41B349]/10 text-[#41B349] flex items-center justify-center font-bold text-xs">
-                  <FaCheckCircle />
-                </span>
-                <h3 className="text-lg sm:text-xl font-bold text-[#0D0F12]" style={{ fontFamily: "Montserrat, sans-serif" }}>
-                  {serviceExcellenceTitle}
-                </h3>
-              </div>
-              <span className="text-xl sm:text-2xl font-black text-[#41B349]" style={{ fontFamily: "'Outfit', sans-serif" }}>
-                {serviceExcellencePercent}%
-              </span>
-            </div>
-            
-            <div className="w-full bg-gray-100 rounded-full h-3.5 p-0.5 overflow-hidden">
-              <div
-                ref={barRef}
-                className="h-full bg-gradient-to-r from-[#41B349] to-[#2DA035] rounded-full transition-all duration-1000 ease-out relative"
-                style={{
-                  width: inView ? `${Number(serviceExcellencePercent) || 90}%` : "0%",
-                }}
-              >
-                <div className="absolute inset-0 bg-white/25 animate-pulse rounded-full" />
-              </div>
-            </div>
-          </motion.div>
+
 
         </div>
 
