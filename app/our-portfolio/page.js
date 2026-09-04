@@ -2,7 +2,6 @@ import React from 'react';
 import PortfolioBanner from '../_components/Portfolio/PortfolioBanner/PortfolioBanner';
 import PortfolioQuote from '../_components/Portfolio/PortfolioQuote/PortfolioQuote';
 import PortfolioProjects from '../_components/Portfolio/PortfolioProjects/PortfolioProjects';
-import PortfolioHireUs from '../_components/Portfolio/PortfolioHireUs/PortfolioHireUs';
 import Newsletter from '../_components/Home/Newsletter/Newsletter';
 import { generateCmsMetadata } from '@/lib/cms-fetch';
 
@@ -22,7 +21,6 @@ function page() {
       <PortfolioBanner />
       <PortfolioQuote />
       <PortfolioProjects />
-      <PortfolioHireUs />
       <Newsletter />
     </main>
   );
