@@ -1,6 +1,7 @@
 import React from 'react';
 import AboutHero from '../_components/About/AboutHero';
 import WhoWeAre from '../_components/About/WhoWeAre';
+import AboutStats from '../_components/About/AboutStats';
 import EmpoweringAgency from '../_components/About/EmpoweringAgency';
 import WhyChooseUs from '../_components/About/WhyChooseUs';
 import WatchUsLive from '../_components/About/WatchUsLive';
@@ -18,14 +19,15 @@ export async function generateMetadata() {
 
 const AboutPage = () => {
     return (
-        <div className="overflow-x-hidden">
+        <main className="w-full overflow-x-hidden bg-[#FFFFFF]">
             <AboutHero />
             <WhoWeAre />
+            <AboutStats />
             <EmpoweringAgency />
             <WhyChooseUs />
             <WatchUsLive />
             <ExperiencePlatforms />
-        </div>
+        </main>
     );
 };
 

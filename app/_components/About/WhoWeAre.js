@@ -1,43 +1,108 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { FaLayerGroup, FaShieldAlt, FaRocket, FaHeadset, FaArrowRight } from "react-icons/fa";
 import AboutImage from "../../../components/Images/about-img.jpg";
+
+const keyPillars = [
+    {
+        icon: <FaLayerGroup className="text-[#41B349] text-lg" />,
+        title: "Agile Engineering",
+        desc: "Sprint-based rapid development with full transparency and adaptive velocity.",
+    },
+    {
+        icon: <FaShieldAlt className="text-[#41B349] text-lg" />,
+        title: "Enterprise Security",
+        desc: "Built according to ISO standards, robust encryption, and cloud resilience.",
+    },
+    {
+        icon: <FaRocket className="text-[#41B349] text-lg" />,
+        title: "User-Centric Design",
+        desc: "Captivating digital experiences crafted to maximize user engagement and retention.",
+    },
+    {
+        icon: <FaHeadset className="text-[#41B349] text-lg" />,
+        title: "Dedicated Partnership",
+        desc: "Round-the-clock technical advisory, proactive maintenance, and strategic scaling.",
+    },
+];
 
 const WhoWeAre = () => {
     return (
-        <div className="w-full bg-white py-16 md:py-15">
-            <div className="max-w-[1140px] mx-auto px-5 flex flex-col md:flex-row items-center gap-15">
-                {/* Left: Circular Image */}
-                <div className="w-full md:w-1/2 flex justify-center md:justify-start">
-                    <div className="relative w-[200px] h-[300px] sm:w-[300px] sm:h-[400px] md:w-[400px] md:h-[500px] ">
-                        <Image
-                            src={AboutImage}
-                            alt="Who We Are"
-                            fill
-                            className="object-conatin"
-                        />
+        <section id="who-we-are" className="relative w-full py-16 md:py-24 overflow-hidden">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+                    {/* Left: Standalone Clean Image */}
+                    <div className="lg:col-span-6 flex justify-center lg:justify-start">
+                        <div className="relative w-full max-w-[420px] h-[360px] sm:h-[460px] md:h-[520px]">
+                            <Image
+                                src={AboutImage}
+                                alt="Who We Are - TechSolutionor"
+                                fill
+                                className="object-contain"
+                                priority
+                            />
+                        </div>
                     </div>
-                </div>
 
-                {/* Right: Content */}
-                <div className="w-full md:w-1/2 text-left -pt-10">
-                    <div className="inline-flex items-center gap-2 bg-[#41b349] text-white px-6 py-2  text-[18px] font-bold mb-4 shadow-xl ">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="w-4 h-4 fill-current">
-                            <path d="M256 8C119.033 8 8 119.033 8 256s111.033 248 248 248 248-111.033 248-248S392.967 8 256 8zm80 248c0 44.112-35.888 80-80 80s-80-35.888-80-80 35.888-80 80-80 80 35.888 80 80z" />
-                        </svg>
-                         Who We Are
+                    {/* Right: Content Section */}
+                    <div className="lg:col-span-6 space-y-6 text-left">
+                        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#41B349]/15 border border-[#41B349]/30 text-[#41B349] font-extrabold text-xs uppercase tracking-widest">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#41B349]" />
+                            <span>WHO WE ARE</span>
+                        </div>
+
+                        <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#111827] tracking-tight leading-[1.2]">
+                            Architecting Next-Gen Software with{" "}
+                            <span className="text-[#41B349]">Precision & Passion</span>
+                        </h2>
+
+                        <p className="text-gray-600 text-base sm:text-lg leading-relaxed font-normal">
+                            TechSolutionor was founded to eliminate the friction between complex technology and sustainable business growth. As a premier software engineering powerhouse headquartered in the UAE, we blend senior technical craftsmanship with bold creative vision.
+                        </p>
+
+                        <p className="text-gray-600 text-sm sm:text-base leading-relaxed font-normal">
+                            Whether architecting high-traffic ecommerce platforms, developing resilient mobile applications, or transforming manual operations into automated cloud workflows, our team stands alongside you as dedicated technical co-pilots.
+                        </p>
+
+                        {/* Feature Pillars Grid */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                            {keyPillars.map((pillar, idx) => (
+                                <div
+                                    key={idx}
+                                    className="p-4 rounded-2xl bg-gray-50/80 border border-gray-100 hover:border-[#41B349]/40 hover:bg-white hover:shadow-md transition-all duration-300"
+                                >
+                                    <div className="w-9 h-9 rounded-xl bg-white shadow-xs border border-gray-100 flex items-center justify-center mb-3">
+                                        {pillar.icon}
+                                    </div>
+                                    <h4 className="text-sm font-extrabold text-gray-900 mb-1">{pillar.title}</h4>
+                                    <p className="text-xs text-gray-500 leading-normal">{pillar.desc}</p>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* CTA Links */}
+                        <div className="pt-4 flex flex-wrap items-center gap-4">
+                            <Link
+                                href="/services"
+                                className="inline-flex items-center gap-2.5 bg-[#111827] hover:bg-[#41B349] text-white px-7 py-3.5 rounded-full font-bold text-sm tracking-wide transition-all duration-300 shadow-md hover:shadow-xl hover:scale-[1.02]"
+                            >
+                                <span>Explore Our Services</span>
+                                <FaArrowRight size={12} />
+                            </Link>
+                            <Link
+                                href="/contact-us"
+                                className="inline-flex items-center gap-2 text-gray-700 hover:text-[#41B349] px-5 py-3 rounded-full font-bold text-sm transition-colors duration-200"
+                            >
+                                <span>Get in Touch with Us →</span>
+                            </Link>
+                        </div>
                     </div>
-                    <h2 className="text-[#262323] text-[32px] md:text-[43px] font-bold leading-tight mb-4">
-                        We Are a Dynamic Team of Creative Designers and Developers
-                    </h2>
-                    <p className="text-gray-600 text-base md:text-[15px] mb-6 leading-relaxed">
-                        With over 10 years of experience, we provide expert consulting, business solutions, and technology services that protect, enhance, and grow your business. Our team combines creativity, technical expertise, and strategic insight to deliver results that matter.
-                    </p>
-                    <button className="bg-[#262323] text-white px-8 py-3.5 rounded-none font-bold text-[16px] tracking-wide uppercase transition-all duration-300 hover:bg-[#41b349] hover:shadow-lg">
-                        ABOUT OUR AGENCY
-                    </button>
                 </div>
             </div>
-        </div>
+        </section>
     );
 };
 
