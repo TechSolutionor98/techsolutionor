@@ -41,6 +41,29 @@ function findFile(resolvedPath) {
   return null;
 }
 
+export function sanitizeFieldText(val) {
+  if (val === undefined || val === null) return val;
+  if (typeof val !== 'string') return val;
+  if (val.startsWith('/') || val.startsWith('http://') || val.startsWith('https://') || val.startsWith('data:image')) {
+    return val;
+  }
+  if (val.startsWith('{') || val.startsWith('[')) {
+    try {
+      JSON.parse(val);
+      return val;
+    } catch (e) {}
+  }
+  let cleaned = val;
+  cleaned = cleaned.replace(/\{\/\*[\s\S]*?\*\/\}/g, '');
+  cleaned = cleaned.replace(/\{"([\s\S]*?)"\}/g, '$1');
+  cleaned = cleaned.replace(/\{'([\s\S]*?)'\}/g, '$1');
+  cleaned = cleaned.replace(/\{[\s\S]*?\}/g, '');
+  cleaned = cleaned.replace(/<[^>]+>/g, ' ');
+  cleaned = cleaned.replace(/&apos;/g, "'").replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/&nbsp;/g, ' ').replace(/&lsquo;/g, "'").replace(/&rsquo;/g, "'");
+  cleaned = cleaned.replace(/\s+/g, ' ').trim();
+  return cleaned;
+}
+
 export function cleanText(text) {
   if (!text || typeof text !== 'string') return '';
   text = text.replace(/\{\/\*[\s\S]*?\*\/\}/g, '');
@@ -48,11 +71,12 @@ export function cleanText(text) {
   text = text.replace(/<\/Link>/gi, '</a>');
   text = text.replace(/<a(\s+[^>]*)>/gi, '');
   text = text.replace(/<\/a>/gi, '');
-  text = text.replace(/<[^>]+>/g, ' ');
   text = text.replace(/\{"([\s\S]*?)"\}/g, '$1');
   text = text.replace(/\{'([\s\S]*?)'\}/g, '$1');
   text = text.replace(/\{[^}]*\|\|\s*"([^"]+)"\s*\}/g, '$1');
   text = text.replace(/\{[^}]*\|\|\s*'([^']+)'\s*\}/g, '$1');
+  text = text.replace(/<[^>]+>/g, ' ');
+  text = text.replace(/&apos;/g, "'").replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/&nbsp;/g, ' ').replace(/&lsquo;/g, "'").replace(/&rsquo;/g, "'");
   text = text.replace(/\{[\s\S]*?\}/g, '');
   text = text.replace(/\s+/g, ' ').trim();
   return text;

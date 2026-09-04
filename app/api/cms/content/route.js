@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 import { getDb } from '@/lib/mongodb';
 import { ObjectId } from 'mongodb';
-import { parsePageContent, updatePageFiles } from '@/lib/cms-parser';
+import { parsePageContent, updatePageFiles, sanitizeFieldText } from '@/lib/cms-parser';
 import path from 'path';
 import fs from 'fs';
 import { logActivity } from '@/lib/activity-logger';
@@ -451,9 +451,18 @@ export async function GET(request) {
       mergedSections = parsedSections;
     }
 
-    // Assign final order sequencing
+    // Assign final order sequencing and sanitize all fields to prevent HTML/code markup leaks
     mergedSections.forEach((s, idx) => {
       s.order = idx + 1;
+      const sanitizedFields = {};
+      for (const [k, f] of Object.entries(s.fields || {})) {
+        sanitizedFields[k] = {
+          ...f,
+          value: sanitizeFieldText(f.value),
+          originalValue: sanitizeFieldText(f.originalValue),
+        };
+      }
+      s.fields = sanitizedFields;
     });
 
     const responseContent = {
@@ -520,11 +529,24 @@ export async function POST(request) {
       /* updatePageFiles disabled to prevent live site desync */
     }
 
+    // Sanitize all incoming fields to store only pure text without code/HTML markup
+    const sanitizedSections = (Array.isArray(sections) ? sections : []).map(sec => {
+      const sanitizedFields = {};
+      for (const [k, f] of Object.entries(sec.fields || {})) {
+        sanitizedFields[k] = {
+          ...f,
+          value: sanitizeFieldText(f.value),
+          originalValue: sanitizeFieldText(f.originalValue),
+        };
+      }
+      return { ...sec, fields: sanitizedFields };
+    });
+
     const contentData = {
       routeId: routeId || null,
       path: path || null,
       websiteId,
-      sections: Array.isArray(sections) ? sections : [],
+      sections: sanitizedSections,
       status,
       version,
       publishedAt: status === 'published' ? now : (existing?.publishedAt || null),

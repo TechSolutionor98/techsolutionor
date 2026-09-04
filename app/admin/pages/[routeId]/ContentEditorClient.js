@@ -6,8 +6,54 @@ import {
   FiTrash2, FiPlus, FiCheckCircle, FiAlertCircle, FiImage, FiLayers, FiSearch, FiRefreshCw, FiX, FiLink
 } from 'react-icons/fi';
 
+function stripCodeMarkup(text) {
+  if (!text || typeof text !== 'string') return text || '';
+  if (text.startsWith('/') || text.startsWith('http://') || text.startsWith('https://') || text.startsWith('data:image')) {
+    return text;
+  }
+  return text
+    .replace(/\{\/\*[\s\S]*?\*\/\}/g, '')
+    .replace(/\{"([\s\S]*?)"\}/g, '$1')
+    .replace(/\{'([\s\S]*?)'\}/g, '$1')
+    .replace(/\{[\s\S]*?\}/g, '')
+    .replace(/<span[^>]*>/gi, '')
+    .replace(/<\/span>/gi, '')
+    .replace(/<div[^>]*>/gi, '')
+    .replace(/<\/div>/gi, '')
+    .replace(/<h[1-6][^>]*>/gi, '')
+    .replace(/<\/h[1-6]>/gi, '')
+    .replace(/<p[^>]*>/gi, '')
+    .replace(/<\/p>/gi, '')
+    .replace(/&apos;/g, "'")
+    .replace(/&quot;/g, '"')
+    .replace(/&amp;/g, '&')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&lsquo;/g, "'")
+    .replace(/&rsquo;/g, "'");
+}
+
+function sanitizeSections(sections = []) {
+  return (sections || []).map(sec => {
+    const fields = {};
+    for (const [k, f] of Object.entries(sec.fields || {})) {
+      fields[k] = {
+        ...f,
+        value: f.type === 'image' || f.type === 'url' || f.type === 'json' ? f.value : stripCodeMarkup(f.value),
+        originalValue: f.type === 'image' || f.type === 'url' || f.type === 'json' ? f.originalValue : stripCodeMarkup(f.originalValue),
+      };
+    }
+    return { ...sec, fields };
+  });
+}
+
 export default function ContentEditorClient({ initialContent, routeId, routePath, apiBase }) {
-  const [content, setContent] = useState(initialContent || { sections: [], status: 'draft', version: 1 });
+  const [content, setContent] = useState(() => {
+    if (!initialContent) return { sections: [], status: 'draft', version: 1 };
+    return {
+      ...initialContent,
+      sections: sanitizeSections(initialContent.sections),
+    };
+  });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
@@ -241,7 +287,7 @@ export default function ContentEditorClient({ initialContent, routeId, routePath
         routeId,
         path: routePath,
         websiteId: 'default',
-        sections: content.sections,
+        sections: sanitizeSections(content.sections),
         status: targetStatus,
       };
 
@@ -391,7 +437,7 @@ export default function ContentEditorClient({ initialContent, routeId, routePath
             <textarea
               id={`input-${sectionIndex}-${fieldKey}`}
               disabled={!canEditContent}
-              value={field.value || ''}
+              value={stripCodeMarkup(field.value || '')}
               onChange={(e) => updateField(sectionIndex, fieldKey, 'value', e.target.value)}
               placeholder={`Enter ${label.toLowerCase()}...`}
               rows={4}
@@ -405,7 +451,7 @@ export default function ContentEditorClient({ initialContent, routeId, routePath
             <textarea
               id={`input-${sectionIndex}-${fieldKey}`}
               disabled={!canEditContent}
-              value={field.value || ''}
+              value={stripCodeMarkup(field.value || '')}
               onChange={(e) => updateField(sectionIndex, fieldKey, 'value', e.target.value)}
               placeholder={`Enter ${label.toLowerCase()}...`}
               rows={2}
