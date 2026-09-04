@@ -543,6 +543,7 @@ const GetQuoteForm = () => {
                                             cellDate.setHours(0, 0, 0, 0);
 
                                             const isPast = cellDate < today;
+                                            const isToday = cellDate.getTime() === today.getTime();
                                             const isSelected = selectedDay === dayNum && !isPast;
 
                                             return (
@@ -553,15 +554,17 @@ const GetQuoteForm = () => {
                                                     onClick={() => !isPast && setSelectedDay(dayNum)}
                                                     className={`h-8 sm:h-9 rounded-lg text-xs font-bold flex flex-col items-center justify-center relative transition-all ${
                                                         isPast
-                                                            ? 'text-gray-600 opacity-30 cursor-not-allowed bg-transparent'
+                                                            ? 'text-white cursor-not-allowed bg-transparent border border-transparent'
                                                             : isSelected 
-                                                                ? 'bg-white text-black font-extrabold shadow-md scale-105 z-10 cursor-pointer' 
-                                                                : 'bg-[#252930] hover:bg-[#323742] text-white cursor-pointer'
+                                                                ? 'bg-white text-black font-extrabold shadow-md scale-105 z-10 cursor-pointer border border-white' 
+                                                                : isToday
+                                                                    ? 'bg-[#252930] hover:bg-[#323742] text-white cursor-pointer border border-white'
+                                                                    : 'bg-[#252930] hover:bg-[#323742] text-white cursor-pointer border border-transparent'
                                                     }`}
                                                 >
                                                     <span>{dayNum}</span>
-                                                    {isSelected && (
-                                                        <span className="w-1 h-1 rounded-full bg-black mt-0.5" />
+                                                    {isToday && (
+                                                        <span className={`w-1 h-1 rounded-full mt-0.5 border ${isSelected ? 'bg-black border-black' : 'bg-white border-white'}`} />
                                                     )}
                                                 </button>
                                             );

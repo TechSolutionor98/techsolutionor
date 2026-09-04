@@ -509,6 +509,7 @@ const GetInTouch = ({ cmsContent }) => {
                                             cellDate.setHours(0, 0, 0, 0);
 
                                             const isPast = cellDate < today;
+                                            const isToday = cellDate.getTime() === today.getTime();
                                             const isSelected = selectedDay === dayNum && !isPast;
 
                                             return (
@@ -519,15 +520,17 @@ const GetInTouch = ({ cmsContent }) => {
                                                     onClick={() => !isPast && setSelectedDay(dayNum)}
                                                     className={`h-10 sm:h-11 rounded-xl text-sm font-bold flex flex-col items-center justify-center relative transition-all ${
                                                         isPast
-                                                            ? 'text-gray-600 opacity-25 cursor-not-allowed bg-transparent'
+                                                            ? 'text-white cursor-not-allowed bg-transparent border border-transparent'
                                                             : isSelected 
-                                                                ? 'bg-white text-black font-black shadow-xl scale-105 z-10 cursor-pointer' 
-                                                                : 'bg-[#2A2E35] hover:bg-[#3B424E] text-white cursor-pointer'
+                                                                ? 'bg-white text-black font-black shadow-xl scale-105 z-10 cursor-pointer border border-white' 
+                                                                : isToday
+                                                                    ? 'bg-[#2A2E35] hover:bg-[#3B424E] text-white cursor-pointer border border-white'
+                                                                    : 'bg-[#2A2E35] hover:bg-[#3B424E] text-white cursor-pointer border border-transparent'
                                                     }`}
                                                 >
                                                     <span>{dayNum}</span>
-                                                    {isSelected && (
-                                                        <span className="w-1.5 h-1.5 rounded-full bg-black mt-0.5" />
+                                                    {isToday && (
+                                                        <span className={`w-1.5 h-1.5 rounded-full mt-0.5 border ${isSelected ? 'bg-black border-black' : 'bg-white border-white'}`} />
                                                     )}
                                                 </button>
                                             );
