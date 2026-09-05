@@ -4,48 +4,66 @@ import { FaArrowRight } from "react-icons/fa";
 import { useQuote } from "@/app/_context/QuoteContext";
 
 const HireUs = ({
-  line1 = "Ready to scale your digital presence in Dubai and across the UAE?",
-  line2 = "Drive more sales with TechSolutionor's eCommerce expertise."
+  badge = "READY TO SCALE YOUR BUSINESS?",
+  line1 = "Ready to scale your digital presence?",
+  line2 = "Hire the TechSolutionor team to handle your project.",
+  buttonText = "Hire Us",
 }) => {
   const { openQuote } = useQuote();
 
+  // If line1 contains newline, split gracefully
+  let displayLine1 = line1;
+  let displayLine2 = line2;
+
+  if (line1 && typeof line1 === "string" && line1.includes("\n")) {
+    const parts = line1.split("\n").map((l) => l.trim()).filter(Boolean);
+    displayLine1 = parts[0] || "";
+    displayLine2 = parts.slice(1).join(" ") || line2;
+  }
+
   return (
-    <section className="w-full flex justify-center py-10 md:py-14 px-4 bg-white" style={{ backgroundColor: "#ffffff" }}>
-      <div
-        className="w-full max-w-[980px] min-h-[110px] md:min-h-[145px] flex rounded-[24px] md:rounded-[30px] overflow-hidden transition-all duration-300"
-        style={{
-          boxShadow: "0px 10px 30px rgba(65, 179, 73, 0.35)",
-        }}
-      >
-        {/* GREEN LEFT SECTION */}
-        <div className="flex-[3] bg-[#41b349] flex items-center justify-center px-4 sm:px-6 md:px-10 py-5 text-center">
+    <section className="w-full bg-[#FFFFFF] py-14 sm:py-20 px-4 sm:px-6 lg:px-8 select-none">
+      {/* Main Glassmorphic CTA Card Container */}
+      <div className="relative z-10 max-w-6xl mx-auto rounded-3xl bg-[#0D0F12] border border-gray-800 p-8 sm:p-12 md:p-16 flex flex-col md:flex-row items-center justify-between gap-8 sm:gap-12 overflow-hidden">
+        
+        {/* Top Glowing Green Accent Line */}
+        <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-transparent via-[#41B349] to-transparent opacity-90" />
+
+        {/* Left Column: Heading & Pill Badge */}
+        <div className="max-w-2xl text-center md:text-left z-10">
+          {badge && (
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#41B349]/15 border border-[#41B349]/30 text-[#41B349] font-black text-xs uppercase tracking-widest mb-4">
+              <span className="w-2 h-2 rounded-full bg-[#41B349] animate-pulse" />
+              <span>{badge}</span>
+            </div>
+          )}
+
           <h2
-            className="text-center text-[16px] sm:text-[22px] md:text-[26px] lg:text-[28px] font-extrabold leading-tight tracking-tight"
-            style={{ fontFamily: "Montserrat, sans-serif" }}
+            className="text-3xl sm:text-4xl md:text-5xl font-black text-white leading-tight tracking-tight"
+            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
           >
-            {/* LINE 1 (DARK TEXT) */}
-            <span className="text-[#232323] block mb-1">
-              {line1}
-            </span>
-            {/* LINE 2 (WHITE TEXT) */}
-            <span className="text-white block">
-              {line2}
-            </span>
+            <span>{displayLine1}</span>
+            {displayLine2 && (
+              <span className="text-[#41B349] block mt-1.5">
+                {displayLine2}
+              </span>
+            )}
           </h2>
         </div>
 
-        {/* BLACK RIGHT BUTTON SECTION */}
-        <div
-          onClick={openQuote}
-          className="flex-[1] min-w-[130px] sm:min-w-[170px] md:min-w-[210px] bg-[#111111] flex items-center justify-center cursor-pointer hover:bg-[#000000] transition-colors duration-300 px-4"
-        >
-          <button className="text-white text-[14px] sm:text-[17px] md:text-[20px] font-bold flex items-center gap-2.5 sm:gap-3 group cursor-pointer">
-            <span>Hire Us</span>
-            <span className="bg-white rounded-full w-5 h-5 sm:w-6 sm:h-6 text-[12px] sm:text-[14px] flex items-center justify-center flex-shrink-0 group-hover:translate-x-1 transition-transform duration-300">
-              <FaArrowRight className="text-black" />
-            </span>
+        {/* Right Column: CTA Button */}
+        <div className="shrink-0 z-10">
+          <button
+            onClick={openQuote}
+            className="inline-flex items-center gap-4 bg-[#41B349] hover:bg-[#36963d] text-[#FCFCFC] text-base sm:text-lg font-extrabold px-8 sm:px-10 py-4 sm:py-5 rounded-full hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer border-2 border-white/60 group"
+          >
+            <span>{buttonText}</span>
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white text-[#0D0F12] flex items-center justify-center shadow-md group-hover:translate-x-1 transition-transform duration-300">
+              <FaArrowRight size={14} className="text-[#0D0F12]" />
+            </div>
           </button>
         </div>
+
       </div>
     </section>
   );
