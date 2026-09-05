@@ -206,7 +206,7 @@ const Navbar = () => {
                                                         key={sub.label}
                                                         href={sub.href}
                                                         onClick={() => setDropdownIndex(null)}
-                                                        className="group flex items-center gap-3.5 p-2.5 rounded-xl transition-all duration-200 hover:bg-[#41B349] hover:shadow-md hover:shadow-[#41B349]/25 cursor-pointer"
+                                                        className="group flex items-center gap-3.5 p-2.5 rounded-xl border border-gray-200 hover:border-[#41B349] hover:bg-[#41B349] hover:shadow-md hover:shadow-[#41B349]/25 transition-all duration-200 ease-in-out cursor-pointer"
                                                     >
                                                         <div className="w-11 h-11 rounded-xl bg-gray-50 border border-gray-200/80 flex items-center justify-center flex-shrink-0 group-hover:bg-white group-hover:scale-105 transition-all p-2 shadow-xs">
                                                             <Image src={sub.Image} alt={sub.label} width={28} height={28} className="object-contain" />
@@ -251,7 +251,7 @@ const Navbar = () => {
                                                         key={sub.label}
                                                         href={sub.href}
                                                         onClick={() => setDropdownIndex(null)}
-                                                        className="group flex items-center gap-3.5 p-2.5 rounded-xl transition-all duration-200 hover:bg-[#41B349] hover:shadow-md hover:shadow-[#41B349]/25 cursor-pointer"
+                                                        className="group flex items-center gap-3.5 p-2.5 rounded-xl border border-gray-200 hover:border-[#41B349] hover:bg-[#41B349] hover:shadow-md hover:shadow-[#41B349]/25 transition-all duration-200 ease-in-out cursor-pointer"
                                                     >
                                                         <div className="w-11 h-11 rounded-xl bg-gray-50 border border-gray-200/80 flex items-center justify-center flex-shrink-0 group-hover:bg-white group-hover:scale-105 transition-all p-2 shadow-xs">
                                                             <Image src={sub.Image} alt={sub.label} width={28} height={28} className="object-contain" />
