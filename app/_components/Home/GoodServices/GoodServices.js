@@ -67,54 +67,6 @@ const HoneycombPatternRight = () => (
   </svg>
 );
 
-// Curved SVG Arrow Left (pointing to Left Card)
-const CurvedArrowLeft = () => (
-  <svg
-    className="w-12 h-12 sm:w-16 sm:h-16 text-[#41B349] rotate-[-20deg] transform scale-x-[-1] drop-shadow"
-    viewBox="0 0 100 100"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      d="M20,20 C40,10 75,30 65,75 C63,80 58,88 42,82"
-      stroke="currentColor"
-      strokeWidth="3.5"
-      strokeLinecap="round"
-    />
-    <path
-      d="M38,72 L42,82 L53,74"
-      stroke="currentColor"
-      strokeWidth="3.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-
-// Curved SVG Arrow Right (pointing to Right Card)
-const CurvedArrowRight = () => (
-  <svg
-    className="w-12 h-12 sm:w-16 sm:h-16 text-[#41B349] rotate-[20deg] drop-shadow"
-    viewBox="0 0 100 100"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      d="M20,20 C40,10 75,30 65,75 C63,80 58,88 42,82"
-      stroke="currentColor"
-      strokeWidth="3.5"
-      strokeLinecap="round"
-    />
-    <path
-      d="M38,72 L42,82 L53,74"
-      stroke="currentColor"
-      strokeWidth="3.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-
 const GoodServices = ({ cmsContent }) => {
   const [inView, setInView] = useState(false);
   const barRef = useRef(null);
@@ -205,25 +157,8 @@ const GoodServices = ({ cmsContent }) => {
           </h2>
         </motion.div>
 
-        {/* Dual Showcase Cards with Annotation Callouts (Directly Matching Design Reference) */}
+        {/* Dual Showcase Cards */}
         <div className="relative max-w-6xl mx-auto">
-          
-          {/* Left Side Annotation (Desktop) */}
-          <div className="hidden lg:flex absolute -left-12 xl:-left-20 top-2 z-20 flex-col items-end pointer-events-none max-w-[200px]">
-            <span className="text-sm md:text-base font-extrabold text-[#0D0F12] tracking-tight text-right leading-snug" style={{ fontFamily: "Montserrat, sans-serif" }}>
-              So <span className="text-[#41B349] underline decoration-[#41B349]/40 decoration-2">Tailored</span> businesses scale fast
-            </span>
-            <CurvedArrowLeft />
-          </div>
-
-          {/* Right Side Annotation (Desktop) */}
-          <div className="hidden lg:flex absolute -right-12 xl:-right-20 top-2 z-20 flex-col items-start pointer-events-none max-w-[200px]">
-            <span className="text-sm md:text-base font-extrabold text-[#0D0F12] tracking-tight text-left leading-snug" style={{ fontFamily: "Montserrat, sans-serif" }}>
-              So <span className="text-[#41B349] underline decoration-[#41B349]/40 decoration-2">Advanced</span> global leaders rely on it..
-            </span>
-            <CurvedArrowRight />
-          </div>
-
           {/* 2-Card Showcase Container */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 items-stretch">
             
