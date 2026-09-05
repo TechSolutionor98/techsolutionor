@@ -98,11 +98,16 @@ const ContactForm = () => {
 
                     {/* Left Side: Text and Image */}
                     <div className="w-full lg:w-[50%]">
-                        <div className="inline-flex items-center gap-2 bg-[#41b349] text-white px-6 py-2 text-sm font-semibold mb-6">
-                            Contact Us
+                        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#41B349]/10 border border-[#41B349]/30 text-[#41B349] font-extrabold text-xs uppercase tracking-widest mb-4">
+                            <span className="w-2 h-2 rounded-full bg-[#41B349] animate-pulse" />
+                            <span>Contact Us</span>
                         </div>
-                        <h2 className="text-[#262323] text-[32px] md:text-[38px] font-bold leading-tight tracking-wide mb-8 uppercase">
-                            Have a cool project? <br /> Get in touch?
+                        <h2 
+                            className="text-3xl sm:text-4xl lg:text-[40px] font-black text-[#111827] tracking-tight leading-[1.15] mb-6"
+                            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+                        >
+                            Have a cool project? <br />
+                            <span className="text-[#41B349]">Get in touch?</span>
                         </h2>
 
                         <div className="relative w-full aspect-[4/3] lg:min-h-[550px] overflow-hidden">

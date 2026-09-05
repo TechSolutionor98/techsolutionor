@@ -1,35 +1,41 @@
+"use client";
+
 import React from 'react';
-import Image from 'next/image';
-import BgBannerContact from "../../../components/Images/bgbannercontactus.png";
 
 const ContactHero = () => {
     return (
-           <div className="relative w-full bg-[#262323] overflow-hidden py-10 md:py-10 text-center">
-               {/* Background Pattern */}
-               <div className="absolute inset-0 z-0 pointer-events-none opacity-20">
-                   <Image
-                       src={BgBannerContact}
-                       alt="Background Pattern"
-                       fill
-                       className="object-cover"
-                   />
-               </div>
-   
-               <div className="relative z-10 max-w-[1140px] mx-auto px-5">
-                   <h1 className="text-white text-[40px] md:text-[50px] font-bold uppercase tracking-wide mb-6">
-                       Request a Free Quote
-                   </h1>
-                   <p className="text-white text-base md:text-[17] max-w-[805px] mx-auto leading-relaxed">
-                       Share the details of your project, and our team will provide a customized, cost-effective solution designed <br /> to meet your unique business or technical needs. Get in touch today to start your journey toward a successful project.
-                   </p>
-                   <div className="mt-8">
-                       <div className="w-[60px] h-[50px] border border-white mx-auto flex items-center justify-center hover:bg-[#41b349] ">
-                           <span className="text-white text-[25px]">↓</span>
-                       </div>
-                   </div>
-               </div>
-           </div>
-       );
+        <section className="relative w-full bg-white overflow-hidden py-16 md:py-24 select-none">
+            {/* Ambient Emerald Glow for Light Theme */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-[radial-gradient(circle_at_top,_rgba(65,179,73,0.12)_0%,_transparent_70%)] pointer-events-none" />
+            <div className="absolute inset-0 bg-[radial-gradient(#41B34912_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none opacity-60" />
+
+            <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                {/* Micro-Badge */}
+                <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-[#41B349]/10 border border-[#41B349]/30 text-[#41B349] font-extrabold text-xs uppercase tracking-widest mb-6 backdrop-blur-sm">
+                    <span className="w-2 h-2 rounded-full bg-[#41B349] animate-pulse" />
+                    <span>GET IN TOUCH WITH OUR TEAM</span>
+                </div>
+
+                {/* Primary Heading */}
+                <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight leading-[1.15] max-w-4xl mx-auto">
+                    <span className="text-[#111827] block">
+                        Let&apos;s Build Something
+                    </span>
+                    <span className="text-[#41B349] block mt-1 sm:mt-2">
+                        Extraordinary Together
+                    </span>
+                </h1>
+
+                {/* Description */}
+                <p className="mt-6 text-[#4B5563] text-base sm:text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-normal">
+                    Have a project in mind, an engineering challenge, or looking to scale your digital presence? Reach out to our technology advisors and solution architects in Dubai for a free, transparent consultation.
+                </p>
+            </div>
+        </section>
+    );
 };
 
 export default ContactHero;
+
+
+
