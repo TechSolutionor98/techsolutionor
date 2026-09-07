@@ -11,14 +11,14 @@ import WebFAQ from '../../_components/services/web-developement/FAQ/WebFAQ'
 const page = () => {
   return (
     <div>
-      <WebDevBanner/>
-      <Strategy/>
-      <Struggling/>
-      <HowDoWeResults/>
-      <TechnoligesWeUse/>
-      <WebWhyChoose/>
-      <WebHireUs/>
-      <WebFAQ/>
+      <WebDevBanner />
+      <Strategy />
+      <Struggling />
+      <HowDoWeResults />
+      <TechnoligesWeUse />
+      <WebWhyChoose />
+      <WebHireUs />
+      <WebFAQ />
     </div>
   )
 }
