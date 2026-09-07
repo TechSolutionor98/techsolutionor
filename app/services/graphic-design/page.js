@@ -3,6 +3,7 @@ import GraphicBanner from '../../_components/services/Graphics/Banner/GraphicBan
 import GraphicAbout from '../../_components/services/Graphics/FrameWork/FrameWork';
 import BusinessGrowth from '../../_components/services/Graphics/BusinessGrowth/BusinessGrowth';
 import DesignServices from '../../_components/services/Graphics/UxDesignServices/DesignServices';
+import TechnologiesBook from '@/app/_components/services/common/TechnologiesBook/TechnologiesBook';
 import AboutGraphics from '../../_components/services/Graphics/AboutGraphics/AboutGraphics';
 import WorkTogether from '../../_components/services/Graphics/Worktogether/worktogether';
 import { generateCmsMetadata } from '@/lib/cms-fetch';
@@ -23,6 +24,7 @@ const Page = () => {
       <GraphicAbout />
       <BusinessGrowth />
       <DesignServices />
+      <TechnologiesBook serviceKey="graphic-design" />
       <AboutGraphics />
       <WorkTogether />
     </div>

@@ -2,6 +2,7 @@ import React from 'react';
 import HireUsBanner from '../../_components/services/hire-us/Banner/HireUsBanner';
 import WhyChooseUs from '../../_components/services/hire-us/WhyChooseUs/WhyChooseUs';
 import KeyBenefits from '../../_components/services/hire-us/KeyBenefits/KeyBenefits';
+import TechnologiesBook from '@/app/_components/services/common/TechnologiesBook/TechnologiesBook';
 import AtoZSolution from '../../_components/services/hire-us/AtoZSolution/AtoZSolution';
 import HireUsForm from '../../_components/services/hire-us/Form/HireUsForm';
 import { generateCmsMetadata } from '@/lib/cms-fetch';
@@ -21,6 +22,7 @@ function page() {
       <HireUsBanner />
       <WhyChooseUs />
       <KeyBenefits />
+      <TechnologiesBook serviceKey="hire-us" />
       <AtoZSolution />
       <HireUsForm />
     </div>

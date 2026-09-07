@@ -3,7 +3,7 @@ import AppDevBanner from "../../_components/services/app-developement/Banner/App
 import TransformingIdeas from "../../_components/services/app-developement/TransformingIdeas/TransformingIdeas";
 import MobileAppService from "../../_components/services/app-developement/MobileAppServices/MobileAppService";
 import AppImages from "../../_components/services/app-developement/AppImages/AppImages";
-import TechnoligesWeUse from "../../_components/services/web-developement/TechnoligesWeUse/TechnoligesWeUse";
+import TechnologiesBook from "@/app/_components/services/common/TechnologiesBook/TechnologiesBook";
 import ExpertiseAcrossPlatform from "../../_components/services/app-developement/ExpertiseAcrossPlatform/ExpertiseAcrossPlatform";
 import OurProces from "../../_components/services/app-developement/OurProces/OurProces";
 import AppWhyChoose from "../../_components/services/app-developement/WhyChoose/AppWhyChoose";
@@ -17,7 +17,7 @@ const page = () => {
       <TransformingIdeas />
       <MobileAppService />
       <AppImages />
-      <TechnoligesWeUse />
+      <TechnologiesBook serviceKey="app-development" />
       <ExpertiseAcrossPlatform />
       <OurProces />
       <AppWhyChoose />

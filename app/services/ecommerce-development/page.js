@@ -5,6 +5,7 @@ import ECommerceServices from '@/app/_components/services/eCommerce-developement
 import B2B from '@/app/_components/services/eCommerce-developement/B2B/B2B';
 import B2C from '@/app/_components/services/eCommerce-developement/B2C/B2C';
 import SliderIcon from '@/app/_components/services/eCommerce-developement/SliderIcon/SliderIcon';
+import TechnologiesBook from '@/app/_components/services/common/TechnologiesBook/TechnologiesBook';
 import WhyChoose from '@/app/_components/services/eCommerce-developement/WhyChoose/WhyChoose';
 import HireUs from '@/app/_components/services/eCommerce-developement/HireUs/HireUs';
 import EcommerceFAQ from '@/app/_components/services/eCommerce-developement/FAQ/EcommerceFAQ';
@@ -28,6 +29,7 @@ export default function EcommerceDevelopmentPage() {
       <B2B />
       <B2C />
       <SliderIcon />
+      <TechnologiesBook serviceKey="ecommerce-development" />
       <WhyChoose />
       <HireUs />
       <EcommerceFAQ />

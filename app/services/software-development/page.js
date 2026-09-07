@@ -2,7 +2,7 @@ import React from 'react';
 import SoftwareDevBanner from '@/app/_components/services/software-developement/Banner/SoftwareDevBanner';
 import WhoWeAre from '@/app/_components/services/software-developement/WhoWeAre/WhoWeAre';
 import SoftwareServices from '@/app/_components/services/software-developement/SoftwareServices/SoftwareServices';
-import TechnologiesWeUse from '@/app/_components/services/software-developement/TechnologiesWeUse/TechnologiesWeUse';
+import TechnologiesBook from '@/app/_components/services/common/TechnologiesBook/TechnologiesBook';
 import SoftwareWhyChoose from '@/app/_components/services/software-developement/WhyChoose/SoftwareWhyChoose';
 import HireUs from '@/app/_components/services/eCommerce-developement/HireUs/HireUs';
 import SoftwareFAQ from '@/app/_components/services/software-developement/FAQ/SoftwareFAQ';
@@ -23,7 +23,7 @@ export default function SoftwareDevelopmentPage() {
       <SoftwareDevBanner />
       <WhoWeAre />
       <SoftwareServices />
-      <TechnologiesWeUse />
+      <TechnologiesBook serviceKey="software-development" />
       <SoftwareWhyChoose />
       <HireUs
         line1="Ready to scale your digital presence in Dubai and across the UAE?"
