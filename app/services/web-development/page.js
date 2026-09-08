@@ -11,10 +11,11 @@ const page = () => {
   return (
     <div>
       <WebDevBanner />
-      <Struggling />
+       <WebWhyChoose />
+      
       <HowDoWeResults />
+      <Struggling />
       <TechnologiesBook serviceKey="web-development" bgColor="#FFFFFF" />
-      <WebWhyChoose />
       <WebHireUs />
       <WebFAQ />
     </div>

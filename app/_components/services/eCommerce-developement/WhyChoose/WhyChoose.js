@@ -207,64 +207,10 @@ export const webWhyChooseData = [
   }
 ];
 
-const WhyChoose = ({ items = defaultWhyChooseData }) => {
-  return (
-    <section className="w-full bg-white py-14 md:py-20 font-sans relative overflow-hidden">
-      {/* Decorative green wavy background lines on left edge */}
-      <div className="absolute left-0 top-1/4 bottom-1/4 w-12 pointer-events-none opacity-40 hidden md:block">
-        <svg className="w-full h-full text-[#41b349]" viewBox="0 0 100 400" fill="none" stroke="currentColor" strokeWidth="3">
-          <path d="M-20 50 Q 60 150 -20 250 T -20 350" />
-          <path d="M-40 100 Q 40 200 -40 300" />
-        </svg>
-      </div>
+import CommonWhyChoose from "@/app/_components/services/common/WhyChoose/CommonWhyChoose";
 
-      <div className="max-w-[1140px] mx-auto px-5 relative z-10">
-        
-        {/* SECTION HEADING ON 2 DISTINCT LINES */}
-        <div className="flex flex-col items-center justify-center text-center mb-12 md:mb-16">
-          <h2 className="text-[30px] sm:text-[38px] md:text-[44px] font-extrabold text-[#262323] tracking-tight leading-tight mb-2">
-            Why Choose
-          </h2>
-          <div>
-            <span className="bg-[#41b349] text-white px-4 py-1.5 rounded-[8px] text-[30px] sm:text-[38px] md:text-[44px] font-extrabold inline-block shadow-sm leading-tight">
-              Tech Solutionor
-            </span>
-          </div>
-        </div>
-
-        {/* 6 CARDS GRID */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
-          {items.map((item, idx) => (
-            <div
-              key={idx}
-              className="bg-white rounded-[24px] p-7 md:p-8 text-center flex flex-col items-center justify-center min-h-[270px] md:min-h-[300px] border border-gray-100/90 shadow-[0_4px_25px_rgba(0,0,0,0.06)] hover:bg-[#41b349] hover:border-[#41b349] hover:shadow-[0_12px_35px_rgba(65,179,73,0.3)] hover:-translate-y-1 transition-all duration-300 group cursor-pointer overflow-hidden relative"
-            >
-              {/* DEFAULT STATE: ICON + TITLE (HIDDEN ON HOVER) */}
-              <div className="flex flex-col items-center justify-center group-hover:hidden transition-all duration-300">
-                {/* ICON */}
-                <div className="mb-5 p-3 rounded-full bg-gray-50/50">
-                  {item.icon}
-                </div>
-
-                {/* TITLE */}
-                <h3 className="text-[#41b349] font-bold text-[19px] sm:text-[21px] md:text-[22px] leading-snug text-center">
-                  {item.title}
-                </h3>
-              </div>
-
-              {/* HOVER STATE: ONLY DESCRIPTION TEXT ON GREEN BACKGROUND */}
-              <div className="hidden group-hover:flex flex-col items-center justify-center h-full transition-all duration-300 px-2">
-                <p className="text-white text-[13.5px] sm:text-[14.5px] leading-relaxed font-normal text-center">
-                  {item.desc}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-
-      </div>
-    </section>
-  );
+const WhyChoose = ({ items }) => {
+  return <CommonWhyChoose serviceKey="ecommerce-development" items={items} />;
 };
 
 export default WhyChoose;

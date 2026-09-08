@@ -3,7 +3,7 @@ import SoftwareDevBanner from '@/app/_components/services/software-developement/
 import WhoWeAre from '@/app/_components/services/software-developement/WhoWeAre/WhoWeAre';
 import SoftwareServices from '@/app/_components/services/software-developement/SoftwareServices/SoftwareServices';
 import TechnologiesBook from '@/app/_components/services/common/TechnologiesBook/TechnologiesBook';
-import SoftwareWhyChoose from '@/app/_components/services/software-developement/WhyChoose/SoftwareWhyChoose';
+import CommonWhyChoose from '@/app/_components/services/common/WhyChoose/CommonWhyChoose';
 import HireUs from '@/app/_components/services/eCommerce-developement/HireUs/HireUs';
 import SoftwareFAQ from '@/app/_components/services/software-developement/FAQ/SoftwareFAQ';
 import { generateCmsMetadata } from '@/lib/cms-fetch';
@@ -24,7 +24,7 @@ export default function SoftwareDevelopmentPage() {
       <WhoWeAre />
       <SoftwareServices />
       <TechnologiesBook serviceKey="software-development" />
-      <SoftwareWhyChoose />
+      <CommonWhyChoose serviceKey="software-development" />
       <HireUs
         line1="Ready to scale your digital presence in Dubai and across the UAE?"
         line2="Choose a trusted team for custom software and ongoing support."

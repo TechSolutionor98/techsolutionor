@@ -3,7 +3,7 @@ import SEOBanner from '../../_components/services/search-engine-optimization/Ban
 import SEOFramework from '../../_components/services/search-engine-optimization/Framework/SEOFramework';
 import SEOServices from '../../_components/services/search-engine-optimization/Services/SEOServices';
 import TechnologiesBook from '@/app/_components/services/common/TechnologiesBook/TechnologiesBook';
-import SEOWhyWork from '../../_components/services/search-engine-optimization/WhyWork/SEOWhyWork';
+import CommonWhyChoose from '@/app/_components/services/common/WhyChoose/CommonWhyChoose';
 import SEOAbout from '../../_components/services/search-engine-optimization/About/SEOAbout';
 import Newsletter from '../../_components/Home/Newsletter/Newsletter';
 import SEOFAQ from '../../_components/services/search-engine-optimization/FAQ/SEOFAQ';
@@ -25,7 +25,7 @@ const Page = () => {
       <SEOFramework />
       <SEOServices />
       <TechnologiesBook serviceKey="search-engine-optimization" />
-      <SEOWhyWork />
+      <CommonWhyChoose serviceKey="search-engine-optimization" />
       <SEOAbout />
       <Newsletter />
       <SEOFAQ />

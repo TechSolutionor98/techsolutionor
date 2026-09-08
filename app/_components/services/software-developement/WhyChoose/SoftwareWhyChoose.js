@@ -1,9 +1,9 @@
 "use client";
 import React from "react";
-import WhyChoose, { softwareWhyChooseData } from "@/app/_components/services/eCommerce-developement/WhyChoose/WhyChoose";
+import CommonWhyChoose from "@/app/_components/services/common/WhyChoose/CommonWhyChoose";
 
 const SoftwareWhyChoose = () => {
-  return <WhyChoose items={softwareWhyChooseData} />;
+  return <CommonWhyChoose serviceKey="software-development" />;
 };
 
 export default SoftwareWhyChoose;

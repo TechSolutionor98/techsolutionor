@@ -1,6 +1,6 @@
 import React from 'react';
 import HireUsBanner from '../../_components/services/hire-us/Banner/HireUsBanner';
-import WhyChooseUs from '../../_components/services/hire-us/WhyChooseUs/WhyChooseUs';
+import CommonWhyChoose from '@/app/_components/services/common/WhyChoose/CommonWhyChoose';
 import KeyBenefits from '../../_components/services/hire-us/KeyBenefits/KeyBenefits';
 import TechnologiesBook from '@/app/_components/services/common/TechnologiesBook/TechnologiesBook';
 import AtoZSolution from '../../_components/services/hire-us/AtoZSolution/AtoZSolution';
@@ -20,7 +20,7 @@ function page() {
   return (
     <div>
       <HireUsBanner />
-      <WhyChooseUs />
+      <CommonWhyChoose serviceKey="hire-us" />
       <KeyBenefits />
       <TechnologiesBook serviceKey="hire-us" />
       <AtoZSolution />

@@ -3,6 +3,7 @@ import DigitalMarketingBanner from '../../_components/services/digital-marketing
 import FrameWork from '../../_components/services/digital-marketing/Framework/Framework'
 import ServicesDM from '../../_components/services/digital-marketing/Servicesdm/ServicesDM'
 import TechnologiesBook from '@/app/_components/services/common/TechnologiesBook/TechnologiesBook'
+import CommonWhyChoose from '@/app/_components/services/common/WhyChoose/CommonWhyChoose'
 import Newsletter from '../../_components/Home/Newsletter/Newsletter'
 import FAQ from '../../_components/services/digital-marketing/FAQ/FAQ'
 const page = () => {
@@ -12,6 +13,7 @@ const page = () => {
       <FrameWork />
       <ServicesDM />
       <TechnologiesBook serviceKey="digital-marketing" />
+      <CommonWhyChoose serviceKey="digital-marketing" />
       <Newsletter />
       <FAQ />
     </div>

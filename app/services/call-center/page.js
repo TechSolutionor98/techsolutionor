@@ -3,6 +3,7 @@ import CallCenterBanner from '../../_components/services/call-center/Banner/Call
 import CallCenterOfferings from '../../_components/services/call-center/Offerings/CallCenterOfferings'
 import CallCenterConsulting from '../../_components/services/call-center/Consulting/CallCenterConsulting'
 import TechnologiesBook from '@/app/_components/services/common/TechnologiesBook/TechnologiesBook'
+import CommonWhyChoose from '@/app/_components/services/common/WhyChoose/CommonWhyChoose'
 import Newsletter from '../../_components/Home/Newsletter/Newsletter'
 import CallCenterFAQ from '../../_components/services/call-center/FAQ/CallCenterFAQ'
 
@@ -13,6 +14,7 @@ function page() {
       <CallCenterOfferings />
       <CallCenterConsulting />
       <TechnologiesBook serviceKey="call-center" />
+      <CommonWhyChoose serviceKey="call-center" />
       <Newsletter />
       <CallCenterFAQ />
     </div>
