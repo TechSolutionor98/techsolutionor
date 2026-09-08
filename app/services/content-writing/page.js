@@ -11,10 +11,10 @@ function page() {
   return (
     <div>
     <ContentBanner />
+    <CommonWhyChoose serviceKey="content-writing" />
     <ContentServices />
     <ContentProcess />
     <TechnologiesBook serviceKey="content-writing" />
-    <CommonWhyChoose serviceKey="content-writing" />
     <Newsletter />
     <ContentFAQ/>
     </div>

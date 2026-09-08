@@ -10,10 +10,10 @@ const page = () => {
   return (
     <div>
       <Banner/>
+      <CommonWhyChoose serviceKey="ppc-amazon-ads" />
       <PPCFramework/>
       <PPCServices/> 
       <TechnologiesBook serviceKey="ppc-amazon-ads" />
-      <CommonWhyChoose serviceKey="ppc-amazon-ads" />
       <Newsletter/>
       <FAQ />
     </div>

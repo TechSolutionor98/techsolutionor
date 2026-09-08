@@ -14,13 +14,13 @@ const page = () => {
   return (
     <div className="bg-white w-full"> 
       <AppDevBanner />
+      <CommonWhyChoose serviceKey="app-development" />
       <TransformingIdeas />
       <MobileAppService />
       <AppImages />
       <TechnologiesBook serviceKey="app-development" />
       <ExpertiseAcrossPlatform />
       <OurProces />
-      <CommonWhyChoose serviceKey="app-development" />
       <AppHireUs />
       <AppFAQ />
     </div>

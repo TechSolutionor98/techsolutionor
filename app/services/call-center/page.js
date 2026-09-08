@@ -11,10 +11,10 @@ function page() {
   return (
     <div>
       <CallCenterBanner />
+      <CommonWhyChoose serviceKey="call-center" />
       <CallCenterOfferings />
       <CallCenterConsulting />
       <TechnologiesBook serviceKey="call-center" />
-      <CommonWhyChoose serviceKey="call-center" />
       <Newsletter />
       <CallCenterFAQ />
     </div>

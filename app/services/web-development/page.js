@@ -11,8 +11,7 @@ const page = () => {
   return (
     <div>
       <WebDevBanner />
-       <WebWhyChoose />
-      
+      <WebWhyChoose />
       <HowDoWeResults />
       <Struggling />
       <TechnologiesBook serviceKey="web-development" bgColor="#FFFFFF" />

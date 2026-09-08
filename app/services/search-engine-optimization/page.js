@@ -22,10 +22,10 @@ const Page = () => {
   return (
     <div>
       <SEOBanner />
+      <CommonWhyChoose serviceKey="search-engine-optimization" />
       <SEOFramework />
       <SEOServices />
       <TechnologiesBook serviceKey="search-engine-optimization" />
-      <CommonWhyChoose serviceKey="search-engine-optimization" />
       <SEOAbout />
       <Newsletter />
       <SEOFAQ />

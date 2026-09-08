@@ -8,9 +8,9 @@ const page = () => {
   return (
     <div>
       <SocialMediaBanner />
+      <CommonWhyChoose serviceKey="social-media" />
       <SocialMediaGrowth />
       <TechnologiesBook serviceKey="social-media" />
-      <CommonWhyChoose serviceKey="social-media" />
       <CardsSection />
     </div>
   )

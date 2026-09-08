@@ -22,12 +22,12 @@ const Page = () => {
   return (
     <div>
       <GraphicBanner />
+      <CommonWhyChoose serviceKey="graphic-design" />
       <GraphicAbout />
       <BusinessGrowth />
       <DesignServices />
       <TechnologiesBook serviceKey="graphic-design" />
       <AboutGraphics />
-      <CommonWhyChoose serviceKey="graphic-design" />
       <WorkTogether />
     </div>
   );

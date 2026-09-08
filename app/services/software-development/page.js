@@ -21,10 +21,10 @@ export default function SoftwareDevelopmentPage() {
   return (
     <div>
       <SoftwareDevBanner />
+      <CommonWhyChoose serviceKey="software-development" />
       <WhoWeAre />
       <SoftwareServices />
       <TechnologiesBook serviceKey="software-development" />
-      <CommonWhyChoose serviceKey="software-development" />
       <HireUs
         line1="Ready to scale your digital presence in Dubai and across the UAE?"
         line2="Choose a trusted team for custom software and ongoing support."

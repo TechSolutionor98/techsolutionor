@@ -10,10 +10,10 @@ const page = () => {
   return (
     <div>
       <DigitalMarketingBanner />
+      <CommonWhyChoose serviceKey="digital-marketing" />
       <FrameWork />
       <ServicesDM />
       <TechnologiesBook serviceKey="digital-marketing" />
-      <CommonWhyChoose serviceKey="digital-marketing" />
       <Newsletter />
       <FAQ />
     </div>

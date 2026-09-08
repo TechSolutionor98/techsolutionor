@@ -24,13 +24,13 @@ export default function EcommerceDevelopmentPage() {
   return (
     <div>
       <Banner />
+      <CommonWhyChoose serviceKey="ecommerce-development" />
       <Framework />
       <ECommerceServices />
       <B2B />
       <B2C />
       <SliderIcon />
       <TechnologiesBook serviceKey="ecommerce-development" />
-      <CommonWhyChoose serviceKey="ecommerce-development" />
       <HireUs />
       <EcommerceFAQ />
     </div>
