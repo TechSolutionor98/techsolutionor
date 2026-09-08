@@ -1,8 +1,7 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
 import Eclipse from '../../../../components/Images/eclipse.png';
 import Grab from '../../../../components/Images/grab.png';
 import Protein from '../../../../components/Images/protein.png';
@@ -12,7 +11,7 @@ import Traders from '../../../../components/Images/traders.png';
 import Super from '../../../../components/Images/super.png';
 import Craters from '../../../../components/Images/crafters.png';
 import Amer from '../../../../components/Images/amer.png';
-import Saloon from '../../../../components/Images/saloon.png';
+import Gentsslone from '../../../../components/Images/gentsslone.png';
 import Exports from '../../../../components/Images/exports.png';
 import Albasit from '../../../../components/Images/albasit.png';
 import Crown from '../../../../components/Images/crownexcel.png';
@@ -32,27 +31,30 @@ export const defaultProjects = {
 };
 
 const icons = [
-  { Image: Grab, width: 223, height: 223 },
-  { Image: Protein, width: 223, height: 223 },
-  { Image: Clickpos, width: 223, height: 223 },
-  { Image: Almatoh, width: 133, height: 114 },
-  { Image: Traders, width: 194, height: 194 },
-  { Image: Super, width: 115, height: 131 },
-  { Image: Craters, width: 223, height: 84 },
-  { Image: Amer, width: 172, height: 90 },
-  { Image: Saloon, width: 201, height: 136 },
-  { Image: Exports, width: 115, height: 129 },
-  { Image: Albasit, width: 190, height: 190 },
-  { Image: Crown, width: 172, height: 72 },
-  { Image: Clickslice, width: 198, height: 41 },
-  { Image: Muzammil, width: 190, height: 64 },
-  { Image: Appliances, width: 227, height: 64 },
-  { Image: Smart, width: 230, height: 44 },
-  { Image: Mubayya, width: 212, height: 60 },
-  { Image: Aljannah, width: 313, height: 167 },
+  { Image: Grab },
+  { Image: Protein },
+  { Image: Clickpos },
+  { Image: Almatoh },
+  { Image: Traders },
+  { Image: Super },
+  { Image: Craters },
+  { Image: Amer },
+  { Image: Gentsslone },
+  { Image: Exports },
+  { Image: Albasit },
+  { Image: Crown },
+  { Image: Clickslice },
+  { Image: Muzammil },
+  { Image: Appliances },
+  { Image: Smart },
+  { Image: Mubayya },
+  { Image: Aljannah },
 ];
 
 const Projects = ({ cmsContent }) => {
+  const [row1Paused, setRow1Paused] = useState(false);
+  const [row2Paused, setRow2Paused] = useState(false);
+
   const title = getCmsVal(cmsContent, defaultProjects.title, "projects");
   const description = getCmsVal(cmsContent, defaultProjects.description, "projects");
 
@@ -73,6 +75,30 @@ const Projects = ({ cmsContent }) => {
 
   return (
     <section className="relative overflow-hidden py-16 md:py-24 bg-[#000000] select-none">
+      {/* Embedded Styles for smooth infinite marquee with row-level hover pause */}
+      <style>{`
+        @keyframes marquee-forward {
+          0% { transform: translateX(0%); }
+          100% { transform: translateX(-33.3333%); }
+        }
+        @keyframes marquee-reverse {
+          0% { transform: translateX(-33.3333%); }
+          100% { transform: translateX(0%); }
+        }
+        .marquee-track-1 {
+          animation: marquee-forward 34s linear infinite;
+        }
+        .marquee-track-2 {
+          animation: marquee-reverse 38s linear infinite;
+        }
+        .marquee-track-1:has(.logo-card:hover) {
+          animation-play-state: paused !important;
+        }
+        .marquee-track-2:has(.logo-card:hover) {
+          animation-play-state: paused !important;
+        }
+      `}</style>
+
       {/* Background Ambient Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#41B349]/10 blur-3xl rounded-full pointer-events-none" />
 
@@ -102,82 +128,78 @@ const Projects = ({ cmsContent }) => {
 
         {/* MARQUEE ROW 1: Forward Motion (Left) */}
         <div className="relative w-full overflow-hidden">
-          <motion.div
-            className="flex gap-5 sm:gap-7 w-max cursor-grab active:cursor-grabbing"
-            animate={{ x: ["0%", "-33.3333%"] }}
-            transition={{
-              repeat: Infinity,
-              repeatType: "loop",
-              duration: 34,
-              ease: "linear",
-            }}
+          <div
+            className="flex gap-5 sm:gap-7 w-max marquee-track-1 will-change-transform"
+            style={{ animationPlayState: row1Paused ? 'paused' : 'running' }}
           >
             {marqueeRow1.map((icon, idx) => {
               const isImgDynamic = typeof icon.imageUrl === 'string' && (icon.imageUrl.startsWith('http') || icon.imageUrl.startsWith('/'));
               return (
                 <div
                   key={`r1-${idx}`}
-                  className="w-56 h-28 sm:w-64 sm:h-32 shrink-0 bg-white border border-gray-100/90 rounded-2xl p-6 flex items-center justify-center shadow-[0_10px_30px_rgba(0,0,0,0.35)] hover:border-[#41B349]/60 hover:shadow-[0_15px_40px_rgba(65,179,73,0.3)] transition-all duration-300 group"
+                  onMouseEnter={() => setRow1Paused(true)}
+                  onMouseLeave={() => setRow1Paused(false)}
+                  className="logo-card w-56 h-28 sm:w-64 sm:h-32 shrink-0 bg-white border border-gray-100/90 rounded-2xl p-3 sm:p-4 flex items-center justify-center shadow-[0_10px_30px_rgba(0,0,0,0.35)] hover:border-[#41B349]/70 hover:scale-105 transition-all duration-300 cursor-pointer overflow-hidden select-none"
                 >
-                  {isImgDynamic ? (
-                    <img
-                      src={icon.imageUrl}
-                      alt={`Client Logo ${idx + 1}`}
-                      className="max-h-16 sm:max-h-20 max-w-[85%] w-auto h-auto object-contain transition-transform duration-300 group-hover:scale-105"
-                    />
-                  ) : (
-                    <Image
-                      src={icon.Image}
-                      alt={`Client Logo ${idx + 1}`}
-                      width={icon.width}
-                      height={icon.height}
-                      className="max-h-16 sm:max-h-20 max-w-[85%] w-auto h-auto object-contain transition-transform duration-300 group-hover:scale-105"
-                    />
-                  )}
+                  <div className="relative w-full h-full flex items-center justify-center">
+                    {isImgDynamic ? (
+                      <img
+                        src={icon.imageUrl}
+                        alt={`Client Logo ${idx + 1}`}
+                        className="w-full h-full object-contain"
+                      />
+                    ) : (
+                      <Image
+                        src={icon.Image}
+                        alt={`Client Logo ${idx + 1}`}
+                        fill
+                        sizes="(max-width: 640px) 224px, 256px"
+                        className="object-contain"
+                      />
+                    )}
+                  </div>
                 </div>
               );
             })}
-          </motion.div>
+          </div>
         </div>
 
         {/* MARQUEE ROW 2: Reverse Motion (Right) */}
         <div className="relative w-full overflow-hidden">
-          <motion.div
-            className="flex gap-5 sm:gap-7 w-max cursor-grab active:cursor-grabbing"
-            animate={{ x: ["-33.3333%", "0%"] }}
-            transition={{
-              repeat: Infinity,
-              repeatType: "loop",
-              duration: 38,
-              ease: "linear",
-            }}
+          <div
+            className="flex gap-5 sm:gap-7 w-max marquee-track-2 will-change-transform"
+            style={{ animationPlayState: row2Paused ? 'paused' : 'running' }}
           >
             {marqueeRow2.map((icon, idx) => {
               const isImgDynamic = typeof icon.imageUrl === 'string' && (icon.imageUrl.startsWith('http') || icon.imageUrl.startsWith('/'));
               return (
                 <div
                   key={`r2-${idx}`}
-                  className="w-56 h-28 sm:w-64 sm:h-32 shrink-0 bg-white border border-gray-100/90 rounded-2xl p-6 flex items-center justify-center shadow-[0_10px_30px_rgba(0,0,0,0.35)] hover:border-[#41B349]/60 hover:shadow-[0_15px_40px_rgba(65,179,73,0.3)] transition-all duration-300 group"
+                  onMouseEnter={() => setRow2Paused(true)}
+                  onMouseLeave={() => setRow2Paused(false)}
+                  className="logo-card w-56 h-28 sm:w-64 sm:h-32 shrink-0 bg-white border border-gray-100/90 rounded-2xl p-3 sm:p-4 flex items-center justify-center shadow-[0_10px_30px_rgba(0,0,0,0.35)] hover:border-[#41B349]/70 hover:scale-105 transition-all duration-300 cursor-pointer overflow-hidden select-none"
                 >
-                  {isImgDynamic ? (
-                    <img
-                      src={icon.imageUrl}
-                      alt={`Client Logo ${idx + 1}`}
-                      className="max-h-16 sm:max-h-20 max-w-[85%] w-auto h-auto object-contain transition-transform duration-300 group-hover:scale-105"
-                    />
-                  ) : (
-                    <Image
-                      src={icon.Image}
-                      alt={`Client Logo ${idx + 1}`}
-                      width={icon.width}
-                      height={icon.height}
-                      className="max-h-16 sm:max-h-20 max-w-[85%] w-auto h-auto object-contain transition-transform duration-300 group-hover:scale-105"
-                    />
-                  )}
+                  <div className="relative w-full h-full flex items-center justify-center">
+                    {isImgDynamic ? (
+                      <img
+                        src={icon.imageUrl}
+                        alt={`Client Logo ${idx + 1}`}
+                        className="w-full h-full object-contain"
+                      />
+                    ) : (
+                      <Image
+                        src={icon.Image}
+                        alt={`Client Logo ${idx + 1}`}
+                        fill
+                        sizes="(max-width: 640px) 224px, 256px"
+                        className="object-contain"
+                      />
+                    )}
+                  </div>
                 </div>
               );
             })}
-          </motion.div>
+          </div>
         </div>
 
       </div>
