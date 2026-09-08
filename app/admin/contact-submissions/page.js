@@ -20,15 +20,9 @@ export default async function ContactSubmissionsPage() {
   }
 
   return (
-    <div>
-      <h2 className="text-[30px] font-bold uppercase">Contact Submissions</h2>
-      <div className="bg-white p-4 rounded shadow mt-10">
-
-        <p className="text-sm text-gray-600 mb-4">
-          <span className='font-bold'>Total Submissions:</span> {submissions.length}
-        </p>
-        <ContactTableClient initialData={submissions} apiBase={apiBase} />
-      </div>
+    <div className="w-full">
+      <h2 className="text-[26px] sm:text-[28px] font-bold uppercase mb-4 text-gray-900">Contact Submissions</h2>
+      <ContactTableClient initialData={submissions} apiBase={apiBase} />
     </div>
   );
 }

@@ -241,10 +241,12 @@ export default function AdminLayout({ children, title = '' }) {
       </aside>
 
       {/* Main Content Area - Scrollable and Offset by Fixed Sidebar */}
-      <main className="flex-1 md:ml-64 p-6 pt-16 md:pt-6 overflow-x-hidden min-h-screen">
-        <header className="mb-6 mt-10 md:mt-0">
-          <h1 className="text-2xl font-semibold">{title}</h1>
-        </header>
+      <main className="flex-1 md:ml-64 px-3 sm:px-4 py-4 md:py-5 overflow-x-hidden min-h-screen">
+        {title ? (
+          <header className="mb-4 mt-6 md:mt-0">
+            <h1 className="text-2xl font-semibold">{title}</h1>
+          </header>
+        ) : null}
         <section>
           {isAllowed ? (
             children
