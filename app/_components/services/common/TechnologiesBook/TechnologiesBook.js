@@ -18,10 +18,13 @@ const TechnologiesBook = ({
   serviceKey = "web-development",
   lang,
   customData,
+  bgColor = "#FFFFFF",
 }) => {
   const { openQuote } = useQuote();
   const { language } = useLanguage();
   const activeLang = lang || language || "en";
+
+  const isLightBg = bgColor.toUpperCase() === "#FFFFFF" || bgColor.toLowerCase() === "white";
 
   // Resolve dataset for the specific service and language
   const content = customData || getServiceTechnologies(serviceKey, activeLang);
@@ -59,26 +62,18 @@ const TechnologiesBook = ({
 
     const startVal = continuousProgress;
     const startTime = performance.now();
-    const duration = 650; // Smooth 650ms animation
+    const duration = 500; // ms
 
-    const cubicEaseOut = (t) => {
-      const f = t - 1.0;
-      return f * f * f + 1.0;
-    };
+    const step = (now) => {
+      const elapsed = now - startTime;
+      const t = Math.min(elapsed / duration, 1);
+      // Ease out cubic
+      const ease = 1 - Math.pow(1 - t, 3);
+      const nextVal = startVal + (targetVal - startVal) * ease;
+      setContinuousProgress(nextVal);
 
-    const step = (currentTime) => {
-      const elapsed = currentTime - startTime;
-      const progressRatio = Math.min(elapsed / duration, 1);
-      const eased = cubicEaseOut(progressRatio);
-      const currentVal = startVal + (targetVal - startVal) * eased;
-
-      setContinuousProgress(currentVal);
-
-      if (progressRatio < 1) {
+      if (t < 1) {
         animFrameRef.current = requestAnimationFrame(step);
-      } else {
-        setContinuousProgress(targetVal);
-        animFrameRef.current = null;
       }
     };
 
@@ -86,26 +81,18 @@ const TechnologiesBook = ({
   }, [continuousProgress]);
 
   // Navigate to specific spread
-  const goToSpread = useCallback(
-    (newSpread, smooth = true) => {
-      const clamped = Math.max(0, Math.min(newSpread, totalSpreads - 1));
-      targetSpreadRef.current = clamped;
-      setActiveSpread(clamped);
-
-      if (smooth) {
-        animateToTarget(clamped);
-      } else {
-        setContinuousProgress(clamped);
-      }
-    },
-    [animateToTarget, totalSpreads]
-  );
+  const goToSpread = useCallback((index) => {
+    const clamped = Math.max(0, Math.min(index, totalSpreads - 1));
+    setActiveSpread(clamped);
+    targetSpreadRef.current = clamped;
+    animateToTarget(clamped);
+  }, [animateToTarget, totalSpreads]);
 
   const handleNext = useCallback(() => {
     if (activeSpread < totalSpreads - 1) {
       goToSpread(activeSpread + 1);
     }
-  }, [activeSpread, totalSpreads, goToSpread]);
+  }, [activeSpread, goToSpread, totalSpreads]);
 
   const handlePrev = useCallback(() => {
     if (activeSpread > 0) {
@@ -118,25 +105,14 @@ const TechnologiesBook = ({
     const handleScroll = () => {
       if (!trackRef.current) return;
       const rect = trackRef.current.getBoundingClientRect();
-      const trackHeight = trackRef.current.offsetHeight;
-      const windowHeight = window.innerHeight;
-
-      // When the top of the track hits the top of viewport, pinning begins
-      const scrolledPastTop = -rect.top;
-      const totalScrollableDistance = trackHeight - windowHeight;
+      const viewportHeight = window.innerHeight;
+      const totalScrollableDistance = rect.height - viewportHeight;
 
       if (totalScrollableDistance <= 0) return;
 
-      if (scrolledPastTop <= 0) {
-        targetSpreadRef.current = 0;
-        setActiveSpread(0);
-        setContinuousProgress(0);
-      } else if (scrolledPastTop >= totalScrollableDistance) {
-        targetSpreadRef.current = totalSpreads - 1;
-        setActiveSpread(totalSpreads - 1);
-        setContinuousProgress(totalSpreads - 1);
-      } else {
-        // Map scroll distance through the 7 spreads
+      const scrolledPastTop = -rect.top;
+
+      if (scrolledPastTop >= 0 && scrolledPastTop <= totalScrollableDistance) {
         const scrollFraction = scrolledPastTop / totalScrollableDistance;
         const mappedProgress = scrollFraction * (totalSpreads - 1);
         const mappedSpread = Math.round(mappedProgress);
@@ -179,27 +155,30 @@ const TechnologiesBook = ({
       id={`technologies-book-section-${serviceKey}`}
       className="relative w-full"
       style={{
-        // 450vh tall scroll track guarantees sticky section stays 100% PINNED
         height: "450vh",
+        backgroundColor: bgColor,
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* STICKY BOOK VIEWPORT (Theme: Entire background #1B4E2C) */}
+      {/* STICKY BOOK VIEWPORT (Section background #FFFFFF) */}
       <div
-        className="sticky top-0 w-full h-screen flex flex-col justify-center items-center bg-[#1B4E2C] overflow-hidden select-none px-4 sm:px-6 md:px-10 z-10 font-sans"
+        className="sticky top-0 w-full h-screen flex flex-col justify-center items-center overflow-hidden select-none px-4 sm:px-6 md:px-10 z-10 font-sans"
         style={{
           position: "sticky",
           top: 0,
           height: "100vh",
+          backgroundColor: bgColor,
         }}
       >
         {/* SUBTLE MINIMAL ARCHITECTURAL GRID OVERLAY */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <div
-            className="absolute inset-0 opacity-[0.05]"
+            className="absolute inset-0 opacity-[0.04]"
             style={{
-              backgroundImage: `linear-gradient(#ffffff 1px, transparent 1px), linear-gradient(90deg, #ffffff 1px, transparent 1px)`,
+              backgroundImage: isLightBg
+                ? `linear-gradient(#cbd5e1 1px, transparent 1px), linear-gradient(90deg, #cbd5e1 1px, transparent 1px)`
+                : `linear-gradient(#ffffff 1px, transparent 1px), linear-gradient(90deg, #ffffff 1px, transparent 1px)`,
               backgroundSize: "40px 40px",
             }}
           />
@@ -213,7 +192,9 @@ const TechnologiesBook = ({
               <span>{badge}</span>
             </div>
             <h2
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-black text-white tracking-tight leading-tight"
+              className={`text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-black tracking-tight leading-tight ${
+                isLightBg ? "text-[#0D0F12]" : "text-white"
+              }`}
               style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
             >
               {title} <span className="text-[#41B349]">{titleHighlight}</span>
@@ -227,7 +208,11 @@ const TechnologiesBook = ({
               disabled={activeSpread === 0}
               className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center border transition-all duration-300 cursor-pointer ${
                 activeSpread === 0
-                  ? "border-white/10 text-white/30 cursor-not-allowed opacity-30 bg-white/5"
+                  ? isLightBg
+                    ? "border-gray-200 text-gray-300 cursor-not-allowed opacity-40 bg-gray-50"
+                    : "border-white/10 text-white/30 cursor-not-allowed opacity-30 bg-white/5"
+                  : isLightBg
+                  ? "border-gray-200 bg-white text-[#1B4E2C] shadow-sm hover:bg-gray-50 hover:border-gray-300 active:scale-95"
                   : "border-white/30 bg-white text-[#1B4E2C] hover:bg-white/90 active:scale-95"
               }`}
               title="Previous Page"
@@ -240,7 +225,11 @@ const TechnologiesBook = ({
               disabled={activeSpread === totalSpreads - 1}
               className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center border transition-all duration-300 cursor-pointer ${
                 activeSpread === totalSpreads - 1
-                  ? "border-white/10 text-white/30 cursor-not-allowed opacity-30 bg-white/5"
+                  ? isLightBg
+                    ? "border-gray-200 text-gray-300 cursor-not-allowed opacity-40 bg-gray-50"
+                    : "border-white/10 text-white/30 cursor-not-allowed opacity-30 bg-white/5"
+                  : isLightBg
+                  ? "border-gray-200 bg-white text-[#1B4E2C] shadow-sm hover:bg-gray-50 hover:border-gray-300 active:scale-95"
                   : "border-white/30 bg-white text-[#1B4E2C] hover:bg-white/90 active:scale-95"
               }`}
               title="Next Page"
@@ -261,7 +250,9 @@ const TechnologiesBook = ({
           {/* DESKTOP / TABLET DUAL-PAGE BOOK (md: and above) */}
           {/* ========================================================= */}
           <div
-            className="hidden md:flex relative w-full h-full rounded-2xl lg:rounded-3xl border border-white/20 bg-white overflow-hidden"
+            className={`hidden md:flex relative w-full h-full rounded-2xl lg:rounded-3xl bg-white overflow-hidden ${
+              isLightBg ? "border border-gray-200 shadow-2xl shadow-black/8" : "border border-white/20"
+            }`}
             style={{
               transformStyle: "preserve-3d",
             }}
@@ -305,7 +296,7 @@ const TechnologiesBook = ({
                 >
                   {/* FRONT FACE (Faces right when flat at 0deg) */}
                   <div
-                    className="absolute inset-0 w-full h-full bg-white rounded-r-2xl lg:rounded-r-3xl overflow-hidden"
+                    className="absolute inset-0 w-full h-full bg-white rounded-r-2xl lg:rounded-r-3xl overflow-hidden border-r border-gray-100"
                     style={{
                       backfaceVisibility: "hidden",
                       WebkitBackfaceVisibility: "hidden",
@@ -317,7 +308,7 @@ const TechnologiesBook = ({
 
                   {/* BACK FACE (Faces left when turned flat at -180deg) */}
                   <div
-                    className="absolute inset-0 w-full h-full bg-white rounded-l-2xl lg:rounded-l-3xl overflow-hidden"
+                    className="absolute inset-0 w-full h-full bg-white rounded-l-2xl lg:rounded-l-3xl overflow-hidden border-l border-gray-100"
                     style={{
                       backfaceVisibility: "hidden",
                       WebkitBackfaceVisibility: "hidden",
@@ -330,10 +321,14 @@ const TechnologiesBook = ({
               );
             })}
 
-            {/* REALISTIC REGISTER / NOTEBOOK SPRING BINDING */}
+            {/* ========================================================= */}
+            {/* CENTRAL 3D SKEUOMORPHIC WIRE SPIRAL BINDING               */}
+            {/* ========================================================= */}
             <div
-              className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-8 sm:w-9 z-50 pointer-events-none flex flex-col justify-between py-6 sm:py-7"
-              aria-hidden="true"
+              className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-6 sm:w-7 z-40 pointer-events-none flex flex-col justify-evenly items-center py-2"
+              style={{
+                transform: "translateZ(1px)",
+              }}
             >
               {/* Central vertical spine binding seam */}
               <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-[2px] bg-gradient-to-b from-gray-300 via-gray-400 to-gray-300 shadow-[0_0_2px_rgba(0,0,0,0.1)]" />
@@ -341,26 +336,18 @@ const TechnologiesBook = ({
               {/* 11 Evenly Spaced Metallic Spring Rings & Punched Holes */}
               {Array.from({ length: 11 }).map((_, rIdx) => (
                 <div key={rIdx} className="relative flex items-center justify-center w-full h-3 sm:h-3.5">
-                  {/* Left punched paper hole */}
-                  <div className="absolute left-0.5 sm:left-1 w-[4px] sm:w-[4.5px] h-[7.5px] sm:h-[8.5px] rounded-[1.5px] bg-[#1e293b] shadow-[inset_0_1px_1.5px_rgba(0,0,0,0.8)] border border-gray-300/40" />
-
-                  {/* Right punched paper hole */}
-                  <div className="absolute right-0.5 sm:right-1 w-[4px] sm:w-[4.5px] h-[7.5px] sm:h-[8.5px] rounded-[1.5px] bg-[#1e293b] shadow-[inset_0_1px_1.5px_rgba(0,0,0,0.8)] border border-gray-300/40" />
-
-                  {/* 3D Metallic Wire Coil Ring */}
+                  <div className="absolute left-0.5 sm:left-1 w-[4px] sm:w-[4.5px] h-[7.5px] sm:h-[8.5px] rounded-[1.5px] bg-gray-200 shadow-[inset_0_1px_1.5px_rgba(0,0,0,0.2)]" />
+                  <div className="absolute right-0.5 sm:right-1 w-[4px] sm:w-[4.5px] h-[7.5px] sm:h-[8.5px] rounded-[1.5px] bg-gray-200 shadow-[inset_0_1px_1.5px_rgba(0,0,0,0.2)]" />
                   <div
                     className="relative z-10 w-[21px] sm:w-[24px] h-[5px] sm:h-[6px] rounded-full transform -rotate-[2deg]"
                     style={{
                       background:
                         "linear-gradient(180deg, #ffffff 0%, #cbd5e1 35%, #94a3b8 70%, #475569 100%)",
                       boxShadow:
-                        "0 1.5px 3px rgba(0,0,0,0.25), inset 0 1px 1px rgba(255,255,255,0.9)",
-                      border: "0.5px solid rgba(148,163,184,0.6)",
+                        "0 1.5px 3px rgba(0,0,0,0.1), inset 0 1px 1px rgba(255,255,255,0.9)",
+                      border: "0.5px solid rgba(148,163,184,0.3)",
                     }}
-                  >
-                    {/* Metallic specular highlight reflection */}
-                    <div className="absolute top-[0.6px] left-1.5 right-1.5 h-[1px] bg-white/95 rounded-full" />
-                  </div>
+                  />
                 </div>
               ))}
             </div>
@@ -369,7 +356,11 @@ const TechnologiesBook = ({
           {/* ========================================================= */}
           {/* MOBILE SINGLE-PAGE BOOK (< md:) */}
           {/* ========================================================= */}
-          <div className="flex md:hidden relative w-full h-full rounded-2xl border border-white/20 bg-white overflow-hidden">
+          <div
+            className={`flex md:hidden relative w-full h-full rounded-2xl bg-white overflow-hidden ${
+              isLightBg ? "border border-gray-200 shadow-xl shadow-black/8" : "border border-white/20"
+            }`}
+          >
             <div className="w-full h-full">
               <PageContent
                 page={pagesData[Math.min(activeSpread * 2 + 1, 13)]}
@@ -381,7 +372,7 @@ const TechnologiesBook = ({
         </div>
 
         {/* BOTTOM PROGRESS INDICATORS */}
-        <div className="relative z-10 w-full max-w-[1140px] mt-2.5 sm:mt-3 flex items-center justify-between gap-2 text-xs text-white/75">
+        <div className="relative z-10 w-full max-w-[1140px] mt-2.5 sm:mt-3 flex items-center justify-between gap-2 text-xs">
           <div className="w-24 hidden sm:block" />
 
           {/* Interactive spread indicator dots */}
@@ -392,7 +383,11 @@ const TechnologiesBook = ({
                 onClick={() => goToSpread(idx)}
                 className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
                   activeSpread === idx
-                    ? "w-8 bg-white"
+                    ? isLightBg
+                      ? "w-8 bg-[#1B4E2C]"
+                      : "w-8 bg-white"
+                    : isLightBg
+                    ? "w-2 bg-gray-300 hover:bg-gray-400"
                     : "w-2 bg-white/30 hover:bg-white/50"
                 }`}
                 title={`Jump to spread ${idx + 1}`}
@@ -401,7 +396,9 @@ const TechnologiesBook = ({
           </div>
 
           <div
-            className="text-xs font-bold text-white text-right w-24 tracking-wider"
+            className={`text-xs font-bold text-right w-24 tracking-wider ${
+              isLightBg ? "text-[#0D0F12]" : "text-white"
+            }`}
             style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
           >
             PAGE {String(activeSpread * 2 + 1).padStart(2, "0")} - {String(Math.min(activeSpread * 2 + 2, 14)).padStart(2, "0")} / 14
