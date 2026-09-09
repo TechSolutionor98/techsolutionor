@@ -4,6 +4,7 @@ import WhoWeAre from '@/app/_components/services/software-developement/WhoWeAre/
 import SoftwareServices from '@/app/_components/services/software-developement/SoftwareServices/SoftwareServices';
 import TechnologiesBook from '@/app/_components/services/common/TechnologiesBook/TechnologiesBook';
 import CommonWhyChoose from '@/app/_components/services/common/WhyChoose/CommonWhyChoose';
+import CommonKeyFeatures from '@/app/_components/services/common/KeyFeatures/CommonKeyFeatures';
 import HireUs from '@/app/_components/services/eCommerce-developement/HireUs/HireUs';
 import SoftwareFAQ from '@/app/_components/services/software-developement/FAQ/SoftwareFAQ';
 import { generateCmsMetadata } from '@/lib/cms-fetch';
@@ -22,6 +23,7 @@ export default function SoftwareDevelopmentPage() {
     <div>
       <SoftwareDevBanner />
       <CommonWhyChoose serviceKey="software-development" />
+      <CommonKeyFeatures serviceKey="software-development" />
       <WhoWeAre />
       <SoftwareServices />
       <TechnologiesBook serviceKey="software-development" />

@@ -4,6 +4,7 @@ import ContentServices from '../../_components/services/content-writing/Services
 import ContentProcess from '../../_components/services/content-writing/Process/ContentProcess'
 import TechnologiesBook from '@/app/_components/services/common/TechnologiesBook/TechnologiesBook'
 import CommonWhyChoose from '@/app/_components/services/common/WhyChoose/CommonWhyChoose'
+import CommonKeyFeatures from '@/app/_components/services/common/KeyFeatures/CommonKeyFeatures'
 import Newsletter from '../../_components/Home/Newsletter/Newsletter'
 import ContentFAQ from '../../_components/services/content-writing/FAQ/ContentFAQ'
 
@@ -12,6 +13,7 @@ function page() {
     <div>
     <ContentBanner />
     <CommonWhyChoose serviceKey="content-writing" />
+    <CommonKeyFeatures serviceKey="content-writing" />
     <ContentServices />
     <ContentProcess />
     <TechnologiesBook serviceKey="content-writing" />
