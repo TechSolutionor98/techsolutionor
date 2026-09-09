@@ -3,6 +3,7 @@ import WebDevBanner from '../../_components/services/web-developement/Banner/Web
 import WebWhyChoose from '../../_components/services/web-developement/WhyChoose/WebWhyChoose'
 import CommonKeyFeatures from '@/app/_components/services/common/KeyFeatures/CommonKeyFeatures'
 import CommonStruggling from '@/app/_components/services/common/Struggling/CommonStruggling'
+import WebServices from '@/app/_components/services/web-developement/Services/WebServices'
 import TechnologiesBook from '@/app/_components/services/common/TechnologiesBook/TechnologiesBook'
 import WebHireUs from '../../_components/services/web-developement/HireUs/WebHireUs'
 import WebFAQ from '../../_components/services/web-developement/FAQ/WebFAQ'
@@ -14,6 +15,7 @@ const page = () => {
       <WebWhyChoose />
       <CommonKeyFeatures serviceKey="web-development" />
       <CommonStruggling serviceKey="web-development" />
+      <WebServices />
       <TechnologiesBook serviceKey="web-development" bgColor="#FFFFFF" />
       <WebHireUs />
       <WebFAQ />
