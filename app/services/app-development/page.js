@@ -10,6 +10,8 @@ import OurProces from "../../_components/services/app-developement/OurProces/Our
 import CommonWhyChoose from "@/app/_components/services/common/WhyChoose/CommonWhyChoose";
 import CommonKeyFeatures from "@/app/_components/services/common/KeyFeatures/CommonKeyFeatures";
 import CommonStruggling from "@/app/_components/services/common/Struggling/CommonStruggling";
+import CommonServices from "@/app/_components/services/common/Services/CommonServices";
+import CommonHireUs from "@/app/_components/services/common/HireUs/CommonHireUs";
 import AppHireUs from "../../_components/services/app-developement/HireUs/AppHireUs";
 import AppFAQ from "../../_components/services/app-developement/FAQ/AppFAQ";
 
@@ -20,15 +22,17 @@ const page = () => {
       <CommonWhyChoose serviceKey="app-development" />
       <CommonKeyFeatures serviceKey="app-development" />
       <CommonStruggling serviceKey="app-development" />
+      <CommonServices serviceKey="app-development" />
       {/* <TransformingIdeas /> */}
       {/* <MobileAppService /> */}
       {/* <AppImages /> */}
-         <AppIndustries />
-      <TechnologiesBook serviceKey="app-development" />
+      {/* <AppIndustries /> */}
+      <TechnologiesBook serviceKey="app-development" bgColor="#FFFFFF" />
       {/* <ExpertiseAcrossPlatform /> */}
    
       {/* <OurProces /> */}
-      <AppHireUs />
+      <CommonHireUs serviceKey="app-development" />
+      {/* <AppHireUs /> */}
       <AppFAQ />
     </div>
   );

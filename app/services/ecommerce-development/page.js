@@ -9,6 +9,8 @@ import TechnologiesBook from '@/app/_components/services/common/TechnologiesBook
 import CommonWhyChoose from '@/app/_components/services/common/WhyChoose/CommonWhyChoose';
 import CommonKeyFeatures from '@/app/_components/services/common/KeyFeatures/CommonKeyFeatures';
 import CommonStruggling from '@/app/_components/services/common/Struggling/CommonStruggling';
+import CommonServices from '@/app/_components/services/common/Services/CommonServices';
+import CommonHireUs from '@/app/_components/services/common/HireUs/CommonHireUs';
 import HireUs from '@/app/_components/services/eCommerce-developement/HireUs/HireUs';
 import EcommerceFAQ from '@/app/_components/services/eCommerce-developement/FAQ/EcommerceFAQ';
 import { generateCmsMetadata } from '@/lib/cms-fetch';
@@ -29,13 +31,15 @@ export default function EcommerceDevelopmentPage() {
       <CommonWhyChoose serviceKey="ecommerce-development" />
       <CommonKeyFeatures serviceKey="ecommerce-development" />
       <CommonStruggling serviceKey="ecommerce-development" />
-      <Framework />
-      <ECommerceServices />
-      <B2B />
-      <B2C />
-      <SliderIcon />
-      <TechnologiesBook serviceKey="ecommerce-development" />
-      <HireUs />
+      <CommonServices serviceKey="ecommerce-development" />
+      {/* <Framework /> */}
+      {/* <ECommerceServices /> */}
+      {/* <B2B /> */}
+      {/* <B2C /> */}
+      {/* <SliderIcon /> */}
+      <TechnologiesBook serviceKey="ecommerce-development" bgColor="#FFFFFF" />
+      <CommonHireUs serviceKey="ecommerce-development" />
+      {/* <HireUs /> */}
       <EcommerceFAQ />
     </div>
   );

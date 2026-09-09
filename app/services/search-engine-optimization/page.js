@@ -6,6 +6,8 @@ import TechnologiesBook from '@/app/_components/services/common/TechnologiesBook
 import CommonWhyChoose from '@/app/_components/services/common/WhyChoose/CommonWhyChoose';
 import CommonKeyFeatures from '@/app/_components/services/common/KeyFeatures/CommonKeyFeatures';
 import CommonStruggling from '@/app/_components/services/common/Struggling/CommonStruggling';
+import CommonServices from '@/app/_components/services/common/Services/CommonServices';
+import CommonHireUs from '@/app/_components/services/common/HireUs/CommonHireUs';
 import SEOAbout from '../../_components/services/search-engine-optimization/About/SEOAbout';
 import Newsletter from '../../_components/Home/Newsletter/Newsletter';
 import SEOFAQ from '../../_components/services/search-engine-optimization/FAQ/SEOFAQ';
@@ -27,11 +29,13 @@ const Page = () => {
       <CommonWhyChoose serviceKey="search-engine-optimization" />
       <CommonKeyFeatures serviceKey="search-engine-optimization" />
       <CommonStruggling serviceKey="search-engine-optimization" />
-      <SEOFramework />
-      <SEOServices />
-      <TechnologiesBook serviceKey="search-engine-optimization" />
-      <SEOAbout />
-      <Newsletter />
+      <CommonServices serviceKey="search-engine-optimization" />
+      {/* <SEOFramework /> */}
+      {/* <SEOServices /> */}
+      <TechnologiesBook serviceKey="search-engine-optimization" bgColor="#FFFFFF" />
+      {/* <SEOAbout /> */}
+      <CommonHireUs serviceKey="search-engine-optimization" />
+      {/* <Newsletter /> */}
       <SEOFAQ />
     </div>
   );

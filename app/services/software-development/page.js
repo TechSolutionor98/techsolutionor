@@ -6,6 +6,8 @@ import TechnologiesBook from '@/app/_components/services/common/TechnologiesBook
 import CommonWhyChoose from '@/app/_components/services/common/WhyChoose/CommonWhyChoose';
 import CommonKeyFeatures from '@/app/_components/services/common/KeyFeatures/CommonKeyFeatures';
 import CommonStruggling from '@/app/_components/services/common/Struggling/CommonStruggling';
+import CommonServices from '@/app/_components/services/common/Services/CommonServices';
+import CommonHireUs from '@/app/_components/services/common/HireUs/CommonHireUs';
 import HireUs from '@/app/_components/services/eCommerce-developement/HireUs/HireUs';
 import SoftwareFAQ from '@/app/_components/services/software-developement/FAQ/SoftwareFAQ';
 import { generateCmsMetadata } from '@/lib/cms-fetch';
@@ -26,13 +28,15 @@ export default function SoftwareDevelopmentPage() {
       <CommonWhyChoose serviceKey="software-development" />
       <CommonKeyFeatures serviceKey="software-development" />
       <CommonStruggling serviceKey="software-development" />
-      <WhoWeAre />
-      <SoftwareServices />
-      <TechnologiesBook serviceKey="software-development" />
-      <HireUs
+      <CommonServices serviceKey="software-development" />
+      {/* <WhoWeAre /> */}
+      {/* <SoftwareServices /> */}
+      <TechnologiesBook serviceKey="software-development" bgColor="#FFFFFF" />
+      <CommonHireUs serviceKey="software-development" />
+      {/* <HireUs
         line1="Ready to scale your digital presence in Dubai and across the UAE?"
         line2="Choose a trusted team for custom software and ongoing support."
-      />
+      /> */}
       <SoftwareFAQ />
     </div>
   );

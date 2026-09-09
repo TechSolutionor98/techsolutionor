@@ -8,6 +8,9 @@ import AboutGraphics from '../../_components/services/Graphics/AboutGraphics/Abo
 import CommonWhyChoose from '@/app/_components/services/common/WhyChoose/CommonWhyChoose';
 import CommonKeyFeatures from '@/app/_components/services/common/KeyFeatures/CommonKeyFeatures';
 import CommonStruggling from '@/app/_components/services/common/Struggling/CommonStruggling';
+import CommonServices from '@/app/_components/services/common/Services/CommonServices';
+import CommonHireUs from '@/app/_components/services/common/HireUs/CommonHireUs';
+import CommonFAQ from '@/app/_components/services/common/FAQ/CommonFAQ';
 import WorkTogether from '../../_components/services/Graphics/Worktogether/worktogether';
 import { generateCmsMetadata } from '@/lib/cms-fetch';
 
@@ -27,12 +30,15 @@ const Page = () => {
       <CommonWhyChoose serviceKey="graphic-design" />
       <CommonKeyFeatures serviceKey="graphic-design" />
       <CommonStruggling serviceKey="graphic-design" />
-      <GraphicAbout />
-      <BusinessGrowth />
-      <DesignServices />
-      <TechnologiesBook serviceKey="graphic-design" />
-      <AboutGraphics />
-      <WorkTogether />
+      <CommonServices serviceKey="graphic-design" />
+      {/* <GraphicAbout /> */}
+      {/* <BusinessGrowth /> */}
+      {/* <DesignServices /> */}
+      <TechnologiesBook serviceKey="graphic-design" bgColor="#FFFFFF" />
+      {/* <AboutGraphics /> */}
+      <CommonHireUs serviceKey="graphic-design" />
+      {/* <WorkTogether /> */}
+      <CommonFAQ serviceKey="graphic-design" />
     </div>
   );
 };

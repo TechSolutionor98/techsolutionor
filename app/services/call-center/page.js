@@ -6,6 +6,8 @@ import TechnologiesBook from '@/app/_components/services/common/TechnologiesBook
 import CommonWhyChoose from '@/app/_components/services/common/WhyChoose/CommonWhyChoose'
 import CommonKeyFeatures from '@/app/_components/services/common/KeyFeatures/CommonKeyFeatures'
 import CommonStruggling from '@/app/_components/services/common/Struggling/CommonStruggling'
+import CommonServices from '@/app/_components/services/common/Services/CommonServices'
+import CommonHireUs from '@/app/_components/services/common/HireUs/CommonHireUs'
 import Newsletter from '../../_components/Home/Newsletter/Newsletter'
 import CallCenterFAQ from '../../_components/services/call-center/FAQ/CallCenterFAQ'
 
@@ -16,10 +18,12 @@ function page() {
       <CommonWhyChoose serviceKey="call-center" />
       <CommonKeyFeatures serviceKey="call-center" />
       <CommonStruggling serviceKey="call-center" />
-      <CallCenterOfferings />
-      <CallCenterConsulting />
-      <TechnologiesBook serviceKey="call-center" />
-      <Newsletter />
+      <CommonServices serviceKey="call-center" />
+      {/* <CallCenterOfferings /> */}
+      {/* <CallCenterConsulting /> */}
+      <TechnologiesBook serviceKey="call-center" bgColor="#FFFFFF" />
+      <CommonHireUs serviceKey="call-center" />
+      {/* <Newsletter /> */}
       <CallCenterFAQ />
     </div>
   )

@@ -6,8 +6,11 @@ import TechnologiesBook from '@/app/_components/services/common/TechnologiesBook
 import CommonWhyChoose from '@/app/_components/services/common/WhyChoose/CommonWhyChoose'
 import CommonKeyFeatures from '@/app/_components/services/common/KeyFeatures/CommonKeyFeatures'
 import CommonStruggling from '@/app/_components/services/common/Struggling/CommonStruggling'
+import CommonServices from '@/app/_components/services/common/Services/CommonServices'
+import CommonHireUs from '@/app/_components/services/common/HireUs/CommonHireUs'
 import Newsletter from '../../_components/Home/Newsletter/Newsletter'
 import FAQ from '../../_components/services/digital-marketing/FAQ/FAQ'
+
 const page = () => {
   return (
     <div>
@@ -15,10 +18,12 @@ const page = () => {
       <CommonWhyChoose serviceKey="digital-marketing" />
       <CommonKeyFeatures serviceKey="digital-marketing" />
       <CommonStruggling serviceKey="digital-marketing" />
-      <FrameWork />
-      <ServicesDM />
-      <TechnologiesBook serviceKey="digital-marketing" />
-      <Newsletter />
+      <CommonServices serviceKey="digital-marketing" />
+      {/* <FrameWork /> */}
+      {/* <ServicesDM /> */}
+      <TechnologiesBook serviceKey="digital-marketing" bgColor="#FFFFFF" />
+      <CommonHireUs serviceKey="digital-marketing" />
+      {/* <Newsletter /> */}
       <FAQ />
     </div>
   )
