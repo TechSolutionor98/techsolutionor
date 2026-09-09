@@ -7,6 +7,7 @@ import TechnologiesBook from '@/app/_components/services/common/TechnologiesBook
 import AboutGraphics from '../../_components/services/Graphics/AboutGraphics/AboutGraphics';
 import CommonWhyChoose from '@/app/_components/services/common/WhyChoose/CommonWhyChoose';
 import CommonKeyFeatures from '@/app/_components/services/common/KeyFeatures/CommonKeyFeatures';
+import CommonStruggling from '@/app/_components/services/common/Struggling/CommonStruggling';
 import WorkTogether from '../../_components/services/Graphics/Worktogether/worktogether';
 import { generateCmsMetadata } from '@/lib/cms-fetch';
 
@@ -25,6 +26,7 @@ const Page = () => {
       <GraphicBanner />
       <CommonWhyChoose serviceKey="graphic-design" />
       <CommonKeyFeatures serviceKey="graphic-design" />
+      <CommonStruggling serviceKey="graphic-design" />
       <GraphicAbout />
       <BusinessGrowth />
       <DesignServices />

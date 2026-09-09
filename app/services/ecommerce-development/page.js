@@ -8,6 +8,7 @@ import SliderIcon from '@/app/_components/services/eCommerce-developement/Slider
 import TechnologiesBook from '@/app/_components/services/common/TechnologiesBook/TechnologiesBook';
 import CommonWhyChoose from '@/app/_components/services/common/WhyChoose/CommonWhyChoose';
 import CommonKeyFeatures from '@/app/_components/services/common/KeyFeatures/CommonKeyFeatures';
+import CommonStruggling from '@/app/_components/services/common/Struggling/CommonStruggling';
 import HireUs from '@/app/_components/services/eCommerce-developement/HireUs/HireUs';
 import EcommerceFAQ from '@/app/_components/services/eCommerce-developement/FAQ/EcommerceFAQ';
 import { generateCmsMetadata } from '@/lib/cms-fetch';
@@ -27,6 +28,7 @@ export default function EcommerceDevelopmentPage() {
       <Banner />
       <CommonWhyChoose serviceKey="ecommerce-development" />
       <CommonKeyFeatures serviceKey="ecommerce-development" />
+      <CommonStruggling serviceKey="ecommerce-development" />
       <Framework />
       <ECommerceServices />
       <B2B />

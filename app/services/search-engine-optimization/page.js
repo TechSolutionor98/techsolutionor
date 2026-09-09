@@ -5,6 +5,7 @@ import SEOServices from '../../_components/services/search-engine-optimization/S
 import TechnologiesBook from '@/app/_components/services/common/TechnologiesBook/TechnologiesBook';
 import CommonWhyChoose from '@/app/_components/services/common/WhyChoose/CommonWhyChoose';
 import CommonKeyFeatures from '@/app/_components/services/common/KeyFeatures/CommonKeyFeatures';
+import CommonStruggling from '@/app/_components/services/common/Struggling/CommonStruggling';
 import SEOAbout from '../../_components/services/search-engine-optimization/About/SEOAbout';
 import Newsletter from '../../_components/Home/Newsletter/Newsletter';
 import SEOFAQ from '../../_components/services/search-engine-optimization/FAQ/SEOFAQ';
@@ -25,6 +26,7 @@ const Page = () => {
       <SEOBanner />
       <CommonWhyChoose serviceKey="search-engine-optimization" />
       <CommonKeyFeatures serviceKey="search-engine-optimization" />
+      <CommonStruggling serviceKey="search-engine-optimization" />
       <SEOFramework />
       <SEOServices />
       <TechnologiesBook serviceKey="search-engine-optimization" />

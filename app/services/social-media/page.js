@@ -4,6 +4,7 @@ import SocialMediaGrowth from '../../_components/services/SocialMedia/SocialMedi
 import TechnologiesBook from '@/app/_components/services/common/TechnologiesBook/TechnologiesBook'
 import CommonWhyChoose from '@/app/_components/services/common/WhyChoose/CommonWhyChoose'
 import CommonKeyFeatures from '@/app/_components/services/common/KeyFeatures/CommonKeyFeatures'
+import CommonStruggling from '@/app/_components/services/common/Struggling/CommonStruggling'
 import CardsSection from '../../_components/services/SocialMedia/CardsSection/CardsSection'
 const page = () => {
   return (
@@ -11,6 +12,7 @@ const page = () => {
       <SocialMediaBanner />
       <CommonWhyChoose serviceKey="social-media" />
       <CommonKeyFeatures serviceKey="social-media" />
+      <CommonStruggling serviceKey="social-media" />
       <SocialMediaGrowth />
       <TechnologiesBook serviceKey="social-media" />
       <CardsSection />

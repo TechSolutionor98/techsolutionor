@@ -5,6 +5,7 @@ import PPCServices from '../../_components/services/ppc-amazon-ads/PPCServices/P
 import TechnologiesBook from '@/app/_components/services/common/TechnologiesBook/TechnologiesBook'
 import CommonWhyChoose from '@/app/_components/services/common/WhyChoose/CommonWhyChoose'
 import CommonKeyFeatures from '@/app/_components/services/common/KeyFeatures/CommonKeyFeatures'
+import CommonStruggling from '@/app/_components/services/common/Struggling/CommonStruggling'
 import Newsletter from '../../_components/Home/Newsletter/Newsletter'
 import FAQ from '../../_components/services/ppc-amazon-ads/FAQ/FAQ' 
 const page = () => {
@@ -13,6 +14,7 @@ const page = () => {
       <Banner/>
       <CommonWhyChoose serviceKey="ppc-amazon-ads" />
       <CommonKeyFeatures serviceKey="ppc-amazon-ads" />
+      <CommonStruggling serviceKey="ppc-amazon-ads" />
       <PPCFramework/>
       <PPCServices/> 
       <TechnologiesBook serviceKey="ppc-amazon-ads" />

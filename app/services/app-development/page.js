@@ -8,6 +8,7 @@ import ExpertiseAcrossPlatform from "../../_components/services/app-developement
 import OurProces from "../../_components/services/app-developement/OurProces/OurProces";
 import CommonWhyChoose from "@/app/_components/services/common/WhyChoose/CommonWhyChoose";
 import CommonKeyFeatures from "@/app/_components/services/common/KeyFeatures/CommonKeyFeatures";
+import CommonStruggling from "@/app/_components/services/common/Struggling/CommonStruggling";
 import AppHireUs from "../../_components/services/app-developement/HireUs/AppHireUs";
 import AppFAQ from "../../_components/services/app-developement/FAQ/AppFAQ";
 
@@ -17,6 +18,7 @@ const page = () => {
       <AppDevBanner />
       <CommonWhyChoose serviceKey="app-development" />
       <CommonKeyFeatures serviceKey="app-development" />
+      <CommonStruggling serviceKey="app-development" />
       <TransformingIdeas />
       <MobileAppService />
       <AppImages />

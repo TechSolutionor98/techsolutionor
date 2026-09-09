@@ -5,6 +5,7 @@ import ServicesDM from '../../_components/services/digital-marketing/Servicesdm/
 import TechnologiesBook from '@/app/_components/services/common/TechnologiesBook/TechnologiesBook'
 import CommonWhyChoose from '@/app/_components/services/common/WhyChoose/CommonWhyChoose'
 import CommonKeyFeatures from '@/app/_components/services/common/KeyFeatures/CommonKeyFeatures'
+import CommonStruggling from '@/app/_components/services/common/Struggling/CommonStruggling'
 import Newsletter from '../../_components/Home/Newsletter/Newsletter'
 import FAQ from '../../_components/services/digital-marketing/FAQ/FAQ'
 const page = () => {
@@ -13,6 +14,7 @@ const page = () => {
       <DigitalMarketingBanner />
       <CommonWhyChoose serviceKey="digital-marketing" />
       <CommonKeyFeatures serviceKey="digital-marketing" />
+      <CommonStruggling serviceKey="digital-marketing" />
       <FrameWork />
       <ServicesDM />
       <TechnologiesBook serviceKey="digital-marketing" />
