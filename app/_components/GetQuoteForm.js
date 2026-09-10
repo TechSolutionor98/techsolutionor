@@ -2,11 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Image from 'next/image';
 import { FaTimes, FaChevronDown, FaCheckCircle, FaSpinner, FaChevronLeft, FaChevronRight, FaArrowRight, FaArrowLeft, FaPaperPlane, FaEnvelopeOpenText, FaEdit } from 'react-icons/fa';
 import { useQuote } from '../_context/QuoteContext';
-import formBg from '@/components/Images/formbg.png';
-import ballFrom from '@/components/Images/ballfrom.png';
 
 const COUNTRY_DIAL_CODES = [
     { name: "United Arab Emirates", code: "+971", minDigits: 9, maxDigits: 9, sample: "50 123 4567" },
@@ -420,35 +417,13 @@ const GetQuoteForm = () => {
 
                     {/* Modal Form Container */}
                     <motion.div
-                        className="relative w-full max-w-[460px] max-h-[94vh] bg-[#171717] rounded-[24px] overflow-hidden shadow-[0_25px_70px_rgba(0,0,0,0.9)] border-2 border-white my-auto z-10"
+                        className="relative w-full max-w-[460px] max-h-[94vh] bg-[#181A18] rounded-[24px] overflow-hidden shadow-[0_25px_70px_rgba(0,0,0,0.9)] border-2 border-white my-auto z-10"
                         variants={modalVariants}
                         initial="hidden"
                         animate="visible"
                         exit="exit"
                         transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                     >
-                        {/* Background Graphic Asset */}
-                        <div className="absolute inset-0 z-0 pointer-events-none opacity-40">
-                            <Image
-                                src={formBg}
-                                alt="Form Background"
-                                fill
-                                className="object-cover object-right"
-                                priority
-                            />
-                        </div>
-
-                        {/* Geometric Accent */}
-                        <div className="absolute top-6 right-16 z-0 pointer-events-none select-none opacity-80 hidden sm:block">
-                            <Image
-                                src={ballFrom}
-                                alt="Decoration"
-                                width={80}
-                                height={80}
-                                className="w-[60px] h-auto object-contain"
-                            />
-                        </div>
-
                         {/* Close Button */}
                         <button
                             onClick={() => {
