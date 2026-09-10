@@ -31,24 +31,24 @@ export const defaultProjects = {
 };
 
 const icons = [
-  { Image: Grab },
-  { Image: Protein },
-  { Image: Clickpos },
-  { Image: Almatoh },
-  { Image: Traders },
-  { Image: Super },
-  { Image: Craters },
-  { Image: Amer },
-  { Image: Gentsslone },
-  { Image: Exports },
-  { Image: Albasit },
-  { Image: Crown },
-  { Image: Clickslice },
-  { Image: Muzammil },
-  { Image: Appliances },
-  { Image: Smart },
-  { Image: Mubayya },
-  { Image: Aljannah },
+  { Image: Grab, name: "Grabatoz", category: "E-Commerce & Tech Retail" },
+  { Image: Protein, name: "Baytal Protein", category: "Sports Nutrition & Health" },
+  { Image: Clickpos, name: "Clix POS", category: "Cloud Point of Sale Software" },
+  { Image: Almatoh, name: "Al Matoh", category: "Wholesale & Trading" },
+  { Image: Traders, name: "Osum Enterprises", category: "Industrial & Spare Parts" },
+  { Image: Super, name: "Super Tech", category: "Retail & Electronics" },
+  { Image: Craters, name: "SERP Crafters", category: "SEO & Growth Agency" },
+  { Image: Amer, name: "Amer Center", category: "Government Services" },
+  { Image: Gentsslone, name: "Gents Saloon", category: "Salon & Grooming" },
+  { Image: Exports, name: "Global Exports", category: "Import & Export Trading" },
+  { Image: Albasit, name: "Al Basit Group", category: "Real Estate & Construction" },
+  { Image: Crown, name: "Crown Excel", category: "IT Hardware & Wholesale" },
+  { Image: Clickslice, name: "ClickSlice", category: "SEO & Digital Agency" },
+  { Image: Muzammil, name: "Muzammil Center", category: "Corporate & Business Services" },
+  { Image: Appliances, name: "Just Appliances", category: "Home Appliance Repair" },
+  { Image: Smart, name: "Smart Max IT", category: "Enterprise IT Infrastructure" },
+  { Image: Mubayya, name: "Mubayaa Real Estate", category: "Property Registration Trustee" },
+  { Image: Aljannah, name: "Rawdat Al Jannah", category: "Retail & Consumer Goods" },
 ];
 
 const Projects = ({ cmsContent }) => {
@@ -110,7 +110,7 @@ const Projects = ({ cmsContent }) => {
             <span>PROVEN IMPACT & CLIENT SUCCESS</span>
           </div>
 
-          <h2 
+          <h2
             className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight leading-tight"
             style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
           >
@@ -124,12 +124,12 @@ const Projects = ({ cmsContent }) => {
       </div>
 
       {/* Dual-Row Smooth Infinite Auto-Moving Marquee Track */}
-      <div className="relative w-full space-y-6 py-4 overflow-hidden">
+      <div className="relative w-full space-y-6 sm:space-y-8 py-4 overflow-hidden">
 
         {/* MARQUEE ROW 1: Forward Motion (Left) */}
         <div className="relative w-full overflow-hidden">
           <div
-            className="flex gap-5 sm:gap-7 w-max marquee-track-1 will-change-transform"
+            className="flex gap-6 sm:gap-8 w-max marquee-track-1 will-change-transform"
             style={{ animationPlayState: row1Paused ? 'paused' : 'running' }}
           >
             {marqueeRow1.map((icon, idx) => {
@@ -139,24 +139,43 @@ const Projects = ({ cmsContent }) => {
                   key={`r1-${idx}`}
                   onMouseEnter={() => setRow1Paused(true)}
                   onMouseLeave={() => setRow1Paused(false)}
-                  className="logo-card w-56 h-28 sm:w-64 sm:h-32 shrink-0 bg-white border border-gray-100/90 rounded-2xl p-3 sm:p-4 flex items-center justify-center shadow-[0_10px_30px_rgba(0,0,0,0.35)] hover:border-[#41B349]/70 hover:scale-105 transition-all duration-300 cursor-pointer overflow-hidden select-none"
+                  className="logo-card group w-60 sm:w-68 md:w-72 h-[224px] sm:h-[248px] shrink-0 bg-white border border-gray-100/90 rounded-2xl flex flex-col justify-between shadow-[0_10px_30px_rgba(0,0,0,0.35)] hover:border-[#41B349]/70 hover:shadow-[0_14px_30px_rgba(65,179,73,0.18)] hover:scale-[1.015] transition-all duration-300 cursor-pointer overflow-hidden select-none"
                 >
-                  <div className="relative w-full h-full flex items-center justify-center">
-                    {isImgDynamic ? (
-                      <img
-                        src={icon.imageUrl}
-                        alt={`Client Logo ${idx + 1}`}
-                        className="w-full h-full object-contain"
-                      />
-                    ) : (
-                      <Image
-                        src={icon.Image}
-                        alt={`Client Logo ${idx + 1}`}
-                        fill
-                        sizes="(max-width: 640px) 224px, 256px"
-                        className="object-contain"
-                      />
-                    )}
+                  {/* Top: Project / Company Logo */}
+                  <div className="relative w-full h-[145px] sm:h-[162px] p-4 sm:p-5 flex items-center justify-center bg-white">
+                    <div className="relative w-full h-full flex items-center justify-center transition-transform duration-300 group-hover:scale-[1.01]">
+                      {isImgDynamic ? (
+                        <img
+                          src={icon.imageUrl}
+                          alt={icon.name}
+                          className="w-full h-full object-contain filter drop-shadow-xs"
+                        />
+                      ) : (
+                        <Image
+                          src={icon.Image}
+                          alt={icon.name}
+                          fill
+                          sizes="(max-width: 640px) 240px, 288px"
+                          className="object-contain filter drop-shadow-xs"
+                        />
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Subtle Divider Line */}
+                  <div className="w-full h-[1px] bg-gray-100 group-hover:bg-[#41B349]/25 transition-colors" />
+
+                  {/* Bottom: Project / Company Name & Category */}
+                  <div className="w-full py-3 sm:py-3.5 px-4 bg-gray-50/90 group-hover:bg-[#41B349]/5 transition-colors flex flex-col items-center justify-center text-center">
+                    <h3
+                      className="text-[#0D0F12] font-bold text-sm sm:text-base tracking-tight group-hover:text-[#41B349] transition-colors truncate w-full"
+                      style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+                    >
+                      {icon.name}
+                    </h3>
+                    <span className="text-[11px] sm:text-xs text-gray-500 font-medium truncate w-full mt-0.5">
+                      {icon.category}
+                    </span>
                   </div>
                 </div>
               );
@@ -167,7 +186,7 @@ const Projects = ({ cmsContent }) => {
         {/* MARQUEE ROW 2: Reverse Motion (Right) */}
         <div className="relative w-full overflow-hidden">
           <div
-            className="flex gap-5 sm:gap-7 w-max marquee-track-2 will-change-transform"
+            className="flex gap-6 sm:gap-8 w-max marquee-track-2 will-change-transform"
             style={{ animationPlayState: row2Paused ? 'paused' : 'running' }}
           >
             {marqueeRow2.map((icon, idx) => {
@@ -177,24 +196,43 @@ const Projects = ({ cmsContent }) => {
                   key={`r2-${idx}`}
                   onMouseEnter={() => setRow2Paused(true)}
                   onMouseLeave={() => setRow2Paused(false)}
-                  className="logo-card w-56 h-28 sm:w-64 sm:h-32 shrink-0 bg-white border border-gray-100/90 rounded-2xl p-3 sm:p-4 flex items-center justify-center shadow-[0_10px_30px_rgba(0,0,0,0.35)] hover:border-[#41B349]/70 hover:scale-105 transition-all duration-300 cursor-pointer overflow-hidden select-none"
+                  className="logo-card group w-60 sm:w-68 md:w-72 h-[224px] sm:h-[248px] shrink-0 bg-white border border-gray-100/90 rounded-2xl flex flex-col justify-between shadow-[0_10px_30px_rgba(0,0,0,0.35)] hover:border-[#41B349]/70 hover:shadow-[0_14px_30px_rgba(65,179,73,0.18)] hover:scale-[1.015] transition-all duration-300 cursor-pointer overflow-hidden select-none"
                 >
-                  <div className="relative w-full h-full flex items-center justify-center">
-                    {isImgDynamic ? (
-                      <img
-                        src={icon.imageUrl}
-                        alt={`Client Logo ${idx + 1}`}
-                        className="w-full h-full object-contain"
-                      />
-                    ) : (
-                      <Image
-                        src={icon.Image}
-                        alt={`Client Logo ${idx + 1}`}
-                        fill
-                        sizes="(max-width: 640px) 224px, 256px"
-                        className="object-contain"
-                      />
-                    )}
+                  {/* Top: Project / Company Logo */}
+                  <div className="relative w-full h-[145px] sm:h-[162px] p-4 sm:p-5 flex items-center justify-center bg-white">
+                    <div className="relative w-full h-full flex items-center justify-center transition-transform duration-300 group-hover:scale-[1.01]">
+                      {isImgDynamic ? (
+                        <img
+                          src={icon.imageUrl}
+                          alt={icon.name}
+                          className="w-full h-full object-contain filter drop-shadow-xs"
+                        />
+                      ) : (
+                        <Image
+                          src={icon.Image}
+                          alt={icon.name}
+                          fill
+                          sizes="(max-width: 640px) 240px, 288px"
+                          className="object-contain filter drop-shadow-xs"
+                        />
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Subtle Divider Line */}
+                  <div className="w-full h-[1px] bg-gray-100 group-hover:bg-[#41B349]/25 transition-colors" />
+
+                  {/* Bottom: Project / Company Name & Category */}
+                  <div className="w-full py-3 sm:py-3.5 px-4 bg-gray-50/90 group-hover:bg-[#41B349]/5 transition-colors flex flex-col items-center justify-center text-center">
+                    <h3
+                      className="text-[#0D0F12] font-bold text-sm sm:text-base tracking-tight group-hover:text-[#41B349] transition-colors truncate w-full"
+                      style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+                    >
+                      {icon.name}
+                    </h3>
+                    <span className="text-[11px] sm:text-xs text-gray-500 font-medium truncate w-full mt-0.5">
+                      {icon.category}
+                    </span>
                   </div>
                 </div>
               );
