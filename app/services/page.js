@@ -1,6 +1,6 @@
 import React from 'react';
-import ServicesPageHero from '../_components/ServicesPage/ServicesPageHero';
-import OurServicesGrid from '../_components/ServicesPage/OurServicesGrid';
+import ServicesHero from '../_components/ServicesPage/ServicesHero';
+import ServicesOverview from '../_components/ServicesPage/ServicesOverview';
 import WhatMakesUsStandOut from '../_components/ServicesPage/WhatMakesUsStandOut';
 import ProcessSteps from '../_components/ServicesPage/ProcessSteps';
 import WhyExpertiseCommitment from '../_components/ServicesPage/WhyExpertiseCommitment';
@@ -19,9 +19,9 @@ export async function generateMetadata() {
 
 const ServicesPage = () => {
     return (
-        <div className="overflow-x-hidden">
-            <ServicesPageHero />
-            <OurServicesGrid />
+        <div className="overflow-x-hidden bg-[#FFFFFF]">
+            <ServicesHero />
+            <ServicesOverview />
             <WhatMakesUsStandOut />
             <ProcessSteps />
             <WhyExpertiseCommitment />
@@ -32,3 +32,4 @@ const ServicesPage = () => {
 };
 
 export default ServicesPage;
+
