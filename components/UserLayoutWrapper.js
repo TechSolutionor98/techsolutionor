@@ -9,6 +9,7 @@ import Footer from '@/src/Components/Footer/Footer';
 import { QuoteProvider } from '@/app/_context/QuoteContext';
 import { LanguageProvider } from '@/app/_context/LanguageContext';
 import GetQuoteForm from '@/app/_components/GetQuoteForm';
+import GetInTouch from '@/app/_components/Home/GetInTouch/GetInTouch';
 
 export default function UserLayoutWrapper({ children }) {
   const pathname = usePathname();
@@ -22,6 +23,7 @@ export default function UserLayoutWrapper({ children }) {
         {!isAdmin && <ScrollToTopButton />}
         <main>{children}</main>
         {!isAdmin && <GetQuoteForm />}
+        {!isAdmin && <GetInTouch />}
         {!isAdmin && <Footer />}
       </QuoteProvider>
     </LanguageProvider>

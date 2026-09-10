@@ -9,7 +9,6 @@ import Technology from "../_components/Home/Technology/Technology";
 import Newsletter from "../_components/Home/Newsletter/Newsletter";
 import Testimonials from "../_components/Home/Testimonials/Testimonials";
 import ChallengeAccepted from "../_components/Home/ChallengeAccepted/ChallengeAccepted";
-import GetInTouch from "../_components/Home/GetInTouch/GetInTouch";
 
 export default function HomeClientPage({ cmsData, fallbackContent }) {
   const homeContent = fallbackContent || {};
@@ -25,7 +24,6 @@ export default function HomeClientPage({ cmsData, fallbackContent }) {
       <Newsletter content={homeContent.newsletter} cmsContent={cmsData?.content} />
       <Testimonials content={homeContent.testimonials} cmsContent={cmsData?.content} />
       <ChallengeAccepted content={homeContent.challengeAccepted} cmsContent={cmsData?.content} />
-      <GetInTouch content={homeContent.getInTouch} cmsContent={cmsData?.content} />
     </div>
   );
 }
