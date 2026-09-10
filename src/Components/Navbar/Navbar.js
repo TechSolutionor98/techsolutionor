@@ -166,9 +166,8 @@ const Navbar = () => {
 
     return (
         <>
-            {/* Desktop Navbar */}
-            <nav className='bg-[#181918] w-full h-[90px] flex items-center justify-between px-10 lg:px-20 lg:pl-40 py-10'
-                style={{ boxShadow: "0px 5px 15px 0px rgba(0, 0, 0, 0.4)" }}>
+            {/* Desktop & Mobile Top Navbar */}
+            <nav className='sticky top-0 z-50 bg-[#181918] w-full h-[90px] flex items-center justify-between px-10 lg:px-20 lg:pl-40 py-10'>
                 <div className="navbar-logo">
                     <Link href='/'><Image src={Logo} alt="Logo" width={200} height={56} className='w-[80px] h-[50px]' /></Link>
                 </div>
@@ -337,7 +336,7 @@ const Navbar = () => {
 
             {/* Mobile Navbar Overlay */}
             <div
-                className={`fixed inset-0 z-50 transition-all duration-300 ${
+                className={`fixed inset-0 z-[60] transition-all duration-300 ${
                     mobileOpen
                         ? 'translate-x-0 opacity-100 visible'
                         : '-translate-x-full opacity-0 invisible'
