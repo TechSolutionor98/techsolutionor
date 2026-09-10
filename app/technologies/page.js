@@ -21,7 +21,7 @@ const TechnologiesPage = () => {
         <div className="overflow-x-hidden">
             <TechnologiesHero />
             <AgencyOverview />
-            <TrendingTechServices />
+            {/* <TrendingTechServices /> */}
             <Newsletter />
             <TechFAQ />
             <ContactExperts />
