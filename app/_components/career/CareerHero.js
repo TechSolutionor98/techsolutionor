@@ -14,7 +14,7 @@ export default function CareerHero() {
   };
 
   return (
-    <section className="relative w-full bg-[#FFFFFF] text-[#0D0F12] overflow-hidden min-h-[560px] flex items-center py-14 md:py-20 select-none border-b border-gray-100">
+    <section className="relative w-full bg-[#FFFFFF] text-[#0D0F12] overflow-hidden min-h-[560px] flex items-center py-14 md:py-20 select-none">
       <div className="relative z-10 max-w-[1240px] mx-auto px-5 sm:px-8 md:px-10 flex flex-col lg:flex-row items-center justify-between w-full gap-12 lg:gap-14">
         {/* Left Content */}
         <div className="w-full lg:w-7/12 text-left">

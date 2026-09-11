@@ -572,8 +572,8 @@ export default function JobApplicationForm({ selectedPosition, onResetPosition }
             </button>
           </div>
         ) : (
-          /* Application Form Card */
-          <div className="bg-[#FFFFFF] border border-gray-200 rounded-3xl p-6 sm:p-10 md:p-12 shadow-xl">
+          /* Application Form - Direct Clean & Minimal Layout */
+          <div className="w-full max-w-[880px] mx-auto">
             {/* Form Alert Banner */}
             {formAlert && (
               <div 

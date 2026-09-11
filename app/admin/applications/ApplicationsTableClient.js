@@ -134,7 +134,7 @@ export default function ApplicationsTableClient({ initialData = [], apiBase = ''
       ? 'Are you sure you want to APPROVE this application? An automated congratulations & next steps email will be sent to the applicant.'
       : newStatus === 'Rejected'
       ? 'Are you sure you want to REJECT this application? An automated polite notification email will be sent to the applicant.'
-      : `Reset status to ${newStatus}?`;
+      : `Reset status to ${newStatus}? An automated update email will be sent to the applicant.`;
 
     if (!window.confirm(confirmText)) {
       return;
@@ -784,10 +784,10 @@ export default function ApplicationsTableClient({ initialData = [], apiBase = ''
                     <button
                       type="button"
                       disabled={actionLoading}
-                      onClick={() => handleStatusChange(viewRow.id || viewRow._id, 'Pending', '')}
+                      onClick={() => handleStatusChange(viewRow.id || viewRow._id, 'Pending', statusNote || '')}
                       className="text-gray-500 hover:text-gray-800 underline cursor-pointer"
                     >
-                      Revert status to Pending Review (no email sent)
+                      Revert status to Pending Review & Send Update Email
                     </button>
                   ) : <span />}
                   <button

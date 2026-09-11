@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/mongodb';
 import { logActivity } from '@/lib/activity-logger';
 import { uploadImage } from '@/lib/cloudinary';
+import { sendApplicationSubmissionConfirmation } from '@/lib/application-mailer';
 import fs from 'fs';
 import path from 'path';
 
@@ -212,6 +213,13 @@ export async function POST(request) {
     await db.collection('otps').deleteMany({ email });
 
     await logActivity(request, 'career_application_submitted', name, { email, position, id: entry.id });
+
+    // Send confirmation email to applicant
+    try {
+      await sendApplicationSubmissionConfirmation({ application: entry });
+    } catch (mailErr) {
+      console.error('Failed to dispatch submission confirmation email:', mailErr);
+    }
 
     return NextResponse.json({ ok: true, entry, message: 'Application submitted successfully!' }, { status: 201 });
   } catch (err) {

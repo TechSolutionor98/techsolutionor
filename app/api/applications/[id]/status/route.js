@@ -61,19 +61,17 @@ export async function PATCH(request, context) {
       id: updated._id.toString(),
     };
 
-    // Send email notification if Approved or Rejected
+    // Send email notification for status update (Approved, Rejected, Pending)
     let emailResult = null;
-    if (status === 'Approved' || status === 'Rejected') {
-      try {
-        emailResult = await sendApplicationStatusNotification({
-          application: formattedApp,
-          status,
-          note,
-        });
-      } catch (mailErr) {
-        console.error('Error dispatching application email notification:', mailErr);
-        emailResult = { success: false, error: mailErr?.message };
-      }
+    try {
+      emailResult = await sendApplicationStatusNotification({
+        application: formattedApp,
+        status,
+        note,
+      });
+    } catch (mailErr) {
+      console.error('Error dispatching application email notification:', mailErr);
+      emailResult = { success: false, error: mailErr?.message };
     }
 
     await logActivity(request, `career_application_${status.toLowerCase()}`, existing.name, {
