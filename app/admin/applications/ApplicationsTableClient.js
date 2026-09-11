@@ -17,7 +17,8 @@ import {
   Trash2, 
   Loader2,
   AlertCircle,
-  ExternalLink
+  ExternalLink,
+  ChevronDown
 } from 'lucide-react';
 
 function getCvViewUrl(app, index = 0, isDownload = false) {
@@ -131,6 +132,7 @@ export default function ApplicationsTableClient({ initialData = [], apiBase = ''
   const [viewRow, setViewRow] = useState(null);
   const [statusNote, setStatusNote] = useState('');
   const [actionLoading, setActionLoading] = useState(false);
+  const [updatingStatusId, setUpdatingStatusId] = useState(null);
   const [toastMessage, setToastMessage] = useState(null);
 
   useEffect(() => {
@@ -271,6 +273,67 @@ export default function ApplicationsTableClient({ initialData = [], apiBase = ''
       showToast(error.message || 'Failed to update application status.', 'error');
     } finally {
       setActionLoading(false);
+    }
+  }
+
+  async function handleTableStatusChange(app, newStatus) {
+    const appId = app.id || app._id;
+    if (!appId) return;
+    const currentStatus = app.status || 'Pending';
+    if (currentStatus.toLowerCase() === newStatus.toLowerCase()) return;
+
+    const candidateName = app.name || 'this candidate';
+    const confirmText = newStatus === 'Approved'
+      ? `Change status to "Approved" for ${candidateName}?\n\nAn automated approval & interview email will be sent to ${app.email || 'the applicant'}.`
+      : newStatus === 'Rejected'
+      ? `Change status to "Rejected" for ${candidateName}?\n\nAn automated notification email will be sent to ${app.email || 'the applicant'}.`
+      : `Reset status to "Pending" for ${candidateName}?\n\nAn automated update email will be sent to ${app.email || 'the applicant'}.`;
+
+    if (!window.confirm(confirmText)) {
+      return;
+    }
+
+    try {
+      setUpdatingStatusId(appId);
+      const res = await fetch(`/api/applications/${appId}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus, note: '' }),
+      });
+
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.error || 'Failed to update status');
+
+      setRows(prev => prev.map(item => {
+        const itemId = item.id || item._id;
+        if (itemId === appId) {
+          return {
+            ...item,
+            status: newStatus,
+            statusNote: '',
+            updatedAt: new Date().toISOString(),
+          };
+        }
+        return item;
+      }));
+
+      if (viewRow && (viewRow.id === appId || viewRow._id === appId)) {
+        setViewRow(prev => ({
+          ...prev,
+          status: newStatus,
+          statusNote: '',
+        }));
+      }
+
+      showToast(
+        `Status updated to ${newStatus}.${result.emailSent ? ' Candidate email notification sent successfully!' : ''}`,
+        'success'
+      );
+    } catch (error) {
+      console.error('Table status update failed:', error);
+      showToast(error.message || 'Failed to update application status.', 'error');
+    } finally {
+      setUpdatingStatusId(null);
     }
   }
 
@@ -474,8 +537,8 @@ export default function ApplicationsTableClient({ initialData = [], apiBase = ''
             <tr>
               <th className="px-4 py-2.5 text-left font-semibold min-w-[220px]">Candidate</th>
               <th className="px-4 py-2.5 text-left font-semibold min-w-[160px]">Position Applied</th>
-              <th className="px-4 py-2.5 text-left font-semibold max-w-[280px]">Cover Letter / Statement</th>
-              <th className="px-4 py-2.5 text-left font-semibold w-32">Status</th>
+              <th className="px-4 py-2.5 text-left font-semibold w-[200px] max-w-[200px]">Cover Letter / Statement</th>
+              <th className="px-4 py-2.5 text-left font-semibold w-[150px]">Status</th>
               <th className="px-4 py-2.5 text-left font-semibold w-36">Submitted At</th>
               <th className="px-4 py-2.5 text-right font-semibold w-24">Actions</th>
             </tr>
@@ -527,14 +590,61 @@ export default function ApplicationsTableClient({ initialData = [], apiBase = ''
                       </div>
                     </td>
 
-                    {/* 3. Cover Letter / Statement Preview */}
-                    <td className="px-4 py-2.5 align-middle text-gray-600 truncate max-w-[280px]" title={app.coverLetter || app.message}>
-                      {app.coverLetter || app.message || '—'}
+                    {/* 3. Cover Letter / Statement Preview (reduced width, clamped to 3 lines with ellipsis) */}
+                    <td className="px-4 py-2.5 align-middle w-[200px] max-w-[200px] whitespace-normal">
+                      <div 
+                        className="text-gray-600 text-[11px] leading-relaxed break-words line-clamp-3" 
+                        style={{
+                          display: '-webkit-box',
+                          WebkitLineClamp: 3,
+                          WebkitBoxOrient: 'vertical',
+                          overflow: 'hidden',
+                        }}
+                        title={app.coverLetter || app.message || ''}
+                      >
+                        {app.coverLetter || app.message || '—'}
+                      </div>
                     </td>
 
-                    {/* 4. Status Badge */}
-                    <td className="px-4 py-2.5 align-middle">
-                      {renderStatusBadge(app.status)}
+                    {/* 4. Status Dropdown (Manageable directly from the table) */}
+                    <td className="px-4 py-2.5 align-middle whitespace-nowrap">
+                      {(() => {
+                        const rawStatus = app.status || 'Pending';
+                        const isUpdating = updatingStatusId === appId;
+                        const stLower = rawStatus.toLowerCase();
+                        const currentSelectValue = stLower === 'approved' ? 'Approved' : stLower === 'rejected' ? 'Rejected' : 'Pending';
+
+                        return (
+                          <div className="relative inline-flex items-center">
+                            <select
+                              value={currentSelectValue}
+                              disabled={isUpdating}
+                              onChange={(e) => handleTableStatusChange(app, e.target.value)}
+                              className={`text-[11px] font-bold py-1 pl-2.5 pr-6 rounded-full border transition-all cursor-pointer outline-none appearance-none shadow-2xs ${
+                                stLower === 'approved'
+                                  ? 'bg-emerald-50 text-emerald-800 border-emerald-300 hover:bg-emerald-100/70 focus:ring-1 focus:ring-emerald-400'
+                                  : stLower === 'rejected'
+                                  ? 'bg-red-50 text-red-800 border-red-300 hover:bg-red-100/70 focus:ring-1 focus:ring-red-400'
+                                  : 'bg-amber-50 text-amber-800 border-amber-300 hover:bg-amber-100/70 focus:ring-1 focus:ring-amber-400'
+                              } ${isUpdating ? 'opacity-60 cursor-wait' : ''}`}
+                              title="Change application status"
+                            >
+                              <option value="Pending" className="bg-white text-gray-800 font-semibold">Pending Review</option>
+                              <option value="Approved" className="bg-white text-emerald-700 font-semibold">Approved</option>
+                              <option value="Rejected" className="bg-white text-red-700 font-semibold">Rejected</option>
+                            </select>
+                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                              {isUpdating ? (
+                                <Loader2 className="w-3 h-3 animate-spin text-gray-500" />
+                              ) : (
+                                <ChevronDown className={`w-3 h-3 ${
+                                  stLower === 'approved' ? 'text-emerald-600' : stLower === 'rejected' ? 'text-red-600' : 'text-amber-600'
+                                }`} />
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })()}
                     </td>
 
                     {/* 5. Submitted At */}
