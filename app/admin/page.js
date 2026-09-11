@@ -4,7 +4,7 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export default async function AdminDashboard() {
-  const { contactCount, pagesCount, mediaCount, websitesCount } = await getDashboardCounts();
+  const { contactCount, applicationsCount = 0, pagesCount, mediaCount, websitesCount } = await getDashboardCounts();
 
   return (
     <div className="space-y-6 overflow-x-hidden">
@@ -12,13 +12,21 @@ export default async function AdminDashboard() {
       <h1 className="text-[30px] font-bold">ADMIN DASHBOARD</h1>
       
       {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
         <div className="bg-white p-6 rounded-lg shadow border-l-4 border-green-500">
           <h3 className="text-lg font-semibold mb-2">Contact Submissions</h3>
           <p className="text-3xl font-bold text-green-600">
             {contactCount}
           </p>
           <p className="text-sm text-gray-600">Total contacts</p>
+        </div>
+
+        <div className="bg-white p-6 rounded-lg shadow border-l-4 border-emerald-600">
+          <h3 className="text-lg font-semibold mb-2">Career Applications</h3>
+          <p className="text-3xl font-bold text-emerald-600">
+            {applicationsCount}
+          </p>
+          <p className="text-sm text-gray-600">Job candidates</p>
         </div>
 
         <div className="bg-white p-6 rounded-lg shadow border-l-4 border-[#20507C]">
@@ -44,14 +52,19 @@ export default async function AdminDashboard() {
       <div className="bg-white p-6 rounded-lg shadow">
         <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <a href="/admin/applications" className="block p-4 bg-emerald-50 rounded-lg hover:bg-emerald-100 transition-colors border border-emerald-200">
+            <h3 className="font-semibold text-emerald-900">💼 Career Applications</h3>
+            <p className="text-sm text-emerald-700">Review & approve job applications</p>
+          </a>
+
           <a href="/admin/contact-submissions" className="block p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors border border-green-200">
             <h3 className="font-semibold text-green-900">📬 Contact Submissions</h3>
             <p className="text-sm text-green-700">View contact form submissions</p>
           </a>
 
-          <a href="/admin/pages" className="block p-4 bg-emerald-50 rounded-lg hover:bg-emerald-100 transition-colors border border-emerald-200">
-            <h3 className="font-semibold text-emerald-900">📄 Pages & Routes</h3>
-            <p className="text-sm text-emerald-700">Scan routes, manage pages, edit content</p>
+          <a href="/admin/pages" className="block p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors border border-blue-200">
+            <h3 className="font-semibold text-blue-900">📄 Pages & Routes</h3>
+            <p className="text-sm text-blue-700">Scan routes, manage pages, edit content</p>
           </a>
 
           <a href="/admin/seo" className="block p-4 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors border border-indigo-200">

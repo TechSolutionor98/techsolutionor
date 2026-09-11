@@ -42,13 +42,15 @@ function calculateSeoScore(seo) {
 export async function getDashboardCounts() {
   try {
     const db = await getDb();
-    const [contactCount, mediaCount, routesList] = await Promise.all([
+    const [contactCount, mediaCount, routesList, applicationsCount] = await Promise.all([
       db.collection('contact_submissions').countDocuments({}).then(c => c || db.collection('submissions').countDocuments({})),
       db.collection('cms_media').countDocuments({}).then(c => c || db.collection('media').countDocuments({})),
-      getRoutesList().catch(() => [])
+      getRoutesList().catch(() => []),
+      db.collection('applications').countDocuments({}).catch(() => 0),
     ]);
     return {
       contactCount,
+      applicationsCount: applicationsCount || 0,
       pagesCount: routesList.length,
       mediaCount,
       websitesCount: 1,

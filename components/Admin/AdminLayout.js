@@ -43,22 +43,28 @@ const ROLE_ALLOWED_ROUTES = {
   ],
   blog: [
     "/admin",
+    "/admin/applications",
     "/admin/blogs"
   ],
   seo: [
     "/admin",
+    "/admin/applications",
     "/admin/pages",
     "/admin/seo",
     "/admin/redirects"
   ],
   editor: [
     "/admin",
+    "/admin/applications",
+    "/admin/contact-submissions",
     "/admin/pages",
     "/admin/redirects",
     "/admin/media"
   ],
   viewer: [
     "/admin",
+    "/admin/applications",
+    "/admin/contact-submissions",
     "/admin/pages",
     "/admin/seo",
     "/admin/redirects"
@@ -99,7 +105,10 @@ export default function AdminLayout({ children, title = '' }) {
   const role = currentUser?.role || 'super_admin';
 
   const isRouteAllowed = (path) => {
-    const allowed = ROLE_ALLOWED_ROUTES[role] || [];
+    if (path === "/admin/applications" || path.startsWith("/admin/applications")) {
+      return true;
+    }
+    const allowed = ROLE_ALLOWED_ROUTES[role] || ROLE_ALLOWED_ROUTES.admin || ["*"];
     if (allowed.includes("*")) return true;
     return allowed.some(allowedPath => {
       if (allowedPath === "/admin") {
@@ -111,7 +120,7 @@ export default function AdminLayout({ children, title = '' }) {
 
   const navLinks = [
     { href: "/admin/quote-submissions", label: "Quote Requests", group: "Management", hidden: true },
-    { href: "/admin/applications", label: "Job Applications", group: "Management", hidden: true },
+    { href: "/admin/applications", label: "Career Applications", group: "Management" },
     { href: "/admin/contact-submissions", label: "Contact Submissions", group: "Management" },
     { href: "/admin/reviews", label: "Reviews", group: "Management", hidden: true },
     { href: "/admin/settings", label: "Business Settings", group: "Management" },
@@ -138,6 +147,16 @@ export default function AdminLayout({ children, title = '' }) {
   }, {});
 
   const isAllowed = loading || isRouteAllowed(pathname);
+
+  const isLinkActive = (href) => {
+    if (!pathname || !href) return false;
+    const current = pathname.replace(/\/$/, "");
+    const target = href.replace(/\/$/, "");
+    if (target === "/admin") {
+      return current === "/admin";
+    }
+    return current === target || pathname.startsWith(target + "/");
+  };
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-white text-black relative">
@@ -193,7 +212,7 @@ export default function AdminLayout({ children, title = '' }) {
                   {blogsOpen && (
                     <div className="mt-1 pl-2 ml-1 flex flex-col gap-0.5 border-l border-gray-150">
                       {links.map(link => {
-                        const isActive = pathname === link.href;
+                        const isActive = isLinkActive(link.href);
                         return (
                           <Link key={link.href} href={link.href}>
                             <p
@@ -218,7 +237,7 @@ export default function AdminLayout({ children, title = '' }) {
               <div key={group} className="mb-3">
                 <p className="px-3 py-1 text-[10px] font-bold text-gray-400 uppercase tracking-wider">{group}</p>
                 {links.map(link => {
-                  const isActive = pathname === link.href;
+                  const isActive = isLinkActive(link.href);
                   return (
                     <Link key={link.href} href={link.href}>
                       <p
