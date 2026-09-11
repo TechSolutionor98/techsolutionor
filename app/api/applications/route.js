@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/mongodb';
 import { logActivity } from '@/lib/activity-logger';
-import { uploadImage } from '@/lib/cloudinary';
+import cloudinary, { uploadImage } from '@/lib/cloudinary';
 import { sendApplicationSubmissionConfirmation } from '@/lib/application-mailer';
 import fs from 'fs';
 import path from 'path';
@@ -79,6 +79,8 @@ export async function POST(request) {
     let cvUrl = '';
     let cvFileName = '';
     let localCvPath = '';
+    let cvFiles = [];
+    let portfolioLinks = [];
 
     if (contentType.includes('multipart/form-data')) {
       const formData = await request.formData();
@@ -92,21 +94,83 @@ export async function POST(request) {
       portfolio = (formData.get('portfolio') || formData.get('linkedin') || '').toString().trim();
       cvUrl = (formData.get('cvUrl') || formData.get('cv') || '').toString().trim();
 
-      const file = formData.get('resume') || formData.get('file') || formData.get('cvFile');
-      if (file && typeof file === 'object' && file.size > 0) {
-        cvFileName = file.name || 'resume.pdf';
-        const fileExt = path.extname(cvFileName).toLowerCase();
+      // Collect portfolio links (supports JSON array or multiple fields)
+      const rawPortfolioLinks = formData.get('portfolioLinks');
+      if (rawPortfolioLinks) {
+        try {
+          const parsed = JSON.parse(rawPortfolioLinks);
+          if (Array.isArray(parsed)) portfolioLinks = parsed;
+        } catch (_) {}
+      }
+      if (portfolioLinks.length === 0) {
+        const allPortfolioInputs = [
+          ...formData.getAll('portfolio'),
+          ...formData.getAll('portfolios'),
+          ...formData.getAll('portfolioLinks'),
+        ];
+        for (const item of allPortfolioInputs) {
+          if (typeof item === 'string' && item.trim()) {
+            try {
+              const parsed = JSON.parse(item);
+              if (Array.isArray(parsed)) {
+                portfolioLinks.push(...parsed.filter(Boolean));
+                continue;
+              }
+            } catch (_) {}
+            portfolioLinks.push(...item.split(',').map(s => s.trim()).filter(Boolean));
+          }
+        }
+      }
+      portfolioLinks = [...new Set(portfolioLinks.map(l => (l || '').trim()).filter(Boolean))];
+      if (portfolioLinks.length > 0) {
+        portfolio = portfolioLinks.join(', ');
+      }
+
+      // Collect multiple uploaded CV files
+      const rawFiles = [
+        ...formData.getAll('resumes'),
+        ...formData.getAll('resume'),
+        ...formData.getAll('files'),
+        ...formData.getAll('file'),
+        ...formData.getAll('cvFile'),
+      ].filter(f => f && typeof f === 'object' && f.size > 0);
+
+      const uniqueFiles = [];
+      const seenFileKeys = new Set();
+      for (const file of rawFiles) {
+        const key = `${file.name}-${file.size}`;
+        if (!seenFileKeys.has(key)) {
+          seenFileKeys.add(key);
+          uniqueFiles.push(file);
+        }
+      }
+
+      for (const file of uniqueFiles) {
+        const curFileName = file.name || 'resume.pdf';
+        const fileExt = path.extname(curFileName).toLowerCase();
         const allowedExtensions = ['.pdf', '.doc', '.docx'];
         if (!allowedExtensions.includes(fileExt)) {
-          return NextResponse.json({ error: 'Invalid file format. Allowed formats: PDF (.pdf), DOC (.doc), and DOCX (.docx).' }, { status: 400 });
+          return NextResponse.json({ error: `Invalid file format for "${curFileName}". Allowed formats: PDF (.pdf), DOC (.doc), and DOCX (.docx).` }, { status: 400 });
         }
         if (file.size > 10 * 1024 * 1024) {
-          return NextResponse.json({ error: 'File size exceeds the 10MB limit. Please upload a smaller file.' }, { status: 400 });
+          return NextResponse.json({ error: `File "${curFileName}" exceeds the 10MB limit. Please upload a smaller file.` }, { status: 400 });
         }
         const buffer = Buffer.from(await file.arrayBuffer());
-        const uploadResult = await uploadResumeBuffer(buffer, cvFileName);
-        cvUrl = uploadResult.cvUrl;
-        localCvPath = uploadResult.localCvPath;
+        const uploadResult = await uploadResumeBuffer(buffer, curFileName);
+        cvFiles.push({
+          cvUrl: uploadResult.cvUrl,
+          cv: uploadResult.cvUrl,
+          localCvPath: uploadResult.localCvPath,
+          cvFileName: curFileName,
+          fileName: curFileName,
+          fileSize: file.size,
+        });
+      }
+
+      if (cvFiles.length > 0) {
+        cvUrl = cvFiles[0].cvUrl;
+        cvFileName = cvFiles[0].cvFileName;
+        localCvPath = cvFiles[0].localCvPath;
       }
     } else {
       const body = await request.json();
@@ -121,6 +185,17 @@ export async function POST(request) {
       cvUrl = (body.cv || body.cvUrl || '').toString().trim();
       cvFileName = (body.cvFileName || '').toString().trim();
       localCvPath = (body.localCvPath || '').toString().trim();
+
+      if (Array.isArray(body.portfolioLinks)) {
+        portfolioLinks = body.portfolioLinks.map(l => (l || '').trim()).filter(Boolean);
+        portfolio = portfolioLinks.join(', ');
+      } else if (portfolio) {
+        portfolioLinks = portfolio.split(',').map(l => l.trim()).filter(Boolean);
+      }
+
+      if (Array.isArray(body.cvFiles)) {
+        cvFiles = body.cvFiles;
+      }
     }
 
     // Comprehensive Field Validation
@@ -150,14 +225,15 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Please provide a cover letter or application message (at least 20 characters).' }, { status: 400 });
     }
 
-    if (!cvUrl) {
-      return NextResponse.json({ error: 'Please upload your Resume / CV (.pdf, .doc, or .docx).' }, { status: 400 });
+    if (!cvUrl && cvFiles.length === 0) {
+      return NextResponse.json({ error: 'Please upload at least one Resume / CV (.pdf, .doc, or .docx).' }, { status: 400 });
     }
 
-    if (portfolio) {
-      const urlPattern = /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/[^\s]*)?$/i;
-      if (!urlPattern.test(portfolio)) {
-        return NextResponse.json({ error: 'Please enter a valid website or profile URL (e.g., https://linkedin.com/in/username).' }, { status: 400 });
+    // Validate each portfolio link if provided
+    const urlPattern = /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/[^\s]*)?$/i;
+    for (const link of portfolioLinks) {
+      if (!urlPattern.test(link)) {
+        return NextResponse.json({ error: `Please enter a valid website or profile URL for "${link}" (e.g., https://linkedin.com/in/username).` }, { status: 400 });
       }
     }
 
@@ -198,9 +274,11 @@ export async function POST(request) {
       coverLetter,
       message: coverLetter, // backward compatibility
       portfolio,
+      portfolioLinks: portfolioLinks.length > 0 ? portfolioLinks : (portfolio ? [portfolio] : []),
       cv: cvUrl,
       localCvPath: localCvPath || (cvUrl && cvUrl.startsWith('/uploads/') ? cvUrl : ''),
       cvFileName: cvFileName || (cvUrl ? path.basename(cvUrl) : ''),
+      cvFiles: cvFiles.length > 0 ? cvFiles : (cvUrl ? [{ cvUrl, cv: cvUrl, cvFileName, fileName: cvFileName, localCvPath }] : []),
       status: 'Pending',
       createdAt: now,
       updatedAt: now,

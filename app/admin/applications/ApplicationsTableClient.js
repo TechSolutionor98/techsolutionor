@@ -16,20 +16,109 @@ import {
   XCircle, 
   Trash2, 
   Loader2,
-  AlertCircle
+  AlertCircle,
+  ExternalLink
 } from 'lucide-react';
 
-function getCvViewUrl(app) {
+function getCvViewUrl(app, index = 0, isDownload = false) {
   if (!app) return '#';
   const appId = app.id || app._id;
   if (appId) {
-    return `/api/applications/${appId}/cv`;
+    const params = new URLSearchParams();
+    if (index > 0) params.set('index', index.toString());
+    if (isDownload) params.set('download', '1');
+    const qs = params.toString();
+    return `/api/applications/${appId}/cv${qs ? `?${qs}` : ''}`;
   }
+  if (app.cvFiles && app.cvFiles[index]?.cvUrl) return app.cvFiles[index].cvUrl;
   if (!app.cv) return '#';
   const trimmed = app.cv.trim();
   if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) return trimmed;
   if (trimmed.startsWith('/')) return trimmed;
   return `/${trimmed}`;
+}
+
+function getApplicationPortfolioLinks(app) {
+  if (!app) return [];
+  let links = [];
+  if (Array.isArray(app.portfolioLinks)) {
+    links = app.portfolioLinks;
+  } else if (typeof app.portfolioLinks === 'string' && app.portfolioLinks.trim()) {
+    try {
+      const parsed = JSON.parse(app.portfolioLinks);
+      if (Array.isArray(parsed)) links = parsed;
+      else links = [app.portfolioLinks];
+    } catch (_) {
+      links = app.portfolioLinks.split(',');
+    }
+  }
+
+  if (links.length === 0 && app.portfolio) {
+    if (typeof app.portfolio === 'string') {
+      try {
+        const parsed = JSON.parse(app.portfolio);
+        if (Array.isArray(parsed)) links = parsed;
+        else links = app.portfolio.split(',');
+      } catch (_) {
+        links = app.portfolio.split(',');
+      }
+    }
+  }
+
+  return [...new Set(links.map(l => (typeof l === 'string' ? l.trim() : '')).filter(Boolean))];
+}
+
+function getApplicationCvFiles(app) {
+  if (!app) return [];
+  let files = [];
+  if (Array.isArray(app.cvFiles) && app.cvFiles.length > 0) {
+    files = app.cvFiles;
+  } else if (typeof app.cvFiles === 'string' && app.cvFiles.trim()) {
+    try {
+      const parsed = JSON.parse(app.cvFiles);
+      if (Array.isArray(parsed) && parsed.length > 0) files = parsed;
+    } catch (_) {}
+  }
+
+  if (files.length === 0 && (app.cv || app.cvUrl)) {
+    const rawUrl = (app.cvUrl || app.cv || '').trim();
+    const rawName = app.cvFileName || app.fileName || (rawUrl ? rawUrl.split('/').pop().split('?')[0] : 'Applicant_Resume.pdf');
+    files = [{
+      cvUrl: rawUrl,
+      cv: rawUrl,
+      fileName: rawName,
+      cvFileName: rawName,
+      fileSize: app.fileSize || null,
+      localCvPath: app.localCvPath || null,
+    }];
+  }
+
+  return files;
+}
+
+function formatBytes(bytes) {
+  if (!bytes || isNaN(bytes)) return null;
+  const k = 1024;
+  const sizes = ['B', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
+function getPlatformInfo(link) {
+  const l = (link || '').toLowerCase();
+  if (l.includes('linkedin.com')) return { name: 'LinkedIn', color: 'bg-sky-50 text-sky-700 border-sky-200' };
+  if (l.includes('github.com')) return { name: 'GitHub', color: 'bg-gray-100 text-gray-800 border-gray-300' };
+  if (l.includes('behance.net')) return { name: 'Behance', color: 'bg-blue-50 text-blue-700 border-blue-200' };
+  if (l.includes('dribbble.com')) return { name: 'Dribbble', color: 'bg-pink-50 text-pink-700 border-pink-200' };
+  if (l.includes('twitter.com') || l.includes('x.com')) return { name: 'X / Twitter', color: 'bg-slate-100 text-slate-800 border-slate-300' };
+  return { name: 'Portfolio / Website', color: 'bg-emerald-50 text-emerald-800 border-emerald-200' };
+}
+
+function getFileFormatBadge(fileName) {
+  const ext = (fileName || '').split('.').pop().toLowerCase();
+  if (ext === 'pdf') return { label: 'PDF', color: 'bg-red-50 text-red-700 border-red-200' };
+  if (ext === 'docx' || ext === 'doc') return { label: ext.toUpperCase(), color: 'bg-blue-50 text-blue-700 border-blue-200' };
+  return { label: ext.toUpperCase() || 'FILE', color: 'bg-gray-100 text-gray-700 border-gray-300' };
 }
 
 export default function ApplicationsTableClient({ initialData = [], apiBase = '' }) {
@@ -467,26 +556,29 @@ export default function ApplicationsTableClient({ initialData = [], apiBase = ''
                         >
                           View
                         </button>
-                        {app.cv ? (
-                          <a
-                            href={getCvViewUrl(app)}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={(e) => e.stopPropagation()}
-                            className="w-20 inline-flex items-center justify-center gap-1 text-[11px] font-bold text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 px-2 py-1 rounded-md border border-blue-200 transition-all cursor-pointer text-center"
-                            title="Open / Preview applicant's CV in new browser tab"
-                          >
-                            <FileText className="w-3 h-3 shrink-0" />
-                            <span>View CV</span>
-                          </a>
-                        ) : (
-                          <span
-                            className="w-20 inline-flex items-center justify-center text-[10px] font-medium text-gray-400 bg-gray-50 px-2 py-1 rounded-md border border-gray-200 text-center cursor-not-allowed select-none"
-                            title="No CV uploaded"
-                          >
-                            No CV
-                          </span>
-                        )}
+                        {(() => {
+                          const appCvList = getApplicationCvFiles(app);
+                          return appCvList.length > 0 ? (
+                            <a
+                              href={getCvViewUrl(app, 0, false)}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                              className="w-20 inline-flex items-center justify-center gap-1 text-[11px] font-bold text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 px-2 py-1 rounded-md border border-blue-200 transition-all cursor-pointer text-center"
+                              title={appCvList.length > 1 ? `Open applicant's primary CV (${appCvList.length} documents uploaded)` : "Open / Preview applicant's CV in new browser tab"}
+                            >
+                              <FileText className="w-3 h-3 shrink-0" />
+                              <span>View CV{appCvList.length > 1 ? ` (${appCvList.length})` : ''}</span>
+                            </a>
+                          ) : (
+                            <span
+                              className="w-20 inline-flex items-center justify-center text-[10px] font-medium text-gray-400 bg-gray-50 px-2 py-1 rounded-md border border-gray-200 text-center cursor-not-allowed select-none"
+                              title="No CV uploaded"
+                            >
+                              No CV
+                            </span>
+                          );
+                        })()}
                       </div>
                     </td>
                   </tr>
@@ -522,323 +614,478 @@ export default function ApplicationsTableClient({ initialData = [], apiBase = ''
       </div>
 
       {/* View Detail Modal Popup */}
-      {viewRow && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 sm:p-6" onClick={() => setViewRow(null)}>
-          <div
-            className="bg-white rounded-2xl shadow-2xl w-full max-w-[780px] max-h-[92vh] flex flex-col overflow-hidden border border-gray-100 animate-in fade-in zoom-in-95 duration-200"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Modal Header */}
-            <div className="bg-[#34953C] px-6 sm:px-8 py-4.5 flex items-center justify-between text-white shrink-0">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center font-bold text-sm">
-                  #{viewRow.appNo}
-                </div>
-                <div>
-                  <h2 className="text-white text-base sm:text-lg font-bold leading-tight">
-                    Application Details
-                  </h2>
-                  <p className="text-white/80 text-[11px] font-medium">
-                    Candidate #{viewRow.appNo} &bull; {viewRow.position || 'Open Role'}
-                  </p>
-                </div>
-              </div>
+      {viewRow && (() => {
+        const modalCvFiles = getApplicationCvFiles(viewRow);
+        const modalPortfolioLinks = getApplicationPortfolioLinks(viewRow);
 
-              <div className="flex items-center gap-2.5">
-                <span className={`px-3 py-1 rounded-full text-xs font-bold shadow-2xs ${
-                  (viewRow.status || '').toLowerCase() === 'approved'
-                    ? 'bg-emerald-100 text-emerald-900 border border-emerald-300/60'
-                    : (viewRow.status || '').toLowerCase() === 'rejected'
-                    ? 'bg-red-100 text-red-900 border border-red-300/60'
-                    : 'bg-amber-100 text-amber-900 border border-amber-300/60'
-                }`}>
-                  {viewRow.status || 'Pending Review'}
-                </span>
-                <button
-                  onClick={() => setViewRow(null)}
-                  className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/25 flex items-center justify-center text-white/90 hover:text-white transition-all cursor-pointer"
-                  title="Close modal"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-
-            {/* Modal Scrollable Body */}
-            <div className="p-6 sm:p-8 space-y-5 overflow-y-auto flex-1 text-left">
-              {/* 1. Candidate Profile Card */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 sm:p-5 rounded-xl bg-gray-50/90 border border-gray-200/80">
-                <div className="flex items-center gap-3.5 min-w-0">
-                  <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xl sm:text-2xl border-2 border-emerald-200/80 shrink-0">
-                    {viewRow.name ? viewRow.name.trim().charAt(0).toUpperCase() : (viewRow.email ? viewRow.email.trim().charAt(0).toUpperCase() : 'C')}
+        return (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 sm:p-6" onClick={() => setViewRow(null)}>
+            <div
+              className="bg-white rounded-2xl shadow-2xl w-full max-w-[840px] max-h-[92vh] flex flex-col overflow-hidden border border-gray-100 animate-in fade-in zoom-in-95 duration-200"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Modal Header */}
+              <div className="bg-[#34953C] px-6 sm:px-8 py-4.5 flex items-center justify-between text-white shrink-0">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center font-bold text-sm">
+                    #{viewRow.appNo}
                   </div>
-                  <div className="min-w-0">
-                    <h3 className="text-base sm:text-lg font-bold text-gray-900 leading-snug truncate">
-                      {viewRow.name || 'Anonymous Candidate'}
-                    </h3>
-                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1 text-xs text-gray-500">
-                      {viewRow.email && (
-                        <a
-                          href={`mailto:${viewRow.email}`}
-                          className="flex items-center gap-1.5 font-mono text-gray-600 hover:text-[#34953C] transition-colors"
-                          title="Send email"
-                        >
-                          <Mail className="w-3.5 h-3.5 text-gray-400" />
-                          <span className="truncate">{viewRow.email}</span>
+                  <div>
+                    <h2 className="text-white text-base sm:text-lg font-bold leading-tight">
+                      Application Details
+                    </h2>
+                    <p className="text-white/80 text-[11px] font-medium">
+                      Candidate #{viewRow.appNo} &bull; {viewRow.position || 'Open Role'}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2.5">
+                  <span className={`px-3 py-1 rounded-full text-xs font-bold shadow-2xs ${
+                    (viewRow.status || '').toLowerCase() === 'approved'
+                      ? 'bg-emerald-100 text-emerald-900 border border-emerald-300/60'
+                      : (viewRow.status || '').toLowerCase() === 'rejected'
+                      ? 'bg-red-100 text-red-900 border border-red-300/60'
+                      : 'bg-amber-100 text-amber-900 border border-amber-300/60'
+                  }`}>
+                    {viewRow.status || 'Pending Review'}
+                  </span>
+                  <button
+                    onClick={() => setViewRow(null)}
+                    className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/25 flex items-center justify-center text-white/90 hover:text-white transition-all cursor-pointer"
+                    title="Close modal"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Modal Scrollable Body */}
+              <div className="p-6 sm:p-8 space-y-6 overflow-y-auto flex-1 text-left">
+                {/* 1. Candidate Profile Card */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 sm:p-5 rounded-xl bg-gray-50/90 border border-gray-200/80">
+                  <div className="flex items-center gap-3.5 min-w-0">
+                    <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xl sm:text-2xl border-2 border-emerald-200/80 shrink-0">
+                      {viewRow.name ? viewRow.name.trim().charAt(0).toUpperCase() : (viewRow.email ? viewRow.email.trim().charAt(0).toUpperCase() : 'C')}
+                    </div>
+                    <div className="min-w-0">
+                      <h3 className="text-base sm:text-lg font-bold text-gray-900 leading-snug truncate">
+                        {viewRow.name || 'Anonymous Candidate'}
+                      </h3>
+                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1 text-xs text-gray-500">
+                        {viewRow.email && (
+                          <a
+                            href={`mailto:${viewRow.email}`}
+                            className="flex items-center gap-1.5 font-mono text-gray-600 hover:text-[#34953C] transition-colors"
+                            title="Send email"
+                          >
+                            <Mail className="w-3.5 h-3.5 text-gray-400" />
+                            <span className="truncate">{viewRow.email}</span>
+                          </a>
+                        )}
+                        {viewRow.phone && (
+                          <a
+                            href={`tel:${viewRow.phone}`}
+                            className="flex items-center gap-1.5 font-semibold text-gray-600 hover:text-[#34953C] transition-colors"
+                            title="Call phone"
+                          >
+                            <Phone className="w-3.5 h-3.5 text-gray-400" />
+                            <span>{viewRow.phone}</span>
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 shrink-0">
+                    {modalCvFiles.length > 0 && (
+                      <a
+                        href={getCvViewUrl(viewRow, 0, false)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 bg-[#20507C] hover:bg-[#163857] text-white rounded-lg text-xs font-semibold shadow-2xs transition-all cursor-pointer"
+                        title="Open / Preview applicant's primary CV in new browser tab"
+                      >
+                        <FileText className="w-3.5 h-3.5" />
+                        <span>View CV{modalCvFiles.length > 1 ? ` (${modalCvFiles.length})` : ''}</span>
+                      </a>
+                    )}
+                    {viewRow.email && (
+                      <a
+                        href={`mailto:${viewRow.email}`}
+                        className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 bg-white hover:bg-gray-100 border border-gray-300 rounded-lg text-xs font-semibold text-gray-700 shadow-2xs transition-all cursor-pointer"
+                      >
+                        <Mail className="w-3.5 h-3.5 text-gray-500" />
+                        <span>Reply via Email</span>
+                      </a>
+                    )}
+                  </div>
+                </div>
+
+                {/* 2. Structured Key Info Grid */}
+                <div>
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400 block mb-2.5">
+                    Application Specifications
+                  </span>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                    {/* Phone */}
+                    <div className="bg-white p-3.5 rounded-xl border border-gray-200 shadow-2xs flex flex-col justify-between">
+                      <div className="flex items-center gap-1.5 text-gray-400 mb-1.5">
+                        <Phone className="w-3.5 h-3.5 text-gray-400" />
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Phone Number</span>
+                      </div>
+                      {viewRow.phone ? (
+                        <a href={`tel:${viewRow.phone}`} className="text-xs font-bold text-[#34953C] hover:underline truncate">
+                          {viewRow.phone}
                         </a>
+                      ) : (
+                        <span className="text-xs font-semibold text-gray-400">—</span>
                       )}
-                      {viewRow.phone && (
+                    </div>
+
+                    {/* Position Applied */}
+                    <div className="bg-white p-3.5 rounded-xl border border-gray-200 shadow-2xs flex flex-col justify-between">
+                      <div className="flex items-center gap-1.5 text-gray-400 mb-1.5">
+                        <Briefcase className="w-3.5 h-3.5 text-[#34953C]" />
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Target Role</span>
+                      </div>
+                      <span className="text-xs font-bold text-gray-900 truncate">
+                        {viewRow.position || '—'}
+                      </span>
+                    </div>
+
+                    {/* Experience */}
+                    <div className="bg-white p-3.5 rounded-xl border border-gray-200 shadow-2xs flex flex-col justify-between">
+                      <div className="flex items-center gap-1.5 text-gray-400 mb-1.5">
+                        <Clock className="w-3.5 h-3.5 text-blue-600" />
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Experience Level</span>
+                      </div>
+                      <div>
+                        {viewRow.experience ? (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold bg-blue-50 text-blue-800 border border-blue-200/80">
+                            {viewRow.experience}
+                          </span>
+                        ) : (
+                          <span className="text-xs font-semibold text-gray-400">—</span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Portfolio / Profiles Summary */}
+                    <div className="bg-white p-3.5 rounded-xl border border-gray-200 shadow-2xs flex flex-col justify-between">
+                      <div className="flex items-center gap-1.5 text-gray-400 mb-1.5">
+                        <Globe className="w-3.5 h-3.5 text-emerald-600" />
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
+                          {modalPortfolioLinks.length > 1 ? `Portfolios (${modalPortfolioLinks.length})` : 'Portfolio / Profile'}
+                        </span>
+                      </div>
+                      {modalPortfolioLinks.length === 1 ? (
                         <a
-                          href={`tel:${viewRow.phone}`}
-                          className="flex items-center gap-1.5 font-semibold text-gray-600 hover:text-[#34953C] transition-colors"
-                          title="Call phone"
+                          href={modalPortfolioLinks[0].startsWith('http') ? modalPortfolioLinks[0] : `https://${modalPortfolioLinks[0]}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs font-bold text-blue-600 hover:underline truncate block"
+                          title={modalPortfolioLinks[0]}
                         >
-                          <Phone className="w-3.5 h-3.5 text-gray-400" />
-                          <span>{viewRow.phone}</span>
+                          {modalPortfolioLinks[0]}
                         </a>
+                      ) : modalPortfolioLinks.length > 1 ? (
+                        <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 inline-block truncate">
+                          {modalPortfolioLinks.length} links submitted (see below)
+                        </span>
+                      ) : (
+                        <span className="text-xs font-semibold text-gray-400">Not provided</span>
                       )}
+                    </div>
+
+                    {/* Current Status */}
+                    <div className="bg-white p-3.5 rounded-xl border border-gray-200 shadow-2xs flex flex-col justify-between">
+                      <div className="flex items-center gap-1.5 text-gray-400 mb-1.5">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-[#34953C]" />
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Application Status</span>
+                      </div>
+                      <div>
+                        {renderStatusBadge(viewRow.status)}
+                      </div>
+                    </div>
+
+                    {/* Submitted At */}
+                    <div className="bg-white p-3.5 rounded-xl border border-gray-200 shadow-2xs flex flex-col justify-between">
+                      <div className="flex items-center gap-1.5 text-gray-400 mb-1.5">
+                        <Calendar className="w-3.5 h-3.5 text-gray-400" />
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Submitted At</span>
+                      </div>
+                      <span className="text-xs font-semibold text-gray-700">
+                        {viewRow.createdAt ? new Date(viewRow.createdAt).toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—'}
+                      </span>
                     </div>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 shrink-0">
-                  {viewRow.cv && (
-                    <a
-                      href={getCvViewUrl(viewRow)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                      className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 bg-[#20507C] hover:bg-[#163857] text-white rounded-lg text-xs font-semibold shadow-2xs transition-all cursor-pointer"
-                      title="Open / Preview applicant's CV in new browser tab"
+                {/* 3. Uploaded Resume / CV Documents Section */}
+                <div className="space-y-2.5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-gray-600 flex items-center gap-1.5 font-semibold">
+                      <FileText className="w-3.5 h-3.5 text-blue-600" />
+                      <span>Uploaded Resume / CV Documents ({modalCvFiles.length})</span>
+                    </span>
+                    <span className="text-[11px] text-gray-400">
+                      {modalCvFiles.length <= 1 ? '1 file attached' : `${modalCvFiles.length} files attached`} &bull; Click to open preview or download
+                    </span>
+                  </div>
+
+                  {modalCvFiles.length > 0 ? (
+                    <div className="grid grid-cols-1 gap-2.5">
+                      {modalCvFiles.map((fileObj, fIdx) => {
+                        const fName = fileObj.fileName || fileObj.cvFileName || `Candidate_Resume_${fIdx + 1}.pdf`;
+                        const badge = getFileFormatBadge(fName);
+                        const sizeStr = formatBytes(fileObj.fileSize);
+
+                        return (
+                          <div
+                            key={fIdx}
+                            className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 rounded-xl bg-gray-50/90 border border-gray-200/90 gap-3 hover:bg-gray-100/70 transition"
+                          >
+                            <div className="flex items-center gap-3 min-w-0">
+                              <div className="w-9 h-9 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center shrink-0">
+                                <FileText className="w-4 h-4" />
+                              </div>
+                              <div className="min-w-0">
+                                <div className="flex items-center gap-2">
+                                  <span className={`text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded border ${badge.color}`}>
+                                    {badge.label}
+                                  </span>
+                                  <p className="text-xs font-bold text-gray-900 truncate max-w-[260px] sm:max-w-[420px]" title={fName}>
+                                    {fName}
+                                  </p>
+                                </div>
+                                <div className="flex items-center gap-2 text-[11px] text-gray-400 mt-0.5">
+                                  <span>Document #{fIdx + 1}</span>
+                                  {sizeStr && (
+                                    <>
+                                      <span>&bull;</span>
+                                      <span className="font-mono">{sizeStr}</span>
+                                    </>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* View/Open and Download Actions */}
+                            <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
+                              <a
+                                href={getCvViewUrl(viewRow, fIdx, false)}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-700 hover:text-blue-900 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-lg border border-blue-200 transition cursor-pointer shadow-2xs"
+                                title="Open and preview this CV document in a new tab"
+                              >
+                                <ExternalLink className="w-3.5 h-3.5" />
+                                <span>View / Open</span>
+                              </a>
+
+                              <a
+                                href={getCvViewUrl(viewRow, fIdx, true)}
+                                download={fName}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1.5 text-xs font-bold text-gray-700 hover:text-gray-900 bg-white hover:bg-gray-100 px-3 py-1.5 rounded-lg border border-gray-300 transition cursor-pointer shadow-2xs"
+                                title="Download this CV document to your local computer"
+                              >
+                                <Download className="w-3.5 h-3.5 text-gray-500" />
+                                <span>Download</span>
+                              </a>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <div className="p-4 rounded-xl bg-gray-50 border border-dashed border-gray-200 text-xs text-gray-400 text-center">
+                      No CV or resume document was uploaded with this application.
+                    </div>
+                  )}
+                </div>
+
+                {/* 4. Portfolio / Website / LinkedIn Profiles Section */}
+                <div className="space-y-2.5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-gray-600 flex items-center gap-1.5 font-semibold">
+                      <Globe className="w-3.5 h-3.5 text-emerald-600" />
+                      <span>Portfolio / Website / LinkedIn Profiles ({modalPortfolioLinks.length})</span>
+                    </span>
+                    <span className="text-[11px] text-gray-400">
+                      {modalPortfolioLinks.length === 0 ? 'None submitted' : `${modalPortfolioLinks.length} link(s) provided`}
+                    </span>
+                  </div>
+
+                  {modalPortfolioLinks.length > 0 ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                      {modalPortfolioLinks.map((link, lIdx) => {
+                        const fullUrl = link.startsWith('http') ? link : `https://${link}`;
+                        const platform = getPlatformInfo(link);
+
+                        return (
+                          <div
+                            key={lIdx}
+                            className="flex items-center justify-between p-3 rounded-xl bg-gray-50/90 border border-gray-200/90 gap-3 hover:bg-gray-100/70 transition"
+                          >
+                            <div className="flex items-center gap-2.5 min-w-0">
+                              <div className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+                                <Globe className="w-4 h-4" />
+                              </div>
+                              <div className="min-w-0">
+                                <span className={`text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded border inline-block mb-0.5 ${platform.color}`}>
+                                  {platform.name}
+                                </span>
+                                <p className="text-xs font-bold text-gray-900 truncate max-w-[200px] sm:max-w-[240px]" title={link}>
+                                  {link}
+                                </p>
+                              </div>
+                            </div>
+
+                            <a
+                              href={fullUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 hover:text-emerald-900 bg-white hover:bg-emerald-50 px-2.5 py-1.5 rounded-lg border border-gray-200 hover:border-emerald-300 transition shrink-0 shadow-2xs cursor-pointer"
+                              title={`Open ${link} in a new tab`}
+                            >
+                              <span>Visit</span>
+                              <ExternalLink className="w-3.5 h-3.5" />
+                            </a>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <div className="p-3.5 rounded-xl bg-gray-50/70 border border-dashed border-gray-200 text-xs text-gray-400 italic">
+                      No portfolio, website, or LinkedIn links were provided with this application.
+                    </div>
+                  )}
+                </div>
+
+                {/* 5. Candidate Statement / Cover Letter Box */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400">
+                      Candidate Statement / Cover Letter
+                    </span>
+                    {(viewRow.coverLetter || viewRow.message) && (
+                      <span className="text-[11px] text-gray-400 font-medium">
+                        {(viewRow.coverLetter || viewRow.message).length} characters
+                      </span>
+                    )}
+                  </div>
+                  <div className="bg-gray-50/90 rounded-xl p-4 sm:p-5 text-xs sm:text-sm text-gray-800 whitespace-pre-wrap break-words border border-gray-200/80 leading-relaxed min-h-[90px]">
+                    {viewRow.coverLetter || viewRow.message || <span className="text-gray-400 italic">No statement provided with this application.</span>}
+                  </div>
+                </div>
+
+                {/* 6. Hiring Manager Feedback / Note Input */}
+                <div className="space-y-2">
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-600">
+                    Internal Feedback / Email Note <span className="text-gray-400 font-normal lowercase">(included in notification email)</span>:
+                  </label>
+                  <textarea
+                    value={statusNote}
+                    onChange={(e) => setStatusNote(e.target.value)}
+                    placeholder="Optional custom feedback, interview schedule details, or notes to send to the candidate..."
+                    rows={2}
+                    className="w-full bg-white border border-gray-300 focus:border-[#34953C] rounded-lg p-2.5 text-xs outline-none transition-all"
+                  />
+                </div>
+
+                {/* 7. Recruitment Decision Actions */}
+                <div className="pt-2 border-t border-gray-200 space-y-2.5">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400 block">
+                    Application Decisions & Automated Email Dispatch
+                  </span>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <button
+                      type="button"
+                      disabled={actionLoading || (viewRow.status || '').toLowerCase() === 'approved'}
+                      onClick={() => handleStatusChange(viewRow.id || viewRow._id, 'Approved', statusNote)}
+                      className="bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white py-2.5 px-4 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs"
                     >
-                      <FileText className="w-3.5 h-3.5" />
-                      <span>View CV</span>
+                      {actionLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5" />}
+                      <span>{(viewRow.status || '').toLowerCase() === 'approved' ? 'Already Approved' : 'Approve & Send Welcome Email'}</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      disabled={actionLoading || (viewRow.status || '').toLowerCase() === 'rejected'}
+                      onClick={() => handleStatusChange(viewRow.id || viewRow._id, 'Rejected', statusNote)}
+                      className="bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white py-2.5 px-4 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs"
+                    >
+                      {actionLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <XCircle className="w-3.5 h-3.5" />}
+                      <span>{(viewRow.status || '').toLowerCase() === 'rejected' ? 'Already Rejected' : 'Reject & Send Update Email'}</span>
+                    </button>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-2 text-xs">
+                    {(viewRow.status || '').toLowerCase() !== 'pending' ? (
+                      <button
+                        type="button"
+                        disabled={actionLoading}
+                        onClick={() => handleStatusChange(viewRow.id || viewRow._id, 'Pending', statusNote || '')}
+                        className="text-gray-500 hover:text-gray-800 underline cursor-pointer"
+                      >
+                        Revert status to Pending Review & Send Update Email
+                      </button>
+                    ) : <span />}
+                    <button
+                      type="button"
+                      disabled={actionLoading}
+                      onClick={() => handleDeleteApplication(viewRow.id || viewRow._id, viewRow.name)}
+                      className="text-red-500 hover:text-red-700 font-semibold flex items-center gap-1 cursor-pointer ml-auto"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                      <span>Delete Application</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Modal Footer */}
+              <div className="px-6 sm:px-8 py-3.5 bg-gray-50 border-t border-gray-200 flex items-center justify-between gap-3 shrink-0">
+                <span className="text-xs text-gray-400 font-medium hidden sm:inline">
+                  Application #{viewRow.appNo} &bull; {viewRow.position || 'Open Role'}
+                </span>
+                <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end">
+                  {viewRow.phone && (
+                    <a
+                      href={`tel:${viewRow.phone}`}
+                      className="px-3.5 py-2 rounded-lg border border-gray-300 bg-white hover:bg-gray-100 text-gray-700 text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer"
+                    >
+                      <Phone className="w-3.5 h-3.5 text-gray-500" />
+                      <span>Call</span>
                     </a>
                   )}
                   {viewRow.email && (
                     <a
                       href={`mailto:${viewRow.email}`}
-                      className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 bg-white hover:bg-gray-100 border border-gray-300 rounded-lg text-xs font-semibold text-gray-700 shadow-2xs transition-all cursor-pointer"
+                      className="px-3.5 py-2 rounded-lg border border-gray-300 bg-white hover:bg-gray-100 text-gray-700 text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer"
                     >
                       <Mail className="w-3.5 h-3.5 text-gray-500" />
-                      <span>Reply via Email</span>
+                      <span>Email</span>
                     </a>
                   )}
-                </div>
-              </div>
-
-              {/* 2. Structured Key Info Grid */}
-              <div>
-                <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400 block mb-2.5">
-                  Application Specifications
-                </span>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                  {/* Phone */}
-                  <div className="bg-white p-3.5 rounded-xl border border-gray-200 shadow-2xs flex flex-col justify-between">
-                    <div className="flex items-center gap-1.5 text-gray-400 mb-1.5">
-                      <Phone className="w-3.5 h-3.5 text-gray-400" />
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Phone Number</span>
-                    </div>
-                    {viewRow.phone ? (
-                      <a href={`tel:${viewRow.phone}`} className="text-xs font-bold text-[#34953C] hover:underline truncate">
-                        {viewRow.phone}
-                      </a>
-                    ) : (
-                      <span className="text-xs font-semibold text-gray-400">—</span>
-                    )}
-                  </div>
-
-                  {/* Position Applied */}
-                  <div className="bg-white p-3.5 rounded-xl border border-gray-200 shadow-2xs flex flex-col justify-between">
-                    <div className="flex items-center gap-1.5 text-gray-400 mb-1.5">
-                      <Briefcase className="w-3.5 h-3.5 text-[#34953C]" />
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Target Role</span>
-                    </div>
-                    <span className="text-xs font-bold text-gray-900 truncate">
-                      {viewRow.position || '—'}
-                    </span>
-                  </div>
-
-                  {/* Experience */}
-                  <div className="bg-white p-3.5 rounded-xl border border-gray-200 shadow-2xs flex flex-col justify-between">
-                    <div className="flex items-center gap-1.5 text-gray-400 mb-1.5">
-                      <Clock className="w-3.5 h-3.5 text-blue-600" />
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Experience Level</span>
-                    </div>
-                    <div>
-                      {viewRow.experience ? (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold bg-blue-50 text-blue-800 border border-blue-200/80">
-                          {viewRow.experience}
-                        </span>
-                      ) : (
-                        <span className="text-xs font-semibold text-gray-400">—</span>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Portfolio Link */}
-                  <div className="bg-white p-3.5 rounded-xl border border-gray-200 shadow-2xs flex flex-col justify-between">
-                    <div className="flex items-center gap-1.5 text-gray-400 mb-1.5">
-                      <Globe className="w-3.5 h-3.5 text-emerald-600" />
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Portfolio / Profile</span>
-                    </div>
-                    {viewRow.portfolio ? (
-                      <a
-                        href={viewRow.portfolio.startsWith('http') ? viewRow.portfolio : `https://${viewRow.portfolio}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-xs font-bold text-blue-600 hover:underline truncate"
-                      >
-                        {viewRow.portfolio}
-                      </a>
-                    ) : (
-                      <span className="text-xs font-semibold text-gray-400">Not provided</span>
-                    )}
-                  </div>
-
-                  {/* Current Status */}
-                  <div className="bg-white p-3.5 rounded-xl border border-gray-200 shadow-2xs flex flex-col justify-between">
-                    <div className="flex items-center gap-1.5 text-gray-400 mb-1.5">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-[#34953C]" />
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Application Status</span>
-                    </div>
-                    <div>
-                      {renderStatusBadge(viewRow.status)}
-                    </div>
-                  </div>
-
-                  {/* Submitted At */}
-                  <div className="bg-white p-3.5 rounded-xl border border-gray-200 shadow-2xs flex flex-col justify-between">
-                    <div className="flex items-center gap-1.5 text-gray-400 mb-1.5">
-                      <Calendar className="w-3.5 h-3.5 text-gray-400" />
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Submitted At</span>
-                    </div>
-                    <span className="text-xs font-semibold text-gray-700">
-                      {viewRow.createdAt ? new Date(viewRow.createdAt).toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—'}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* 3. Cover Letter / Statement Box */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400">
-                    Candidate Statement / Cover Letter
-                  </span>
-                  {(viewRow.coverLetter || viewRow.message) && (
-                    <span className="text-[11px] text-gray-400 font-medium">
-                      {(viewRow.coverLetter || viewRow.message).length} characters
-                    </span>
-                  )}
-                </div>
-                <div className="bg-gray-50/90 rounded-xl p-4 sm:p-5 text-xs sm:text-sm text-gray-800 whitespace-pre-wrap break-words border border-gray-200/80 leading-relaxed min-h-[90px]">
-                  {viewRow.coverLetter || viewRow.message || <span className="text-gray-400 italic">No statement provided with this application.</span>}
-                </div>
-              </div>
-
-              {/* 4. Hiring Manager Feedback / Note Input */}
-              <div className="space-y-2">
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-600">
-                  Internal Feedback / Email Note <span className="text-gray-400 font-normal lowercase">(included in notification email)</span>:
-                </label>
-                <textarea
-                  value={statusNote}
-                  onChange={(e) => setStatusNote(e.target.value)}
-                  placeholder="Optional custom feedback, interview schedule details, or notes to send to the candidate..."
-                  rows={2}
-                  className="w-full bg-white border border-gray-300 focus:border-[#34953C] rounded-lg p-2.5 text-xs outline-none transition-all"
-                />
-              </div>
-
-              {/* 5. Recruitment Decision Actions */}
-              <div className="pt-2 border-t border-gray-200 space-y-2.5">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400 block">
-                  Application Decisions & Automated Email Dispatch
-                </span>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                   <button
                     type="button"
-                    disabled={actionLoading || (viewRow.status || '').toLowerCase() === 'approved'}
-                    onClick={() => handleStatusChange(viewRow.id || viewRow._id, 'Approved', statusNote)}
-                    className="bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white py-2.5 px-4 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs"
+                    onClick={() => setViewRow(null)}
+                    className="px-6 py-2 bg-[#34953C] hover:bg-[#2b7e32] text-white rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-xs"
                   >
-                    {actionLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5" />}
-                    <span>{(viewRow.status || '').toLowerCase() === 'approved' ? 'Already Approved' : 'Approve & Send Welcome Email'}</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    disabled={actionLoading || (viewRow.status || '').toLowerCase() === 'rejected'}
-                    onClick={() => handleStatusChange(viewRow.id || viewRow._id, 'Rejected', statusNote)}
-                    className="bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white py-2.5 px-4 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs"
-                  >
-                    {actionLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <XCircle className="w-3.5 h-3.5" />}
-                    <span>{(viewRow.status || '').toLowerCase() === 'rejected' ? 'Already Rejected' : 'Reject & Send Update Email'}</span>
+                    Close
                   </button>
                 </div>
-
-                <div className="flex items-center justify-between pt-2 text-xs">
-                  {(viewRow.status || '').toLowerCase() !== 'pending' ? (
-                    <button
-                      type="button"
-                      disabled={actionLoading}
-                      onClick={() => handleStatusChange(viewRow.id || viewRow._id, 'Pending', statusNote || '')}
-                      className="text-gray-500 hover:text-gray-800 underline cursor-pointer"
-                    >
-                      Revert status to Pending Review & Send Update Email
-                    </button>
-                  ) : <span />}
-                  <button
-                    type="button"
-                    disabled={actionLoading}
-                    onClick={() => handleDeleteApplication(viewRow.id || viewRow._id, viewRow.name)}
-                    className="text-red-500 hover:text-red-700 font-semibold flex items-center gap-1 cursor-pointer ml-auto"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                    <span>Delete Application</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Modal Footer */}
-            <div className="px-6 sm:px-8 py-3.5 bg-gray-50 border-t border-gray-200 flex items-center justify-between gap-3 shrink-0">
-              <span className="text-xs text-gray-400 font-medium hidden sm:inline">
-                Application #{viewRow.appNo} &bull; {viewRow.position || 'Open Role'}
-              </span>
-              <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end">
-                {viewRow.phone && (
-                  <a
-                    href={`tel:${viewRow.phone}`}
-                    className="px-3.5 py-2 rounded-lg border border-gray-300 bg-white hover:bg-gray-100 text-gray-700 text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer"
-                  >
-                    <Phone className="w-3.5 h-3.5 text-gray-500" />
-                    <span>Call</span>
-                  </a>
-                )}
-                {viewRow.email && (
-                  <a
-                    href={`mailto:${viewRow.email}`}
-                    className="px-3.5 py-2 rounded-lg border border-gray-300 bg-white hover:bg-gray-100 text-gray-700 text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer"
-                  >
-                    <Mail className="w-3.5 h-3.5 text-gray-500" />
-                    <span>Email</span>
-                  </a>
-                )}
-                <button
-                  type="button"
-                  onClick={() => setViewRow(null)}
-                  className="px-6 py-2 bg-[#34953C] hover:bg-[#2b7e32] text-white rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-xs"
-                >
-                  Close
-                </button>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
     </div>
   );
 }

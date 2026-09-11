@@ -17,7 +17,8 @@ import {
   Award,
   ShieldCheck,
   RotateCw,
-  Edit2
+  Edit2,
+  Plus
 } from "lucide-react";
 
 const availableRoles = [
@@ -47,11 +48,15 @@ export default function JobApplicationForm({ selectedPosition, onResetPosition }
     phone: "",
     position: selectedPosition || "",
     experience: "",
-    portfolio: "",
     coverLetter: "",
   });
 
-  const [resumeFile, setResumeFile] = useState(null);
+  // Multiple Portfolio / Website / LinkedIn Links (Optional)
+  const [portfolioLinks, setPortfolioLinks] = useState([""]);
+  const [portfolioErrors, setPortfolioErrors] = useState({});
+
+  // Multiple Resume / CV Upload Files (Required >= 1)
+  const [resumeFiles, setResumeFiles] = useState([]);
   const [dragActive, setDragActive] = useState(false);
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
@@ -105,7 +110,7 @@ export default function JobApplicationForm({ selectedPosition, onResetPosition }
   }, [selectedPosition]);
 
   // Validation function for each field
-  const validateField = (name, value, file = resumeFile) => {
+  const validateField = (name, value, customFiles = null) => {
     switch (name) {
       case "name": {
         const trimmed = (value || "").trim();
@@ -148,22 +153,30 @@ export default function JobApplicationForm({ selectedPosition, onResetPosition }
         return "";
       }
       case "portfolio": {
-        const trimmed = (value || "").trim();
-        if (!trimmed) return ""; // Optional field
         const urlPattern = /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/[^\s]*)?$/i;
-        if (!urlPattern.test(trimmed)) return "Please enter a valid website or profile URL (e.g., https://linkedin.com/in/username).";
+        for (const link of portfolioLinks) {
+          const trimmed = (link || "").trim();
+          if (trimmed && !urlPattern.test(trimmed)) {
+            return "Please enter a valid website or profile URL (e.g., https://linkedin.com/in/username).";
+          }
+        }
         return "";
       }
       case "resume": {
-        if (!file) return "Resume / CV upload is required (.pdf, .doc, or .docx).";
-        const allowedExtensions = [".pdf", ".doc", ".docx"];
-        const ext = file.name.substring(file.name.lastIndexOf(".")).toLowerCase();
-        if (!allowedExtensions.includes(ext)) {
-          return "Invalid file type. Only PDF (.pdf), DOC (.doc), and DOCX (.docx) files are allowed.";
+        const targetFiles = customFiles ? (Array.isArray(customFiles) ? customFiles : [customFiles]) : resumeFiles;
+        if (!targetFiles || targetFiles.length === 0) {
+          return "At least one Resume / CV upload is required (.pdf, .doc, or .docx).";
         }
+        const allowedExtensions = [".pdf", ".doc", ".docx"];
         const maxSize = 10 * 1024 * 1024; // 10MB
-        if (file.size > maxSize) {
-          return `File size exceeds the 10MB limit (uploaded: ${(file.size / (1024 * 1024)).toFixed(1)}MB).`;
+        for (const f of targetFiles) {
+          const ext = f.name.substring(f.name.lastIndexOf(".")).toLowerCase();
+          if (!allowedExtensions.includes(ext)) {
+            return `File "${f.name}" has an invalid file type. Only PDF (.pdf), DOC (.doc), and DOCX (.docx) files are allowed.`;
+          }
+          if (f.size > maxSize) {
+            return `File "${f.name}" exceeds the 10MB limit (${(f.size / (1024 * 1024)).toFixed(1)}MB).`;
+          }
         }
         return "";
       }
@@ -190,22 +203,6 @@ export default function JobApplicationForm({ selectedPosition, onResetPosition }
     setErrors((prev) => ({ ...prev, [name]: error }));
   };
 
-  const handleFileChange = (file) => {
-    if (!file) return;
-    setTouched((prev) => ({ ...prev, resume: true }));
-    const error = validateField("resume", null, file);
-    if (error) {
-      setErrors((prev) => ({ ...prev, resume: error }));
-      setResumeFile(null);
-      if (fileInputRef.current) fileInputRef.current.value = "";
-      return;
-    }
-
-    setErrors((prev) => ({ ...prev, resume: "" }));
-    setResumeFile(file);
-    if (formAlert) setFormAlert(null);
-  };
-
   const handleDrag = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -220,18 +217,114 @@ export default function JobApplicationForm({ selectedPosition, onResetPosition }
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      handleFileChange(e.dataTransfer.files[0]);
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      handleFilesAdded(e.dataTransfer.files);
     }
   };
 
-  const removeFile = () => {
-    setResumeFile(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
+  // Portfolio Links Helper Handlers
+  const validatePortfolioUrl = (url) => {
+    const trimmed = (url || "").trim();
+    if (!trimmed) return "";
+    const urlPattern = /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/[^\s]*)?$/i;
+    if (!urlPattern.test(trimmed)) {
+      return "Please enter a valid website or profile URL (e.g., https://linkedin.com/in/username).";
     }
-    if (touched.resume) {
-      setErrors((prev) => ({ ...prev, resume: "Resume / CV upload is required (.pdf, .doc, or .docx)." }));
+    return "";
+  };
+
+  const handleAddPortfolioLink = () => {
+    setPortfolioLinks((prev) => [...prev, ""]);
+  };
+
+  const handlePortfolioLinkChange = (index, value) => {
+    const updated = [...portfolioLinks];
+    updated[index] = value;
+    setPortfolioLinks(updated);
+
+    if (portfolioErrors[index]) {
+      const err = validatePortfolioUrl(value);
+      setPortfolioErrors((prev) => ({ ...prev, [index]: err }));
+    }
+    if (errors.portfolio) {
+      setErrors((prev) => ({ ...prev, portfolio: "" }));
+    }
+    if (formAlert) setFormAlert(null);
+  };
+
+  const handlePortfolioLinkBlur = (index) => {
+    const err = validatePortfolioUrl(portfolioLinks[index]);
+    setPortfolioErrors((prev) => ({ ...prev, [index]: err }));
+  };
+
+  const handleRemovePortfolioLink = (index) => {
+    if (portfolioLinks.length <= 1) {
+      setPortfolioLinks([""]);
+      setPortfolioErrors({});
+      return;
+    }
+    const updated = portfolioLinks.filter((_, i) => i !== index);
+    setPortfolioLinks(updated);
+    const newErrors = {};
+    updated.forEach((link, idx) => {
+      const err = validatePortfolioUrl(link);
+      if (err) newErrors[idx] = err;
+    });
+    setPortfolioErrors(newErrors);
+  };
+
+  // Resume Files Helper Handlers
+  const handleFilesAdded = (incoming) => {
+    if (!incoming || incoming.length === 0) return;
+    const fileList = Array.from(incoming);
+    const allowedExtensions = [".pdf", ".doc", ".docx"];
+    const maxSize = 10 * 1024 * 1024;
+
+    let errorFound = "";
+    const validToAdd = [];
+
+    for (const f of fileList) {
+      const ext = f.name.substring(f.name.lastIndexOf(".")).toLowerCase();
+      if (!allowedExtensions.includes(ext)) {
+        errorFound = `File "${f.name}" has an invalid format. Allowed: .pdf, .doc, .docx`;
+        continue;
+      }
+      if (f.size > maxSize) {
+        errorFound = `File "${f.name}" exceeds the 10MB limit (${(f.size / (1024 * 1024)).toFixed(1)}MB).`;
+        continue;
+      }
+      const alreadyExists = resumeFiles.some(
+        (existing) => existing.name === f.name && existing.size === f.size
+      );
+      if (!alreadyExists) {
+        validToAdd.push(f);
+      }
+    }
+
+    setTouched((prev) => ({ ...prev, resume: true }));
+
+    if (errorFound && validToAdd.length === 0 && resumeFiles.length === 0) {
+      setErrors((prev) => ({ ...prev, resume: errorFound }));
+      return;
+    }
+
+    const updated = [...resumeFiles, ...validToAdd];
+    setResumeFiles(updated);
+    if (updated.length > 0) {
+      setErrors((prev) => ({ ...prev, resume: "" }));
+      if (formAlert) setFormAlert(null);
+    }
+  };
+
+  const handleRemoveFile = (index) => {
+    const updated = resumeFiles.filter((_, i) => i !== index);
+    setResumeFiles(updated);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+    if (updated.length === 0 && touched.resume) {
+      setErrors((prev) => ({
+        ...prev,
+        resume: "At least one Resume / CV upload is required (.pdf, .doc, or .docx).",
+      }));
     }
   };
 
@@ -252,6 +345,13 @@ export default function JobApplicationForm({ selectedPosition, onResetPosition }
           const el = document.getElementById("resume-upload-zone") || fileInputRef.current;
           if (el) {
             el.scrollIntoView({ behavior: "smooth", block: "center" });
+            return;
+          }
+        } else if (field === "portfolio") {
+          const el = document.querySelector('input[data-field="portfolio"]') || document.querySelector('input[type="url"]');
+          if (el) {
+            el.scrollIntoView({ behavior: "smooth", block: "center" });
+            el.focus();
             return;
           }
         } else {
@@ -365,6 +465,18 @@ export default function JobApplicationForm({ selectedPosition, onResetPosition }
     e.preventDefault();
     setFormAlert(null);
 
+    // Validate each portfolio link
+    const newPortErrors = {};
+    let hasPortError = false;
+    portfolioLinks.forEach((link, idx) => {
+      const err = validatePortfolioUrl(link);
+      if (err) {
+        newPortErrors[idx] = err;
+        hasPortError = true;
+      }
+    });
+    setPortfolioErrors(newPortErrors);
+
     // Validate ALL fields on submission
     const currentErrors = {
       name: validateField("name", formData.name),
@@ -372,9 +484,9 @@ export default function JobApplicationForm({ selectedPosition, onResetPosition }
       phone: validateField("phone", formData.phone),
       position: validateField("position", formData.position),
       experience: validateField("experience", formData.experience),
-      portfolio: validateField("portfolio", formData.portfolio),
+      portfolio: hasPortError ? "Please correct invalid portfolio URLs." : "",
       coverLetter: validateField("coverLetter", formData.coverLetter),
-      resume: validateField("resume", null, resumeFile),
+      resume: validateField("resume", null, resumeFiles),
     };
 
     // Mark all as touched
@@ -390,7 +502,7 @@ export default function JobApplicationForm({ selectedPosition, onResetPosition }
     });
     setErrors(currentErrors);
 
-    const hasErrors = Object.values(currentErrors).some((err) => Boolean(err));
+    const hasErrors = Object.values(currentErrors).some((err) => Boolean(err)) || hasPortError;
     if (hasErrors) {
       setFormAlert({
         type: "error",
@@ -467,9 +579,18 @@ export default function JobApplicationForm({ selectedPosition, onResetPosition }
       data.append("phone", formData.phone.trim());
       data.append("position", formData.position.trim());
       data.append("experience", formData.experience.trim());
-      data.append("portfolio", formData.portfolio.trim());
       data.append("coverLetter", formData.coverLetter.trim());
-      data.append("resume", resumeFile);
+
+      // Append clean portfolio links
+      const cleanLinks = portfolioLinks.map((l) => l.trim()).filter(Boolean);
+      data.append("portfolio", cleanLinks.join(", "));
+      data.append("portfolioLinks", JSON.stringify(cleanLinks));
+
+      // Append all resume files
+      resumeFiles.forEach((file) => {
+        data.append("resumes", file);
+        data.append("resume", file); // backward compatibility
+      });
 
       const appRes = await fetch("/api/applications", {
         method: "POST",
@@ -497,10 +618,11 @@ export default function JobApplicationForm({ selectedPosition, onResetPosition }
         phone: "",
         position: "",
         experience: "",
-        portfolio: "",
         coverLetter: "",
       });
-      setResumeFile(null);
+      setPortfolioLinks([""]);
+      setPortfolioErrors({});
+      setResumeFiles([]);
       setErrors({});
       setTouched({});
       if (fileInputRef.current) fileInputRef.current.value = "";
@@ -762,33 +884,69 @@ export default function JobApplicationForm({ selectedPosition, onResetPosition }
                   )}
                 </div>
 
-                {/* 6. Portfolio / LinkedIn (Optional) */}
+                {/* 6. Portfolio / Website / LinkedIn (Optional, Multi-Link) */}
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-[#0D0F12] mb-2">
-                    Portfolio / Website / LinkedIn <span className="text-gray-400 text-[11px] font-normal lowercase">(optional)</span>
-                  </label>
-                  <div className="relative">
-                    <Globe className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-                    <input
-                      type="url"
-                      name="portfolio"
-                      value={formData.portfolio}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      placeholder="https://linkedin.com/in/username or yoursite.com"
-                      className={`w-full bg-[#F8FAFC] border ${
-                        touched.portfolio && errors.portfolio
-                          ? "border-red-400 bg-red-50/20 focus:border-red-500 focus:ring-1 focus:ring-red-400"
-                          : "border-gray-200 focus:border-[#36963D] focus:bg-white"
-                      } rounded-xl pl-10 pr-4 py-3 text-sm text-[#0D0F12] placeholder-gray-400 outline-none transition-all`}
-                    />
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-[#0D0F12]">
+                      Portfolio / Website / LinkedIn <span className="text-gray-400 text-[11px] font-normal lowercase">(optional)</span>
+                    </label>
+                    <button
+                      type="button"
+                      onClick={handleAddPortfolioLink}
+                      className="text-xs font-bold text-[#36963D] hover:text-[#2e8234] hover:underline inline-flex items-center gap-1 cursor-pointer transition-colors"
+                      title="Add another portfolio, website, or LinkedIn URL"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      <span>Add Another</span>
+                    </button>
                   </div>
-                  {touched.portfolio && errors.portfolio && (
-                    <p className="text-red-500 text-xs mt-1.5 flex items-center gap-1 font-medium animate-in fade-in-50 duration-200">
-                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                      <span>{errors.portfolio}</span>
-                    </p>
-                  )}
+
+                  <div className="space-y-2.5">
+                    {portfolioLinks.map((link, idx) => (
+                      <div key={idx} className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <div className="relative flex-1">
+                            <Globe className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                            <input
+                              type="url"
+                              data-field="portfolio"
+                              value={link}
+                              onChange={(e) => handlePortfolioLinkChange(idx, e.target.value)}
+                              onBlur={() => handlePortfolioLinkBlur(idx)}
+                              placeholder={
+                                idx === 0
+                                  ? "https://linkedin.com/in/username or yoursite.com"
+                                  : idx === 1
+                                  ? "https://github.com/username or personal site"
+                                  : "https://additional-portfolio.com"
+                              }
+                              className={`w-full bg-[#F8FAFC] border ${
+                                portfolioErrors[idx]
+                                  ? "border-red-400 bg-red-50/20 focus:border-red-500 focus:ring-1 focus:ring-red-400"
+                                  : "border-gray-200 focus:border-[#36963D] focus:bg-white"
+                              } rounded-xl pl-10 pr-4 py-3 text-sm text-[#0D0F12] placeholder-gray-400 outline-none transition-all`}
+                            />
+                          </div>
+                          {portfolioLinks.length > 1 && (
+                            <button
+                              type="button"
+                              onClick={() => handleRemovePortfolioLink(idx)}
+                              className="p-3 rounded-xl border border-gray-200 text-gray-400 hover:text-red-500 hover:border-red-300 hover:bg-red-50/50 transition-colors cursor-pointer shrink-0"
+                              title="Remove link"
+                            >
+                              <X className="w-4 h-4" />
+                            </button>
+                          )}
+                        </div>
+                        {portfolioErrors[idx] && (
+                          <p className="text-red-500 text-xs flex items-center gap-1 font-medium animate-in fade-in-50 duration-200 pl-1">
+                            <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                            <span>{portfolioErrors[idx]}</span>
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
 
@@ -825,37 +983,99 @@ export default function JobApplicationForm({ selectedPosition, onResetPosition }
                 )}
               </div>
 
-              {/* 8. Resume / CV Upload Box */}
+              {/* 8. Resume / CV Upload Box (Multi-File Support) */}
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-[#0D0F12] mb-2">
-                  Resume / CV Upload <span className="text-red-500 font-bold">*</span>
-                </label>
-
-                {resumeFile ? (
-                  /* Attached Valid File Card */
-                  <div className="bg-emerald-50/80 border border-emerald-300 rounded-2xl p-4 flex items-center justify-between shadow-2xs">
-                    <div className="flex items-center gap-3 min-w-0">
-                      <div className="w-10 h-10 rounded-xl bg-[#36963D] text-white flex items-center justify-center shrink-0">
-                        <FileText className="w-5 h-5" />
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-sm font-bold text-[#0D0F12] truncate">{resumeFile.name}</p>
-                        <p className="text-xs text-emerald-700 font-medium">
-                          {formatFileSize(resumeFile.size)} &bull; Ready for submission
-                        </p>
-                      </div>
-                    </div>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-[#0D0F12]">
+                    Resume / CV Upload <span className="text-red-500 font-bold">*</span>
+                    {resumeFiles.length > 0 && (
+                      <span className="text-gray-400 text-[11px] font-normal lowercase ml-2">
+                        ({resumeFiles.length} {resumeFiles.length === 1 ? "file" : "files"} selected)
+                      </span>
+                    )}
+                  </label>
+                  {resumeFiles.length > 0 && (
                     <button
                       type="button"
-                      onClick={removeFile}
-                      className="p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-white transition-colors cursor-pointer shrink-0 ml-3"
-                      title="Remove file"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="text-xs font-bold text-[#36963D] hover:text-[#2e8234] hover:underline inline-flex items-center gap-1 cursor-pointer transition-colors"
+                      title="Add another CV/resume document"
                     >
-                      <X className="w-5 h-5" />
+                      <Plus className="w-3.5 h-3.5" />
+                      <span>Add Another CV</span>
                     </button>
+                  )}
+                </div>
+
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  multiple
+                  accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                  onChange={(e) => {
+                    if (e.target.files && e.target.files.length > 0) {
+                      handleFilesAdded(e.target.files);
+                    }
+                  }}
+                  className="hidden"
+                />
+
+                {resumeFiles.length > 0 ? (
+                  <div className="space-y-3">
+                    {/* List of Attached Files */}
+                    <div className="space-y-2">
+                      {resumeFiles.map((file, idx) => (
+                        <div
+                          key={idx}
+                          className="bg-emerald-50/80 border border-emerald-300 rounded-2xl p-3.5 sm:p-4 flex items-center justify-between shadow-2xs animate-in fade-in duration-200"
+                        >
+                          <div className="flex items-center gap-3 min-w-0">
+                            <div className="w-10 h-10 rounded-xl bg-[#36963D] text-white flex items-center justify-center shrink-0">
+                              <FileText className="w-5 h-5" />
+                            </div>
+                            <div className="min-w-0">
+                              <p className="text-sm font-bold text-[#0D0F12] truncate">{file.name}</p>
+                              <p className="text-xs text-emerald-700 font-medium">
+                                {formatFileSize(file.size)} &bull; {file.name.substring(file.name.lastIndexOf('.')).toUpperCase()} &bull; Ready for submission
+                              </p>
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveFile(idx)}
+                            className="p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-white transition-colors cursor-pointer shrink-0 ml-3"
+                            title={`Remove ${file.name}`}
+                          >
+                            <X className="w-5 h-5" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Quick Add Another Strip */}
+                    <div
+                      onDragEnter={handleDrag}
+                      onDragLeave={handleDrag}
+                      onDragOver={handleDrag}
+                      onDrop={handleDrop}
+                      onClick={() => fileInputRef.current?.click()}
+                      className={`border-2 border-dashed rounded-xl p-3.5 text-center cursor-pointer transition-colors ${
+                        dragActive
+                          ? "border-[#36963D] bg-emerald-50/50 scale-[1.01]"
+                          : "border-gray-300 hover:border-[#36963D] bg-[#F8FAFC]"
+                      }`}
+                    >
+                      <p className="text-xs font-bold text-gray-700 inline-flex items-center gap-1.5">
+                        <UploadCloud className="w-4 h-4 text-[#36963D]" />
+                        <span>Click to add another CV or document, or drag & drop</span>
+                      </p>
+                      <p className="text-[11px] text-gray-400 mt-0.5">
+                        Supported formats: PDF, DOC, DOCX (Max 10MB each)
+                      </p>
+                    </div>
                   </div>
                 ) : (
-                  /* Drag & Drop Upload Zone */
+                  /* Empty State: Drag & Drop Zone */
                   <div
                     id="resume-upload-zone"
                     onDragEnter={handleDrag}
@@ -871,18 +1091,6 @@ export default function JobApplicationForm({ selectedPosition, onResetPosition }
                         : "border-gray-300 hover:border-[#36963D] bg-[#F8FAFC]"
                     }`}
                   >
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                      onChange={(e) => {
-                        if (e.target.files && e.target.files[0]) {
-                          handleFileChange(e.target.files[0]);
-                        }
-                      }}
-                      className="hidden"
-                    />
-
                     <div className={`w-14 h-14 ${
                       touched.resume && errors.resume ? "bg-red-100 text-red-600" : "bg-[#36963D]/10 text-[#36963D]"
                     } rounded-2xl flex items-center justify-center mx-auto mb-3 transition-colors`}>
@@ -893,7 +1101,10 @@ export default function JobApplicationForm({ selectedPosition, onResetPosition }
                       Click to upload your CV, or drag & drop here
                     </p>
                     <p className="text-xs text-[#64748B]">
-                      Supported formats: <strong className="text-gray-700">PDF, DOC, DOCX</strong> (Max size: 10MB)
+                      Supported formats: <strong className="text-gray-700">PDF, DOC, DOCX</strong> (Max size: 10MB per file)
+                    </p>
+                    <p className="text-[11px] text-emerald-700 font-medium mt-2">
+                      You can add multiple files if you have additional resume versions or portfolios.
                     </p>
                   </div>
                 )}

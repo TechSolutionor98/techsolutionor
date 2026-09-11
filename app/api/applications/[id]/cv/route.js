@@ -37,25 +37,45 @@ export async function GET(request, { params }) {
     }
 
     const application = await db.collection('applications').findOne(query);
-    if (!application || !application.cv) {
+    if (!application || (!application.cv && (!Array.isArray(application.cvFiles) || application.cvFiles.length === 0))) {
       return new NextResponse('CV not found for this applicant.', { status: 404 });
     }
 
-    const cvPath = application.cv.trim();
+    // Support multiple uploaded CV files via index parameter (?index=0, 1, 2...)
+    const url = new URL(request.url);
+    const indexParam = url.searchParams.get('index') || url.searchParams.get('file');
+    const isDownload = url.searchParams.get('download') === '1' || url.searchParams.get('download') === 'true';
+
+    let targetFile = null;
+    if (Array.isArray(application.cvFiles) && application.cvFiles.length > 0) {
+      if (indexParam !== null && !isNaN(parseInt(indexParam, 10))) {
+        const idx = parseInt(indexParam, 10);
+        targetFile = application.cvFiles[idx] || application.cvFiles[0];
+      } else {
+        targetFile = application.cvFiles[0];
+      }
+    }
+
+    const cvPath = (targetFile?.cvUrl || targetFile?.cv || application.cv || '').trim();
     const candidateName = (application.name || 'Applicant').replace(/[^a-zA-Z0-9_-]/g, '_');
-    const originalFileName = application.cvFileName || path.basename(cvPath) || 'resume.pdf';
+    const originalFileName = targetFile?.fileName || targetFile?.cvFileName || application.cvFileName || path.basename(cvPath) || 'resume.pdf';
     const ext = originalFileName.split('.').pop().toLowerCase();
     const mimeType = getMimeType(originalFileName);
-    const downloadFileName = `${candidateName}_Resume.${ext}`;
+    const downloadFileName = `${candidateName}_${originalFileName.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
+
+    const getDisposition = () => {
+      if (isDownload) return `attachment; filename="${downloadFileName}"`;
+      return ext === 'pdf' ? `inline; filename="${downloadFileName}"` : `attachment; filename="${downloadFileName}"`;
+    };
 
     // 1. Check if the file is stored locally in public/
-    const localCvPath = application.localCvPath || (cvPath.startsWith('/uploads/') || cvPath.startsWith('uploads/') ? cvPath : null);
+    const localCvPath = targetFile?.localCvPath || application.localCvPath || (cvPath.startsWith('/uploads/') || cvPath.startsWith('uploads/') ? cvPath : null);
     if (localCvPath) {
       const cleanRel = localCvPath.startsWith('/') ? localCvPath.slice(1) : localCvPath;
       const fullDiskPath = path.join(process.cwd(), 'public', cleanRel);
       if (fs.existsSync(fullDiskPath)) {
         const fileBuffer = await fs.promises.readFile(fullDiskPath);
-        const disposition = ext === 'pdf' ? `inline; filename="${downloadFileName}"` : `attachment; filename="${downloadFileName}"`;
+        const disposition = getDisposition();
         return new NextResponse(fileBuffer, {
           status: 200,
           headers: {
@@ -129,7 +149,7 @@ export async function GET(request, { params }) {
           console.warn('Failed to cache resume file locally:', cacheErr);
         }
 
-        const disposition = ext === 'pdf' ? `inline; filename="${downloadFileName}"` : `attachment; filename="${downloadFileName}"`;
+        const disposition = getDisposition();
         return new NextResponse(buffer, {
           status: 200,
           headers: {
@@ -147,7 +167,7 @@ export async function GET(request, { params }) {
       const res = await fetch(cvPath);
       if (res.ok) {
         const buffer = Buffer.from(await res.arrayBuffer());
-        const disposition = ext === 'pdf' ? `inline; filename="${downloadFileName}"` : `attachment; filename="${downloadFileName}"`;
+        const disposition = getDisposition();
         return new NextResponse(buffer, {
           status: 200,
           headers: {
