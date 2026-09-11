@@ -166,6 +166,26 @@ export async function POST(request) {
     }
 
     const db = await getDb();
+
+    // Security Check: Applicant must have successfully verified their email via OTP
+    const otpRecord = await db.collection('otps').findOne({ 
+      email, 
+      verified: true 
+    });
+
+    if (!otpRecord) {
+      return NextResponse.json({ 
+        error: 'Email verification required. Please verify your email with the 6-digit code before submitting your application.' 
+      }, { status: 403 });
+    }
+
+    if (new Date() > new Date(otpRecord.expiresAt)) {
+      await db.collection('otps').deleteMany({ email });
+      return NextResponse.json({ 
+        error: 'Your verification session has expired. Please request a new verification code and try again.' 
+      }, { status: 403 });
+    }
+
     const now = new Date().toISOString();
     const doc = {
       name,
@@ -187,6 +207,9 @@ export async function POST(request) {
 
     const res = await db.collection('applications').insertOne(doc);
     const entry = { id: res.insertedId.toString(), _id: res.insertedId.toString(), ...doc };
+
+    // Clean up / consume the verified OTP so it cannot be reused
+    await db.collection('otps').deleteMany({ email });
 
     await logActivity(request, 'career_application_submitted', name, { email, position, id: entry.id });
 

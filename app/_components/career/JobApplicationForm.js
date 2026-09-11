@@ -14,7 +14,10 @@ import {
   Mail,
   Phone,
   Globe,
-  Award
+  Award,
+  ShieldCheck,
+  RotateCw,
+  Edit2
 } from "lucide-react";
 
 const availableRoles = [
@@ -50,15 +53,48 @@ export default function JobApplicationForm({ selectedPosition, onResetPosition }
 
   const [resumeFile, setResumeFile] = useState(null);
   const [dragActive, setDragActive] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
   const [formAlert, setFormAlert] = useState(null);
   const [successData, setSuccessData] = useState(null);
 
+  // OTP Verification States
+  const [showOtpModal, setShowOtpModal] = useState(false);
+  const [otpDigits, setOtpDigits] = useState(["", "", "", "", "", ""]);
+  const [otpError, setOtpError] = useState("");
+  const [sendingOtp, setSendingOtp] = useState(false);
+  const [verifyingOtp, setVerifyingOtp] = useState(false);
+  const [resendingOtp, setResendingOtp] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
+
   const fileInputRef = useRef(null);
   const formRef = useRef(null);
   const errorBannerRef = useRef(null);
+  const otpInputRefs = useRef([]);
+
+  // Cooldown countdown timer
+  useEffect(() => {
+    if (resendCooldown <= 0) return;
+    const timer = setInterval(() => {
+      setResendCooldown((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [resendCooldown]);
+
+  // Handle modal lock and focus
+  useEffect(() => {
+    if (showOtpModal) {
+      document.body.style.overflow = "hidden";
+      setTimeout(() => {
+        otpInputRefs.current[0]?.focus();
+      }, 100);
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [showOtpModal]);
 
   // Sync when selectedPosition prop updates
   useEffect(() => {
@@ -231,6 +267,100 @@ export default function JobApplicationForm({ selectedPosition, onResetPosition }
     errorBannerRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
   };
 
+  // OTP Digits input handling
+  const handleOtpChange = (index, value) => {
+    const cleaned = value.replace(/\D/g, "");
+    if (!cleaned) {
+      const newDigits = [...otpDigits];
+      newDigits[index] = "";
+      setOtpDigits(newDigits);
+      return;
+    }
+
+    const digit = cleaned.slice(-1);
+    const newDigits = [...otpDigits];
+    newDigits[index] = digit;
+    setOtpDigits(newDigits);
+    setOtpError("");
+
+    if (index < 5 && digit) {
+      otpInputRefs.current[index + 1]?.focus();
+    }
+  };
+
+  const handleOtpKeyDown = (index, e) => {
+    if (e.key === "Backspace" && !otpDigits[index] && index > 0) {
+      otpInputRefs.current[index - 1]?.focus();
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      handleVerifyAndSubmit();
+    }
+  };
+
+  const handleOtpPaste = (e) => {
+    e.preventDefault();
+    const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
+    if (!pasted) return;
+
+    const newDigits = [...otpDigits];
+    for (let i = 0; i < 6; i++) {
+      newDigits[i] = pasted[i] || "";
+    }
+    setOtpDigits(newDigits);
+    setOtpError("");
+
+    const nextIndex = Math.min(pasted.length, 5);
+    otpInputRefs.current[nextIndex]?.focus();
+  };
+
+  const handleResendOtp = async () => {
+    if (resendCooldown > 0 || resendingOtp) return;
+    try {
+      setResendingOtp(true);
+      setOtpError("");
+      const res = await fetch("/api/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: formData.email.trim().toLowerCase(),
+          purpose: "application",
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to resend verification code.");
+      }
+      setResendCooldown(30);
+      setOtpDigits(["", "", "", "", "", ""]);
+      setTimeout(() => {
+        otpInputRefs.current[0]?.focus();
+      }, 50);
+    } catch (err) {
+      setOtpError(err.message || "Failed to resend verification code. Please try again.");
+    } finally {
+      setResendingOtp(false);
+    }
+  };
+
+  const handleCloseModal = () => {
+    if (verifyingOtp) return;
+    setShowOtpModal(false);
+    setOtpError("");
+  };
+
+  const handleEditEmail = () => {
+    if (verifyingOtp) return;
+    setShowOtpModal(false);
+    setOtpError("");
+    setTimeout(() => {
+      const emailInput = document.querySelector('input[name="email"]');
+      if (emailInput) {
+        emailInput.scrollIntoView({ behavior: "smooth", block: "center" });
+        emailInput.focus();
+      }
+    }, 150);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setFormAlert(null);
@@ -270,8 +400,67 @@ export default function JobApplicationForm({ selectedPosition, onResetPosition }
       return;
     }
 
+    // First validate and dispatch verification OTP to applicant's email
     try {
-      setLoading(true);
+      setSendingOtp(true);
+      const res = await fetch("/api/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: formData.email.trim().toLowerCase(),
+          purpose: "application",
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to dispatch verification code. Please try again.");
+      }
+
+      // Open OTP Verification Modal
+      setOtpDigits(["", "", "", "", "", ""]);
+      setOtpError("");
+      setResendCooldown(30);
+      setShowOtpModal(true);
+    } catch (err) {
+      console.error("OTP dispatch error:", err);
+      setFormAlert({
+        type: "error",
+        message: err.message || "Failed to send verification code. Please check your email address and try again.",
+      });
+      errorBannerRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    } finally {
+      setSendingOtp(false);
+    }
+  };
+
+  const handleVerifyAndSubmit = async () => {
+    const code = otpDigits.join("").trim();
+    if (code.length !== 6) {
+      setOtpError("Please enter the complete 6-digit verification code.");
+      return;
+    }
+
+    try {
+      setVerifyingOtp(true);
+      setOtpError("");
+
+      // 1. Verify OTP with backend
+      const verifyRes = await fetch("/api/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: formData.email.trim().toLowerCase(),
+          otp: code,
+        }),
+      });
+
+      const verifyData = await verifyRes.json();
+      if (!verifyRes.ok) {
+        throw new Error(verifyData.error || "Invalid verification code. Please check and try again.");
+      }
+
+      // 2. OTP is verified! Now submit complete application data with CV
       const data = new FormData();
       data.append("name", formData.name.trim());
       data.append("email", formData.email.trim().toLowerCase());
@@ -282,21 +471,23 @@ export default function JobApplicationForm({ selectedPosition, onResetPosition }
       data.append("coverLetter", formData.coverLetter.trim());
       data.append("resume", resumeFile);
 
-      const res = await fetch("/api/applications", {
+      const appRes = await fetch("/api/applications", {
         method: "POST",
         body: data,
       });
 
-      const result = await res.json();
-      if (!res.ok) {
-        throw new Error(result.error || "Failed to submit application. Please check your details and try again.");
+      const appResult = await appRes.json();
+      if (!appRes.ok) {
+        throw new Error(appResult.error || "Failed to submit application after verification. Please try again.");
       }
 
+      // 3. Close modal & show success celebration
+      setShowOtpModal(false);
       setSuccessData({
         name: formData.name,
         email: formData.email,
         position: formData.position,
-        id: result.entry?.id || result.entry?._id,
+        id: appResult.entry?.id || appResult.entry?._id,
       });
 
       // Reset form
@@ -315,14 +506,10 @@ export default function JobApplicationForm({ selectedPosition, onResetPosition }
       if (fileInputRef.current) fileInputRef.current.value = "";
       if (onResetPosition) onResetPosition();
     } catch (err) {
-      console.error("Application submission error:", err);
-      setFormAlert({
-        type: "error",
-        message: err.message || "An unexpected error occurred while submitting your application. Please try again.",
-      });
-      errorBannerRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      console.error("Verification and submission error:", err);
+      setOtpError(err.message || "An unexpected error occurred. Please try again.");
     } finally {
-      setLoading(false);
+      setVerifyingOtp(false);
     }
   };
 
@@ -723,14 +910,14 @@ export default function JobApplicationForm({ selectedPosition, onResetPosition }
               <div className="pt-4">
                 <button
                   type="submit"
-                  disabled={loading}
+                  disabled={sendingOtp}
                   className="w-full bg-[#36963D] hover:bg-[#2e8234] disabled:opacity-70 text-white py-4 rounded-full font-bold text-base transition-all duration-300 shadow-md hover:shadow-lg hover:scale-[1.01] active:scale-[0.99] cursor-pointer flex items-center justify-center gap-2.5"
                   style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
                 >
-                  {loading ? (
+                  {sendingOtp ? (
                     <>
                       <Loader2 className="w-5 h-5 animate-spin" />
-                      <span>Submitting Application & Uploading CV...</span>
+                      <span>Sending Verification Code to Email...</span>
                     </>
                   ) : (
                     <>
@@ -748,6 +935,171 @@ export default function JobApplicationForm({ selectedPosition, onResetPosition }
           </div>
         )}
       </div>
+
+      {/* OTP Verification Modal Overlay */}
+      {showOtpModal && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) handleCloseModal();
+          }}
+        >
+          <div 
+            className="bg-white rounded-3xl p-6 sm:p-9 max-w-[500px] w-full shadow-2xl border border-gray-100 relative animate-in zoom-in-95 duration-200"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="otp-modal-title"
+          >
+            {/* Close Button */}
+            <button
+              type="button"
+              onClick={handleCloseModal}
+              disabled={verifyingOtp}
+              className="absolute top-5 right-5 p-2 rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer disabled:opacity-50"
+              title="Close and return to form"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            {/* Header Icon */}
+            <div className="w-16 h-16 rounded-2xl bg-[#36963D]/10 border border-[#36963D]/20 text-[#36963D] flex items-center justify-center mx-auto mb-4 shadow-xs">
+              <ShieldCheck className="w-8 h-8" />
+            </div>
+
+            {/* Modal Title */}
+            <h3 
+              id="otp-modal-title"
+              className="text-2xl font-black text-[#0D0F12] text-center mb-2"
+              style={{ fontFamily: "'Outfit', sans-serif" }}
+            >
+              Verify Your Email
+            </h3>
+
+            {/* Subtitle / Email Address Pill */}
+            <p className="text-sm text-gray-600 text-center mb-1 leading-relaxed">
+              We&apos;ve sent a 6-digit verification code to:
+            </p>
+            <div className="flex items-center justify-center gap-2 mb-6">
+              <span className="font-bold text-[#0D0F12] text-sm bg-gray-100 px-3 py-1 rounded-full truncate max-w-[280px]">
+                {formData.email}
+              </span>
+              <button
+                type="button"
+                onClick={handleEditEmail}
+                disabled={verifyingOtp}
+                className="text-xs font-semibold text-[#36963D] hover:underline inline-flex items-center gap-1 cursor-pointer disabled:opacity-50"
+                title="Change email address"
+              >
+                <Edit2 className="w-3 h-3" />
+                <span>Edit</span>
+              </button>
+            </div>
+
+            {/* 6-Digit OTP Inputs */}
+            <div className="mb-4">
+              <label className="block text-center text-xs font-bold uppercase tracking-wider text-gray-500 mb-3">
+                Enter 6-Digit Code
+              </label>
+              <div className="flex justify-center items-center gap-2 sm:gap-2.5" onPaste={handleOtpPaste}>
+                {otpDigits.map((digit, idx) => (
+                  <input
+                    key={idx}
+                    ref={(el) => (otpInputRefs.current[idx] = el)}
+                    type="text"
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
+                    maxLength={1}
+                    value={digit}
+                    onChange={(e) => handleOtpChange(idx, e.target.value)}
+                    onKeyDown={(e) => handleOtpKeyDown(idx, e)}
+                    disabled={verifyingOtp}
+                    className={`w-11 sm:w-12 h-13 sm:h-14 text-2xl font-black text-center font-mono rounded-xl border ${
+                      otpError
+                        ? "border-red-400 bg-red-50/30 text-red-700"
+                        : digit
+                        ? "border-[#36963D] bg-emerald-50/30 text-[#0D0F12]"
+                        : "border-gray-300 bg-[#F8FAFC] text-[#0D0F12]"
+                    } focus:border-[#36963D] focus:ring-2 focus:ring-[#36963D]/20 focus:bg-white outline-none transition-all disabled:opacity-50`}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Error Message Box */}
+            {otpError && (
+              <div className="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 flex items-start gap-2 text-xs text-red-600 animate-in fade-in-50 duration-200">
+                <AlertCircle className="w-4 h-4 shrink-0 text-red-500 mt-0.5" />
+                <span className="font-medium">{otpError}</span>
+              </div>
+            )}
+
+            {/* Resend Cooldown Section */}
+            <div className="flex items-center justify-between text-xs text-gray-500 mb-6 px-1">
+              <span>Didn&apos;t receive code?</span>
+              {resendCooldown > 0 ? (
+                <span className="font-semibold text-gray-400">
+                  Resend in <strong className="text-gray-700">{resendCooldown}s</strong>
+                </span>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleResendOtp}
+                  disabled={resendingOtp || verifyingOtp}
+                  className="font-bold text-[#36963D] hover:text-[#2e8234] hover:underline inline-flex items-center gap-1 cursor-pointer disabled:opacity-50"
+                >
+                  {resendingOtp ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      <span>Sending...</span>
+                    </>
+                  ) : (
+                    <>
+                      <RotateCw className="w-3.5 h-3.5" />
+                      <span>Resend Code</span>
+                    </>
+                  )}
+                </button>
+              )}
+            </div>
+
+            {/* Action Buttons */}
+            <div className="space-y-2.5">
+              <button
+                type="button"
+                onClick={handleVerifyAndSubmit}
+                disabled={verifyingOtp || otpDigits.some((d) => !d)}
+                className="w-full bg-[#36963D] hover:bg-[#2e8234] disabled:opacity-50 text-white py-3.5 rounded-full font-bold text-sm sm:text-base transition-all duration-300 shadow-md hover:shadow-lg cursor-pointer flex items-center justify-center gap-2"
+                style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+              >
+                {verifyingOtp ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Verifying Code & Submitting...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Verify & Submit Application</span>
+                    <Send className="w-4 h-4" />
+                  </>
+                )}
+              </button>
+
+              <button
+                type="button"
+                onClick={handleCloseModal}
+                disabled={verifyingOtp}
+                className="w-full py-2.5 text-xs font-semibold text-gray-500 hover:text-gray-800 transition-colors cursor-pointer disabled:opacity-50"
+              >
+                Cancel and return to form
+              </button>
+            </div>
+
+            <p className="text-[11px] text-gray-400 text-center mt-4">
+              Security code expires in 10 minutes. Please check your Spam or Junk folder if you do not see it in your inbox.
+            </p>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
