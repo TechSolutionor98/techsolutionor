@@ -6,25 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FaChevronDown, FaCheckCircle, FaSpinner, FaPaperPlane, FaChevronLeft, FaChevronRight, FaArrowRight, FaArrowLeft, FaEnvelopeOpenText, FaEdit } from 'react-icons/fa';
 import { getCmsVal } from "@/lib/api-helper";
 import getInTouchImg from '@/components/Images/getintouch.png';
-
-const COUNTRY_DIAL_CODES = [
-    { dialCountry: "United Arab Emirates", code: "+971", minDigits: 9, maxDigits: 9, sample: "50 123 4567" },
-    { dialCountry: "Saudi Arabia", code: "+966", minDigits: 9, maxDigits: 9, sample: "50 123 4567" },
-    { dialCountry: "Qatar", code: "+974", minDigits: 8, maxDigits: 8, sample: "3312 3456" },
-    { dialCountry: "Oman", code: "+968", minDigits: 8, maxDigits: 8, sample: "9123 4567" },
-    { dialCountry: "Kuwait", code: "+965", minDigits: 8, maxDigits: 8, sample: "9123 4567" },
-    { dialCountry: "Bahrain", code: "+973", minDigits: 8, maxDigits: 8, sample: "3912 3456" },
-    { dialCountry: "United States", code: "+1", minDigits: 10, maxDigits: 10, sample: "202 555 0123" },
-    { dialCountry: "United Kingdom", code: "+44", minDigits: 10, maxDigits: 10, sample: "7911 123456" },
-    { dialCountry: "Canada", code: "+1", minDigits: 10, maxDigits: 10, sample: "416 555 0123" },
-    { dialCountry: "Australia", code: "+61", minDigits: 9, maxDigits: 9, sample: "412 345 678" },
-    { dialCountry: "Pakistan", code: "+92", minDigits: 10, maxDigits: 10, sample: "300 1234567" },
-    { dialCountry: "India", code: "+91", minDigits: 10, maxDigits: 10, sample: "98765 43210" },
-    { dialCountry: "Germany", code: "+49", minDigits: 10, maxDigits: 11, sample: "151 12345678" },
-    { dialCountry: "France", code: "+33", minDigits: 9, maxDigits: 9, sample: "6 12 34 56 78" },
-    { dialCountry: "Singapore", code: "+65", minDigits: 8, maxDigits: 8, sample: "9123 4567" },
-    { dialCountry: "Other Country", code: "+", minDigits: 7, maxDigits: 15, sample: "12345678" }
-];
+import { COUNTRY_DIAL_CODES, findCountry, sanitizePhoneDigits, validatePhoneNumber } from "@/lib/country-phone";
 
 const SERVICES = [
     "Web Development",
@@ -91,7 +73,7 @@ const GetInTouch = ({ cmsContent }) => {
     const [status, setStatus] = useState({ type: '', message: '' });
 
     // Selected country object
-    const selectedCountryObj = COUNTRY_DIAL_CODES.find(c => (c.country || c.name) === formData.country);
+    const selectedCountryObj = findCountry(formData.country);
 
     // Resend OTP Countdown Timer
     useEffect(() => {
@@ -127,19 +109,29 @@ const GetInTouch = ({ cmsContent }) => {
     };
 
     // Handle Country selection & adjust phone digits length if necessary
-    const handleCountryChange = (e) => {
-        const selectedCountry = e.target.value;
-        const countryObj = COUNTRY_DIAL_CODES.find(c => c.name === selectedCountry);
+    const handleCountryChange = (selectedCountry, countryObj) => {
+        const countryName = typeof selectedCountry === 'object' && selectedCountry?.target 
+            ? selectedCountry.target.value 
+            : selectedCountry;
+        const countryObjResolved = countryObj || findCountry(countryName);
 
         setFormData(prev => ({
             ...prev,
-            country: selectedCountry
+            country: countryName
         }));
 
-        if (countryObj && phoneDigits) {
-            setPhoneDigits(phoneDigits.slice(0, countryObj.maxDigits));
+        if (countryObjResolved && phoneDigits) {
+            setPhoneDigits(sanitizePhoneDigits(phoneDigits, countryObjResolved));
         }
 
+        if (status.message) setStatus({ type: '', message: '' });
+    };
+
+    // Handle Phone input changes with normalization
+    const handlePhoneChange = (e) => {
+        const val = e.target.value;
+        const sanitized = sanitizePhoneDigits(val, selectedCountryObj);
+        setPhoneDigits(sanitized);
         if (status.message) setStatus({ type: '', message: '' });
     };
 
@@ -188,36 +180,11 @@ const GetInTouch = ({ cmsContent }) => {
             return;
         }
 
-        // Country Validation
-        if (!formData.country || !selectedCountryObj) {
-            setStatus({ type: 'error', message: 'Please select your Country first.' });
+        // Country & Phone Number Validation
+        const phoneValidation = validatePhoneNumber(phoneDigits, formData.country);
+        if (!phoneValidation.valid) {
+            setStatus({ type: 'error', message: phoneValidation.error });
             return;
-        }
-
-        // Phone Number Digits & Exact Length Validation
-        const cleanPhoneDigits = phoneDigits.replace(/[^0-9]/g, '');
-        if (!cleanPhoneDigits) {
-            setStatus({ type: 'error', message: 'Please enter your Phone Number.' });
-            return;
-        }
-
-        const { minDigits, maxDigits, name, code } = selectedCountryObj;
-        if (minDigits === maxDigits) {
-            if (cleanPhoneDigits.length !== maxDigits) {
-                setStatus({ 
-                    type: 'error', 
-                    message: `Phone number for ${name} must contain exactly ${maxDigits} digits (excluding country code ${code}).` 
-                });
-                return;
-            }
-        } else {
-            if (cleanPhoneDigits.length < minDigits || cleanPhoneDigits.length > maxDigits) {
-                setStatus({ 
-                    type: 'error', 
-                    message: `Phone number for ${name} must contain between ${minDigits} and ${maxDigits} digits.` 
-                });
-                return;
-            }
         }
 
         // Email Format Validation
@@ -599,12 +566,9 @@ const GetInTouch = ({ cmsContent }) => {
                                                     className="w-full h-11 bg-white rounded-xl px-4 pr-10 text-gray-800 text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs cursor-pointer"
                                                 >
                                                     <option value="">Select your Country</option>
-                                                    {COUNTRY_DIAL_CODES.map((c) => {
-                                                        const countryName = c.dialCountry || c.country || c.name;
-                                                        return (
-                                                            <option key={countryName} value={countryName}>{countryName} ({c.code})</option>
-                                                        );
-                                                    })}
+                                                    {COUNTRY_DIAL_CODES.map((c) => (
+                                                        <option key={c.name} value={c.name}>{c.name}</option>
+                                                    ))}
                                                 </select>
                                                 <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
                                                     <FaChevronDown size={11} />
@@ -627,18 +591,15 @@ const GetInTouch = ({ cmsContent }) => {
                                                     type="tel"
                                                     name="phoneDigits"
                                                     value={phoneDigits}
-                                                    onChange={(e) => {
-                                                        const val = e.target.value.replace(/[^0-9]/g, '');
-                                                        const max = selectedCountryObj?.maxDigits || 15;
-                                                        setPhoneDigits(val.slice(0, max));
-                                                        if (status.message) setStatus({ type: '', message: '' });
-                                                    }}
+                                                    onChange={handlePhoneChange}
                                                     disabled={!formData.country}
                                                     maxLength={selectedCountryObj?.maxDigits || 15}
                                                     placeholder={
                                                         !formData.country 
                                                             ? "Select country first *" 
-                                                            : `Enter ${selectedCountryObj?.minDigits === selectedCountryObj?.maxDigits ? `${selectedCountryObj?.maxDigits} digits` : 'phone number'}`
+                                                            : selectedCountryObj?.sample
+                                                                ? `e.g. ${selectedCountryObj.sample}`
+                                                                : `Enter ${selectedCountryObj?.minDigits === selectedCountryObj?.maxDigits ? `${selectedCountryObj?.maxDigits} digits` : 'phone number'}`
                                                     }
                                                     required
                                                     className={`w-full h-11 text-sm transition shadow-xs ${

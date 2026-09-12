@@ -4,25 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaTimes, FaChevronDown, FaCheckCircle, FaSpinner, FaChevronLeft, FaChevronRight, FaArrowRight, FaArrowLeft, FaPaperPlane, FaEnvelopeOpenText, FaEdit } from 'react-icons/fa';
 import { useQuote } from '../_context/QuoteContext';
-
-const COUNTRY_DIAL_CODES = [
-    { name: "United Arab Emirates", code: "+971", minDigits: 9, maxDigits: 9, sample: "50 123 4567" },
-    { name: "Saudi Arabia", code: "+966", minDigits: 9, maxDigits: 9, sample: "50 123 4567" },
-    { name: "Qatar", code: "+974", minDigits: 8, maxDigits: 8, sample: "3312 3456" },
-    { name: "Oman", code: "+968", minDigits: 8, maxDigits: 8, sample: "9123 4567" },
-    { name: "Kuwait", code: "+965", minDigits: 8, maxDigits: 8, sample: "9123 4567" },
-    { name: "Bahrain", code: "+973", minDigits: 8, maxDigits: 8, sample: "3912 3456" },
-    { name: "United States", code: "+1", minDigits: 10, maxDigits: 10, sample: "202 555 0123" },
-    { name: "United Kingdom", code: "+44", minDigits: 10, maxDigits: 10, sample: "7911 123456" },
-    { name: "Canada", code: "+1", minDigits: 10, maxDigits: 10, sample: "416 555 0123" },
-    { name: "Australia", code: "+61", minDigits: 9, maxDigits: 9, sample: "412 345 678" },
-    { name: "Pakistan", code: "+92", minDigits: 10, maxDigits: 10, sample: "300 1234567" },
-    { name: "India", code: "+91", minDigits: 10, maxDigits: 10, sample: "98765 43210" },
-    { name: "Germany", code: "+49", minDigits: 10, maxDigits: 11, sample: "151 12345678" },
-    { name: "France", code: "+33", minDigits: 9, maxDigits: 9, sample: "6 12 34 56 78" },
-    { name: "Singapore", code: "+65", minDigits: 8, maxDigits: 8, sample: "9123 4567" },
-    { name: "Other Country", code: "+", minDigits: 7, maxDigits: 15, sample: "12345678" }
-];
+import { COUNTRY_DIAL_CODES, findCountry, sanitizePhoneDigits, validatePhoneNumber } from "@/lib/country-phone";
 
 const SERVICES = [
     "Web Development",
@@ -91,7 +73,7 @@ const GetQuoteForm = () => {
     const [status, setStatus] = useState({ type: '', message: '' });
 
     // Selected country object
-    const selectedCountryObj = COUNTRY_DIAL_CODES.find(c => c.name === formData.country);
+    const selectedCountryObj = findCountry(formData.country);
 
     // Countdown Timer for OTP
     useEffect(() => {
@@ -124,19 +106,29 @@ const GetQuoteForm = () => {
     };
 
     // Handle Country selection & adjust phone digits length if necessary
-    const handleCountryChange = (e) => {
-        const selectedCountry = e.target.value;
-        const countryObj = COUNTRY_DIAL_CODES.find(c => c.name === selectedCountry);
+    const handleCountryChange = (selectedCountry, countryObj) => {
+        const countryName = typeof selectedCountry === 'object' && selectedCountry?.target 
+            ? selectedCountry.target.value 
+            : selectedCountry;
+        const countryObjResolved = countryObj || findCountry(countryName);
 
         setFormData(prev => ({
             ...prev,
-            country: selectedCountry
+            country: countryName
         }));
 
-        if (countryObj && phoneDigits) {
-            setPhoneDigits(phoneDigits.slice(0, countryObj.maxDigits));
+        if (countryObjResolved && phoneDigits) {
+            setPhoneDigits(sanitizePhoneDigits(phoneDigits, countryObjResolved));
         }
 
+        if (status.message) setStatus({ type: '', message: '' });
+    };
+
+    // Handle Phone input changes with normalization
+    const handlePhoneChange = (e) => {
+        const val = e.target.value;
+        const sanitized = sanitizePhoneDigits(val, selectedCountryObj);
+        setPhoneDigits(sanitized);
         if (status.message) setStatus({ type: '', message: '' });
     };
 
@@ -185,36 +177,11 @@ const GetQuoteForm = () => {
             return;
         }
 
-        // Country Validation
-        if (!formData.country || !selectedCountryObj) {
-            setStatus({ type: 'error', message: 'Please select your Country first.' });
+        // Country & Phone Number Validation
+        const phoneValidation = validatePhoneNumber(phoneDigits, formData.country);
+        if (!phoneValidation.valid) {
+            setStatus({ type: 'error', message: phoneValidation.error });
             return;
-        }
-
-        // Phone Number Digits & Exact Length Validation
-        const cleanPhoneDigits = phoneDigits.replace(/[^0-9]/g, '');
-        if (!cleanPhoneDigits) {
-            setStatus({ type: 'error', message: 'Please enter your Phone Number.' });
-            return;
-        }
-
-        const { minDigits, maxDigits, name, code } = selectedCountryObj;
-        if (minDigits === maxDigits) {
-            if (cleanPhoneDigits.length !== maxDigits) {
-                setStatus({ 
-                    type: 'error', 
-                    message: `Phone number for ${name} must contain exactly ${maxDigits} digits (excluding country code ${code}).` 
-                });
-                return;
-            }
-        } else {
-            if (cleanPhoneDigits.length < minDigits || cleanPhoneDigits.length > maxDigits) {
-                setStatus({ 
-                    type: 'error', 
-                    message: `Phone number for ${name} must contain between ${minDigits} and ${maxDigits} digits.` 
-                });
-                return;
-            }
         }
 
         // Email Format Validation
@@ -601,7 +568,7 @@ const GetQuoteForm = () => {
                                             >
                                                 <option value="">Select your Country *</option>
                                                 {COUNTRY_DIAL_CODES.map((c) => (
-                                                    <option key={c.name} value={c.name}>{c.name} ({c.code})</option>
+                                                    <option key={c.name} value={c.name}>{c.name}</option>
                                                 ))}
                                             </select>
                                             <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
@@ -620,18 +587,15 @@ const GetQuoteForm = () => {
                                                 type="tel"
                                                 name="phoneDigits"
                                                 value={phoneDigits}
-                                                onChange={(e) => {
-                                                    const val = e.target.value.replace(/[^0-9]/g, '');
-                                                    const max = selectedCountryObj?.maxDigits || 15;
-                                                    setPhoneDigits(val.slice(0, max));
-                                                    if (status.message) setStatus({ type: '', message: '' });
-                                                }}
+                                                onChange={handlePhoneChange}
                                                 disabled={!formData.country}
                                                 maxLength={selectedCountryObj?.maxDigits || 15}
                                                 placeholder={
                                                     !formData.country 
                                                         ? "Select country *" 
-                                                        : `Enter ${selectedCountryObj?.minDigits === selectedCountryObj?.maxDigits ? `${selectedCountryObj?.maxDigits} digits *` : 'phone number *'}`
+                                                        : selectedCountryObj?.sample
+                                                            ? `e.g. ${selectedCountryObj.sample}`
+                                                            : `Enter ${selectedCountryObj?.minDigits === selectedCountryObj?.maxDigits ? `${selectedCountryObj?.maxDigits} digits *` : 'phone number *'}`
                                                 }
                                                 required
                                                 className={`w-full h-10 text-sm transition shadow-xs ${
