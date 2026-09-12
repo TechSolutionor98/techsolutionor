@@ -7,8 +7,6 @@ import MetaHireUs from '../../_components/Meta/HireUs/MetaHireUs';
 import MetaFAQ from '../../_components/Meta/MetaFAQ/MetaFAQ';
 import { getCmsData, generateCmsMetadata } from '@/lib/cms-fetch';
 
-export const revalidate = 0;
-
 export async function generateMetadata() {
   return generateCmsMetadata('/technologies/meta', {
     title: 'Meta Social Technology Services | TechSolutionor',

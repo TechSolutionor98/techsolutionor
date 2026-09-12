@@ -26,6 +26,24 @@ export default function SeoOverviewClient({ initialPages = [], apiBase }) {
   const [scoreFilter, setScoreFilter] = useState('all');
   const [copiedText, setCopiedText] = useState('');
 
+  const fetchSeoPages = async () => {
+    try {
+      const res = await fetch(`${apiBase || ''}/api/cms/seo?all=true`);
+      if (res.ok) {
+        const data = await res.json();
+        setPages(data.pages || []);
+      }
+    } catch (err) {
+      console.error('Failed to fetch SEO pages:', err);
+    }
+  };
+
+  useEffect(() => {
+    if (!initialPages || initialPages.length === 0) {
+      fetchSeoPages();
+    }
+  }, []);
+
   const handleCopy = (text) => {
     if (typeof window !== "undefined" && navigator.clipboard) {
       navigator.clipboard.writeText(text);

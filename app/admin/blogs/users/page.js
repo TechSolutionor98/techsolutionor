@@ -1,23 +1,9 @@
 import React from 'react';
 import BlogUsersClient from './BlogUsersClient';
-import { getApiBase } from '@/lib/api-helper';
-import { getBlogCommentsList } from '@/lib/cms-service';
 
 export const metadata = { title: 'Blog Users - Admin' };
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
 
-export default async function BlogUsersPage() {
-  const apiBase = getApiBase();
-
-  let comments = [];
-  try {
-    const list = await getBlogCommentsList(true);
-    comments = JSON.parse(JSON.stringify(list)) || [];
-  } catch (err) {
-    console.error('Failed to fetch comments', err);
-  }
-
+export default function BlogUsersPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -30,7 +16,7 @@ export default async function BlogUsersPage() {
       </div>
 
       <div className="bg-white p-4 rounded-xl shadow-lg border border-gray-100 mt-6">
-        <BlogUsersClient initialComments={comments} apiBase={apiBase} />
+        <BlogUsersClient />
       </div>
     </div>
   );

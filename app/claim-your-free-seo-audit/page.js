@@ -9,8 +9,6 @@ import SeoAuditFAQ from '../_components/SeoAudit/SeoAuditFAQ';
 import Newsletter from '../_components/Home/Newsletter/Newsletter';
 import { generateCmsMetadata } from '@/lib/cms-fetch';
 
-export const revalidate = 0;
-
 export async function generateMetadata() {
   return generateCmsMetadata('/claim-your-free-seo-audit', {
     title: 'Claim Your Free SEO Audit | Tech Solutionor',

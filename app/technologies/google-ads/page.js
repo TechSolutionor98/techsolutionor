@@ -7,8 +7,6 @@ import GoogleHireUs from '../../_components/GoogleAds/HireUs/GoogleHireUs';
 import GoogleFAQ from '../../_components/GoogleAds/GoogleFAQ/GoogleFAQ';
 import { getCmsData, generateCmsMetadata } from '@/lib/cms-fetch';
 
-export const revalidate = 0;
-
 export async function generateMetadata() {
   return generateCmsMetadata('/technologies/google-ads', {
     title: 'Google Ads Management Services | TechSolutionor',

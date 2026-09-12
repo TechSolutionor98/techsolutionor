@@ -7,8 +7,6 @@ import SwiftHireUs from '../../_components/Swift/HireUs/SwiftHireUs';
 import SwiftFAQ from '../../_components/Swift/SwiftFAQ/SwiftFAQ';
 import { getCmsData, generateCmsMetadata } from '@/lib/cms-fetch';
 
-export const revalidate = 0;
-
 export async function generateMetadata() {
   return generateCmsMetadata('/technologies/swift', {
     title: 'Swift Development Services | TechSolutionor',

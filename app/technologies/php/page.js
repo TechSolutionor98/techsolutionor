@@ -7,8 +7,6 @@ import PhpHireUs from '../../_components/Php/HireUs/PhpHireUs';
 import PhpFAQ from '../../_components/Php/PhpFAQ/PhpFAQ';
 import { getCmsData, generateCmsMetadata } from '@/lib/cms-fetch';
 
-export const revalidate = 0;
-
 export async function generateMetadata() {
   return generateCmsMetadata('/technologies/php', {
     title: 'PHP Web Development Services | TechSolutionor',

@@ -96,6 +96,14 @@ export default function SettingsClient({ initialSettings = {}, apiBase = process
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
 
+  React.useEffect(() => {
+    if (!initialSettings || Object.keys(initialSettings).length === 0 || !initialSettings.email) {
+      fetch(`${apiBase || ''}/api/settings`).then(r => r.json()).then(data => {
+        if (data && typeof data === 'object') setSettings(data);
+      }).catch(e => console.error(e));
+    }
+  }, []);
+
   const handleChange = (field, value) => {
     setSettings(prev => ({ ...prev, [field]: value }));
   };

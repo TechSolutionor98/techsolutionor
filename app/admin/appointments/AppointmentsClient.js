@@ -27,6 +27,14 @@ export default function AppointmentsClient({ initialLinks = [], apiBase = '' }) 
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState(null);
 
+  React.useEffect(() => {
+    if (!initialLinks || initialLinks.length === 0) {
+      fetch(`${apiBase || ''}/api/appointments`).then(r => r.json()).then(data => {
+        if (Array.isArray(data)) setLinks(normalize(data));
+      }).catch(e => console.error(e));
+    }
+  }, []);
+
   // Modal form states
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState(null);

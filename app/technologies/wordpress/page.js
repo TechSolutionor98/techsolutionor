@@ -7,8 +7,6 @@ import WpHireUs from '../../_components/Wp/HireUs/WpHireUs';
 import WpFAQ from '../../_components/Wp/WpFAQ/WpFAQ';
 import { getCmsData, generateCmsMetadata } from '@/lib/cms-fetch';
 
-export const revalidate = 0;
-
 export async function generateMetadata() {
   return generateCmsMetadata('/technologies/wordpress', {
     title: 'WordPress Web Development Services | TechSolutionor',

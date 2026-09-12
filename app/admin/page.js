@@ -1,10 +1,27 @@
-import { getDashboardCounts } from '@/lib/cms-service';
+"use client";
+import React, { useState, useEffect } from 'react';
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+export default function AdminDashboard() {
+  const [counts, setCounts] = useState({
+    contactCount: 0,
+    applicationsCount: 0,
+    pagesCount: 0,
+    mediaCount: 0,
+    websitesCount: 1,
+  });
 
-export default async function AdminDashboard() {
-  const { contactCount, applicationsCount = 0, pagesCount, mediaCount, websitesCount } = await getDashboardCounts();
+  useEffect(() => {
+    fetch('/api/cms/dashboard')
+      .then(res => res.json())
+      .then(data => {
+        if (data && !data.error) {
+          setCounts(data);
+        }
+      })
+      .catch(err => console.error('Failed to load dashboard counts:', err));
+  }, []);
+
+  const { contactCount, applicationsCount = 0, pagesCount, mediaCount, websitesCount } = counts;
 
   return (
     <div className="space-y-6 overflow-x-hidden">

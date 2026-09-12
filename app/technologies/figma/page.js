@@ -7,8 +7,6 @@ import FigmaHireUs from '../../_components/Figma/HireUs/FigmaHireUs';
 import FigmaFAQ from '../../_components/Figma/FigmaFAQ/FigmaFAQ';
 import { getCmsData, generateCmsMetadata } from '@/lib/cms-fetch';
 
-export const revalidate = 0;
-
 export async function generateMetadata() {
   return generateCmsMetadata('/technologies/figma', {
     title: 'Figma UI/UX Design Services | TechSolutionor',

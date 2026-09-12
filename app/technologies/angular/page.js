@@ -7,8 +7,6 @@ import AngularHireUs from '../../_components/Angular/HireUs/AngularHireUs';
 import AngularFAQ from '../../_components/Angular/AngularFAQ/AngularFAQ';
 import { getCmsData, generateCmsMetadata } from '@/lib/cms-fetch';
 
-export const revalidate = 0;
-
 export async function generateMetadata() {
   return generateCmsMetadata('/technologies/angular', {
     title: 'Angular Development Services | TechSolutionor',

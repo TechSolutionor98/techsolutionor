@@ -61,6 +61,24 @@ export default function PagesClient({ initialRoutes = [], apiBase, initialError 
   const canEditSeo = ['super_admin', 'admin', 'seo', 'client'].includes(role);
   const canViewSeo = ['super_admin', 'admin', 'seo', 'client', 'viewer'].includes(role);
 
+  const fetchRoutes = async () => {
+    try {
+      const routesRes = await fetch(`${apiBase || ''}/api/cms/routes?websiteId=default`);
+      if (routesRes.ok) {
+        const routesData = await routesRes.json();
+        setRoutes(routesData.routes || []);
+      }
+    } catch (err) {
+      console.error('Failed to fetch routes:', err);
+    }
+  };
+
+  useEffect(() => {
+    if (!initialRoutes || initialRoutes.length === 0) {
+      fetchRoutes();
+    }
+  }, []);
+
   // Scan routes from project
   const handleScanRoutes = async () => {
     if (!canEditPages) return;
@@ -68,7 +86,7 @@ export default function PagesClient({ initialRoutes = [], apiBase, initialError 
     setScanResult(null);
     setMessage('');
     try {
-      const res = await fetch(`${apiBase}/api/cms/scan-routes`, {
+      const res = await fetch(`${apiBase || ''}/api/cms/scan-routes`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ websiteId: 'default' }),
@@ -84,11 +102,7 @@ export default function PagesClient({ initialRoutes = [], apiBase, initialError 
       setMessageType('success');
 
       // Refresh routes list
-      const routesRes = await fetch(`${apiBase}/api/cms/routes?websiteId=default`);
-      if (routesRes.ok) {
-        const routesData = await routesRes.json();
-        setRoutes(routesData.routes || []);
-      }
+      await fetchRoutes();
     } catch (err) {
       console.error(err);
       setMessage('Scan failed: ' + err.message);
@@ -102,7 +116,7 @@ export default function PagesClient({ initialRoutes = [], apiBase, initialError 
   const handleStatusChange = async (id, newStatus) => {
     if (!canEditPages) return;
     try {
-      const res = await fetch(`${apiBase}/api/cms/routes`, {
+      const res = await fetch(`${apiBase || ''}/api/cms/routes`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id, status: newStatus }),

@@ -20,6 +20,12 @@ export default function BlogsListClient({ initialData = [], apiBase = '' }) {
     );
   }, [blogs, search]);
 
+  React.useEffect(() => {
+    if (!initialData || initialData.length === 0) {
+      refresh();
+    }
+  }, []);
+
   // Refresh data list
   const refresh = async () => {
     try {

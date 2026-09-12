@@ -7,8 +7,6 @@ import AnalyticsHireUs from '../../_components/Analytics/HireUs/AnalyticsHireUs'
 import AnalyticsFAQ from '../../_components/Analytics/AnalyticsFAQ/AnalyticsFAQ';
 import { getCmsData, generateCmsMetadata } from '@/lib/cms-fetch';
 
-export const revalidate = 0;
-
 export async function generateMetadata() {
   return generateCmsMetadata('/technologies/analytics', {
     title: 'Analytics & Data-Driven Services | TechSolutionor',

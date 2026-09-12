@@ -43,6 +43,24 @@ export default function RedirectsClient({ initialRedirects = [], apiBase, initia
     }
   }, []);
 
+  const fetchRedirects = async () => {
+    try {
+      const res = await fetch(`${apiBase || ''}/api/cms/redirects?websiteId=default`);
+      if (res.ok) {
+        const data = await res.json();
+        setRedirects(data.redirects || []);
+      }
+    } catch (err) {
+      console.error('Failed to fetch redirects:', err);
+    }
+  };
+
+  useEffect(() => {
+    if (!initialRedirects || initialRedirects.length === 0) {
+      fetchRedirects();
+    }
+  }, []);
+
   const role = currentUser?.role || 'super_admin';
   const canEdit = role !== 'viewer';
 
@@ -83,8 +101,13 @@ export default function RedirectsClient({ initialRedirects = [], apiBase, initia
     e.preventDefault();
     if (!canEdit) return;
 
+    if (!fromPath.trim() || !toPath.trim()) {
+      alert("Both From Path and To Path are required.");
+      return;
+    }
+
     if (!fromPath.startsWith('/')) {
-      alert("Redirect From path must start with a slash (/)");
+      alert("Redirect From path must start with a forward slash (/)");
       return;
     }
     if (!toPath.startsWith('/') && !toPath.startsWith('http://') && !toPath.startsWith('https://')) {
@@ -96,7 +119,7 @@ export default function RedirectsClient({ initialRedirects = [], apiBase, initia
     setMessage('');
 
     try {
-      const url = `${apiBase}/api/cms/redirects`;
+      const url = `${apiBase || ''}/api/cms/redirects`;
       const method = modalMode === 'add' ? 'POST' : 'PATCH';
       
       const payload = {
@@ -152,7 +175,7 @@ export default function RedirectsClient({ initialRedirects = [], apiBase, initia
     if (!confirm("Are you sure you want to delete this redirect rule?")) return;
 
     try {
-      const res = await fetch(`${apiBase}/api/cms/redirects?id=${id}`, {
+      const res = await fetch(`${apiBase || ''}/api/cms/redirects?id=${id}`, {
         method: 'DELETE'
       });
 

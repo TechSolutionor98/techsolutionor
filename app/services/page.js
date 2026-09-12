@@ -8,8 +8,6 @@ import ServicesFAQ from '../_components/ServicesPage/ServicesFAQ';
 import Newsletter from '../_components/Home/Newsletter/Newsletter';
 import { generateCmsMetadata } from '@/lib/cms-fetch';
 
-export const revalidate = 0;
-
 export async function generateMetadata() {
   return generateCmsMetadata('/services', {
     title: "Our Services - Tech Solutionor",

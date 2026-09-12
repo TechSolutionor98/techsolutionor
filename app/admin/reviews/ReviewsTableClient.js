@@ -12,6 +12,12 @@ export default function ReviewsTableClient({ initialData = [], apiBase = process
     return rows.filter(r => showAll ? true : !r.approved);
   }, [rows, showAll]);
 
+  React.useEffect(() => {
+    if (!initialData || initialData.length === 0) {
+      refresh();
+    }
+  }, []);
+
   async function refresh() {
     try {
       setLoading(true);

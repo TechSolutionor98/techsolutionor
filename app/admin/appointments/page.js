@@ -1,38 +1,22 @@
-import { getApiBase, getServerApiBase } from '@/lib/api-helper';
+import React from 'react';
 import AppointmentsClient from './AppointmentsClient';
 
-export const metadata = {
-  title: 'Appointment Links - Admin',
-};
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+export const metadata = { title: 'Appointments - Admin' };
 
-export default async function AppointmentsPage() {
-  const apiBase = getApiBase();
-  const serverApiBase = getServerApiBase();
-  let links = [];
-
-  try {
-    const res = await fetch(`${serverApiBase}/api/appointments`, { 
-      cache: 'no-store',
-      signal: AbortSignal.timeout(1000)
-    });
-    if (res.ok) {
-      const data = await res.json();
-      links = data.links || [];
-    }
-  } catch (err) {
-    console.error('Error fetching appointment links:', err);
-  }
-
+export default function AppointmentsPage() {
   return (
-    <div>
-      <h1 className="text-[30px] font-bold">APPOINTMENT LINKS</h1>
-      <p className="text-sm text-gray-600">
-        Add Google Calendar / Appointment Schedule links here. Clients will see and click these links to book appointments.
-      </p>
-      <div className="bg-white p-6 rounded shadow mt-5">
-        <AppointmentsClient initialLinks={links} apiBase={apiBase} />
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-[30px] font-bold text-gray-800 font-sans">APPOINTMENTS & CALENDLY</h1>
+          <p className="text-sm text-gray-500">
+            Manage booking links, calendar scheduling URLs, and team meeting slots.
+          </p>
+        </div>
+      </div>
+
+      <div className="bg-white p-4 rounded-xl shadow-lg border border-gray-100 mt-6">
+        <AppointmentsClient />
       </div>
     </div>
   );

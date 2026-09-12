@@ -4,7 +4,6 @@ import BlogList from '../_components/Blog/BlogList';
 import { generateCmsMetadata } from '@/lib/cms-fetch';
 import { getBlogsList } from '@/lib/cms-service';
 
-export const revalidate = 0;
 export const dynamic = 'force-dynamic';
 
 export async function generateMetadata() {

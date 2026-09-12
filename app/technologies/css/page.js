@@ -7,8 +7,6 @@ import CssHireUs from '../../_components/Css/HireUs/CssHireUs';
 import CssFAQ from '../../_components/Css/CssFAQ/CssFAQ';
 import { getCmsData, generateCmsMetadata } from '@/lib/cms-fetch';
 
-export const revalidate = 0;
-
 export async function generateMetadata() {
   return generateCmsMetadata('/technologies/css', {
     title: 'CSS Web Design Services | TechSolutionor',

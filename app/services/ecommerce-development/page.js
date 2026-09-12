@@ -15,8 +15,6 @@ import HireUs from '@/app/_components/services/eCommerce-developement/HireUs/Hir
 import EcommerceFAQ from '@/app/_components/services/eCommerce-developement/FAQ/EcommerceFAQ';
 import { generateCmsMetadata } from '@/lib/cms-fetch';
 
-export const revalidate = 0;
-
 export async function generateMetadata() {
   return generateCmsMetadata('/services/ecommerce-development', {
     title: 'E-commerce Development Services | Tech Solutioner',

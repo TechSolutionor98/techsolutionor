@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FiActivity, FiFilter, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
 const ACTION_LABELS = {
@@ -32,12 +32,18 @@ export default function ActivityClient({ initialLogs = [], initialTotal = 0, api
   const [actionFilter, setActionFilter] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
 
+  useEffect(() => {
+    if (!initialLogs || initialLogs.length === 0) {
+      fetchLogs(1, '');
+    }
+  }, []);
+
   const fetchLogs = async (page = 1, action = '') => {
     try {
       const params = new URLSearchParams({ websiteId: 'all', limit: '50', page: page.toString() });
       if (action) params.set('action', action);
 
-      const res = await fetch(`${apiBase}/api/cms/activity?${params}`);
+      const res = await fetch(`${apiBase || ''}/api/cms/activity?${params}`);
       if (res.ok) {
         const data = await res.json();
         setLogs(data.logs || []);

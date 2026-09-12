@@ -7,8 +7,6 @@ import ShopifyHireUs from '../../_components/Shopify/HireUs/ShopifyHireUs';
 import ShopifyFAQ from '../../_components/Shopify/ShopifyFAQ/ShopifyFAQ';
 import { getCmsData, generateCmsMetadata } from '@/lib/cms-fetch';
 
-export const revalidate = 0;
-
 export async function generateMetadata() {
   return generateCmsMetadata('/technologies/shopify', {
     title: 'Shopify eCommerce Development Services | TechSolutionor',

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { FiUpload, FiSearch, FiGrid, FiList, FiTrash2, FiCopy, FiEdit2, FiImage, FiX, FiCheckCircle, FiAlertCircle, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
 export default function MediaLibraryClient({ initialMedia = [], initialTotal = 0, initialFolders = [], apiBase }) {
@@ -18,6 +18,12 @@ export default function MediaLibraryClient({ initialMedia = [], initialTotal = 0
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef(null);
 
+  useEffect(() => {
+    if (!initialMedia || initialMedia.length === 0) {
+      fetchMedia(1, '', '');
+    }
+  }, []);
+
   const showMessage = (msg, type) => {
     setMessage(msg);
     setMessageType(type);
@@ -35,7 +41,7 @@ export default function MediaLibraryClient({ initialMedia = [], initialTotal = 0
       if (searchQuery) params.set('search', searchQuery);
       if (folder) params.set('folder', folder);
 
-      const res = await fetch(`${apiBase}/api/cms/media?${params}`);
+      const res = await fetch(`${apiBase || ''}/api/cms/media?${params}`);
       if (res.ok) {
         const data = await res.json();
         setMedia(data.media || []);

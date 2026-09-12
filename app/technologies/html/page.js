@@ -7,8 +7,6 @@ import HtmlHireUs from '../../_components/Html/HireUs/HtmlHireUs';
 import HtmlFAQ from '../../_components/Html/HtmlFAQ/HtmlFAQ';
 import { getCmsData, generateCmsMetadata } from '@/lib/cms-fetch';
 
-export const revalidate = 0;
-
 export async function generateMetadata() {
   return generateCmsMetadata('/technologies/html', {
     title: 'HTML Web Development Services | TechSolutionor',

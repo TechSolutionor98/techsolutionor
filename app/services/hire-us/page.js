@@ -12,8 +12,6 @@ import HireUsForm from '../../_components/services/hire-us/Form/HireUsForm';
 import CommonFAQ from '@/app/_components/services/common/FAQ/CommonFAQ';
 import { generateCmsMetadata } from '@/lib/cms-fetch';
 
-export const revalidate = 0;
-
 export async function generateMetadata() {
   return generateCmsMetadata('/hire-us', {
     title: 'Hire Us | Tech Solutionor',

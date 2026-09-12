@@ -346,8 +346,21 @@ export default function CommentsListClient({
   initialComments = [],
   apiBase = ''
 }) {
-  const [blogs] = useState(initialBlogs);
+  const [blogs, setBlogs] = useState(initialBlogs);
   const [comments, setComments] = useState(initialComments);
+
+  React.useEffect(() => {
+    if (!initialComments || initialComments.length === 0) {
+      fetch(`${apiBase || ''}/api/blogs/comments`).then(r => r.json()).then(data => {
+        if (Array.isArray(data)) setComments(data);
+      }).catch(e => console.error(e));
+    }
+    if (!initialBlogs || initialBlogs.length === 0) {
+      fetch(`${apiBase || ''}/api/blogs?all=true`).then(r => r.json()).then(data => {
+        if (Array.isArray(data)) setBlogs(data);
+      }).catch(e => console.error(e));
+    }
+  }, []);
 
   // When selectedBlog is null, show Main Table (all comments from all blogs).
   // When set, show that specific blog's comments table (without Blog column).

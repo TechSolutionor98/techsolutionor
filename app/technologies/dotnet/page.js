@@ -7,8 +7,6 @@ import DotNetHireUs from '../../_components/DotNet/HireUs/DotNetHireUs';
 import DotNetFAQ from '../../_components/DotNet/DotNetFAQ/DotNetFAQ';
 import { getCmsData, generateCmsMetadata } from '@/lib/cms-fetch';
 
-export const revalidate = 0;
-
 export async function generateMetadata() {
   return generateCmsMetadata('/technologies/dotnet', {
     title: '.NET Development Services | TechSolutionor',

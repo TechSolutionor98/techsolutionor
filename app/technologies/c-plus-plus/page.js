@@ -1,8 +1,6 @@
 import React from 'react';
 import { generateCmsMetadata } from '@/lib/cms-fetch';
 
-export const revalidate = 0;
-
 export async function generateMetadata() {
   return generateCmsMetadata('/technologies/c-plus-plus', {
     title: 'C++ Software Development Services | Tech Solutioner',

@@ -1,14 +1,9 @@
 import React from 'react';
 import BlogFormClient from '../components/BlogFormClient';
-import { getApiBase } from '@/lib/api-helper';
 
 export const metadata = { title: 'Add Blog - Admin' };
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
 
-export default async function AddBlogPage() {
-  const apiBase = getApiBase();
-
+export default function AddBlogPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -20,7 +15,7 @@ export default async function AddBlogPage() {
         </div>
       </div>
       
-      <BlogFormClient apiBase={apiBase} isEdit={false} />
+      <BlogFormClient isEdit={false} />
     </div>
   );
 }

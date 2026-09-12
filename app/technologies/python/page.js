@@ -7,8 +7,6 @@ import PythonHireUs from '../../_components/Python/HireUs/PythonHireUs';
 import PythonFAQ from '../../_components/Python/PythonFAQ/PythonFAQ';
 import { getCmsData, generateCmsMetadata } from '@/lib/cms-fetch';
 
-export const revalidate = 0;
-
 export async function generateMetadata() {
   return generateCmsMetadata('/technologies/python', {
     title: 'Python Development Services | TechSolutionor',

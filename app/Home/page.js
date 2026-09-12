@@ -3,8 +3,6 @@ import HomeClientPage from './HomeClientPage';
 import { getCmsData, generateCmsMetadata } from '@/lib/cms-fetch';
 import fallbackHomeContent from '@/content/home/home.json';
 
-export const revalidate = 0;
-
 export async function generateMetadata() {
   return generateCmsMetadata('/', {
     title: 'TechSolutionor | Web Development, SEO & Digital Growth Services',
@@ -24,7 +22,7 @@ export default async function HomePage() {
   try {
     const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000";
     const res = await fetch(`${apiBase}/api/admin/content/home`, { 
-      cache: 'no-store',
+      next: { revalidate: 60 },
       signal: AbortSignal.timeout(1000)
     });
     if (res.ok) {

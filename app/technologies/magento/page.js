@@ -7,8 +7,6 @@ import MagentoHireUs from '../../_components/Magento/HireUs/MagentoHireUs';
 import MagentoFAQ from '../../_components/Magento/MagentoFAQ/MagentoFAQ';
 import { getCmsData, generateCmsMetadata } from '@/lib/cms-fetch';
 
-export const revalidate = 0;
-
 export async function generateMetadata() {
   return generateCmsMetadata('/technologies/magento', {
     title: 'Magento eCommerce Development Services | TechSolutionor',

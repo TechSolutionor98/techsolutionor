@@ -7,7 +7,6 @@ import BlogSidebar from '@/app/_components/Blog/BlogSidebar';
 import BlogCommentForm from './BlogCommentForm';
 import { FaCalendarAlt, FaUser, FaClock, FaComment, FaTag, FaArrowLeft } from 'react-icons/fa';
 
-export const revalidate = 0;
 export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }) {

@@ -14,8 +14,6 @@ import CommonFAQ from '@/app/_components/services/common/FAQ/CommonFAQ';
 import WorkTogether from '../../_components/services/Graphics/Worktogether/worktogether';
 import { generateCmsMetadata } from '@/lib/cms-fetch';
 
-export const revalidate = 0;
-
 export async function generateMetadata() {
   return generateCmsMetadata('/services/graphic-design', {
     title: "Graphic Design Services - Tech Solutionor",

@@ -7,8 +7,6 @@ import FlutterHireUs from '../../_components/Flutter/HireUs/FlutterHireUs';
 import FlutterFAQ from '../../_components/Flutter/FlutterFAQ/FlutterFAQ';
 import { getCmsData, generateCmsMetadata } from '@/lib/cms-fetch';
 
-export const revalidate = 0;
-
 export async function generateMetadata() {
   return generateCmsMetadata('/technologies/flutter', {
     title: 'Flutter Mobile App Development | TechSolutionor',

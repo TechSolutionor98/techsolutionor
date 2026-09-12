@@ -16,6 +16,14 @@ export default function BlogUsersClient({ initialComments = [], apiBase = '' }) 
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(false);
 
+  React.useEffect(() => {
+    if (!initialComments || initialComments.length === 0) {
+      fetch(`${apiBase || ''}/api/blogs/comments`).then(r => r.json()).then(data => {
+        if (Array.isArray(data)) setComments(data);
+      }).catch(e => console.error(e));
+    }
+  }, []);
+
   // Group comments into unique users
   const usersList = useMemo(() => {
     const userMap = {};

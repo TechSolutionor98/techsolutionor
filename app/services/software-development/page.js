@@ -12,8 +12,6 @@ import HireUs from '@/app/_components/services/eCommerce-developement/HireUs/Hir
 import SoftwareFAQ from '@/app/_components/services/software-developement/FAQ/SoftwareFAQ';
 import { generateCmsMetadata } from '@/lib/cms-fetch';
 
-export const revalidate = 0;
-
 export async function generateMetadata() {
   return generateCmsMetadata('/services/software-development', {
     title: 'Custom Software Development Services in Dubai & UAE | Tech Solutioner',

@@ -13,8 +13,6 @@ import Newsletter from '../../_components/Home/Newsletter/Newsletter';
 import SEOFAQ from '../../_components/services/search-engine-optimization/FAQ/SEOFAQ';
 import { generateCmsMetadata } from '@/lib/cms-fetch';
 
-export const revalidate = 0;
-
 export async function generateMetadata() {
   return generateCmsMetadata('/services/search-engine-optimization', {
     title: "Search Engine Optimization Services - Tech Solutionor",
