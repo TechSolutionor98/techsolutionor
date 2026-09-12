@@ -1,24 +1,113 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { FaArrowRight } from "react-icons/fa6";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { getCmsVal } from "@/lib/api-helper";
+import HeroConstellation from "./HeroConstellation";
+
+export const DEFAULT_GLOBAL_COUNTRIES = [
+  "United Arab Emirates",
+  "Saudi Arabia",
+  "Qatar",
+  "Oman",
+  "Kuwait",
+  "United States",
+  "United Kingdom",
+  "Canada",
+  "Australia",
+  "Germany",
+  "France",
+  "Netherlands",
+  "Singapore",
+  "Malaysia",
+  "India",
+  "Pakistan",
+];
+
+export const DEFAULT_GLOBAL_LOCATIONS = DEFAULT_GLOBAL_COUNTRIES;
 
 export const defaultHomeHero = {
-  title: "Digital Marketing Agency in Dubai – Web Development & SEO Services for Business Growth",
+  title: "Digital Marketing Agency in – Web Development & SEO Services for Business Growth",
   description:
     "Serving businesses across the world, with a strong focus on helping companies in Dubai and the UAE grow through smart digital solutions.",
   buttonText: "Get a Free Quote",
 };
 
-const HomeBanner = ({ content, cmsContent }) => {
+// Smooth character-by-character reveal and transition variants
+const countryContainerVariants = {
+  hidden: {
+    opacity: 1,
+  },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.055, // Reveal character by character from left to right
+      delayChildren: 0.04,
+    },
+  },
+  exit: {
+    opacity: 0,
+    y: -6,
+    transition: {
+      duration: 0.25,
+      ease: [0.4, 0, 0.2, 1],
+    },
+  },
+};
+
+const charVariants = {
+  hidden: {
+    opacity: 0,
+    y: 5,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.16,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
+const HomeBanner = ({ content, cmsContent, locations, countries }) => {
+  const [countryIndex, setCountryIndex] = useState(0);
 
   const heroContent = useMemo(
     () => ({ ...defaultHomeHero, ...(content || {}) }),
     [content]
   );
+
+  const activeCountries = useMemo(() => {
+    if (Array.isArray(countries) && countries.length > 0) return countries;
+    if (Array.isArray(locations) && locations.length > 0) return locations;
+    if (Array.isArray(heroContent.countries) && heroContent.countries.length > 0) return heroContent.countries;
+    if (Array.isArray(heroContent.locations) && heroContent.locations.length > 0) return heroContent.locations;
+    return DEFAULT_GLOBAL_COUNTRIES;
+  }, [countries, locations, heroContent.countries, heroContent.locations]);
+
+  // Country animation sequence:
+  // 1. Reveal characters one-by-one from left to right
+  // 2. Keep full country name visible briefly (~1800ms)
+  // 3. Smooth exit transition to the next country (~250ms)
+  // 4. Continuously loop through all countries
+  useEffect(() => {
+    if (activeCountries.length <= 1) return;
+
+    const currentCountry = activeCountries[countryIndex] || "";
+    const revealTime = currentCountry.length * 55 + 80;
+    const holdTime = 1800;
+    const exitTime = 250;
+    const totalTime = revealTime + holdTime + exitTime;
+
+    const timer = setTimeout(() => {
+      setCountryIndex((prev) => (prev + 1) % activeCountries.length);
+    }, totalTime);
+
+    return () => clearTimeout(timer);
+  }, [countryIndex, activeCountries]);
 
   const rawTitle = heroContent.title?.trim() || defaultHomeHero.title;
   const rawDescription = heroContent.description?.trim() || defaultHomeHero.description;
@@ -33,15 +122,25 @@ const HomeBanner = ({ content, cmsContent }) => {
     ? bannerDescription.split("\n").filter(Boolean)
     : [bannerDescription];
 
-  // Helper to format title with matching Toonbee reference pill badge & heavy typography style
+  // Helper to format title with animated country text and heavy typography style
   const renderTitle = (titleString) => {
     if (!titleString) return null;
 
     // Check if title includes delimiter " – " (or default string format)
     if (titleString.includes(" – ")) {
       const parts = titleString.split(" – ");
-      const firstLine = parts[0];
+      const firstLineRaw = parts[0] || "";
       const secondLineRaw = parts[1] || "";
+
+      // Clean prefix so it ends naturally with "in"
+      let prefix = firstLineRaw
+        .replace(/\b(in\s+Globally|in\s+Dubai)\b/gi, "in")
+        .replace(/\s+(Globally|Dubai)$/i, "")
+        .trim();
+
+      if (!prefix.toLowerCase().endsWith("in")) {
+        prefix = `${prefix} in`;
+      }
 
       let middlePillText = secondLineRaw;
       let bottomLineText = "";
@@ -52,15 +151,42 @@ const HomeBanner = ({ content, cmsContent }) => {
         bottomLineText = secondLineRaw.substring(idx).trim();
       }
 
+      const currentCountry = activeCountries[countryIndex] || "";
+
       return (
         <div 
-          className="flex flex-col items-center justify-center text-center space-y-2 sm:space-y-3"
+          className="flex flex-col items-center justify-center text-center space-y-2.5 sm:space-y-3.5"
           style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
         >
-          {/* Top Line */}
-          <span className="block text-3xl sm:text-5xl md:text-6xl lg:text-[62px] font-black text-[#0D0F12] leading-[1.1] tracking-tight">
-            {firstLine}
-          </span>
+          {/* Top Line: Digital Marketing Agency in [Country] - Natural normal heading text, no badge */}
+          <div className="w-full text-center">
+            <h1 className="text-2xl sm:text-4xl md:text-[42px] lg:text-[46px] xl:text-[50px] font-black text-[#0D0F12] leading-tight tracking-tight inline-block">
+              <span className="inline">{prefix} </span>
+              <span className="inline-block whitespace-nowrap align-baseline">
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={currentCountry}
+                    variants={countryContainerVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    className="inline-block text-[#0D0F12]"
+                  >
+                    {currentCountry.split("").map((char, idx) => (
+                      <motion.span
+                        key={`${currentCountry}-${idx}`}
+                        variants={charVariants}
+                        className="inline-block"
+                        style={{ whiteSpace: "pre" }}
+                      >
+                        {char === " " ? "\u00A0" : char}
+                      </motion.span>
+                    ))}
+                  </motion.span>
+                </AnimatePresence>
+              </span>
+            </h1>
+          </div>
 
           {/* Middle Line inside Pill Badge with Gentle, Subtle Left-Entrance Animation */}
           <motion.div 
@@ -76,10 +202,10 @@ const HomeBanner = ({ content, cmsContent }) => {
 
           {/* Bottom Line */}
           {bottomLineText && (
-            <span className="block text-3xl sm:text-5xl md:text-6xl lg:text-[62px] font-black text-[#0D0F12] leading-[1.1] tracking-tight relative">
-              <span className="text-[#41B349] text-3xl sm:text-5xl font-serif mr-1 sm:mr-2" aria-hidden="true">&lsquo;</span>
+            <span className="block text-2xl sm:text-4xl md:text-5xl lg:text-[62px] font-black text-[#0D0F12] leading-[1.1] tracking-tight relative">
+              <span className="text-[#41B349] text-2xl sm:text-4xl md:text-5xl font-serif mr-1 sm:mr-2" aria-hidden="true">&lsquo;</span>
               {bottomLineText}
-              <span className="text-[#41B349] text-3xl sm:text-5xl font-serif ml-1 sm:ml-2" aria-hidden="true">&rsquo;</span>
+              <span className="text-[#41B349] text-2xl sm:text-4xl md:text-5xl font-serif ml-1 sm:ml-2" aria-hidden="true">&rsquo;</span>
             </span>
           )}
         </div>
@@ -101,8 +227,11 @@ const HomeBanner = ({ content, cmsContent }) => {
         background: "linear-gradient(135deg, #41B349 0%, rgba(65, 179, 73, 0.45) 30%, rgba(255, 231, 168, 0.2) 60%, #FFFFFF 100%)",
       }}
     >
+      {/* Interactive Constellation / Network Background Animation */}
+      <HeroConstellation />
+
       {/* Main Centered Content Layout */}
-      <div className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center">
+      <div className="relative z-10 w-full max-w-6xl xl:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center">
 
         {/* Main Headline */}
         <div
