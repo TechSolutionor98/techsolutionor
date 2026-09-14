@@ -76,8 +76,7 @@ const Footer = () => {
                     {Object.entries(footerLinks).map(([section, links]) => (
                         <div key={section} className="flex flex-col">
                             {/* Heading / Title */}
-                            <div className="flex items-center gap-2 mb-4 sm:mb-5">
-                                <span className="w-2 h-2 rounded-full bg-[#41B349] shadow-[0_0_8px_rgba(65,179,73,0.8)] flex-shrink-0" />
+                            <div className="flex items-center mb-4 sm:mb-5">
                                 <h3 
                                     className="text-base sm:text-[17px] font-extrabold text-[#41B349] uppercase tracking-wider"
                                     style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
