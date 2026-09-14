@@ -10,7 +10,7 @@ import Newsletter from "../_components/Home/Newsletter/Newsletter";
 import Testimonials from "../_components/Home/Testimonials/Testimonials";
 import ChallengeAccepted from "../_components/Home/ChallengeAccepted/ChallengeAccepted";
 
-export default function HomeClientPage({ cmsData, fallbackContent }) {
+export default function HomeClientPage({ cmsData, fallbackContent, approvedReviews = [] }) {
   const homeContent = fallbackContent || {};
 
   return (
@@ -22,7 +22,11 @@ export default function HomeClientPage({ cmsData, fallbackContent }) {
       <Projects content={homeContent.projects} cmsContent={cmsData?.content} />
       <Technology content={homeContent.technology} cmsContent={cmsData?.content} />
       <Newsletter content={homeContent.newsletter} cmsContent={cmsData?.content} />
-      <Testimonials content={homeContent.testimonials} cmsContent={cmsData?.content} />
+      <Testimonials 
+        content={homeContent.testimonials} 
+        cmsContent={cmsData?.content} 
+        initialReviews={approvedReviews}
+      />
       <ChallengeAccepted content={homeContent.challengeAccepted} cmsContent={cmsData?.content} />
     </div>
   );

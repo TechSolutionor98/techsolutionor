@@ -10,6 +10,9 @@ export async function generateMetadata() {
   });
 }
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default async function HomePage() {
   let cmsData = null;
   try {
@@ -35,6 +38,26 @@ export default async function HomePage() {
     // Ignore fetch error if server is not reachable
   }
 
+  let approvedReviews = [];
+  try {
+    const { getDb } = await import('@/lib/mongodb');
+    const db = await getDb();
+    const rows = await db.collection('reviews').find({ approved: true }).sort({ createdAt: -1 }).limit(100).toArray();
+    approvedReviews = rows.map((r) => ({
+      _id: r._id.toString(),
+      name: r.name || 'Verified Client',
+      message: r.message || r.comment || r.review || '',
+      rating: r.rating || 5,
+      time: r.time || 'Recently',
+      avatar: r.avatar || null,
+      source: r.source || 'Google',
+      color: r.color || null,
+      initial: r.initial || null,
+    }));
+  } catch (err) {
+    console.error('Failed to load approved reviews for HomePage:', err);
+  }
+
   const mergedContent = {
     ...fallbackHomeContent,
     ...(serverContent || {}),
@@ -44,6 +67,7 @@ export default async function HomePage() {
     <HomeClientPage
       cmsData={cmsData}
       fallbackContent={mergedContent}
+      approvedReviews={approvedReviews}
     />
   );
 }

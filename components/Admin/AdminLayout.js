@@ -122,7 +122,7 @@ export default function AdminLayout({ children, title = '' }) {
     { href: "/admin/quote-submissions", label: "Quote Requests", group: "Management", hidden: true },
     { href: "/admin/applications", label: "Career Applications", group: "Management" },
     { href: "/admin/contact-submissions", label: "Contact Submissions", group: "Management" },
-    { href: "/admin/reviews", label: "Reviews", group: "Management", hidden: true },
+    { href: "/admin/reviews", label: "Reviews", group: "Management" },
     { href: "/admin/settings", label: "Business Settings", group: "Management" },
     { href: "/admin/pages", label: "Pages & Routes", group: "CMS" },
     { href: "/admin/seo", label: "SEO Manager", group: "CMS" },

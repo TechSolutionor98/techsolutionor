@@ -107,8 +107,11 @@ function dataReviewsFromCms(cmsContent) {
   return null
 }
 
-const Testimonials = ({ content, cmsContent }) => {
-  const [liveReviews, setLiveReviews] = useState([])
+const Testimonials = ({ content, cmsContent, initialReviews = [] }) => {
+  const [liveReviews, setLiveReviews] = useState(() => {
+    if (Array.isArray(initialReviews) && initialReviews.length > 0) return initialReviews
+    return []
+  })
   const [slotReviews, setSlotReviews] = useState([0, 1, 2, 3])
   const [hoveredSlots, setHoveredSlots] = useState({ 0: false, 1: false, 2: false, 3: false })
 
@@ -132,7 +135,7 @@ const Testimonials = ({ content, cmsContent }) => {
       } catch (err) {
         console.warn('Could not fetch live reviews from /api/reviews:', err)
       }
-      if (isMounted) {
+      if (isMounted && (!initialReviews || initialReviews.length === 0)) {
         const fallback = dataReviewsFromCms(cmsContent) || content?.reviews || defaultTestimonials.reviews
         setLiveReviews(fallback)
       }
@@ -149,7 +152,9 @@ const Testimonials = ({ content, cmsContent }) => {
   const sectionTitleHighlight = getCmsVal(cmsContent, content?.titleHighlight || defaultTestimonials.titleHighlight, 'testimonials')
 
   // Active reviews list
-  const activeReviews = liveReviews.length > 0 ? liveReviews : defaultTestimonials.reviews
+  const activeReviews = liveReviews.length > 0 
+    ? liveReviews 
+    : (Array.isArray(initialReviews) && initialReviews.length > 0 ? initialReviews : defaultTestimonials.reviews)
 
   // Format all available reviews
   const formattedReviews = activeReviews.map((item, idx) => {
@@ -159,6 +164,7 @@ const Testimonials = ({ content, cmsContent }) => {
     const time = item.time || item.date || 'Recently'
     const reviewText = item.message || item.review || item.text || item.comment || ''
     const uniqueKey = item._id || `${name}-${idx}`
+    const avatar = item.avatar || null
 
     return {
       uniqueKey,
@@ -167,6 +173,7 @@ const Testimonials = ({ content, cmsContent }) => {
       color,
       time,
       review: reviewText,
+      avatar,
     }
   })
 
@@ -260,7 +267,24 @@ const Testimonials = ({ content, cmsContent }) => {
             {/* Comment Box */}
             <div className="bg-white border-2 border-[#FDE68A]/80 rounded-2xl p-5 shadow-[0_6px_20px_rgba(0,0,0,0.05)] hover:shadow-[0_12px_30px_rgba(245,158,11,0.12)] hover:border-[#F59E0B]/60 transition-all duration-300 relative">
               <div className="flex items-start gap-3.5">
-                <div className={`w-10 h-10 rounded-full ${item.color} flex items-center justify-center text-white font-black text-base shadow-xs shrink-0 mt-0.5 border border-white/60`}>
+                {item.avatar && typeof item.avatar === 'string' && item.avatar.trim() ? (
+                  <img
+                    src={item.avatar}
+                    alt={item.name}
+                    referrerPolicy="no-referrer"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                      if (e.currentTarget.nextElementSibling) {
+                        e.currentTarget.nextElementSibling.style.display = 'flex';
+                      }
+                    }}
+                    className="w-10 h-10 rounded-full object-cover shrink-0 mt-0.5 border border-white/60 shadow-xs"
+                  />
+                ) : null}
+                <div 
+                  className={`w-10 h-10 rounded-full ${item.color} flex items-center justify-center text-white font-black text-base shadow-xs shrink-0 mt-0.5 border border-white/60`}
+                  style={{ display: (item.avatar && typeof item.avatar === 'string' && item.avatar.trim()) ? 'none' : 'flex' }}
+                >
                   {item.initial}
                 </div>
                 
