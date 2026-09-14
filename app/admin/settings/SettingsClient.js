@@ -91,18 +91,20 @@ const SocialInput = ({ platform, field, settings, handleChange }) => (
   </div>
 );
 
-export default function SettingsClient({ initialSettings = {}, apiBase = process.env.NEXT_PUBLIC_API_URL }) {
+export default function SettingsClient({ initialSettings = {}, apiBase = '' }) {
   const [settings, setSettings] = useState(initialSettings);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
 
+  const baseUrl = apiBase || '';
+
   React.useEffect(() => {
     if (!initialSettings || Object.keys(initialSettings).length === 0 || !initialSettings.email) {
-      fetch(`${apiBase || ''}/api/settings`).then(r => r.json()).then(data => {
+      fetch(`${baseUrl}/api/settings`).then(r => r.json()).then(data => {
         if (data && typeof data === 'object') setSettings(data);
       }).catch(e => console.error(e));
     }
-  }, []);
+  }, [baseUrl]);
 
   const handleChange = (field, value) => {
     setSettings(prev => ({ ...prev, [field]: value }));
@@ -134,7 +136,7 @@ export default function SettingsClient({ initialSettings = {}, apiBase = process
     setLoading(true);
     setMessage('');
     try {
-      const res = await fetch(`${apiBase}/api/settings`, {
+      const res = await fetch(`${baseUrl}/api/settings`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(settings),
@@ -195,7 +197,7 @@ export default function SettingsClient({ initialSettings = {}, apiBase = process
               type="email"
               value={settings.email || ''}
               onChange={(e) => handleChange('email', e.target.value)}
-              placeholder="contact@osumfix.ae"
+              placeholder="info@techsolutionor.com"
               className="rounded-md border border-gray-300 px-4 py-2 text-gray-900 placeholder-gray-400 shadow-sm
                          focus:border-[#20507C] focus:ring-2 focus:ring-[#34953C] focus:outline-none transition"
             />

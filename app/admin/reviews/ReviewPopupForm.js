@@ -90,7 +90,8 @@ export default function ReviewPopupForm({ apiBase, onClose, onSuccess }) {
           return;
         }
       }
-      const res = await fetch(`${apiBase}/api/reviews`, {
+      const baseUrl = apiBase || '';
+      const res = await fetch(`${baseUrl}/api/reviews`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...form, avatar: avatarUrl }),

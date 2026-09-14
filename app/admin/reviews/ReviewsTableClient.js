@@ -2,11 +2,13 @@
 import React, { useState, useMemo } from 'react';
 import ReviewPopupForm from './ReviewPopupForm';
 
-export default function ReviewsTableClient({ initialData = [], apiBase = process.env.NEXT_PUBLIC_API_URL }) {
+export default function ReviewsTableClient({ initialData = [], apiBase = '' }) {
   const [rows, setRows] = useState(initialData || []);
   const [showAll, setShowAll] = useState(true);
   const [loading, setLoading] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
+
+  const baseUrl = apiBase || '';
 
   const filtered = useMemo(() => {
     return rows.filter(r => showAll ? true : !r.approved);
@@ -21,7 +23,7 @@ export default function ReviewsTableClient({ initialData = [], apiBase = process
   async function refresh() {
     try {
       setLoading(true);
-      const res = await fetch(`${apiBase}/api/reviews?all=true`);
+      const res = await fetch(`${baseUrl}/api/reviews?all=true`);
       if (!res.ok) throw new Error('Fetch failed');
       const data = await res.json();
       setRows(data);
@@ -36,7 +38,7 @@ export default function ReviewsTableClient({ initialData = [], apiBase = process
     if (!confirm('Approve this review?')) return;
     try {
       setLoading(true);
-      const res = await fetch(`${apiBase}/api/reviews`, {
+      const res = await fetch(`${baseUrl}/api/reviews`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id, approve: true }),
@@ -53,7 +55,7 @@ export default function ReviewsTableClient({ initialData = [], apiBase = process
     if (!confirm('Delete this review? This cannot be undone.')) return;
     try {
       setLoading(true);
-      const res = await fetch(`${apiBase}/api/reviews?id=${encodeURIComponent(id)}`, { method: 'DELETE' });
+      const res = await fetch(`${baseUrl}/api/reviews?id=${encodeURIComponent(id)}`, { method: 'DELETE' });
       const json = await res.json();
       if (!res.ok) throw new Error(json?.error || 'Delete failed');
       await refresh();
@@ -90,7 +92,7 @@ export default function ReviewsTableClient({ initialData = [], apiBase = process
 
       {showPopup && (
         <ReviewPopupForm
-          apiBase={apiBase}
+          apiBase={baseUrl}
           onClose={() => setShowPopup(false)}
           onSuccess={handleSuccess}
         />

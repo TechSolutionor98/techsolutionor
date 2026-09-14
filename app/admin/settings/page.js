@@ -9,7 +9,7 @@ export default function SettingsPage() {
   return (
     <div className="w-full">
       <h2 className="text-[26px] sm:text-[28px] font-bold uppercase mb-4 text-gray-900">Website Settings</h2>
-      <SettingsClient />
+      <SettingsClient apiBase="" />
     </div>
   );
 }
