@@ -1,22 +1,14 @@
 import React from 'react';
+import BecomeAPartnerContent from './BecomeAPartnerContent';
 import { generateCmsMetadata } from '@/lib/cms-fetch';
 
 export async function generateMetadata() {
   return generateCmsMetadata('/become-a-partner', {
-    title: 'Become a Partner | Tech Solutioner',
-    description: 'Partner with Tech Solutioner to scale your agency, software products, and technical delivery.',
+    title: 'Become a Partner | Tech Solutionor',
+    description: 'Partner with Tech Solutionor to expand your agency capabilities, monetize enterprise referrals, co-engineer high-scale software, and accelerate global business growth.',
   });
 }
 
 export default function BecomeAPartnerPage() {
-  return (
-    <div className="min-h-screen bg-slate-950 text-white py-20 px-6">
-      <div className="max-w-4xl mx-auto space-y-6">
-        <h1 className="text-4xl font-extrabold text-blue-400">Become a Partner</h1>
-        <p className="text-gray-300 leading-relaxed">
-          Collaborate with Tech Solutioner. Join our referral and strategic technology partnership program to unlock mutual business growth.
-        </p>
-      </div>
-    </div>
-  );
+  return <BecomeAPartnerContent />;
 }

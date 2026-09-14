@@ -59,7 +59,7 @@ const Footer = () => {
             { name: "Blogs", href: "/blog" },
             { name: "Our Projects", href: "/projects" },
             { name: "Career", href: "/career" },
-            { name: "Become a Partner", href: "/contact" }
+            { name: "Become a Partner", href: "/become-a-partner" }
         ]
     };
 
