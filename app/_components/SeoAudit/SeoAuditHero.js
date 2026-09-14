@@ -1,62 +1,110 @@
 "use client";
+
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import ServicesBg from "../../../components/Images/seobannerbg.png";
-// import TechBg from "../../../components/Images/technologybannerbg.svg";
+import TechBg from "@/components/Images/technologybannerbg.svg";
+import FreeSeoAuditImg from "@/components/Images/Free-seo-audit.png";
+import { ArrowRight, Sparkles, ShieldCheck } from "lucide-react";
+import { useQuote } from "@/app/_context/QuoteContext";
 
-const ServicesPageHero = () => {
+const SeoAuditHero = () => {
+  const { openQuote } = useQuote();
+
   return (
-    <div className="relative w-full  h-[400px] md:h-[600px] flex items-center justify-center overflow-hidden">
-      {/* <div className="absolute top-0 left-0 opacity-60 rotate-0 z-20">
+    <section className="relative w-full bg-[#FFFFFF] text-[#0D0F12] overflow-hidden min-h-[500px] sm:min-h-[540px] flex items-center py-14 md:py-20 select-none">
+      {/* Background Subtle Geometric Polygons */}
+      <div className="absolute top-0 left-0 opacity-40 pointer-events-none">
         <Image
           src={TechBg}
-          alt="Tech Background"
+          alt="Geometric Background Accent"
           width={400}
           height={400}
-          className="w-[350px] bg-cover "
+          className="w-[350px] object-contain"
         />
-      </div> */}
-      {/* Background Image */}
-      <div className="absolute inset-0 z-0">
-        <Image
-          src={ServicesBg}
-          alt="Services Background"
-          fill
-          style={{ objectFit: "cover" }}
-          priority
-        />
-        <div className="absolute inset-0 bg-black/60 z-[1]"></div>
       </div>
 
-      {/* Content Overlay */}
-                  <div className="container mx-auto px-5 md:px-10 relative z-10">
-                <div className="max-w-4xl md:ml-50">
-                    {/* Hero Text */}
-                    <div className="text-white mb-10">
-                        <h1 className="text-4xl md:text-[38px]  font-bold leading-tight mb-8">
-                            Get a Free Professional <br />
-                            <span className="text-white">SEO Audit & Custom</span> <br />
-                            <span className="text-white">Action Plan</span>
-                        </h1>
-                        <p className="text-lg md:text-[16px] text-gray-200 leading-relaxed max-w-2xl font-medium">
-                            Get a comprehensive SEO analysis tailored for businesses in Dubai, across the UAE, and worldwide. Discover hidden growth opportunities and fix ranking issues with a manual, data-driven SEO action plan designed to unlock qualified traffic, leads, and revenue.
-                        </p>
-                    </div>
+      {/* Subtle Top-Right Ambient Glow */}
+      <div className="absolute top-0 right-1/4 w-[450px] h-[300px] bg-[#36963D]/5 rounded-full blur-[120px] pointer-events-none" />
 
-                    {/* CTA Button & Tagline */}
-                    <div className="flex flex-col items-start gap-4">
-                        <button className="px-4 py-2 bg-[#00C853] text-white font-semibold text-[16px] hover:bg-white hover:text-[#00C853] transition-all duration-300 shadow-lg uppercase tracking-wide">
-                            Claim Your Free SEO Audit
-                        </button>
-                        <p className="text-gray-300 text-sm italic">
-                            "No Automated Bot Reports. Get a Custom SEO Action Plan Hand-Crafted by Our Experts."
-                        </p>
-                    </div>
-                </div>
+      <div className="relative z-10 max-w-[1240px] mx-auto px-5 sm:px-8 md:px-10 flex flex-col md:flex-row items-center justify-between w-full gap-10 md:gap-14">
+        {/* Left Content */}
+        <div className="w-full md:w-1/2 text-left">
+          {/* Eyebrow Pill Badge */}
+          <div 
+            className="inline-flex items-center px-4 py-1.5 rounded-full bg-[#36963D]/10 border border-[#36963D]/30 text-[#36963D] font-mono text-xs uppercase tracking-widest font-bold mb-6 shadow-2xs"
+            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+          >
+            <span>FREE PROFESSIONAL SEO AUDIT</span>
+          </div>
+
+          {/* Main Headline matching Technologies page */}
+          <h1 
+            className="text-3xl sm:text-4xl md:text-[44px] lg:text-[50px] font-black leading-[1.12] tracking-tight text-[#0D0F12] mb-6"
+            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+          >
+            Get a Free Professional <br />
+            SEO Audit & Custom <br />
+            <span className="text-[#36963D]">Action Plan.</span>
+          </h1>
+
+          {/* Subtitle */}
+          <p 
+            className="text-[#475569] text-base md:text-lg max-w-[500px] mb-5 leading-relaxed font-normal"
+            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+          >
+            Get a comprehensive SEO analysis tailored for businesses in Dubai, across the UAE, and worldwide. Discover hidden growth opportunities and fix ranking issues with a manual, data-driven SEO action plan designed to unlock qualified traffic, leads, and revenue.
+          </p>
+
+          {/* Trust Tagline Note */}
+          <div className="flex items-center gap-2 text-xs sm:text-sm text-[#2d5a32] font-semibold mb-8 bg-[#36963D]/5 border border-[#36963D]/15 rounded-xl px-3.5 py-2 max-w-lg">
+            <ShieldCheck className="w-4 h-4 text-[#36963D] shrink-0" />
+            <span>No Automated Bot Reports. Get a Custom SEO Action Plan Hand-Crafted by Our Experts.</span>
+          </div>
+
+          {/* CTA Buttons */}
+          <div className="flex flex-wrap items-center gap-4">
+            <a href="#form" className="inline-block group">
+              <button 
+                className="bg-[#36963D] hover:bg-[#2e8234] text-white px-8 py-3.5 rounded-full font-bold text-sm sm:text-base transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2.5"
+                style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+              >
+                <span>Claim Your Free SEO Audit</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </button>
+            </a>
+
+            <button 
+              onClick={openQuote}
+              className="bg-transparent hover:bg-[#36963D]/10 text-[#0D0F12] hover:text-[#36963D] border-2 border-[#0D0F12]/30 hover:border-[#36963D] px-7 py-3.5 rounded-full font-bold text-sm sm:text-base transition-all duration-300 cursor-pointer flex items-center gap-2"
+              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+            >
+              <Sparkles className="w-4 h-4 text-[#36963D]" />
+              <span>Get Free Quote</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Right Content - Visual Banner Graphic */}
+        <div className="w-full md:w-1/2 flex justify-center items-center">
+          <div className="relative w-[280px] h-[280px] sm:w-[350px] sm:h-[350px] md:w-[440px] md:h-[440px]">
+            {/* Ambient circular frame backdrop */}
+            <div className="absolute inset-4 rounded-full bg-gradient-to-tr from-[#36963D]/10 via-[#36963D]/5 to-transparent pointer-events-none" />
+            <div className="absolute inset-0 flex items-center justify-center p-6">
+              <Image 
+                src={FreeSeoAuditImg} 
+                alt="Free SEO Audit Illustration" 
+                width={380}
+                height={380}
+                priority
+                className="object-contain filter drop-shadow-xl transition-transform duration-300 hover:scale-105"
+              />
             </div>
-    </div>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 };
 
-export default ServicesPageHero;
+export default SeoAuditHero;

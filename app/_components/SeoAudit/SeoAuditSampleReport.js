@@ -1,63 +1,81 @@
 "use client";
+
 import React from "react";
 import Image from "next/image";
-import SeoAuditImg from "../../../components/Images/SEO-audit.png";
+import SeoAuditImg from "@/components/Images/SEO-audit.png";
+import { Check, ArrowRight } from "lucide-react";
+
+const points = [
+  "Page performance insights",
+  "Keyword ranking analysis",
+  "Technical issues and recommendations",
+  "Competitor comparisons",
+  "Actionable growth plan",
+];
 
 const SeoAuditSampleReport = () => {
-  const points = [
-    "Page performance insights",
-    "Keyword ranking analysis",
-    "Technical issues and recommendations",
-    "Competitor comparisons",
-    "Actionable growth plan",
-  ];
-
   return (
-    <section className="py- bg-white overflow-hidden -mt-20">
-      <div className="container mx-auto px-5 md:px-10">
-        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-0">
-          {/* Left Side: Illustration */}
-          <div className="flex-1 w-full flex justify-center lg:justify-start">
-            <div className="relative w-full max-w-[600px] aspect-[4/3] mb-30 ml-20">
+    <section className="py-16 sm:py-20 md:py-24 bg-white select-none overflow-hidden">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Main Card Container matching WhyChoose design language */}
+        <div className="bg-white rounded-[28px] sm:rounded-[36px] md:rounded-[40px] border-2 border-[#41B349] p-6 sm:p-10 md:p-12 shadow-[0_4px_24px_rgba(0,0,0,0.03)] grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          
+          {/* Left Column: Sample Report Illustration */}
+          <div className="lg:col-span-5 flex justify-center items-center">
+            <div className="relative w-full max-w-[420px] aspect-[4/3] rounded-2xl overflow-hidden p-2">
               <Image
                 src={SeoAuditImg}
                 alt="Sample SEO Audit Report Illustration"
                 fill
                 style={{ objectFit: "contain" }}
+                className="filter drop-shadow-md hover:scale-105 transition-transform duration-300"
               />
             </div>
           </div>
 
-          {/* Right Side: Content */}
-          <div className="flex-1">
-            <span className="inline-block bg-[#262323] text-white px-6 py-[12px] text-[14px] font-semibold mb-6 tracking-normal normal-case leading-[14px] h-[38px] shadow-[0px_10px_6px_rgba(65,179,73,0.36)] rounded-[1px] transition duration-300 cursor-pointer ">
-              Sample SEO Report
-            </span>
+          {/* Right Column: Content */}
+          <div className="lg:col-span-7 text-left">
+            <div 
+              className="inline-flex items-center px-4 py-1.5 rounded-full bg-[#36963D]/10 border border-[#36963D]/30 text-[#36963D] font-mono text-xs uppercase tracking-widest font-bold mb-4 shadow-2xs"
+              style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+            >
+              <span>SAMPLE SEO REPORT</span>
+            </div>
 
-            <h2 className="text-3xl md:text-[33px] font-extrabold text-[#262323] mb-4 leading-tight">
-              See What a Professional <br /> SEO Audit Looks Like
+            <h2
+              className="text-3xl sm:text-4xl font-black text-[#111827] leading-tight mb-4"
+              style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+            >
+              See What a Professional <br />
+              <span className="text-[#41B349]">SEO Audit Looks Like</span>
             </h2>
 
-            <p className="text-gray-600 text-lg md:text-[18px] mb-4">
+            <p className="text-gray-600 text-sm sm:text-base mb-6 font-normal">
               Get an example of our comprehensive SEO audit report, including:
             </p>
 
-            <ul className="space-y-2 mb-4">
+            <ul className="space-y-3 mb-8">
               {points.map((point, index) => (
                 <li
                   key={index}
-                  className="flex items-start gap-3 text-gray-700 text-lg md:text-[18px] "
+                  className="flex items-center gap-3 text-gray-700 text-sm sm:text-[15.5px]"
                 >
-                  <span className="text-gray-700 ">•</span>
-                  {point}
+                  <span className="w-5 h-5 rounded-full bg-[#41B349]/15 text-[#41B349] flex items-center justify-center shrink-0">
+                    <Check className="w-3.5 h-3.5" strokeWidth={3} />
+                  </span>
+                  <span className="font-medium">{point}</span>
                 </li>
               ))}
             </ul>
 
-            <button className="font-roboto font-medium text-[15px] leading-[15px] tracking-normal text-center text-white no-underline uppercase bg-[#61CE70] rounded-[3px] px-6 py-3 inline-block cursor-pointer shadow-none transition-all duration-300 select-none">
-              Sample SEO Audit Report
-            </button>
+            <a href="#form" className="inline-block group">
+              <button className="bg-[#36963D] hover:bg-[#2e8234] text-white rounded-full px-8 py-3.5 font-bold text-sm sm:text-base shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-all cursor-pointer flex items-center gap-2.5">
+                <span>Sample SEO Audit Report</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </button>
+            </a>
           </div>
+
         </div>
       </div>
     </section>
