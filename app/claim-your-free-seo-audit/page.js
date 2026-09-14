@@ -4,7 +4,6 @@ import SeoAuditContent from '../_components/SeoAudit/SeoAuditContent';
 import SeoAuditBenefits from '../_components/SeoAudit/SeoAuditBenefits';
 import SeoAuditProcess from '../_components/SeoAudit/SeoAuditProcess';
 import SeoAuditSampleReport from '../_components/SeoAudit/SeoAuditSampleReport';
-import SeoAuditFinalForm from '../_components/SeoAudit/SeoAuditFinalForm';
 import SeoAuditFAQ from '../_components/SeoAudit/SeoAuditFAQ';
 import Newsletter from '../_components/Home/Newsletter/Newsletter';
 import { generateCmsMetadata } from '@/lib/cms-fetch';
@@ -24,7 +23,6 @@ const ClaimFreeSeoAudit = () => {
             <SeoAuditBenefits />
             <SeoAuditProcess />
             <SeoAuditSampleReport />
-            <SeoAuditFinalForm />
             <Newsletter />
             <SeoAuditFAQ />
         </main>
