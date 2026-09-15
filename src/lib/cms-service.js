@@ -245,7 +245,11 @@ export async function getSeoEntry(routeId) {
   const db = await getDb();
   let filter = {};
   if (ObjectId.isValid(routeId)) {
-    filter = { _id: new ObjectId(routeId) };
+    try {
+      filter = { _id: new ObjectId(routeId) };
+    } catch (e) {
+      filter = { path: routeId };
+    }
   } else {
     filter = { path: routeId };
   }
@@ -253,9 +257,20 @@ export async function getSeoEntry(routeId) {
   const route = await db.collection('cms_routes').findOne(filter);
   const targetPath = route ? route.path : routeId;
 
-  const seo = await db.collection('cms_seo').findOne({
-    $or: [{ routeId }, { path: targetPath }]
-  });
+  const orConditions = [{ path: targetPath }];
+  if (targetPath) {
+    const altPath = targetPath.endsWith('/') ? targetPath.slice(0, -1) : `${targetPath}/`;
+    orConditions.push({ path: altPath });
+    orConditions.push({ path: targetPath.toLowerCase() });
+  }
+  if (routeId) {
+    orConditions.push({ routeId });
+    if (ObjectId.isValid(routeId)) {
+      try { orConditions.push({ routeId: new ObjectId(routeId) }); } catch (e) {}
+    }
+  }
+
+  const seo = await db.collection('cms_seo').findOne({ $or: orConditions });
 
   if (!seo) {
     return {
@@ -302,13 +317,34 @@ export async function saveSeoEntry(routeId, seoData) {
     updatedAt: new Date(),
   };
 
+  const orConditions = [{ path }];
+  const altPath = path.endsWith('/') ? path.slice(0, -1) : `${path}/`;
+  orConditions.push({ path: altPath });
+  if (routeId) orConditions.push({ routeId });
+
   await db.collection('cms_seo').updateOne(
-    { path },
-    { $set: doc },
+    { $or: orConditions },
+    { $set: doc, $setOnInsert: { createdAt: new Date() } },
     { upsert: true }
   );
 
   return { success: true, path };
+}
+
+export async function deleteSeoEntry(routeIdOrPath) {
+  const db = await getDb();
+  const orConditions = [{ path: routeIdOrPath }, { routeId: routeIdOrPath }];
+  if (ObjectId.isValid(routeIdOrPath)) {
+    try {
+      orConditions.push({ _id: new ObjectId(routeIdOrPath) });
+      orConditions.push({ routeId: new ObjectId(routeIdOrPath) });
+    } catch (e) {}
+  }
+  const altPath = routeIdOrPath.endsWith('/') ? routeIdOrPath.slice(0, -1) : `${routeIdOrPath}/`;
+  orConditions.push({ path: altPath });
+
+  const result = await db.collection('cms_seo').deleteMany({ $or: orConditions });
+  return { success: true, deletedCount: result.deletedCount };
 }
 
 export async function getPublishedContent(pathParam) {

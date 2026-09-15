@@ -66,88 +66,112 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const sitemapEntries: MetadataRoute.Sitemap = [];
   const addedPaths = new Set<string>();
 
-  // 1. Add base static pages
-  for (const pagePath of defaultPages) {
-    const url = pagePath === '' ? baseUrl : `${baseUrl}${pagePath}`;
-    addedPaths.add(pagePath || '/');
+  // Fetch SEO entries and dynamic routes from DB
+  let seoMap = new Map<string, any>();
+  let db: any = null;
+
+  try {
+    db = await getDb();
+    const seoEntries = await db.collection('cms_seo').find({ websiteId: 'default' }).toArray();
+    for (const entry of seoEntries) {
+      if (entry.path) {
+        const clean = entry.path.trim();
+        seoMap.set(clean, entry);
+        const alt = clean.endsWith('/') ? clean.slice(0, -1) : `${clean}/`;
+        seoMap.set(alt, entry);
+        seoMap.set(clean.toLowerCase(), entry);
+      }
+    }
+  } catch (err) {
+    console.error('Error loading cms_seo for sitemap:', err);
+  }
+
+  const getSeoSettings = (pathUrl: string) => {
+    const lookup = pathUrl === '' ? '/' : pathUrl;
+    return seoMap.get(lookup) || null;
+  };
+
+  const addSitemapEntry = (
+    pathUrl: string,
+    defaultPriority: number = 0.8,
+    defaultFrequency: any = 'weekly',
+    fallbackLastModified: Date = new Date()
+  ) => {
+    const cleanPath = pathUrl === '' ? '/' : (pathUrl.startsWith('/') ? pathUrl : `/${pathUrl}`);
+    if (addedPaths.has(cleanPath)) return;
+
+    const seo = getSeoSettings(pathUrl);
+
+    // Dynamic inclusion check: Honor Admin SEO Settings
+    if (seo) {
+      if (seo.sitemap?.include === false || seo.robots?.index === false) {
+        return; // Excluded dynamically via admin
+      }
+    }
+
+    addedPaths.add(cleanPath);
+
+    const priority = (seo?.sitemap?.priority !== undefined && seo?.sitemap?.priority !== null)
+      ? Number(seo.sitemap.priority)
+      : defaultPriority;
+
+    const changeFrequency = seo?.sitemap?.changeFrequency || defaultFrequency;
+    const lastModified = seo?.updatedAt ? new Date(seo.updatedAt) : fallbackLastModified;
+
+    const url = pathUrl === '' ? baseUrl : `${baseUrl}${pathUrl.startsWith('/') ? pathUrl : `/${pathUrl}`}`;
+
     sitemapEntries.push({
       url,
-      lastModified: new Date(),
-      changeFrequency: pagePath === '' ? 'daily' : 'weekly',
-      priority: pagePath === '' ? 1.0 : 0.8,
+      lastModified,
+      changeFrequency,
+      priority,
     });
+  };
+
+  // 1. Add base static pages
+  for (const pagePath of defaultPages) {
+    addSitemapEntry(pagePath, pagePath === '' ? 1.0 : 0.8, pagePath === '' ? 'daily' : 'weekly');
   }
 
   // 2. Add technology pages
   for (const pagePath of techPages) {
-    if (!addedPaths.has(pagePath)) {
-      addedPaths.add(pagePath);
-      sitemapEntries.push({
-        url: `${baseUrl}${pagePath}`,
-        lastModified: new Date(),
-        changeFrequency: 'daily',
-        priority: 0.8,
-      });
-    }
+    addSitemapEntry(pagePath, 0.8, 'daily');
   }
 
   // 3. Add service pages
   for (const pagePath of servicePages) {
-    if (!addedPaths.has(pagePath)) {
-      addedPaths.add(pagePath);
-      sitemapEntries.push({
-        url: `${baseUrl}${pagePath}`,
-        lastModified: new Date(),
-        changeFrequency: 'daily',
-        priority: 0.8,
-      });
-    }
+    addSitemapEntry(pagePath, 0.8, 'daily');
   }
 
-  // 4. Fetch dynamic published blog articles and CMS routes from MongoDB
-  try {
-    const db = await getDb();
-    
-    // Published blog posts (at root level /:slug per original SEO)
-    const blogs = await db.collection('blogs').find({ status: 'published' }).toArray();
-    for (const blog of blogs) {
-      if (blog.slug) {
-        const pagePath = `/${blog.slug}`;
-        if (!addedPaths.has(pagePath)) {
-          addedPaths.add(pagePath);
-          sitemapEntries.push({
-            url: `${baseUrl}${pagePath}`,
-            lastModified: blog.updatedAt ? new Date(blog.updatedAt) : new Date(),
-            changeFrequency: 'daily',
-            priority: 0.64,
-          });
+  // 4. Dynamic CMS routes and Blogs
+  if (db) {
+    try {
+      // Published blog posts
+      const blogs = await db.collection('blogs').find({ status: 'published' }).toArray();
+      for (const blog of blogs) {
+        if (blog.slug) {
+          const pagePath = `/${blog.slug}`;
+          addSitemapEntry(pagePath, 0.64, 'daily', blog.updatedAt ? new Date(blog.updatedAt) : new Date());
         }
       }
-    }
 
-    // Dynamic CMS routes
-    const cmsRoutes = await db.collection('cms_routes').find({ websiteId: 'default', status: 'active' }).toArray();
-    for (const route of cmsRoutes) {
-      if (
-        route.path &&
-        !route.path.includes('[') &&
-        !route.path.startsWith('/admin') &&
-        !route.path.startsWith('/api')
-      ) {
-        const pagePath = route.path.startsWith('/') ? route.path : `/${route.path}`;
-        if (!addedPaths.has(pagePath)) {
-          addedPaths.add(pagePath);
-          sitemapEntries.push({
-            url: `${baseUrl}${pagePath}`,
-            lastModified: route.updatedAt ? new Date(route.updatedAt) : new Date(),
-            changeFrequency: 'daily',
-            priority: 0.8,
-          });
+      // Dynamic CMS routes
+      const cmsRoutes = await db.collection('cms_routes').find({ websiteId: 'default', status: 'active' }).toArray();
+      for (const route of cmsRoutes) {
+        if (
+          route.path &&
+          !route.path.includes('[') &&
+          !route.path.startsWith('/admin') &&
+          !route.path.startsWith('/api') &&
+          route.path !== '/technologies/react'
+        ) {
+          const pagePath = route.path.startsWith('/') ? route.path : `/${route.path}`;
+          addSitemapEntry(pagePath, 0.8, 'daily', route.updatedAt ? new Date(route.updatedAt) : new Date());
         }
       }
+    } catch (error) {
+      console.error('Error loading dynamic routes for sitemap:', error);
     }
-  } catch (error) {
-    console.error('Error loading dynamic sitemap entries:', error);
   }
 
   return sitemapEntries;

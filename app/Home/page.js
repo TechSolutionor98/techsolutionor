@@ -2,6 +2,7 @@ import React from 'react';
 import HomeClientPage from './HomeClientPage';
 import { getCmsData, generateCmsMetadata } from '@/lib/cms-fetch';
 import fallbackHomeContent from '@/content/home/home.json';
+import CmsJsonLd from '@/components/CmsJsonLd';
 
 export async function generateMetadata() {
   return generateCmsMetadata('/', {
@@ -64,10 +65,13 @@ export default async function HomePage() {
   };
 
   return (
-    <HomeClientPage
-      cmsData={cmsData}
-      fallbackContent={mergedContent}
-      approvedReviews={approvedReviews}
-    />
+    <>
+      <CmsJsonLd path="/" />
+      <HomeClientPage
+        cmsData={cmsData}
+        fallbackContent={mergedContent}
+        approvedReviews={approvedReviews}
+      />
+    </>
   );
 }

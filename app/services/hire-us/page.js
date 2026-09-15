@@ -5,16 +5,15 @@ import CommonKeyFeatures from '@/app/_components/services/common/KeyFeatures/Com
 import CommonStruggling from '@/app/_components/services/common/Struggling/CommonStruggling';
 import CommonServices from '@/app/_components/services/common/Services/CommonServices';
 import CommonHireUs from '@/app/_components/services/common/HireUs/CommonHireUs';
-import KeyBenefits from '../../_components/services/hire-us/KeyBenefits/KeyBenefits';
 import TechnologiesBook from '@/app/_components/services/common/TechnologiesBook/TechnologiesBook';
-import AtoZSolution from '../../_components/services/hire-us/AtoZSolution/AtoZSolution';
 import HireUsForm from '../../_components/services/hire-us/Form/HireUsForm';
 import CommonFAQ from '@/app/_components/services/common/FAQ/CommonFAQ';
 import { generateCmsMetadata } from '@/lib/cms-fetch';
+import CmsJsonLd from '@/components/CmsJsonLd';
 
 export async function generateMetadata() {
-  return generateCmsMetadata('/hire-us', {
-    title: 'Hire Us | Tech Solutionor',
+  return generateCmsMetadata('/services/hire-us', {
+    title: 'Hire Dedicated IT & Software Engineers | Tech Solutionor',
     description: 'Hire Tech Solutionor team for expert web development, mobile apps, custom software, and SEO engineering.',
   });
 }
@@ -22,14 +21,13 @@ export async function generateMetadata() {
 function page() {
   return (
     <div>
+      <CmsJsonLd path="/services/hire-us" />
       <HireUsBanner />
       <CommonWhyChoose serviceKey="hire-us" />
       <CommonKeyFeatures serviceKey="hire-us" />
       <CommonStruggling serviceKey="hire-us" />
       <CommonServices serviceKey="hire-us" />
-      {/* <KeyBenefits /> */}
       <TechnologiesBook serviceKey="hire-us" bgColor="#FFFFFF" />
-      {/* <AtoZSolution /> */}
       <CommonHireUs serviceKey="hire-us" />
       <HireUsForm />
       <CommonFAQ serviceKey="hire-us" />

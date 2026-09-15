@@ -151,3 +151,28 @@ export async function generateCmsMetadata(path, defaults = {}) {
 
   return metadata;
 }
+
+export function getCmsJsonLd(seo, path = '') {
+  if (!seo || !seo.schema) return null;
+
+  if (seo.schema.customSchema && typeof seo.schema.customSchema === 'string' && seo.schema.customSchema.trim()) {
+    try {
+      return JSON.parse(seo.schema.customSchema.trim());
+    } catch (e) {
+      return seo.schema.customSchema.trim();
+    }
+  }
+
+  const type = seo.schema.type || 'WebPage';
+  const url = seo.canonicalUrl || `https://techsolutionor.com${path === '/' ? '' : path}`;
+  const title = seo.metaTitle || 'Tech Solutionor';
+  const description = seo.metaDescription || 'Tech Solutionor Technical Services and Engineering Solutions.';
+
+  return {
+    "@context": "https://schema.org",
+    "@type": type,
+    "name": title,
+    "description": description,
+    "url": url,
+  };
+}

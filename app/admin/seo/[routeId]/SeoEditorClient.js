@@ -105,9 +105,16 @@ export default function SeoEditorClient({ initialSeo, routeId, routePath, apiBas
         metaKeywords: keywordsInput.split(',').map(k => k.trim()).filter(Boolean),
       };
 
-      const res = await fetch(`${apiBase}/api/cms/seo`, {
+      const token = typeof window !== 'undefined' ? localStorage.getItem('jwt') : null;
+      const headers = { 'Content-Type': 'application/json' };
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
+      const res = await fetch(`${apiBase || ''}/api/cms/seo`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
+        credentials: 'include',
         body: JSON.stringify(payload),
       });
 
@@ -117,6 +124,9 @@ export default function SeoEditorClient({ initialSeo, routeId, routePath, apiBas
       }
 
       const data = await res.json();
+      if (data.upsertedId) {
+        setSeo(prev => ({ ...prev, _id: data.upsertedId }));
+      }
       setMessage(`SEO saved successfully! Score: ${data.seoScore}%`);
       setMessageType('success');
       setTimeout(() => setMessage(''), 4000);
@@ -136,8 +146,22 @@ export default function SeoEditorClient({ initialSeo, routeId, routePath, apiBas
     setLoading(true);
     setMessage('');
     try {
-      const res = await fetch(`${apiBase}/api/cms/seo?id=${seo._id || routeId}&path=${encodeURIComponent(routePath)}`, {
+      const token = typeof window !== 'undefined' ? localStorage.getItem('jwt') : null;
+      const headers = {};
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
+      const queryParams = new URLSearchParams({
+        id: seo._id || routeId,
+        routeId: routeId || '',
+        path: routePath || '',
+      }).toString();
+
+      const res = await fetch(`${apiBase || ''}/api/cms/seo?${queryParams}`, {
         method: 'DELETE',
+        headers,
+        credentials: 'include',
       });
 
       if (!res.ok) {
@@ -540,10 +564,10 @@ export default function SeoEditorClient({ initialSeo, routeId, routePath, apiBas
                 </h3>
                 <div className="border border-gray-200 rounded-lg p-4 bg-white">
                   <p className="text-sm text-green-700 mb-1 truncate">
-                    {seo.canonicalUrl || `https://www.osumfix.com${routePath}`}
+                    {seo.canonicalUrl || `https://techsolutionor.com${routePath}`}
                   </p>
                   <h3 className="text-xl text-blue-800 hover:underline cursor-pointer mb-1 line-clamp-1">
-                    {seo.metaTitle || 'Page Title - OsumFix'}
+                    {seo.metaTitle || 'Page Title - Tech Solutionor'}
                   </h3>
                   <p className="text-sm text-gray-600 line-clamp-2">
                     {seo.metaDescription || 'Add a meta description to see how it will appear in search results.'}
@@ -566,7 +590,7 @@ export default function SeoEditorClient({ initialSeo, routeId, routePath, apiBas
                     </div>
                   )}
                   <div className="p-3">
-                    <p className="text-xs text-gray-500 uppercase">osumfix.ae</p>
+                    <p className="text-xs text-gray-500 uppercase">techsolutionor.com</p>
                     <h4 className="text-sm font-semibold text-gray-900 mt-1 line-clamp-2">
                       {seo.openGraph?.title || seo.metaTitle || 'Page Title'}
                     </h4>

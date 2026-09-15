@@ -4,30 +4,30 @@ import CommonWhyChoose from '@/app/_components/services/common/WhyChoose/CommonW
 import CommonKeyFeatures from '@/app/_components/services/common/KeyFeatures/CommonKeyFeatures'
 import CommonStruggling from '@/app/_components/services/common/Struggling/CommonStruggling'
 import CommonServices from '@/app/_components/services/common/Services/CommonServices'
-import SocialMediaGrowth from '../../_components/services/SocialMedia/SocialMediaGrowth/SocialMediaGrowth'
 import TechnologiesBook from '@/app/_components/services/common/TechnologiesBook/TechnologiesBook'
-import CardsSection from '../../_components/services/SocialMedia/CardsSection/CardsSection'
 import CommonHireUs from '@/app/_components/services/common/HireUs/CommonHireUs'
-import HireUs from '@/app/_components/services/eCommerce-developement/HireUs/HireUs'
 import CommonFAQ from '@/app/_components/services/common/FAQ/CommonFAQ'
+import { generateCmsMetadata } from '@/lib/cms-fetch'
+import CmsJsonLd from '@/components/CmsJsonLd'
+
+export async function generateMetadata() {
+  return generateCmsMetadata('/services/social-media', {
+    title: 'Social Media Marketing & Management Services | Tech Solutionor',
+    description: 'Grow your brand reach, audience engagement, and conversions across Facebook, Instagram, LinkedIn, and TikTok with Tech Solutionor.',
+  });
+}
 
 const page = () => {
   return (
     <div>
+      <CmsJsonLd path="/services/social-media" />
       <SocialMediaBanner />
       <CommonWhyChoose serviceKey="social-media" />
       <CommonKeyFeatures serviceKey="social-media" />
       <CommonStruggling serviceKey="social-media" />
       <CommonServices serviceKey="social-media" />
-      {/* <SocialMediaGrowth /> */}
       <TechnologiesBook serviceKey="social-media" bgColor="#FFFFFF" />
       <CommonHireUs serviceKey="social-media" />
-      {/* <HireUs
-        badge="AMPLIFY YOUR SOCIAL REACH"
-        line1="Ready to scale your brand across social platforms?"
-        line2="Partner with Tech Solutionor for data-driven creative campaigns that convert."
-      /> */}
-      {/* <CardsSection /> */}
       <CommonFAQ serviceKey="social-media" />
     </div>
   )

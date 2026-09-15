@@ -7,10 +7,20 @@ import WebServices from '@/app/_components/services/web-developement/Services/We
 import TechnologiesBook from '@/app/_components/services/common/TechnologiesBook/TechnologiesBook'
 import WebHireUs from '../../_components/services/web-developement/HireUs/WebHireUs'
 import WebFAQ from '../../_components/services/web-developement/FAQ/WebFAQ'
+import { generateCmsMetadata } from '@/lib/cms-fetch'
+import CmsJsonLd from '@/components/CmsJsonLd'
+
+export async function generateMetadata() {
+  return generateCmsMetadata('/services/web-development', {
+    title: 'Custom Web Development Services | Tech Solutionor',
+    description: 'Expert web development services using cutting-edge modern technologies to build high-performance web applications.',
+  });
+}
 
 const page = () => {
   return (
     <div>
+      <CmsJsonLd path="/services/web-development" />
       <WebDevBanner />
       <WebWhyChoose />
       <CommonKeyFeatures serviceKey="web-development" />
