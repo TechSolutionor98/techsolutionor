@@ -52,42 +52,7 @@ const roboto = Roboto({
     weight: ['500', '700'],
 });
 
-// Navlinks data
-const navLinks = [
-    {
-        label: 'Technologies',
-        href: '/technologies',
-        subLinks: [
-            { label: 'Web Development', href: '/services/web' },
-            { label: 'App Development', href: '/services/app' },
-        ],
-    },
-    {
-        label: 'Services',
-        href: '/services',
-        subLinks: [
-            { label: 'Web Development', href: '/services/web-development' },
-            { label: 'App Development', href: '/services/app-development' },
-        ],
-    },
-    {
-        label: 'About Us',
-        href: '/about-us',
-    },
-    {
-        label: 'Portfolio',
-        href: '/our-portfolio',
-    },
-    {
-        label: 'Blog',
-        href: '/blog',
-    },
-    {
-        label: 'Contact Us',
-        href: '/contact-us',
-    },
-];
-
+// Tech sublinks
 const techSubLinks = [
     { Image: Laraval, label: 'Laravel', href: '/technologies/laravel', desc: 'PHP Web Framework' },
     { Image: Javascript, label: 'JavaScript', href: '/technologies/javascript', desc: 'Modern Web Scripting' },
@@ -109,6 +74,7 @@ const techSubLinks = [
     { Image: Angular, label: 'Angular', href: '/technologies/angular', desc: 'Scalable Web Platforms' },
 ];
 
+// Services sublinks
 const servicesSubLinks = [
     { Image: Web, label: 'Web Development', href: '/services/web-development', desc: 'Custom websites & web apps' },
     { Image: App, label: 'App Development', href: '/services/app-development', desc: 'iOS & Android mobile apps' },
@@ -124,6 +90,36 @@ const servicesSubLinks = [
     { Image: Hire, label: 'Hire Us', href: '/services/hire-us', desc: 'Dedicated developer teams' },
 ];
 
+// Navlinks data
+const navLinks = [
+    {
+        label: 'Technologies',
+        href: '/technologies',
+        subLinks: techSubLinks,
+    },
+    {
+        label: 'Services',
+        href: '/services',
+        subLinks: servicesSubLinks,
+    },
+    {
+        label: 'About Us',
+        href: '/about-us',
+    },
+    {
+        label: 'Portfolio',
+        href: '/our-portfolio',
+    },
+    {
+        label: 'Blog',
+        href: '/blog',
+    },
+    {
+        label: 'Contact Us',
+        href: '/contact-us',
+    },
+];
+
 const Navbar = () => {
     const [dropdownIndex, setDropdownIndex] = useState(null);
     const [mobileOpen, setMobileOpen] = useState(false);
@@ -131,21 +127,15 @@ const Navbar = () => {
     const pathname = usePathname();
     const { openQuote } = useQuote();
 
-    const handleMouseEnter = (idx) => {
-        if (timeoutRef.current) {
-            clearTimeout(timeoutRef.current);
-            timeoutRef.current = null;
-        }
-        setDropdownIndex(idx);
+    const handleMouseEnter = (index) => {
+        if (timeoutRef.current) clearTimeout(timeoutRef.current);
+        setDropdownIndex(index);
     };
 
     const handleMouseLeave = () => {
-        if (timeoutRef.current) {
-            clearTimeout(timeoutRef.current);
-        }
         timeoutRef.current = setTimeout(() => {
             setDropdownIndex(null);
-        }, 250);
+        }, 150);
     };
 
     React.useEffect(() => {
@@ -198,19 +188,46 @@ const Navbar = () => {
                       ${dropdownIndex === idx ? 'opacity-100 visible translate-y-0 pointer-events-auto' : 'opacity-0 invisible -translate-y-2 pointer-events-none'}
                     `}
                                     >
-                                        <div className="bg-white shadow-[0_25px_60px_rgba(0,0,0,0.18)] border border-gray-100 rounded-2xl p-6">
+                                        <div className="bg-white rounded-2xl p-6 relative shadow-[0_25px_60px_rgba(0,0,0,0.18)] border-0 overflow-hidden">
+                                            {/* Shared SVG Gradient Definition for Button Link Borders */}
+                                            <svg className="absolute w-0 h-0 pointer-events-none" aria-hidden="true">
+                                                <defs>
+                                                    <linearGradient id="dropdown-btn-border-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                                        <stop offset="0%" stopColor="#FFFFFF" />
+                                                        <stop offset="100%" stopColor="#FFFFFF" />
+                                                    </linearGradient>
+                                                </defs>
+                                            </svg>
                                             <div className="grid grid-cols-3 gap-x-5 gap-y-2.5">
                                                 {techSubLinks.map((sub) => (
                                                     <Link
                                                         key={sub.label}
                                                         href={sub.href}
                                                         onClick={() => setDropdownIndex(null)}
-                                                        className="group flex items-center gap-3.5 p-2.5 rounded-xl border border-gray-200 hover:border-[#41B349] hover:bg-[#41B349] hover:shadow-md hover:shadow-[#41B349]/25 transition-all duration-200 ease-in-out cursor-pointer"
+                                                        className="group relative flex items-center gap-3.5 p-2.5 rounded-xl bg-white hover:bg-[#41B349] border border-gray-200/80 hover:border-transparent hover:shadow-lg hover:shadow-[#41B349]/25 transition-all duration-300 ease-in-out cursor-pointer overflow-hidden"
                                                     >
-                                                        <div className="w-11 h-11 rounded-xl bg-gray-50 border border-gray-200/80 flex items-center justify-center flex-shrink-0 group-hover:bg-white group-hover:scale-105 transition-all p-2 shadow-xs">
-                                                            <Image src={sub.Image} alt={sub.label} width={28} height={28} className="object-contain" />
+                                                        {/* SVG Animated Moving Border Line on Hover */}
+                                                        <div className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
+                                                            <svg className="w-full h-full overflow-visible">
+                                                                <rect
+                                                                    x="1"
+                                                                    y="1"
+                                                                    width="calc(100% - 2px)"
+                                                                    height="calc(100% - 2px)"
+                                                                    rx="11"
+                                                                    fill="none"
+                                                                    stroke="#FFFFFF"
+                                                                    strokeWidth="2"
+                                                                    strokeLinecap="round"
+                                                                    pathLength="100"
+                                                                    className="dropdown-btn-svg-border-line"
+                                                                />
+                                                            </svg>
                                                         </div>
-                                                        <div className="flex flex-col min-w-0">
+                                                        <div className="w-11 h-11 rounded-xl bg-gray-50 border border-gray-200/80 flex items-center justify-center flex-shrink-0 group-hover:bg-white group-hover:border-transparent group-hover:scale-105 transition-all duration-300 p-2 shadow-xs relative z-10">
+                                                            <Image src={sub.Image} alt={sub.label} width={28} height={28} className="object-contain dropdown-icon-bounce" />
+                                                        </div>
+                                                        <div className="flex flex-col min-w-0 relative z-10">
                                                             <span className={`${plusJakarta.className} text-[13.5px] font-bold text-gray-900 group-hover:text-white transition-colors duration-200 truncate`}>
                                                                 {sub.label}
                                                             </span>
@@ -243,19 +260,37 @@ const Navbar = () => {
                       ${dropdownIndex === idx ? 'opacity-100 visible translate-y-0 pointer-events-auto' : 'opacity-0 invisible -translate-y-2 pointer-events-none'}
                     `}
                                     >
-                                        <div className="bg-white shadow-[0_25px_60px_rgba(0,0,0,0.18)] border border-gray-100 rounded-2xl p-6">
+                                        <div className="bg-white rounded-2xl p-6 relative shadow-[0_25px_60px_rgba(0,0,0,0.18)] border-0 overflow-hidden">
                                             <div className="grid grid-cols-3 gap-x-5 gap-y-2.5">
                                                 {servicesSubLinks.map((sub) => (
                                                     <Link
                                                         key={sub.label}
                                                         href={sub.href}
                                                         onClick={() => setDropdownIndex(null)}
-                                                        className="group flex items-center gap-3.5 p-2.5 rounded-xl border border-gray-200 hover:border-[#41B349] hover:bg-[#41B349] hover:shadow-md hover:shadow-[#41B349]/25 transition-all duration-200 ease-in-out cursor-pointer"
+                                                        className="group relative flex items-center gap-3.5 p-2.5 rounded-xl bg-white hover:bg-[#41B349] border border-gray-200/80 hover:border-transparent hover:shadow-lg hover:shadow-[#41B349]/25 transition-all duration-300 ease-in-out cursor-pointer overflow-hidden"
                                                     >
-                                                        <div className="w-11 h-11 rounded-xl bg-gray-50 border border-gray-200/80 flex items-center justify-center flex-shrink-0 group-hover:bg-white group-hover:scale-105 transition-all p-2 shadow-xs">
-                                                            <Image src={sub.Image} alt={sub.label} width={28} height={28} className="object-contain" />
+                                                        {/* SVG Animated Moving Border Line on Hover */}
+                                                        <div className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
+                                                            <svg className="w-full h-full overflow-visible">
+                                                                <rect
+                                                                    x="1"
+                                                                    y="1"
+                                                                    width="calc(100% - 2px)"
+                                                                    height="calc(100% - 2px)"
+                                                                    rx="11"
+                                                                    fill="none"
+                                                                    stroke="#FFFFFF"
+                                                                    strokeWidth="2"
+                                                                    strokeLinecap="round"
+                                                                    pathLength="100"
+                                                                    className="dropdown-btn-svg-border-line"
+                                                                />
+                                                            </svg>
                                                         </div>
-                                                        <div className="flex flex-col min-w-0">
+                                                        <div className="w-11 h-11 rounded-xl bg-gray-50 border border-gray-200/80 flex items-center justify-center flex-shrink-0 group-hover:bg-white group-hover:border-transparent group-hover:scale-105 transition-all duration-300 p-2 shadow-xs relative z-10">
+                                                            <Image src={sub.Image} alt={sub.label} width={28} height={28} className="object-contain dropdown-icon-bounce" />
+                                                        </div>
+                                                        <div className="flex flex-col min-w-0 relative z-10">
                                                             <span className={`${plusJakarta.className} text-[13.5px] font-bold text-gray-900 group-hover:text-white transition-colors duration-200 truncate`}>
                                                                 {sub.label}
                                                             </span>
