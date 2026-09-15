@@ -21,8 +21,9 @@ import {
   Sparkles
 } from "lucide-react";
 import Faq from "@/components/Faq/Faq";
+import { getCmsVal } from "@/lib/api-helper";
 
-export default function BecomeAPartnerContent() {
+export default function BecomeAPartnerContent({ cmsContent }) {
   const scrollTo = (id) => {
     const el = document.getElementById(id);
     if (el) {
@@ -186,7 +187,7 @@ export default function BecomeAPartnerContent() {
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#41B349]/10 border border-[#41B349]/30 text-[#36963D] font-mono text-xs uppercase tracking-widest font-bold mb-6 shadow-2xs">
             <span className="w-2 h-2 rounded-full bg-[#41B349] animate-pulse" />
             <Handshake className="w-3.5 h-3.5 text-[#41B349]" />
-            <span>GLOBAL PARTNERSHIP NETWORK</span>
+            <span>{getCmsVal(cmsContent, "GLOBAL PARTNERSHIP NETWORK", "partnerhero")}</span>
           </div>
 
           {/* Main Headline */}
@@ -194,13 +195,16 @@ export default function BecomeAPartnerContent() {
             className="text-3xl sm:text-5xl md:text-6xl font-black text-[#111827] tracking-tight leading-[1.14] mb-6"
             style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
           >
-            Scale Faster, Earn More With Our <br className="hidden sm:inline" />
-            <span className="text-[#41B349]">Strategic Technology Partnership</span>
+            {getCmsVal(cmsContent, "Scale Faster, Earn More With Our Strategic Technology Partnership", "partnerhero")}
           </h1>
 
           {/* Subtitle */}
           <p className="text-gray-600 text-base sm:text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-normal mb-8">
-            Collaborate with <strong>Tech Solutionor</strong> to expand your technical delivery capacity, monetize high-value enterprise referrals, or deliver white-label custom software, web apps, and digital solutions with guaranteed quality.
+            {getCmsVal(
+              cmsContent,
+              "Collaborate with Tech Solutionor to expand your technical delivery capacity, monetize high-value enterprise referrals, or deliver white-label custom software, web apps, and digital solutions with guaranteed quality.",
+              "partnerhero"
+            )}
           </p>
 
           {/* CTA Buttons */}

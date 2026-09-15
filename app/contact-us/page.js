@@ -1,7 +1,8 @@
 import React from 'react';
 import ContactHero from '../_components/Contact/ContactHero';
 import ContactForm from '../_components/Contact/ContactForm';
-import { generateCmsMetadata } from '@/lib/cms-fetch';
+import { generateCmsMetadata, getCmsData } from '@/lib/cms-fetch';
+import CmsJsonLd from '@/components/CmsJsonLd';
 
 export async function generateMetadata() {
   return generateCmsMetadata('/contact-us', {
@@ -10,13 +11,20 @@ export async function generateMetadata() {
   });
 }
 
-const ContactUsPage = () => {
-    return (
-        <div className="overflow-x-hidden">
-            <ContactHero />
-            <ContactForm />
-        </div>
-    );
-};
+export default async function ContactUsPage() {
+  let cmsContent = null;
+  try {
+    const cmsData = await getCmsData('/contact-us');
+    cmsContent = cmsData?.content || null;
+  } catch (err) {
+    console.error('Failed to load CMS content for Contact Us page:', err);
+  }
 
-export default ContactUsPage;
+  return (
+    <div className="overflow-x-hidden">
+      <CmsJsonLd path="/contact-us" />
+      <ContactHero cmsContent={cmsContent} />
+      <ContactForm cmsContent={cmsContent} />
+    </div>
+  );
+}

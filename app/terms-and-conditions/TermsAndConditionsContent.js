@@ -24,6 +24,7 @@ import {
   Building,
   ChevronRight
 } from "lucide-react";
+import { getCmsVal } from "@/lib/api-helper";
 
 const sections = [
   { id: "introduction", title: "1. Introduction", icon: FileText },
@@ -46,7 +47,7 @@ const sections = [
   { id: "contact-information", title: "18. Contact Information", icon: Mail },
 ];
 
-export default function TermsAndConditionsContent() {
+export default function TermsAndConditionsContent({ cmsContent }) {
   const [activeSection, setActiveSection] = useState("introduction");
 
   useEffect(() => {
@@ -91,7 +92,7 @@ export default function TermsAndConditionsContent() {
           {/* Eyebrow Pill */}
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#41B349]/10 border border-[#41B349]/30 text-[#36963D] font-mono text-xs uppercase tracking-widest font-bold mb-6 shadow-2xs">
             <Scale className="w-4 h-4 text-[#41B349]" />
-            <span>TERMS OF ENGAGEMENT &amp; SERVICE</span>
+            <span>{getCmsVal(cmsContent, "TERMS OF ENGAGEMENT & SERVICE", "termshero")}</span>
           </div>
 
           {/* Main Title */}
@@ -99,15 +100,20 @@ export default function TermsAndConditionsContent() {
             className="text-3xl sm:text-5xl md:text-6xl font-black text-[#111827] tracking-tight leading-[1.15] mb-6"
             style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
           >
-            Terms &amp; <span className="text-[#41B349]">Conditions</span>
+            {getCmsVal(cmsContent, "Terms & Conditions", "termshero")}
           </h1>
 
           {/* Subtitle */}
           <p className="text-gray-600 text-sm sm:text-base md:text-lg max-w-3xl mx-auto leading-relaxed font-normal">
-            These Terms and Conditions govern your access to and use of <strong>Tech Solutionor</strong>&apos;s website, software engineering services, technical consultations, SEO audits, and digital solutions. Please review them carefully.
+            {getCmsVal(
+              cmsContent,
+              "These Terms and Conditions govern your access to and use of Tech Solutionor's website, software engineering services, technical consultations, SEO audits, and digital solutions. Please review them carefully.",
+              "termshero"
+            )}
           </p>
         </div>
       </section>
+
 
       {/* Main Content Layout with Sticky Sidebar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20">

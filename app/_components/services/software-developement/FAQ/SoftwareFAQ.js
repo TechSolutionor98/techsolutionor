@@ -1,8 +1,9 @@
 "use client";
 import React from "react";
 import Faq from "@/components/Faq/Faq";
+import { getCmsVal } from "@/lib/api-helper";
 
-const softwareFaqs = [
+const defaultSoftwareFaqs = [
   {
     question: "What types of software development services do you offer?",
     answer: "We provide full‑cycle software development services including custom business applications, enterprise systems, SaaS platforms, mobile apps, API integrations and scalable solutions tailored to your industry requirements."
@@ -45,6 +46,12 @@ const softwareFaqs = [
   }
 ];
 
-export default function SoftwareFAQ() {
-  return <Faq title="Frequently Asked Questions (FAQs)" faqs={softwareFaqs} />;
+export default function SoftwareFAQ({ cmsContent }) {
+  const title = getCmsVal(cmsContent, "Frequently Asked Questions (FAQs)", "softwarefaq");
+  const faqs = defaultSoftwareFaqs.map((item) => ({
+    question: getCmsVal(cmsContent, item.question, "softwarefaq"),
+    answer: getCmsVal(cmsContent, item.answer, "softwarefaq"),
+  }));
+
+  return <Faq title={title} faqs={faqs} />;
 }

@@ -1,7 +1,8 @@
 import React from "react";
 import KeyFeatures from "@/components/KeyFeatures/KeyFeatures";
+import { getCmsVal } from "@/lib/api-helper";
 
-const jsKeyFeatures = [
+const jsKeyFeaturesDefault = [
   {
     title: "Dynamic Scripting",
     desc: "JavaScript enables dynamic content updates, interactive features, and rich multimedia integration across modern web applications.",
@@ -20,8 +21,16 @@ const jsKeyFeatures = [
   },
 ];
 
-const JsCards = () => {
-  return <KeyFeatures title="NO RISK." subtitle="ONLY RESULTS." features={jsKeyFeatures} />;
+const JsCards = ({ cmsContent }) => {
+  const title = getCmsVal(cmsContent, "NO RISK.", "jscards");
+  const subtitle = getCmsVal(cmsContent, "ONLY RESULTS.", "jscards");
+
+  const cards = jsKeyFeaturesDefault.map((item) => ({
+    title: getCmsVal(cmsContent, item.title, "jscards"),
+    desc: getCmsVal(cmsContent, item.desc, "jscards"),
+  }));
+
+  return <KeyFeatures title={title} subtitle={subtitle} features={cards} />;
 };
 
 export default JsCards;

@@ -1,8 +1,9 @@
 "use client";
 import React from "react";
 import Faq from "@/components/Faq/Faq";
+import { getCmsVal } from "@/lib/api-helper";
 
-const reactFaqs = [
+const defaultReactFaqs = [
   {
     question: "What is React JS used for?",
     answer: "React JS is used to build dynamic and responsive user interfaces for web applications, allowing developers to create interactive and component-based UI elements efficiently."
@@ -37,6 +38,12 @@ const reactFaqs = [
   }
 ];
 
-export default function ReactFAQ() {
-  return <Faq title="Frequently Asked Questions (FAQs)" faqs={reactFaqs} />;
+export default function ReactFAQ({ cmsContent }) {
+  const title = getCmsVal(cmsContent, "Frequently Asked Questions (FAQs)", "reactfaq");
+  const faqs = defaultReactFaqs.map((faq) => ({
+    question: getCmsVal(cmsContent, faq.question, "reactfaq"),
+    answer: getCmsVal(cmsContent, faq.answer, "reactfaq"),
+  }));
+
+  return <Faq title={title} faqs={faqs} />;
 }

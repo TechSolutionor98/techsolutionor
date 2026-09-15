@@ -1,7 +1,7 @@
 import React from 'react';
 import BlogHero from '../_components/Blog/BlogHero';
 import BlogList from '../_components/Blog/BlogList';
-import { generateCmsMetadata } from '@/lib/cms-fetch';
+import { generateCmsMetadata, getCmsData } from '@/lib/cms-fetch';
 import { getBlogsList } from '@/lib/cms-service';
 
 export const dynamic = 'force-dynamic';
@@ -22,6 +22,8 @@ export default async function BlogPage() {
     console.error('Failed to fetch blogs for BlogPage:', err);
   }
 
+  const cmsContent = await getCmsData('/blog');
+
   // Calculate dynamic categories and counts
   const categoryMap = {};
   blogs.forEach((b) => {
@@ -39,7 +41,7 @@ export default async function BlogPage() {
 
   return (
     <main className="min-h-screen bg-white">
-      <BlogHero />
+      <BlogHero cmsContent={cmsContent} />
       <BlogList
         posts={blogs}
         categories={categories}
@@ -48,3 +50,4 @@ export default async function BlogPage() {
     </main>
   );
 }
+

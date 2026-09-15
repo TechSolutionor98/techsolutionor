@@ -1,6 +1,6 @@
 import React from 'react';
 import PrivacyPolicyContent from './PrivacyPolicyContent';
-import { generateCmsMetadata } from '@/lib/cms-fetch';
+import { generateCmsMetadata, getCmsData } from '@/lib/cms-fetch';
 
 export async function generateMetadata() {
   return generateCmsMetadata('/privacy-policy', {
@@ -9,6 +9,7 @@ export async function generateMetadata() {
   });
 }
 
-export default function PrivacyPolicyPage() {
-  return <PrivacyPolicyContent />;
+export default async function PrivacyPolicyPage() {
+  const cmsContent = await getCmsData('/privacy-policy');
+  return <PrivacyPolicyContent cmsContent={cmsContent} />;
 }

@@ -6,20 +6,20 @@ import JobApplicationForm from "./JobApplicationForm";
 import Newsletter from "../Home/Newsletter/Newsletter";
 import CareerFAQ from "./CareerFAQ";
 
-export default function CareerPageClient() {
+export default function CareerPageClient({ cmsContent }) {
   return (
     <div className="overflow-x-hidden bg-white text-[#0D0F12]">
       {/* 1. Hero Section */}
-      <CareerHero />
+      <CareerHero cmsContent={cmsContent} />
 
       {/* 2. Submit Your Application Form */}
       <JobApplicationForm />
 
-      {/* 3. Hire Us Section (Exact component from Technologies page) */}
+      {/* 3. Newsletter Section */}
       <Newsletter />
 
-      {/* 4. Frequently Asked Questions (Exact component from Technologies page) */}
-      <CareerFAQ />
+      {/* 4. Frequently Asked Questions */}
+      <CareerFAQ cmsContent={cmsContent} />
     </div>
   );
 }

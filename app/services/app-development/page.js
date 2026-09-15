@@ -7,7 +7,7 @@ import CommonStruggling from "@/app/_components/services/common/Struggling/Commo
 import CommonServices from "@/app/_components/services/common/Services/CommonServices";
 import CommonHireUs from "@/app/_components/services/common/HireUs/CommonHireUs";
 import AppFAQ from "../../_components/services/app-developement/FAQ/AppFAQ";
-import { generateCmsMetadata } from "@/lib/cms-fetch";
+import { generateCmsMetadata, getCmsData } from "@/lib/cms-fetch";
 import CmsJsonLd from "@/components/CmsJsonLd";
 
 export async function generateMetadata() {
@@ -17,20 +17,26 @@ export async function generateMetadata() {
   });
 }
 
-const page = () => {
+export default async function AppDevelopmentPage() {
+  let cmsContent = null;
+  try {
+    const cmsData = await getCmsData('/services/app-development');
+    cmsContent = cmsData?.content || null;
+  } catch (err) {
+    console.error('Failed to load CMS content for App Development page:', err);
+  }
+
   return (
     <div className="bg-white w-full"> 
       <CmsJsonLd path="/services/app-development" />
-      <AppDevBanner />
-      <CommonWhyChoose serviceKey="app-development" />
-      <CommonKeyFeatures serviceKey="app-development" />
-      <CommonStruggling serviceKey="app-development" />
-      <CommonServices serviceKey="app-development" />
-      <TechnologiesBook serviceKey="app-development" bgColor="#FFFFFF" />
-      <CommonHireUs serviceKey="app-development" />
-      <AppFAQ />
+      <AppDevBanner cmsContent={cmsContent} />
+      <CommonWhyChoose serviceKey="app-development" cmsContent={cmsContent} />
+      <CommonKeyFeatures serviceKey="app-development" cmsContent={cmsContent} />
+      <CommonStruggling serviceKey="app-development" cmsContent={cmsContent} />
+      <CommonServices serviceKey="app-development" cmsContent={cmsContent} />
+      <TechnologiesBook serviceKey="app-development" bgColor="#FFFFFF" cmsContent={cmsContent} />
+      <CommonHireUs serviceKey="app-development" cmsContent={cmsContent} />
+      <AppFAQ cmsContent={cmsContent} />
     </div>
   );
-};
-
-export default page;
+}

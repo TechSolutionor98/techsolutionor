@@ -1,7 +1,8 @@
 import React from "react";
 import KeyFeatures from "@/components/KeyFeatures/KeyFeatures";
+import { getCmsVal } from "@/lib/api-helper";
 
-const reactKeyFeatures = [
+const reactKeyFeaturesDefault = [
   {
     title: "Virtual DOM",
     desc: "React uses a Virtual DOM to optimize performance by updating only the necessary parts of the interface, reducing direct manipulation of the real DOM and improving application speed.",
@@ -20,8 +21,16 @@ const reactKeyFeatures = [
   },
 ];
 
-const ReactCards = () => {
-  return <KeyFeatures title="NO RISK." subtitle="ONLY RESULTS." features={reactKeyFeatures} />;
+const ReactCards = ({ cmsContent }) => {
+  const title = getCmsVal(cmsContent, "NO RISK.", "reactcards");
+  const subtitle = getCmsVal(cmsContent, "ONLY RESULTS.", "reactcards");
+
+  const cards = reactKeyFeaturesDefault.map((item) => ({
+    title: getCmsVal(cmsContent, item.title, "reactcards"),
+    desc: getCmsVal(cmsContent, item.desc, "reactcards"),
+  }));
+
+  return <KeyFeatures title={title} subtitle={subtitle} features={cards} />;
 };
 
 export default ReactCards;

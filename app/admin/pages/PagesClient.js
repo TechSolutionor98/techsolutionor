@@ -132,10 +132,25 @@ export default function PagesClient({ initialRoutes = [], apiBase, initialError 
     }
   };
 
+const HIDDEN_ADMIN_PAGE_ROUTES = new Set([
+  '/[slug]',
+  '/blog',
+  '/contact-us',
+  '/blog/[slug]',
+  '/technologies/[slug]',
+]);
+
+const isHiddenRoute = (route) => {
+  if (!route || !route.path) return false;
+  const p = route.path.replace(/\\/g, '/').trim();
+  const clean = p.length > 1 && p.endsWith('/') ? p.slice(0, -1) : p;
+  return HIDDEN_ADMIN_PAGE_ROUTES.has(clean) || HIDDEN_ADMIN_PAGE_ROUTES.has(p);
+};
+
   // Filter routes
   const filteredRoutes = useMemo(() => {
     return routes.filter(route => {
-      if (route.path === '/[slug]' || route.filePath?.includes('[slug]')) return false;
+      if (isHiddenRoute(route)) return false;
       const matchesSearch = !search || route.path.toLowerCase().includes(search.toLowerCase());
       const matchesStatus = statusFilter === 'all' || route.status === statusFilter;
       const matchesType = typeFilter === 'all' || route.type === typeFilter;
@@ -145,7 +160,7 @@ export default function PagesClient({ initialRoutes = [], apiBase, initialError 
 
   // Stats
   const stats = useMemo(() => {
-    const validRoutes = routes.filter(r => r.path !== '/[slug]' && !r.filePath?.includes('[slug]'));
+    const validRoutes = routes.filter(r => !isHiddenRoute(r));
     return {
       total: validRoutes.length,
       active: validRoutes.filter(r => r.status === 'active').length,

@@ -25,6 +25,7 @@ import {
   Info,
   Building
 } from "lucide-react";
+import { getCmsVal } from "@/lib/api-helper";
 
 const sections = [
   { id: "introduction", title: "1. Introduction", icon: Shield },
@@ -46,7 +47,7 @@ const sections = [
   { id: "contact-information", title: "17. Contact Information", icon: Mail },
 ];
 
-export default function PrivacyPolicyContent() {
+export default function PrivacyPolicyContent({ cmsContent }) {
   const [activeSection, setActiveSection] = useState("introduction");
 
   useEffect(() => {
@@ -91,7 +92,7 @@ export default function PrivacyPolicyContent() {
           {/* Eyebrow Pill */}
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#41B349]/10 border border-[#41B349]/30 text-[#36963D] font-mono text-xs uppercase tracking-widest font-bold mb-6 shadow-2xs">
             <ShieldCheck className="w-4 h-4 text-[#41B349]" />
-            <span>LEGAL &amp; DATA PRIVACY</span>
+            <span>{getCmsVal(cmsContent, "LEGAL & DATA PRIVACY", "privacyhero")}</span>
           </div>
 
           {/* Main Title */}
@@ -99,12 +100,16 @@ export default function PrivacyPolicyContent() {
             className="text-3xl sm:text-5xl md:text-6xl font-black text-[#111827] tracking-tight leading-[1.15] mb-6"
             style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
           >
-            Privacy <span className="text-[#41B349]">Policy</span>
+            {getCmsVal(cmsContent, "Privacy Policy", "privacyhero")}
           </h1>
 
           {/* Subtitle */}
           <p className="text-gray-600 text-sm sm:text-base md:text-lg max-w-3xl mx-auto leading-relaxed font-normal">
-            At <strong>Tech Solutionor</strong>, protecting your privacy and ensuring the integrity of your personal and business data is a cornerstone of our software engineering and digital services. This policy transparently explains what data we collect, how we handle it, and how your rights are safeguarded.
+            {getCmsVal(
+              cmsContent,
+              "At Tech Solutionor, protecting your privacy and ensuring the integrity of your personal and business data is a cornerstone of our software engineering and digital services. This policy transparently explains what data we collect, how we handle it, and how your rights are safeguarded.",
+              "privacyhero"
+            )}
           </p>
         </div>
       </section>

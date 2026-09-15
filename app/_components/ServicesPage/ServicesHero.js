@@ -7,9 +7,26 @@ import ServicesPic from "@/components/Images/servicesapp.png";
 import TechBg from "@/components/Images/technologybannerbg.svg";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { useQuote } from "@/app/_context/QuoteContext";
+import { getCmsVal } from "@/lib/api-helper";
 
-const ServicesHero = () => {
+const ServicesHero = ({ cmsContent }) => {
   const { openQuote } = useQuote();
+
+  const badge = getCmsVal(cmsContent, "OUR SERVICES & SOLUTIONS", "serviceshero");
+  const title = getCmsVal(
+    cmsContent,
+    "Enterprise IT & Digital Services Crafted For Global Scale.",
+    "serviceshero"
+  );
+  const subtitle = getCmsVal(
+    cmsContent,
+    "From high-throughput web and mobile apps to custom enterprise software, e-commerce storefronts, and performance marketing, we deliver end-to-end technology solutions tailored for businesses across Dubai, the UAE, and worldwide.",
+    "serviceshero"
+  );
+  const cta1Text = getCmsVal(cmsContent, "Explore Services", "serviceshero");
+  const cta2Text = getCmsVal(cmsContent, "Get Free Quote", "serviceshero");
+  const defaultImg = ServicesPic?.src || ServicesPic;
+  const image = getCmsVal(cmsContent, defaultImg, "serviceshero");
 
   return (
     <section className="relative w-full bg-[#FFFFFF] text-[#0D0F12] overflow-hidden min-h-[520px] flex items-center py-14 md:py-20 select-none">
@@ -36,17 +53,15 @@ const ServicesHero = () => {
             style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
           >
             <span className="w-2 h-2 rounded-full bg-[#36963D] animate-pulse" />
-            <span>OUR SERVICES &amp; SOLUTIONS</span>
+            <span>{badge}</span>
           </div>
 
-          {/* Main Headline matching Technologies Section Typography */}
+          {/* Main Headline */}
           <h1 
             className="text-3xl sm:text-4xl md:text-[44px] lg:text-[50px] font-black leading-[1.12] tracking-tight text-[#0D0F12] mb-6"
             style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
           >
-            Enterprise IT &amp; Digital <br />
-            Services Crafted For <br />
-            <span className="text-[#36963D]">Global Scale.</span>
+            {title}
           </h1>
 
           {/* Subtitle */}
@@ -54,7 +69,7 @@ const ServicesHero = () => {
             className="text-[#475569] text-base md:text-lg max-w-[490px] mb-8 leading-relaxed font-normal"
             style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
           >
-            From high-throughput web and mobile apps to custom enterprise software, e-commerce storefronts, and performance marketing, we deliver end-to-end technology solutions tailored for businesses across Dubai, the UAE, and worldwide.
+            {subtitle}
           </p>
 
           {/* Action Buttons */}
@@ -64,7 +79,7 @@ const ServicesHero = () => {
                 className="bg-[#36963D] hover:bg-[#2e8234] text-white px-8 py-3.5 rounded-full font-bold text-sm sm:text-base transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2.5"
                 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
               >
-                <span>Explore Services</span>
+                <span>{cta1Text}</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
             </Link>
@@ -75,7 +90,7 @@ const ServicesHero = () => {
               style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
             >
               <Sparkles className="w-4 h-4 text-[#36963D]" />
-              <span>Get Free Quote</span>
+              <span>{cta2Text}</span>
             </button>
           </div>
         </div>
@@ -86,13 +101,21 @@ const ServicesHero = () => {
             {/* Ambient circular frame backdrop */}
             <div className="absolute inset-4 rounded-full bg-gradient-to-tr from-[#36963D]/10 via-[#36963D]/5 to-transparent pointer-events-none" />
             <div className="absolute inset-0 flex items-center justify-center">
-              <Image 
-                src={ServicesPic} 
-                alt="Digital Services Specialist" 
-                fill 
-                priority
-                className="object-contain filter drop-shadow-md"
-              />
+              {typeof image === 'string' && (image.startsWith('http') || image.startsWith('/')) ? (
+                <img 
+                  src={image} 
+                  alt="Digital Services Specialist" 
+                  className="w-full h-full object-contain filter drop-shadow-md"
+                />
+              ) : (
+                <Image 
+                  src={ServicesPic} 
+                  alt="Digital Services Specialist" 
+                  fill 
+                  priority
+                  className="object-contain filter drop-shadow-md"
+                />
+              )}
             </div>
           </div>
         </div>

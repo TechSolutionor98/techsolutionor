@@ -1,6 +1,7 @@
 import React from 'react';
 import CareerPageClient from '../_components/career/CareerPageClient';
-import { generateCmsMetadata } from '@/lib/cms-fetch';
+import { generateCmsMetadata, getCmsData } from '@/lib/cms-fetch';
+import CmsJsonLd from '@/components/CmsJsonLd';
 
 export async function generateMetadata() {
   return generateCmsMetadata('/career', {
@@ -9,7 +10,19 @@ export async function generateMetadata() {
   });
 }
 
-export default function CareerPage() {
-  return <CareerPageClient />;
-}
+export default async function CareerPage() {
+  let cmsContent = null;
+  try {
+    const cmsData = await getCmsData('/career');
+    cmsContent = cmsData?.content || null;
+  } catch (err) {
+    console.error('Failed to load CMS content for Career page:', err);
+  }
 
+  return (
+    <>
+      <CmsJsonLd path="/career" />
+      <CareerPageClient cmsContent={cmsContent} />
+    </>
+  );
+}

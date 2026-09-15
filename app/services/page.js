@@ -6,7 +6,8 @@ import ProcessSteps from '../_components/ServicesPage/ProcessSteps';
 import WhyExpertiseCommitment from '../_components/ServicesPage/WhyExpertiseCommitment';
 import ServicesFAQ from '../_components/ServicesPage/ServicesFAQ';
 import Newsletter from '../_components/Home/Newsletter/Newsletter';
-import { generateCmsMetadata } from '@/lib/cms-fetch';
+import { generateCmsMetadata, getCmsData } from '@/lib/cms-fetch';
+import CmsJsonLd from '@/components/CmsJsonLd';
 
 export async function generateMetadata() {
   return generateCmsMetadata('/services', {
@@ -15,19 +16,25 @@ export async function generateMetadata() {
   });
 }
 
-const ServicesPage = () => {
-    return (
-        <div className="overflow-x-hidden bg-[#FFFFFF]">
-            <ServicesHero />
-            <ServicesOverview />
-            <WhatMakesUsStandOut />
-            <ProcessSteps />
-            <WhyExpertiseCommitment />
-            <Newsletter />
-            <ServicesFAQ />
-        </div>
-    );
-};
+export default async function ServicesPage() {
+  let cmsContent = null;
+  try {
+    const cmsData = await getCmsData('/services');
+    cmsContent = cmsData?.content || null;
+  } catch (err) {
+    console.error('Failed to load CMS content for Services page:', err);
+  }
 
-export default ServicesPage;
-
+  return (
+    <div className="overflow-x-hidden bg-[#FFFFFF]">
+      <CmsJsonLd path="/services" />
+      <ServicesHero cmsContent={cmsContent} />
+      <ServicesOverview />
+      <WhatMakesUsStandOut />
+      <ProcessSteps />
+      <WhyExpertiseCommitment />
+      <Newsletter />
+      <ServicesFAQ cmsContent={cmsContent} />
+    </div>
+  );
+}

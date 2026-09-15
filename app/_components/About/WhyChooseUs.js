@@ -6,8 +6,9 @@ import Icon1 from "../../../components/Images/abouticon4.png";
 import Icon2 from "../../../components/Images/abouticon5.png";
 import Icon3 from "../../../components/Images/abouticon6.png";
 import Icon4 from "../../../components/Images/abouticon7.png";
+import { getCmsVal } from "@/lib/api-helper";
 
-const features = [
+const defaultFeatures = [
     {
         step: "01",
         image: Icon1,
@@ -42,7 +43,26 @@ const features = [
     },
 ];
 
-const WhyChooseUs = () => {
+const WhyChooseUs = ({ cmsContent }) => {
+    const badge = getCmsVal(cmsContent, "THE TECHSOLUTIONOR ADVANTAGE", "aboutwhychoose");
+    const heading = getCmsVal(
+        cmsContent,
+        "Why Ambitious Brands Choose Us as Their Engineering Partner",
+        "aboutwhychoose"
+    );
+    const subtitle = getCmsVal(
+        cmsContent,
+        "We blend high-caliber software engineering with commercial strategic acumen to deliver solutions that outperform benchmarks and power sustainable growth.",
+        "aboutwhychoose"
+    );
+
+    const items = defaultFeatures.map((feat) => ({
+        ...feat,
+        title: getCmsVal(cmsContent, feat.title, "aboutwhychoose"),
+        subtitle: getCmsVal(cmsContent, feat.subtitle, "aboutwhychoose"),
+        description: getCmsVal(cmsContent, feat.description, "aboutwhychoose"),
+    }));
+
     return (
         <section className="relative w-full bg-[#FFFFFF] py-20 md:py-28 select-none overflow-hidden">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -50,22 +70,28 @@ const WhyChooseUs = () => {
                 <div className="text-center max-w-3xl mx-auto mb-16">
                     <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#41B349]/15 border border-[#41B349]/30 text-[#41B349] font-extrabold text-xs uppercase tracking-widest mb-4">
                         <span className="w-1.5 h-1.5 rounded-full bg-[#41B349]" />
-                        <span>THE TECHSOLUTIONOR ADVANTAGE</span>
+                        <span>{badge}</span>
                     </div>
 
                     <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-gray-900 tracking-tight leading-tight">
-                        Why Ambitious Brands Choose Us as Their{" "}
-                        <span className="text-[#41B349]">Engineering Partner</span>
+                        {heading.includes("Engineering Partner") ? (
+                            <>
+                                Why Ambitious Brands Choose Us as Their{" "}
+                                <span className="text-[#41B349]">Engineering Partner</span>
+                            </>
+                        ) : (
+                            heading
+                        )}
                     </h2>
 
                     <p className="mt-4 text-gray-600 text-base sm:text-lg leading-relaxed font-normal">
-                        We blend high-caliber software engineering with commercial strategic acumen to deliver solutions that outperform benchmarks and power sustainable growth.
+                        {subtitle}
                     </p>
                 </div>
 
                 {/* 4 Cards Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-7">
-                    {features.map((item, idx) => (
+                    {items.map((item, idx) => (
                         <div
                             key={idx}
                             className="relative rounded-3xl p-7 bg-white border border-gray-100 shadow-lg shadow-gray-100/70 hover:shadow-2xl hover:shadow-[#41B349]/12 hover:border-[#41B349]/50 transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1.5"

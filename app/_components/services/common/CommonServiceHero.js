@@ -30,6 +30,8 @@ const CommonServiceHero = ({
   const dynamicLine3 = getCmsVal(cmsContent, titleAccent, cmsPrefix);
   const dynamicDesc = getCmsVal(cmsContent, description, cmsPrefix);
   const dynamicBadge = getCmsVal(cmsContent, badge, cmsPrefix);
+  const defaultImg = image?.src || image;
+  const dynamicImage = getCmsVal(cmsContent, defaultImg, cmsPrefix);
 
   return (
     <section className="relative w-full bg-[#FFFFFF] text-[#0D0F12] overflow-hidden min-h-[500px] sm:min-h-[520px] flex items-center py-14 md:py-20 select-none">
@@ -126,16 +128,22 @@ const CommonServiceHero = ({
             {/* Ambient circular frame backdrop */}
             <div className="absolute inset-4 rounded-full bg-gradient-to-tr from-[#36963D]/10 via-[#36963D]/5 to-transparent pointer-events-none" />
             <div className="absolute inset-0 flex items-center justify-center p-6">
-              {image && (
+              {dynamicImage && (typeof dynamicImage === 'string' && (dynamicImage.startsWith('http') || dynamicImage.startsWith('/')) ? (
+                <img 
+                  src={dynamicImage} 
+                  alt={imageAlt} 
+                  className="w-full h-full object-contain filter drop-shadow-md transition-transform duration-300 hover:scale-105"
+                />
+              ) : (
                 <Image 
-                  src={image} 
+                  src={dynamicImage} 
                   alt={imageAlt} 
                   width={350}
                   height={350}
                   priority
                   className="object-contain filter drop-shadow-md transition-transform duration-300 hover:scale-105"
                 />
-              )}
+              ))}
             </div>
           </div>
         </div>

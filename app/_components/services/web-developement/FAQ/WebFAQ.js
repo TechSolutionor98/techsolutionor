@@ -1,8 +1,9 @@
 "use client";
 import React from "react";
 import Faq from "@/components/Faq/Faq";
+import { getCmsVal } from "@/lib/api-helper";
 
-const webFaqs = [
+const defaultWebFaqs = [
   {
     question: "What types of web development services do you offer in Dubai?",
     answer: "We provide full-stack web development services in Dubai and across the UAE, including custom website development, responsive design, CMS development (WordPress, Drupal), eCommerce sites, web application development, API integration and maintenance services tailored to your business needs."
@@ -45,6 +46,12 @@ const webFaqs = [
   }
 ];
 
-export default function WebFAQ() {
-  return <Faq title="Frequently Asked Questions (FAQs)" faqs={webFaqs} />;
+export default function WebFAQ({ cmsContent }) {
+  const title = getCmsVal(cmsContent, "Frequently Asked Questions (FAQs)", "webfaq");
+  const faqs = defaultWebFaqs.map((item) => ({
+    question: getCmsVal(cmsContent, item.question, "webfaq"),
+    answer: getCmsVal(cmsContent, item.answer, "webfaq"),
+  }));
+
+  return <Faq title={title} faqs={faqs} />;
 }

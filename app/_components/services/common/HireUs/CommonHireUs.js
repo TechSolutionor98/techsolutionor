@@ -78,6 +78,8 @@ export const servicesHireUsData = {
   },
 };
 
+import { getCmsVal } from "@/lib/api-helper";
+
 /**
  * Reusable CommonHireUs Component
  * Renders the exact same HireUs CTA card UI, styling, and animations as WebHireUs
@@ -90,6 +92,7 @@ export const servicesHireUsData = {
  * @param {string} buttonText - Optional button text override
  */
 export default function CommonHireUs({
+  cmsContent,
   serviceKey = "web-development",
   badge,
   line1,
@@ -98,10 +101,15 @@ export default function CommonHireUs({
 }) {
   const config = servicesHireUsData[serviceKey] || servicesHireUsData["web-development"];
 
-  const displayBadge = badge || config.badge;
-  const displayLine1 = line1 || config.line1;
-  const displayLine2 = line2 || config.line2;
-  const displayButtonText = buttonText || config.buttonText;
+  const rawBadge = badge || config.badge;
+  const rawLine1 = line1 || config.line1;
+  const rawLine2 = line2 || config.line2;
+  const rawButtonText = buttonText || config.buttonText;
+
+  const displayBadge = getCmsVal(cmsContent, rawBadge, "hireus");
+  const displayLine1 = getCmsVal(cmsContent, rawLine1, "hireus");
+  const displayLine2 = getCmsVal(cmsContent, rawLine2, "hireus");
+  const displayButtonText = getCmsVal(cmsContent, rawButtonText, "hireus");
 
   return (
     <HireUs

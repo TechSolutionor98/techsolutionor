@@ -6,8 +6,24 @@ import Link from "next/link";
 import BannerPic from "@/components/Images/technologybanner.png";
 import TechBg from "@/components/Images/technologybannerbg.svg";
 import { ArrowRight } from "lucide-react";
+import { getCmsVal } from "@/lib/api-helper";
 
-const TechnologiesHero = () => {
+const TechnologiesHero = ({ cmsContent }) => {
+  const badge = getCmsVal(cmsContent, "TECHNOLOGY SERVICES", "techhero");
+  const title = getCmsVal(
+    cmsContent,
+    "Modern Technologies Powering Our Digital Solution.",
+    "techhero"
+  );
+  const subtitle = getCmsVal(
+    cmsContent,
+    "Delivering the best solutions starts with understanding your needs and customizing our approach to ensure exceptional, scalable commercial results.",
+    "techhero"
+  );
+  const buttonText = getCmsVal(cmsContent, "Discover More", "techhero");
+  const bannerImgSrc = BannerPic?.src || BannerPic;
+  const image = getCmsVal(cmsContent, bannerImgSrc, "techhero");
+
   return (
     <section className="relative w-full bg-[#FFFFFF] text-[#0D0F12] overflow-hidden min-h-[520px] flex items-center py-14 md:py-20 select-none">
       {/* Background Subtle Geometric Polygons & Ambient Accent */}
@@ -33,17 +49,15 @@ const TechnologiesHero = () => {
             style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
           >
             <span className="w-2 h-2 rounded-full bg-[#36963D] animate-pulse" />
-            <span>TECHNOLOGY SERVICES</span>
+            <span>{badge}</span>
           </div>
 
-          {/* Main Headline matching Home Page Hero Typography */}
+          {/* Main Headline */}
           <h1 
             className="text-3xl sm:text-4xl md:text-[44px] lg:text-[50px] font-black leading-[1.12] tracking-tight text-[#0D0F12] mb-6"
             style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
           >
-            Modern Technologies <br />
-            Powering Our Digital <br />
-            <span className="text-[#36963D]">Solution.</span>
+            {title}
           </h1>
 
           {/* Subtitle */}
@@ -51,7 +65,7 @@ const TechnologiesHero = () => {
             className="text-[#475569] text-base md:text-lg max-w-[480px] mb-8 leading-relaxed font-normal"
             style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
           >
-            Delivering the best solutions starts with understanding your needs and customizing our approach to ensure exceptional, scalable commercial results.
+            {subtitle}
           </p>
 
           {/* CTA Button */}
@@ -60,7 +74,7 @@ const TechnologiesHero = () => {
               className="bg-[#36963D] hover:bg-[#2e8234] text-white px-8 py-3.5 rounded-full font-bold text-sm sm:text-base transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2.5"
               style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
             >
-              <span>Discover More</span>
+              <span>{buttonText}</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
           </Link>
@@ -72,13 +86,21 @@ const TechnologiesHero = () => {
             {/* Ambient circular frame backdrop */}
             <div className="absolute inset-4 rounded-full bg-gradient-to-tr from-[#36963D]/10 via-[#36963D]/5 to-transparent pointer-events-none" />
             <div className="absolute inset-0 flex items-center justify-center">
-              <Image 
-                src={BannerPic} 
-                alt="Technologies Specialist" 
-                fill 
-                priority
-                className="object-contain filter drop-shadow-md"
-              />
+              {typeof image === 'string' && (image.startsWith('http') || image.startsWith('/')) ? (
+                <img 
+                  src={image} 
+                  alt="Technologies Specialist" 
+                  className="w-full h-full object-contain filter drop-shadow-md"
+                />
+              ) : (
+                <Image 
+                  src={BannerPic} 
+                  alt="Technologies Specialist" 
+                  fill 
+                  priority
+                  className="object-contain filter drop-shadow-md"
+                />
+              )}
             </div>
           </div>
         </div>

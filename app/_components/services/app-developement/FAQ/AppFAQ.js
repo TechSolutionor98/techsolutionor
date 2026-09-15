@@ -1,8 +1,9 @@
 "use client";
 import React from "react";
 import Faq from "@/components/Faq/Faq";
+import { getCmsVal } from "@/lib/api-helper";
 
-const appFaqs = [
+const defaultAppFaqs = [
   {
     question: "What types of mobile app development services do you offer in Dubai?",
     answer: "We develop custom mobile applications for iOS, Android and cross-platform environments for clients across Dubai and the UAE. Our services include native apps, hybrid apps, ecommerce apps and progressive web apps, tailored to your business goals and user needs."
@@ -45,6 +46,12 @@ const appFaqs = [
   }
 ];
 
-export default function AppFAQ() {
-  return <Faq title="Frequently Asked Questions (FAQs)" faqs={appFaqs} />;
+export default function AppFAQ({ cmsContent }) {
+  const title = getCmsVal(cmsContent, "Frequently Asked Questions (FAQs)", "appfaq");
+  const faqs = defaultAppFaqs.map((item) => ({
+    question: getCmsVal(cmsContent, item.question, "appfaq"),
+    answer: getCmsVal(cmsContent, item.answer, "appfaq"),
+  }));
+
+  return <Faq title={title} faqs={faqs} />;
 }

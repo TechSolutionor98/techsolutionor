@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import { getCmsVal } from "@/lib/api-helper";
 
 // 6 Custom Vector Icons with stroke="currentColor" for seamless color inversion (#1B4E2C <-> #FFFFFF)
 const icons = [
@@ -182,9 +183,21 @@ function smoothStep(min, max, value) {
   return x * x * (3 - 2 * x);
 }
 
-export default function WebWhyChoose() {
+export default function WebWhyChoose({ cmsContent }) {
   const containerRef = useRef(null);
   const [progress, setProgress] = useState(0);
+
+  const eyebrow = getCmsVal(cmsContent, "WHY CHOOSE US", "webwhychoose");
+  const defaultHeading = "Why Choose Tech Solutionor";
+  const heading = getCmsVal(cmsContent, defaultHeading, "webwhychoose");
+  const defaultSub = "Engineered for high performance, enterprise security, and measurable digital growth.";
+  const subtitle = getCmsVal(cmsContent, defaultSub, "webwhychoose");
+
+  const displayCards = webWhyChooseData.map((item) => ({
+    ...item,
+    title: getCmsVal(cmsContent, item.title, "webwhychoose"),
+    desc: getCmsVal(cmsContent, item.desc, "webwhychoose"),
+  }));
 
   useEffect(() => {
     let ticking = false;
@@ -278,7 +291,7 @@ export default function WebWhyChoose() {
             {/* Pulsing Pill Eyebrow Badge */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#1B4E2C]/10 border border-[#1B4E2C]/20 text-[#1B4E2C] font-extrabold text-xs uppercase tracking-widest mb-2 shadow-2xs">
               <span className="w-2 h-2 rounded-full bg-[#1B4E2C] animate-pulse" />
-              <span>WHY CHOOSE US</span>
+              <span>{eyebrow}</span>
             </div>
 
             {/* Heading with Outfit & Plus Jakarta Sans typography */}
@@ -286,10 +299,16 @@ export default function WebWhyChoose() {
               className="text-2xl sm:text-3xl md:text-[34px] lg:text-[38px] font-black text-[#0D0F12] tracking-tight leading-tight"
               style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
             >
-              Why Choose{" "}
-              <span className="text-[#1B4E2C] block sm:inline mt-0.5 sm:mt-0">
-                Tech Solutionor
-              </span>
+              {heading.includes("Tech Solutionor") ? (
+                <>
+                  Why Choose{" "}
+                  <span className="text-[#1B4E2C] block sm:inline mt-0.5 sm:mt-0">
+                    Tech Solutionor
+                  </span>
+                </>
+              ) : (
+                heading
+              )}
             </h2>
 
             {/* Clean Subtitle matching Home Page Hierarchy */}
@@ -297,7 +316,7 @@ export default function WebWhyChoose() {
               className="text-[#475569] text-xs sm:text-sm max-w-lg mx-auto mt-1 font-normal leading-relaxed hidden sm:block"
               style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
             >
-              Engineered for high performance, enterprise security, and measurable digital growth.
+              {subtitle}
             </p>
           </div>
 
@@ -317,7 +336,7 @@ export default function WebWhyChoose() {
                 }}
                 className="transition-transform duration-75 ease-out"
               >
-                <Card item={webWhyChooseData[0]} />
+                <Card item={displayCards[0]} />
               </div>
 
               {/* Card 1: Center Top (Enters First) */}
@@ -329,7 +348,7 @@ export default function WebWhyChoose() {
                 }}
                 className="transition-transform duration-75 ease-out"
               >
-                <Card item={webWhyChooseData[1]} />
+                <Card item={displayCards[1]} />
               </div>
 
               {/* Card 2: Right Top (Enters Second) */}
@@ -341,7 +360,7 @@ export default function WebWhyChoose() {
                 }}
                 className="transition-transform duration-75 ease-out"
               >
-                <Card item={webWhyChooseData[2]} />
+                <Card item={displayCards[2]} />
               </div>
             </div>
 
@@ -356,7 +375,7 @@ export default function WebWhyChoose() {
                 }}
                 className="transition-transform duration-75 ease-out"
               >
-                <Card item={webWhyChooseData[3]} />
+                <Card item={displayCards[3]} />
               </div>
 
               {/* Card 4: Center Bottom (Emerges from behind Center Top) */}
@@ -368,7 +387,7 @@ export default function WebWhyChoose() {
                 }}
                 className="transition-transform duration-75 ease-out"
               >
-                <Card item={webWhyChooseData[4]} />
+                <Card item={displayCards[4]} />
               </div>
 
               {/* Card 5: Right Bottom (Emerges from behind Right Top) */}
@@ -380,7 +399,7 @@ export default function WebWhyChoose() {
                 }}
                 className="transition-transform duration-75 ease-out"
               >
-                <Card item={webWhyChooseData[5]} />
+                <Card item={displayCards[5]} />
               </div>
             </div>
           </div>

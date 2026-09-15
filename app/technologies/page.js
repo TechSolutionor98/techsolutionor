@@ -1,10 +1,10 @@
 import React from 'react';
 import TechnologiesHero from '../_components/Technologies/TechnologiesHero';
 import AgencyOverview from '../_components/Technologies/AgencyOverview';
-import TrendingTechServices from '../_components/Technologies/TrendingTechServices';
 import Newsletter from '../_components/Home/Newsletter/Newsletter';
 import TechFAQ from '../_components/Technologies/TechFAQ';
-import { generateCmsMetadata } from '@/lib/cms-fetch';
+import { generateCmsMetadata, getCmsData } from '@/lib/cms-fetch';
+import CmsJsonLd from '@/components/CmsJsonLd';
 
 export async function generateMetadata() {
   return generateCmsMetadata('/technologies', {
@@ -13,16 +13,22 @@ export async function generateMetadata() {
   });
 }
 
-const TechnologiesPage = () => {
-    return (
-        <div className="overflow-x-hidden">
-            <TechnologiesHero />
-            <AgencyOverview />
-            {/* <TrendingTechServices /> */}
-            <Newsletter />
-            <TechFAQ />
-        </div>
-    );
-};
+export default async function TechnologiesPage() {
+  let cmsContent = null;
+  try {
+    const cmsData = await getCmsData('/technologies');
+    cmsContent = cmsData?.content || null;
+  } catch (err) {
+    console.error('Failed to load CMS content for Technologies page:', err);
+  }
 
-export default TechnologiesPage;
+  return (
+    <div className="overflow-x-hidden">
+      <CmsJsonLd path="/technologies" />
+      <TechnologiesHero cmsContent={cmsContent} />
+      <AgencyOverview />
+      <Newsletter />
+      <TechFAQ cmsContent={cmsContent} />
+    </div>
+  );
+}

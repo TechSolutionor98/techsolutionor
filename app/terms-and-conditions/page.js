@@ -1,6 +1,6 @@
 import React from 'react';
 import TermsAndConditionsContent from './TermsAndConditionsContent';
-import { generateCmsMetadata } from '@/lib/cms-fetch';
+import { generateCmsMetadata, getCmsData } from '@/lib/cms-fetch';
 
 export async function generateMetadata() {
   return generateCmsMetadata('/terms-and-conditions', {
@@ -9,6 +9,7 @@ export async function generateMetadata() {
   });
 }
 
-export default function TermsAndConditionsPage() {
-  return <TermsAndConditionsContent />;
+export default async function TermsAndConditionsPage() {
+  const cmsContent = await getCmsData('/terms-and-conditions');
+  return <TermsAndConditionsContent cmsContent={cmsContent} />;
 }

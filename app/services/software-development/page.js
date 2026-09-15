@@ -1,16 +1,14 @@
 import React from 'react';
 import SoftwareDevBanner from '@/app/_components/services/software-developement/Banner/SoftwareDevBanner';
-import WhoWeAre from '@/app/_components/services/software-developement/WhoWeAre/WhoWeAre';
-import SoftwareServices from '@/app/_components/services/software-developement/SoftwareServices/SoftwareServices';
 import TechnologiesBook from '@/app/_components/services/common/TechnologiesBook/TechnologiesBook';
 import CommonWhyChoose from '@/app/_components/services/common/WhyChoose/CommonWhyChoose';
 import CommonKeyFeatures from '@/app/_components/services/common/KeyFeatures/CommonKeyFeatures';
 import CommonStruggling from '@/app/_components/services/common/Struggling/CommonStruggling';
 import CommonServices from '@/app/_components/services/common/Services/CommonServices';
 import CommonHireUs from '@/app/_components/services/common/HireUs/CommonHireUs';
-import HireUs from '@/app/_components/services/eCommerce-developement/HireUs/HireUs';
 import SoftwareFAQ from '@/app/_components/services/software-developement/FAQ/SoftwareFAQ';
-import { generateCmsMetadata } from '@/lib/cms-fetch';
+import { generateCmsMetadata, getCmsData } from '@/lib/cms-fetch';
+import CmsJsonLd from '@/components/CmsJsonLd';
 
 export async function generateMetadata() {
   return generateCmsMetadata('/services/software-development', {
@@ -19,23 +17,26 @@ export async function generateMetadata() {
   });
 }
 
-export default function SoftwareDevelopmentPage() {
+export default async function SoftwareDevelopmentPage() {
+  let cmsContent = null;
+  try {
+    const cmsData = await getCmsData('/services/software-development');
+    cmsContent = cmsData?.content || null;
+  } catch (err) {
+    console.error('Failed to load CMS content for Software Development page:', err);
+  }
+
   return (
     <div>
-      <SoftwareDevBanner />
-      <CommonWhyChoose serviceKey="software-development" />
-      <CommonKeyFeatures serviceKey="software-development" />
-      <CommonStruggling serviceKey="software-development" />
-      <CommonServices serviceKey="software-development" />
-      {/* <WhoWeAre /> */}
-      {/* <SoftwareServices /> */}
-      <TechnologiesBook serviceKey="software-development" bgColor="#FFFFFF" />
-      <CommonHireUs serviceKey="software-development" />
-      {/* <HireUs
-        line1="Ready to scale your digital presence in Dubai and across the UAE?"
-        line2="Choose a trusted team for custom software and ongoing support."
-      /> */}
-      <SoftwareFAQ />
+      <CmsJsonLd path="/services/software-development" />
+      <SoftwareDevBanner cmsContent={cmsContent} />
+      <CommonWhyChoose serviceKey="software-development" cmsContent={cmsContent} />
+      <CommonKeyFeatures serviceKey="software-development" cmsContent={cmsContent} />
+      <CommonStruggling serviceKey="software-development" cmsContent={cmsContent} />
+      <CommonServices serviceKey="software-development" cmsContent={cmsContent} />
+      <TechnologiesBook serviceKey="software-development" bgColor="#FFFFFF" cmsContent={cmsContent} />
+      <CommonHireUs serviceKey="software-development" cmsContent={cmsContent} />
+      <SoftwareFAQ cmsContent={cmsContent} />
     </div>
   );
 }

@@ -61,6 +61,13 @@ export default function ContentEditorClient({ initialContent, routeId, routePath
   const [showTemplateModal, setShowTemplateModal] = useState(false);
   const [uploadingField, setUploadingField] = useState(null);
 
+  // Add Section & Add Field States
+  const [addingFieldToSection, setAddingFieldToSection] = useState(null);
+  const [newFieldType, setNewFieldType] = useState('text');
+  const [newFieldLabel, setNewFieldLabel] = useState('');
+  const [newSectionTemplate, setNewSectionTemplate] = useState('custom');
+  const [newSectionName, setNewSectionName] = useState('');
+
   // Link Modal States
   const [showLinkModal, setShowLinkModal] = useState(false);
   const [linkModalData, setLinkModalData] = useState(null);
@@ -113,6 +120,110 @@ export default function ContentEditorClient({ initialContent, routeId, routePath
     const newSections = [...content.sections];
     newSections[index] = { ...newSections[index], sectionName: name };
     setContent({ ...content, sections: newSections });
+  };
+
+  const handleAddSection = (templateKey, customName) => {
+    if (!canEditContent) return;
+    const key = templateKey || newSectionTemplate;
+    const name = (customName || newSectionName).trim() || 'New Section';
+
+    let templateFields = {};
+    if (key === 'hero') {
+      templateFields = {
+        badge: { type: 'text', value: 'WELCOME TO OUR AGENCY', label: 'Eyebrow Badge' },
+        heading: { type: 'text', tag: 'h1', value: 'Transforming Digital Visions into Scalable Realities', label: 'Main Headline' },
+        description: { type: 'richtext', value: 'Delivering world-class software engineering and enterprise digital growth.', label: 'Description' },
+        ctaText: { type: 'text', value: 'Get Started', label: 'CTA Button Text' },
+        heroImage: { type: 'image', value: '', label: 'Hero Image / Graphic', alt: '', title: '' }
+      };
+    } else if (key === 'about') {
+      templateFields = {
+        badge: { type: 'text', value: 'ABOUT US', label: 'Badge' },
+        heading: { type: 'text', tag: 'h2', value: 'Who We Are & What We Do', label: 'Heading' },
+        description: { type: 'richtext', value: 'Experienced engineering team dedicated to client success.', label: 'Description' },
+        image: { type: 'image', value: '', label: 'About Image', alt: '', title: '' }
+      };
+    } else if (key === 'services') {
+      templateFields = {
+        badge: { type: 'text', value: 'OUR SERVICES', label: 'Badge' },
+        heading: { type: 'text', tag: 'h2', value: 'End-to-End Digital Solutions', label: 'Heading' },
+        description: { type: 'richtext', value: 'Comprehensive engineering services customized to your needs.', label: 'Description' }
+      };
+    } else if (key === 'faq') {
+      templateFields = {
+        heading: { type: 'text', tag: 'h2', value: 'Frequently Asked Questions', label: 'Heading' },
+        q1: { type: 'text', value: 'How do we start working together?', label: 'Question 1' },
+        a1: { type: 'richtext', value: 'Contact our team for a free discovery consultation.', label: 'Answer 1' },
+        q2: { type: 'text', value: 'What technologies do you support?', label: 'Question 2' },
+        a2: { type: 'richtext', value: 'We specialize in React, Next.js, Node.js, Python, Mobile, and Cloud Architectures.', label: 'Answer 2' }
+      };
+    } else {
+      templateFields = {
+        heading: { type: 'text', tag: 'h2', value: name, label: 'Section Title' },
+        description: { type: 'richtext', value: 'Section content goes here...', label: 'Content Paragraph' },
+        image: { type: 'image', value: '', label: 'Section Image / Media', alt: '', title: '' }
+      };
+    }
+
+    const uniqueId = `sec_${Date.now()}`;
+    const newSection = {
+      sectionId: uniqueId,
+      sectionName: name,
+      order: content.sections.length + 1,
+      fields: templateFields
+    };
+
+    const newSections = [...content.sections, newSection];
+    setContent({ ...content, sections: newSections });
+    setExpandedSections(prev => new Set([...prev, newSections.length - 1]));
+    setShowTemplateModal(false);
+    setNewSectionName('');
+    setMessage(`Section "${name}" added! Click Publish when ready.`);
+    setMessageType('success');
+    setTimeout(() => setMessage(''), 4000);
+  };
+
+  const handleAddField = (sectionIndex) => {
+    if (!canEditContent) return;
+    const label = newFieldLabel.trim() || (newFieldType === 'image' ? 'Image / Logo' : 'Text Content');
+    const fieldKey = `fld_${newFieldType}_${Date.now()}`;
+
+    let newFieldObj = {
+      type: newFieldType === 'paragraph' ? 'richtext' : (newFieldType === 'image' ? 'image' : 'text'),
+      value: '',
+      label,
+    };
+    if (newFieldType === 'heading') {
+      newFieldObj.tag = 'h2';
+    }
+    if (newFieldType === 'image') {
+      newFieldObj.alt = '';
+      newFieldObj.title = '';
+    }
+
+    const newSections = [...content.sections];
+    const sec = { ...newSections[sectionIndex] };
+    sec.fields = { ...(sec.fields || {}), [fieldKey]: newFieldObj };
+    newSections[sectionIndex] = sec;
+    setContent({ ...content, sections: newSections });
+    setAddingFieldToSection(null);
+    setNewFieldLabel('');
+    setMessage(`Field "${label}" added to section!`);
+    setMessageType('success');
+    setTimeout(() => setMessage(''), 3000);
+  };
+
+  const handleDeleteField = (sectionIndex, fieldKey) => {
+    if (!canEditContent) return;
+    if (confirm('Delete this field?')) {
+      const newSections = [...content.sections];
+      const sec = { ...newSections[sectionIndex] };
+      const fields = { ...sec.fields };
+      delete fields[fieldKey];
+      sec.fields = fields;
+      newSections[sectionIndex] = sec;
+      setContent({ ...content, sections: newSections });
+    }
   };
 
   const updateField = (sectionIndex, fieldKey, prop, val) => {
@@ -327,6 +438,16 @@ export default function ContentEditorClient({ initialContent, routeId, routePath
             <span className="text-xs font-bold uppercase tracking-wider text-[#20507C] flex items-center gap-1.5">
               <FiImage size={14} /> {label}
             </span>
+            {canEditContent && (
+              <button
+                type="button"
+                onClick={() => handleDeleteField(sectionIndex, fieldKey)}
+                className="text-gray-400 hover:text-red-600 p-1 rounded transition cursor-pointer"
+                title="Delete Field"
+              >
+                <FiTrash2 size={13} />
+              </button>
+            )}
           </div>
           <div className="flex gap-2 items-center">
             <input
@@ -421,15 +542,27 @@ export default function ContentEditorClient({ initialContent, routeId, routePath
       <div key={fieldKey} className="mb-4">
         <div className="flex items-center justify-between mb-1.5">
           <label className="block text-sm font-semibold text-gray-700">{label}</label>
-          {isRich && canEditContent && (
-            <button
-              type="button"
-              onClick={() => handleOpenLinkModal(sectionIndex, fieldKey, field.value || '')}
-              className="text-xs font-semibold text-[#20507C] hover:text-[#34953C] flex items-center gap-1 bg-emerald-50 px-2.5 py-1 rounded border border-emerald-200 transition cursor-pointer"
-            >
-              <FiLink size={12} /> Add Link
-            </button>
-          )}
+          <div className="flex items-center gap-2">
+            {isRich && canEditContent && (
+              <button
+                type="button"
+                onClick={() => handleOpenLinkModal(sectionIndex, fieldKey, field.value || '')}
+                className="text-xs font-semibold text-[#20507C] hover:text-[#34953C] flex items-center gap-1 bg-emerald-50 px-2.5 py-1 rounded border border-emerald-200 transition cursor-pointer"
+              >
+                <FiLink size={12} /> Add Link
+              </button>
+            )}
+            {canEditContent && (
+              <button
+                type="button"
+                onClick={() => handleDeleteField(sectionIndex, fieldKey)}
+                className="text-gray-400 hover:text-red-600 p-1 rounded transition cursor-pointer"
+                title="Delete Field"
+              >
+                <FiTrash2 size={13} />
+              </button>
+            )}
+          </div>
         </div>
 
         {isRich ? (
@@ -492,7 +625,7 @@ export default function ContentEditorClient({ initialContent, routeId, routePath
         >
           <FiArrowLeft /> Back to Pages
         </Link>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <span className={`px-2 py-1 rounded text-xs font-medium ${content.status === 'published' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
             }`}>
             {content.status} • v{content.version}
@@ -507,6 +640,13 @@ export default function ContentEditorClient({ initialContent, routeId, routePath
           </a>
           {canEditContent && (
             <>
+              <button
+                type="button"
+                onClick={() => setShowTemplateModal(true)}
+                className="flex items-center gap-1.5 px-3.5 py-2 text-sm bg-emerald-50 text-[#34953C] hover:bg-emerald-100 border border-emerald-300 rounded-md font-bold transition cursor-pointer"
+              >
+                <FiPlus size={14} /> Add Section
+              </button>
               <button
                 onClick={() => handleSave('draft')}
                 disabled={loading}
@@ -551,11 +691,20 @@ export default function ContentEditorClient({ initialContent, routeId, routePath
           <p className="text-sm text-gray-400 mb-4">
             {canEditContent ? 'Add sections to start building your page content.' : 'No content sections available.'}
           </p>
+          {canEditContent && (
+            <button
+              type="button"
+              onClick={() => setShowTemplateModal(true)}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-[#34953C] text-white rounded-md text-sm font-bold hover:bg-[#2e8234] transition cursor-pointer"
+            >
+              <FiPlus size={16} /> Add First Section
+            </button>
+          )}
         </div>
       ) : (
         <div className="space-y-4">
           {content.sections.map((section, index) => (
-            <div key={`${section.sectionId || 'section'}-${index}`} className="bg-white rounded-lg shadow-2xs overflow-hidden">
+            <div key={`${section.sectionId || 'section'}-${index}`} className="bg-white rounded-lg shadow-2xs overflow-hidden border border-gray-200">
               {/* Section Header */}
               <div
                 className="flex items-center justify-between px-4 py-3 bg-gray-50 border-b border-gray-200 cursor-pointer"
@@ -607,10 +756,81 @@ export default function ContentEditorClient({ initialContent, routeId, routePath
                   {section.fields && Object.entries(section.fields).map(([key, field]) =>
                     renderField(index, key, field)
                   )}
+
+                  {/* Add Field To Section */}
+                  {canEditContent && (
+                    <div className="mt-4 pt-4 border-t border-gray-100">
+                      {addingFieldToSection === index ? (
+                        <div className="p-3 bg-gray-50 rounded-lg border border-gray-200 space-y-3">
+                          <p className="text-xs font-bold text-gray-700">Add Field to &quot;{section.sectionName}&quot;</p>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <div>
+                              <label className="block text-xs font-semibold text-gray-600 mb-1">Field Type</label>
+                              <select
+                                value={newFieldType}
+                                onChange={(e) => setNewFieldType(e.target.value)}
+                                className="w-full text-xs rounded border border-gray-300 p-1.5 bg-white text-gray-800"
+                              >
+                                <option value="text">Single-line Text</option>
+                                <option value="heading">Heading (H2)</option>
+                                <option value="paragraph">Paragraph / Rich Text</option>
+                                <option value="image">Image / Logo</option>
+                              </select>
+                            </div>
+                            <div>
+                              <label className="block text-xs font-semibold text-gray-600 mb-1">Field Label</label>
+                              <input
+                                type="text"
+                                value={newFieldLabel}
+                                onChange={(e) => setNewFieldLabel(e.target.value)}
+                                placeholder="e.g. Subtitle, Card Title, Partner Logo..."
+                                className="w-full text-xs rounded border border-gray-300 p-1.5 bg-white text-gray-800"
+                              />
+                            </div>
+                          </div>
+                          <div className="flex justify-end gap-2">
+                            <button
+                              type="button"
+                              onClick={() => { setAddingFieldToSection(null); setNewFieldLabel(''); }}
+                              className="px-2.5 py-1 text-xs border border-gray-300 rounded hover:bg-gray-100 text-gray-600 cursor-pointer"
+                            >
+                              Cancel
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleAddField(index)}
+                              className="px-3 py-1 text-xs bg-[#34953C] text-white rounded font-bold hover:bg-[#2e8234] cursor-pointer"
+                            >
+                              Add Field
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => { setAddingFieldToSection(index); setNewFieldLabel(''); }}
+                          className="inline-flex items-center gap-1.5 text-xs font-bold text-[#20507C] hover:text-[#34953C] py-1.5 px-3 rounded border border-gray-200 bg-gray-50 hover:bg-gray-100 transition cursor-pointer"
+                        >
+                          <FiPlus size={12} /> Add Field to Section
+                        </button>
+                      )}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
           ))}
+
+          {/* Add Section Action Button */}
+          {canEditContent && (
+            <button
+              type="button"
+              onClick={() => setShowTemplateModal(true)}
+              className="w-full py-3.5 border-2 border-dashed border-gray-300 hover:border-[#34953C] rounded-lg text-sm font-bold text-gray-600 hover:text-[#34953C] flex items-center justify-center gap-2 bg-white transition shadow-2xs cursor-pointer"
+            >
+              <FiPlus size={16} /> Add New Content Section
+            </button>
+          )}
         </div>
       )}
 
@@ -734,6 +954,124 @@ export default function ContentEditorClient({ initialContent, routeId, routePath
                 className="px-4.5 py-2 text-sm text-gray-600 hover:bg-gray-50 border border-gray-300 rounded-lg transition font-semibold cursor-pointer"
               >
                 Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Add Section Template Modal */}
+      {showTemplateModal && (
+        <div
+          className="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center z-50"
+          onClick={() => setShowTemplateModal(false)}
+        >
+          <div
+            className="bg-white rounded-xl shadow-2xl p-6 max-w-2xl w-full mx-4 border border-gray-100 relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setShowTemplateModal(false)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition cursor-pointer"
+            >
+              <FiX size={18} />
+            </button>
+
+            <div className="flex items-center gap-2 mb-4">
+              <span className="p-2 rounded-lg bg-emerald-50 text-[#34953C]">
+                <FiPlus size={20} />
+              </span>
+              <div>
+                <h3 className="text-lg font-bold text-gray-900">Add Content Section</h3>
+                <p className="text-xs text-gray-500">Choose a section template or create a custom section.</p>
+              </div>
+            </div>
+
+            {/* Template options */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5">
+              <div
+                onClick={() => handleAddSection('hero')}
+                className="p-4 rounded-lg border border-gray-200 hover:border-[#34953C] hover:bg-emerald-50/40 cursor-pointer transition flex flex-col group"
+              >
+                <span className="text-sm font-bold text-gray-800 group-hover:text-[#34953C] flex items-center justify-between">
+                  Hero Banner <span className="text-xs text-emerald-600">Preset →</span>
+                </span>
+                <p className="text-xs text-gray-500 mt-1">Heading, subtitle, paragraph, CTA buttons, and hero image/media.</p>
+              </div>
+
+              <div
+                onClick={() => handleAddSection('about')}
+                className="p-4 rounded-lg border border-gray-200 hover:border-[#34953C] hover:bg-emerald-50/40 cursor-pointer transition flex flex-col group"
+              >
+                <span className="text-sm font-bold text-gray-800 group-hover:text-[#34953C] flex items-center justify-between">
+                  About & Story <span className="text-xs text-emerald-600">Preset →</span>
+                </span>
+                <p className="text-xs text-gray-500 mt-1">Section heading, story description, quote, and spotlight image.</p>
+              </div>
+
+              <div
+                onClick={() => handleAddSection('services')}
+                className="p-4 rounded-lg border border-gray-200 hover:border-[#34953C] hover:bg-emerald-50/40 cursor-pointer transition flex flex-col group"
+              >
+                <span className="text-sm font-bold text-gray-800 group-hover:text-[#34953C] flex items-center justify-between">
+                  Features & Services <span className="text-xs text-emerald-600">Preset →</span>
+                </span>
+                <p className="text-xs text-gray-500 mt-1">Section heading, sub-headings, service features and description.</p>
+              </div>
+
+              <div
+                onClick={() => handleAddSection('faq')}
+                className="p-4 rounded-lg border border-gray-200 hover:border-[#34953C] hover:bg-emerald-50/40 cursor-pointer transition flex flex-col group"
+              >
+                <span className="text-sm font-bold text-gray-800 group-hover:text-[#34953C] flex items-center justify-between">
+                  FAQ Section <span className="text-xs text-emerald-600">Preset →</span>
+                </span>
+                <p className="text-xs text-gray-500 mt-1">FAQ heading with question and answer pairs.</p>
+              </div>
+            </div>
+
+            {/* Custom section input */}
+            <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+              <label className="block text-xs font-bold text-gray-700 mb-1.5">Or Create Custom Section</label>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={newSectionName}
+                  onChange={(e) => setNewSectionName(e.target.value)}
+                  placeholder="e.g. Partner Logos, Case Studies, Testimonials..."
+                  className="flex-1 text-sm rounded-lg border border-gray-300 px-3 py-2 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#34953C]"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && newSectionName.trim()) {
+                      handleAddSection('custom', newSectionName.trim());
+                    }
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (newSectionName.trim()) {
+                      handleAddSection('custom', newSectionName.trim());
+                    }
+                  }}
+                  disabled={!newSectionName.trim()}
+                  className={`px-4 py-2 text-sm font-bold rounded-lg transition ${
+                    newSectionName.trim()
+                      ? 'bg-[#34953C] text-white hover:bg-[#2e8234] cursor-pointer'
+                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  }`}
+                >
+                  Create
+                </button>
+              </div>
+            </div>
+
+            <div className="flex justify-end mt-5">
+              <button
+                type="button"
+                onClick={() => setShowTemplateModal(false)}
+                className="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-lg transition cursor-pointer"
+              >
+                Cancel
               </button>
             </div>
           </div>

@@ -1,7 +1,8 @@
 import React from 'react';
 import KeyFeatures from '@/components/KeyFeatures/KeyFeatures';
+import { getCmsVal } from '@/lib/api-helper';
 
-const keyFeatures = [
+const defaultKeyFeatures = [
     {
         title: 'RESTful API Development',
         desc: "Laravel streamlines the development of RESTful APIs with built-in routing, request validation, authentication, and response handling, making API creation secure, scalable, and efficient.",
@@ -20,8 +21,16 @@ const keyFeatures = [
     },
 ];
 
-const LaravelCards = () => {
-    return <KeyFeatures title="NO RISK." subtitle="ONLY RESULTS." features={keyFeatures} />;
+const LaravelCards = ({ cmsContent }) => {
+    const title = getCmsVal(cmsContent, 'NO RISK.', 'laravelcards');
+    const subtitle = getCmsVal(cmsContent, 'ONLY RESULTS.', 'laravelcards');
+
+    const features = defaultKeyFeatures.map((item) => ({
+        title: getCmsVal(cmsContent, item.title, 'laravelcards'),
+        desc: getCmsVal(cmsContent, item.desc, 'laravelcards'),
+    }));
+
+    return <KeyFeatures title={title} subtitle={subtitle} features={features} />;
 };
 
 export default LaravelCards;

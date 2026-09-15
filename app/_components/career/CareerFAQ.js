@@ -2,8 +2,9 @@
 
 import React from "react";
 import FAQs from "@/components/Faq/Faq";
+import { getCmsVal } from "@/lib/api-helper";
 
-const careerFaqs = [
+const defaultCareerFaqs = [
   {
     question: "How can I apply for a position?",
     answer: "You can apply directly using our online job application form above. Select the position you wish to apply for, fill in your contact information, specify your experience level, attach a brief cover letter or introductory message, and upload your resume/CV in PDF, DOC, or DOCX format."
@@ -46,6 +47,12 @@ const careerFaqs = [
   }
 ];
 
-export default function CareerFAQ() {
-  return <FAQs title="Frequently Asked Questions (FAQs)" faqs={careerFaqs} />;
+export default function CareerFAQ({ cmsContent }) {
+  const title = getCmsVal(cmsContent, "Frequently Asked Questions (FAQs)", "careerfaq");
+  const faqs = defaultCareerFaqs.map((faq) => ({
+    question: getCmsVal(cmsContent, faq.question, "careerfaq"),
+    answer: getCmsVal(cmsContent, faq.answer, "careerfaq"),
+  }));
+
+  return <FAQs title={title} faqs={faqs} />;
 }

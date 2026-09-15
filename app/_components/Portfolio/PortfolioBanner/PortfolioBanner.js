@@ -5,8 +5,25 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowDown, Sparkles } from 'lucide-react';
 import portfolioBanner from '@/components/Images/portfoliobanner.png';
+import { getCmsVal } from '@/lib/api-helper';
 
-const PortfolioBanner = () => {
+const PortfolioBanner = ({ cmsContent }) => {
+  const badge = getCmsVal(cmsContent, "Real-World Client Case Studies", "portfoliobanner");
+  const heading = getCmsVal(
+    cmsContent,
+    "Our Portfolio of Digital Projects & Client Success Stories",
+    "portfoliobanner"
+  );
+  const description = getCmsVal(
+    cmsContent,
+    "Welcome to our portfolio of innovative digital solutions! At TechSolutionor, we specialize in delivering custom software and technology solutions that drive measurable business success. Explore our projects across various industries to see how we combine creativity, technology, and strategic expertise to deliver cutting-edge solutions tailored to each client’s needs.",
+    "portfoliobanner"
+  );
+  const cta1 = getCmsVal(cmsContent, "Explore Case Studies", "portfoliobanner");
+  const cta2 = getCmsVal(cmsContent, "Start Your Project", "portfoliobanner");
+  const defaultImg = portfolioBanner?.src || portfolioBanner;
+  const image = getCmsVal(cmsContent, defaultImg, "portfoliobanner");
+
   const scrollToProjects = () => {
     const el = document.getElementById('portfolio-showcase');
     if (el) {
@@ -28,17 +45,23 @@ const PortfolioBanner = () => {
             {/* Pill Tag */}
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#41B349]/10 border border-[#41B349]/30 text-[#41B349] text-xs sm:text-sm font-bold tracking-wider uppercase">
               <Sparkles className="w-4 h-4 text-[#41B349]" />
-              <span>Real-World Client Case Studies</span>
+              <span>{badge}</span>
             </div>
 
             {/* Main Heading */}
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[50px] font-extrabold tracking-tight leading-[1.15] text-[#111827]">
-              Our Portfolio of <span className="text-[#41B349]">Digital Projects</span> &amp; Client Success Stories
+              {heading.includes("Digital Projects") ? (
+                <>
+                  Our Portfolio of <span className="text-[#41B349]">Digital Projects</span> &amp; Client Success Stories
+                </>
+              ) : (
+                heading
+              )}
             </h1>
 
-            {/* Description (Exact User Text) */}
+            {/* Description */}
             <p className="text-base sm:text-lg text-[#4B5563] leading-relaxed max-w-2xl font-normal">
-              Welcome to our portfolio of innovative digital solutions! At TechSolutionor, we specialize in delivering custom software and technology solutions that drive measurable business success. Explore our projects across various industries to see how we combine creativity, technology, and strategic expertise to deliver cutting-edge solutions tailored to each client’s needs.
+              {description}
             </p>
 
             {/* Action Buttons */}
@@ -47,7 +70,7 @@ const PortfolioBanner = () => {
                 onClick={scrollToProjects}
                 className="group relative inline-flex items-center gap-3 px-8 py-4 rounded-full bg-[#41B349] hover:bg-[#389e40] text-white font-bold text-base shadow-[0_10px_25px_rgba(65,179,73,0.3)] hover:shadow-[0_15px_30px_rgba(65,179,73,0.45)] transition-all duration-300 active:scale-95 cursor-pointer"
               >
-                <span>Explore Case Studies</span>
+                <span>{cta1}</span>
                 <ArrowDown className="w-4 h-4 group-hover:translate-y-1 transition-transform duration-300" />
               </button>
 
@@ -55,7 +78,7 @@ const PortfolioBanner = () => {
                 href="/hire-us"
                 className="inline-flex items-center gap-2 px-7 py-4 rounded-full bg-white hover:bg-gray-50 border border-gray-200 text-[#111827] hover:text-[#41B349] font-bold text-base shadow-sm transition-all duration-300"
               >
-                Start Your Project
+                {cta2}
               </Link>
             </div>
           </div>
@@ -63,14 +86,22 @@ const PortfolioBanner = () => {
           {/* Right Column: Clean Image */}
           <div className="lg:col-span-5 relative flex items-center justify-center">
             <div className="relative z-10 w-full max-w-[480px]">
-              <Image
-                src={portfolioBanner}
-                alt="TechSolutionor Portfolio of Digital Projects"
-                width={600}
-                height={500}
-                className="w-full h-auto object-contain"
-                priority
-              />
+              {typeof image === 'string' && (image.startsWith('http') || image.startsWith('/')) ? (
+                <img
+                  src={image}
+                  alt="TechSolutionor Portfolio of Digital Projects"
+                  className="w-full h-auto object-contain"
+                />
+              ) : (
+                <Image
+                  src={portfolioBanner}
+                  alt="TechSolutionor Portfolio of Digital Projects"
+                  width={600}
+                  height={500}
+                  className="w-full h-auto object-contain"
+                  priority
+                />
+              )}
             </div>
           </div>
         </div>

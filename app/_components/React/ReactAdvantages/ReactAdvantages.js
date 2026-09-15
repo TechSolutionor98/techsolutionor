@@ -1,7 +1,8 @@
 import React from "react";
 import Advantages from "@/components/Advantages/Advantages";
+import { getCmsVal } from "@/lib/api-helper";
 
-const reactAdvantagesData = [
+const reactAdvantagesDefault = [
   {
     title: "High Performance",
     desc: "React’s efficient rendering through the Virtual DOM ensures fast updates and smooth user experiences, even in complex applications.",
@@ -16,12 +17,24 @@ const reactAdvantagesData = [
   },
 ];
 
-const ReactAdvantages = () => {
+const ReactAdvantages = ({ cmsContent }) => {
+  const title = getCmsVal(cmsContent, "Advantages", "reactadvantages");
+  const subtitle = getCmsVal(
+    cmsContent,
+    "Why modern engineering teams and enterprises choose React to power high-performance user interfaces.",
+    "reactadvantages"
+  );
+
+  const items = reactAdvantagesDefault.map((item) => ({
+    title: getCmsVal(cmsContent, item.title, "reactadvantages"),
+    desc: getCmsVal(cmsContent, item.desc, "reactadvantages"),
+  }));
+
   return (
     <Advantages
-      title="Advantages"
-      subtitle="Why modern engineering teams and enterprises choose React to power high-performance user interfaces."
-      items={reactAdvantagesData}
+      title={title}
+      subtitle={subtitle}
+      items={items}
     />
   );
 };

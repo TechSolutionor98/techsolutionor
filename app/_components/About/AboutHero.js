@@ -3,9 +3,24 @@
 import React from "react";
 import { FaArrowRight, FaChevronDown, FaCheckCircle } from "react-icons/fa";
 import { useQuote } from "@/app/_context/QuoteContext";
+import { getCmsVal } from "@/lib/api-helper";
 
-const AboutHero = () => {
+const AboutHero = ({ cmsContent }) => {
     const { openQuote } = useQuote();
+
+    const badge = getCmsVal(cmsContent, "DISCOVER OUR STORY & PURPOSE", "abouthero");
+    const heading = getCmsVal(
+        cmsContent,
+        "Engineering Digital Excellence, Delivering Scalable Realities",
+        "abouthero"
+    );
+    const description = getCmsVal(
+        cmsContent,
+        "TechSolutionor is a premier technology & software engineering agency based in the UAE, powering brands worldwide. We architect modern web applications, bespoke enterprise systems, and result-driven digital strategies that turn ambitious visions into sustainable market leaders.",
+        "abouthero"
+    );
+    const cta1 = getCmsVal(cmsContent, "Start Your Project", "abouthero");
+    const cta2 = getCmsVal(cmsContent, "Explore Our Story", "abouthero");
 
     const scrollToContent = () => {
         const target = document.getElementById("who-we-are");
@@ -24,20 +39,26 @@ const AboutHero = () => {
                 {/* Micro-Badge */}
                 <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-[#41B349]/10 border border-[#41B349]/30 text-[#41B349] font-extrabold text-xs uppercase tracking-widest mb-6 backdrop-blur-sm">
                     <span className="w-2 h-2 rounded-full bg-[#41B349] animate-pulse" />
-                    <span>DISCOVER OUR STORY &amp; PURPOSE</span>
+                    <span>{badge}</span>
                 </div>
 
                 {/* Primary Heading */}
                 <h1 className="text-3xl sm:text-5xl md:text-6xl font-black text-[#111827] tracking-tight leading-[1.15] max-w-4xl mx-auto">
-                    Engineering Digital Excellence, Delivering{" "}
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#41B349] via-[#38a840] to-[#41B349]">
-                        Scalable Realities
-                    </span>
+                    {heading.includes("Scalable Realities") ? (
+                        <>
+                            Engineering Digital Excellence, Delivering{" "}
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#41B349] via-[#38a840] to-[#41B349]">
+                                Scalable Realities
+                            </span>
+                        </>
+                    ) : (
+                        heading
+                    )}
                 </h1>
 
                 {/* Description */}
                 <p className="mt-6 text-[#4B5563] text-base sm:text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-normal">
-                    TechSolutionor is a premier technology &amp; software engineering agency based in the UAE, powering brands worldwide. We architect modern web applications, bespoke enterprise systems, and result-driven digital strategies that turn ambitious visions into sustainable market leaders.
+                    {description}
                 </p>
 
                 {/* Quick Impact Highlight Badges */}
@@ -66,14 +87,14 @@ const AboutHero = () => {
                         onClick={openQuote}
                         className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-[#41B349] hover:bg-[#369c3d] text-white font-extrabold px-8 py-4 rounded-full text-sm sm:text-base transition-all duration-300 shadow-lg shadow-[#41B349]/25 hover:scale-[1.02] cursor-pointer"
                     >
-                        <span>Start Your Project</span>
+                        <span>{cta1}</span>
                         <FaArrowRight size={13} />
                     </button>
                     <button
                         onClick={scrollToContent}
                         className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white hover:bg-gray-50 text-[#111827] hover:text-[#41B349] font-bold px-7 py-4 rounded-full text-sm sm:text-base border border-gray-200 shadow-sm transition-all duration-300 hover:border-gray-300 cursor-pointer"
                     >
-                        <span>Explore Our Story</span>
+                        <span>{cta2}</span>
                         <FaChevronDown size={11} className="text-[#41B349]" />
                     </button>
                 </div>

@@ -2,6 +2,7 @@
 
 import React from "react";
 import Faq from "@/components/Faq/Faq";
+import { getCmsVal } from "@/lib/api-helper";
 
 export const serviceFaqsData = {
   "graphic-design": [
@@ -93,10 +94,18 @@ export const serviceFaqsData = {
 };
 
 export default function CommonFAQ({
+  cmsContent,
   serviceKey = "graphic-design",
   title = "Frequently Asked Questions (FAQs)",
   faqs,
 }) {
-  const displayFaqs = faqs || serviceFaqsData[serviceKey] || serviceFaqsData["graphic-design"];
-  return <Faq title={title} faqs={displayFaqs} />;
+  const defaultFaqs = faqs || serviceFaqsData[serviceKey] || serviceFaqsData["graphic-design"];
+  const dynamicTitle = getCmsVal(cmsContent, title, "commonfaq");
+
+  const displayFaqs = defaultFaqs.map((faq) => ({
+    question: getCmsVal(cmsContent, faq.question, "commonfaq"),
+    answer: getCmsVal(cmsContent, faq.answer, "commonfaq"),
+  }));
+
+  return <Faq title={dynamicTitle} faqs={displayFaqs} />;
 }

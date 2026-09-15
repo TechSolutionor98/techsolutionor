@@ -128,12 +128,20 @@ const WhyChoose = ({
             <div className="w-full aspect-[16/10] rounded-2xl sm:rounded-3xl overflow-hidden shadow-lg shadow-black/10 border border-gray-150 relative group flex items-center justify-center bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9]">
               {image && (
                 imageFit === "cover" ? (
-                  <Image
-                    src={image}
-                    alt={imageAlt}
-                    priority
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
+                  typeof image === 'string' ? (
+                    <img
+                      src={image}
+                      alt={imageAlt}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  ) : (
+                    <Image
+                      src={image}
+                      alt={imageAlt}
+                      priority
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  )
                 ) : (
                   <div className="w-full h-full flex items-center justify-center p-6 sm:p-8">
                     {typeof image === 'string' ? (

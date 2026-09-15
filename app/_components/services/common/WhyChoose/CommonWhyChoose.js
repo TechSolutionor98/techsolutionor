@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { servicesWhyChooseData } from "@/app/_data/servicesWhyChooseData";
+import { getCmsVal } from "@/lib/api-helper";
 
 // Polynomial smoothstep interpolation matching WebWhyChoose exactly
 function smoothStep(min, max, value) {
@@ -23,6 +24,7 @@ function smoothStep(min, max, value) {
  * @param {string} tagText - Optional card category badge text (default: "TECH SOLUTIONOR")
  */
 export default function CommonWhyChoose({
+  cmsContent,
   serviceKey = "app-development",
   items,
   eyebrow = "WHY CHOOSE US",
@@ -36,8 +38,19 @@ export default function CommonWhyChoose({
 
   // Resolve data based on serviceKey or items prop
   const serviceConfig = servicesWhyChooseData[serviceKey] || servicesWhyChooseData["app-development"];
-  const displayItems = items || serviceConfig?.items || [];
-  const displaySubtitle = subtitle || serviceConfig?.subtitle || "Engineered for high performance, enterprise security, and measurable digital growth.";
+  const rawItems = items || serviceConfig?.items || [];
+  const rawSubtitle = subtitle || serviceConfig?.subtitle || "Engineered for high performance, enterprise security, and measurable digital growth.";
+
+  const dynamicEyebrow = getCmsVal(cmsContent, eyebrow, "whychoose");
+  const dynamicTitlePrefix = getCmsVal(cmsContent, titlePrefix, "whychoose");
+  const dynamicTitleHighlight = getCmsVal(cmsContent, titleHighlight, "whychoose");
+  const displaySubtitle = getCmsVal(cmsContent, rawSubtitle, "whychoose");
+
+  const displayItems = rawItems.map((card) => ({
+    ...card,
+    title: getCmsVal(cmsContent, card.title, "whychoose"),
+    desc: getCmsVal(cmsContent, card.desc, "whychoose"),
+  }));
 
   useEffect(() => {
     let ticking = false;
@@ -131,7 +144,7 @@ export default function CommonWhyChoose({
             {/* Pulsing Pill Eyebrow Badge */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#1B4E2C]/10 border border-[#1B4E2C]/20 text-[#1B4E2C] font-extrabold text-xs uppercase tracking-widest mb-2 shadow-2xs">
               <span className="w-2 h-2 rounded-full bg-[#1B4E2C] animate-pulse" />
-              <span>{eyebrow}</span>
+              <span>{dynamicEyebrow}</span>
             </div>
 
             {/* Heading with Outfit & Plus Jakarta Sans typography */}
@@ -139,9 +152,9 @@ export default function CommonWhyChoose({
               className="text-2xl sm:text-3xl md:text-[34px] lg:text-[38px] font-black text-[#0D0F12] tracking-tight leading-tight"
               style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
             >
-              {titlePrefix}{" "}
+              {dynamicTitlePrefix}{" "}
               <span className="text-[#1B4E2C] block sm:inline mt-0.5 sm:mt-0">
-                {titleHighlight}
+                {dynamicTitleHighlight}
               </span>
             </h2>
 

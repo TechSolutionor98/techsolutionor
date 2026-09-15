@@ -1,8 +1,9 @@
 "use client";
 import React from "react";
 import Faq from "@/components/Faq/Faq";
+import { getCmsVal } from "@/lib/api-helper";
 
-const ecommerceFaqs = [
+const defaultEcommerceFaqs = [
   {
     question: "What ecommerce development services do you offer?",
     answer: "We offer end-to-end ecommerce development services including custom ecommerce platforms, online store design, payment gateway integration, shopping cart development, SEO-optimized product pages and ongoing maintenance, all tailored for businesses in the UAE and worldwide."
@@ -45,6 +46,12 @@ const ecommerceFaqs = [
   }
 ];
 
-export default function EcommerceFAQ() {
-  return <Faq title="Frequently Asked Questions (FAQs)" faqs={ecommerceFaqs} />;
+export default function EcommerceFAQ({ cmsContent }) {
+  const title = getCmsVal(cmsContent, "Frequently Asked Questions (FAQs)", "ecommercefaq");
+  const faqs = defaultEcommerceFaqs.map((item) => ({
+    question: getCmsVal(cmsContent, item.question, "ecommercefaq"),
+    answer: getCmsVal(cmsContent, item.answer, "ecommercefaq"),
+  }));
+
+  return <Faq title={title} faqs={faqs} />;
 }

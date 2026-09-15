@@ -8,7 +8,7 @@ import CommonHireUs from '@/app/_components/services/common/HireUs/CommonHireUs'
 import TechnologiesBook from '@/app/_components/services/common/TechnologiesBook/TechnologiesBook';
 import HireUsForm from '../../_components/services/hire-us/Form/HireUsForm';
 import CommonFAQ from '@/app/_components/services/common/FAQ/CommonFAQ';
-import { generateCmsMetadata } from '@/lib/cms-fetch';
+import { generateCmsMetadata, getCmsData } from '@/lib/cms-fetch';
 import CmsJsonLd from '@/components/CmsJsonLd';
 
 export async function generateMetadata() {
@@ -18,21 +18,27 @@ export async function generateMetadata() {
   });
 }
 
-function page() {
+export default async function ServicesHireUsPage() {
+  let cmsContent = null;
+  try {
+    const cmsData = await getCmsData('/services/hire-us');
+    cmsContent = cmsData?.content || null;
+  } catch (err) {
+    console.error('Failed to load CMS content for Services Hire Us page:', err);
+  }
+
   return (
     <div>
       <CmsJsonLd path="/services/hire-us" />
-      <HireUsBanner />
-      <CommonWhyChoose serviceKey="hire-us" />
-      <CommonKeyFeatures serviceKey="hire-us" />
-      <CommonStruggling serviceKey="hire-us" />
-      <CommonServices serviceKey="hire-us" />
-      <TechnologiesBook serviceKey="hire-us" bgColor="#FFFFFF" />
-      <CommonHireUs serviceKey="hire-us" />
+      <HireUsBanner cmsContent={cmsContent} />
+      <CommonWhyChoose serviceKey="hire-us" cmsContent={cmsContent} />
+      <CommonKeyFeatures serviceKey="hire-us" cmsContent={cmsContent} />
+      <CommonStruggling serviceKey="hire-us" cmsContent={cmsContent} />
+      <CommonServices serviceKey="hire-us" cmsContent={cmsContent} />
+      <TechnologiesBook serviceKey="hire-us" bgColor="#FFFFFF" cmsContent={cmsContent} />
+      <CommonHireUs serviceKey="hire-us" cmsContent={cmsContent} />
       <HireUsForm />
-      <CommonFAQ serviceKey="hire-us" />
+      <CommonFAQ serviceKey="hire-us" cmsContent={cmsContent} />
     </div>
   );
 }
-
-export default page;

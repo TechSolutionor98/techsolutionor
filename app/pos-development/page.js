@@ -5,7 +5,8 @@ import POSKeyBenefits from '../_components/pos-development/POSKeyBenefits';
 import POSPowerfulFeatures from '../_components/pos-development/POSPowerfulFeatures';
 import POSFAQ from '../_components/pos-development/POSFAQ';
 import Newsletter from '../_components/Home/Newsletter/Newsletter';
-import { generateCmsMetadata } from '@/lib/cms-fetch';
+import { generateCmsMetadata, getCmsData } from '@/lib/cms-fetch';
+import CmsJsonLd from '@/components/CmsJsonLd';
 
 export async function generateMetadata() {
   return generateCmsMetadata('/pos-development', {
@@ -14,17 +15,24 @@ export async function generateMetadata() {
   });
 }
 
-const page = () => {
-    return (
-        <main>
-            <POSHero />
-            <POSBestSoftware />
-            <POSKeyBenefits />
-            <POSPowerfulFeatures />
-            <Newsletter />
-            <POSFAQ />
-        </main>
-    );
-};
+export default async function POSDevelopmentPage() {
+  let cmsContent = null;
+  try {
+    const cmsData = await getCmsData('/pos-development');
+    cmsContent = cmsData?.content || null;
+  } catch (err) {
+    console.error('Failed to load CMS content for POS Development page:', err);
+  }
 
-export default page;
+  return (
+    <main>
+      <CmsJsonLd path="/pos-development" />
+      <POSHero cmsContent={cmsContent} />
+      <POSBestSoftware />
+      <POSKeyBenefits />
+      <POSPowerfulFeatures />
+      <Newsletter />
+      <POSFAQ cmsContent={cmsContent} />
+    </main>
+  );
+}

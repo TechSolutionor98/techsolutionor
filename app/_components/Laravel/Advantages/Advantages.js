@@ -1,7 +1,8 @@
 import React from 'react';
 import Advantages from '@/components/Advantages/Advantages';
+import { getCmsVal } from '@/lib/api-helper';
 
-const advantagesData = [
+const defaultAdvantagesData = [
   {
     title: 'Clean and Readable Syntax',
     desc: "Laravel's expressive and clean syntax improves developer productivity, making code easier to write, understand, and maintain.",
@@ -16,12 +17,24 @@ const advantagesData = [
   },
 ];
 
-function LaravelAdvantages() {
+function LaravelAdvantages({ cmsContent }) {
+  const title = getCmsVal(cmsContent, "Advantages", "laraveladvantages");
+  const subtitle = getCmsVal(
+    cmsContent,
+    "Why modern engineering teams and enterprises choose Laravel to power their digital applications.",
+    "laraveladvantages"
+  );
+
+  const items = defaultAdvantagesData.map((item) => ({
+    title: getCmsVal(cmsContent, item.title, "laraveladvantages"),
+    desc: getCmsVal(cmsContent, item.desc, "laraveladvantages"),
+  }));
+
   return (
     <Advantages
-      title="Advantages"
-      subtitle="Why modern engineering teams and enterprises choose Laravel to power their digital applications."
-      items={advantagesData}
+      title={title}
+      subtitle={subtitle}
+      items={items}
     />
   );
 }

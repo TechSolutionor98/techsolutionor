@@ -4,8 +4,24 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Briefcase, Sparkles, Users, Award, ShieldCheck } from "lucide-react";
+import { getCmsVal } from "@/lib/api-helper";
 
-export default function CareerHero() {
+export default function CareerHero({ cmsContent }) {
+  const badge = getCmsVal(cmsContent, "WE ARE EXPANDING OUR GLOBAL TEAM", "careerhero");
+  const title = getCmsVal(
+    cmsContent,
+    "Build Your Career With A High-Impact Team of Visionaries.",
+    "careerhero"
+  );
+  const subtitle = getCmsVal(
+    cmsContent,
+    "We are looking for creative thinkers, passionate developers, and digital craftspeople to build next-generation software, scalable enterprise platforms, and award-winning digital experiences.",
+    "careerhero"
+  );
+  const cta1 = getCmsVal(cmsContent, "Explore Roles & Apply", "careerhero");
+  const cta2 = getCmsVal(cmsContent, "Apply Now", "careerhero");
+  const image = getCmsVal(cmsContent, "/images/career-hero.png", "careerhero");
+
   const scrollTo = (id) => {
     const el = document.getElementById(id) || document.getElementById('application-form');
     if (el) {
@@ -24,7 +40,7 @@ export default function CareerHero() {
             style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
           >
             <span className="w-2 h-2 rounded-full bg-[#36963D] animate-pulse" />
-            <span>WE ARE EXPANDING OUR GLOBAL TEAM</span>
+            <span>{badge}</span>
           </div>
 
           {/* Main Headline */}
@@ -32,9 +48,15 @@ export default function CareerHero() {
             className="text-3xl sm:text-4xl md:text-[46px] lg:text-[52px] font-black leading-[1.12] tracking-tight text-[#0D0F12] mb-6"
             style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
           >
-            Build Your Career With <br />
-            A High-Impact Team of <br />
-            <span className="text-[#36963D]">Visionaries.</span>
+            {title.includes("Visionaries") ? (
+              <>
+                Build Your Career With <br />
+                A High-Impact Team of <br />
+                <span className="text-[#36963D]">Visionaries.</span>
+              </>
+            ) : (
+              title
+            )}
           </h1>
 
           {/* Subtitle */}
@@ -42,7 +64,7 @@ export default function CareerHero() {
             className="text-[#475569] text-base md:text-lg max-w-[540px] mb-8 leading-relaxed font-normal"
             style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
           >
-            We are looking for creative thinkers, passionate developers, and digital craftspeople to build next-generation software, scalable enterprise platforms, and award-winning digital experiences.
+            {subtitle}
           </p>
 
           {/* CTA Buttons */}
@@ -52,7 +74,7 @@ export default function CareerHero() {
               className="bg-[#36963D] hover:bg-[#2e8234] text-white px-8 py-3.5 rounded-full font-bold text-sm sm:text-base transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2.5 group"
               style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
             >
-              <span>Explore Roles & Apply</span>
+              <span>{cta1}</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
 
@@ -62,7 +84,7 @@ export default function CareerHero() {
               style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
             >
               <Briefcase className="w-4 h-4 text-[#36963D]" />
-              <span>Apply Now</span>
+              <span>{cta2}</span>
             </button>
           </div>
 
@@ -95,36 +117,22 @@ export default function CareerHero() {
             
             {/* Visual Image */}
             <div className="absolute inset-0 flex items-center justify-center p-4">
-              <Image 
-                src="/images/career-hero.png" 
-                alt="Tech Solutionor Recruitment" 
-                fill 
-                priority
-                unoptimized
-                className="object-contain filter drop-shadow-md hover:scale-102 transition-transform duration-500"
-              />
-            </div>
-
-            {/* Floating Badge 1: Top Right */}
-            <div className="absolute -top-3 -right-2 sm:right-2 bg-white/95 backdrop-blur-md border border-gray-200/90 rounded-2xl p-3.5 shadow-xl flex items-center gap-3 animate-bounce [animation-duration:3s]">
-              <div className="w-10 h-10 rounded-xl bg-[#36963D]/10 flex items-center justify-center text-[#36963D]">
-                <Sparkles className="w-5 h-5" />
-              </div>
-              <div>
-                <p className="text-xs font-bold text-[#0D0F12]">Innovative Work Culture</p>
-                <p className="text-[11px] text-[#64748B]">Modern Stack & Autonomy</p>
-              </div>
-            </div>
-
-            {/* Floating Badge 2: Bottom Left */}
-            <div className="absolute -bottom-3 -left-2 sm:left-2 bg-white/95 backdrop-blur-md border border-gray-200/90 rounded-2xl p-3.5 shadow-xl flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-600">
-                <ShieldCheck className="w-5 h-5" />
-              </div>
-              <div>
-                <p className="text-xs font-bold text-[#0D0F12]">Comprehensive Benefits</p>
-                <p className="text-[11px] text-[#64748B]">Health, Bonuses & Learning</p>
-              </div>
+              {typeof image === 'string' && (image.startsWith('http') || image.startsWith('/')) ? (
+                <img 
+                  src={image} 
+                  alt="Tech Solutionor Recruitment" 
+                  className="w-full h-full object-contain filter drop-shadow-md hover:scale-102 transition-transform duration-500"
+                />
+              ) : (
+                <Image 
+                  src="/images/career-hero.png" 
+                  alt="Tech Solutionor Recruitment" 
+                  fill 
+                  priority
+                  unoptimized
+                  className="object-contain filter drop-shadow-md hover:scale-102 transition-transform duration-500"
+                />
+              )}
             </div>
           </div>
         </div>

@@ -1,7 +1,8 @@
 import React from "react";
 import Advantages from "@/components/Advantages/Advantages";
+import { getCmsVal } from "@/lib/api-helper";
 
-const jsAdvantagesData = [
+const jsAdvantagesDefault = [
   {
     title: "Versatility",
     desc: "JavaScript is used across multiple platforms, including web applications, mobile apps, server-side development (Node.js), and cloud-based solutions.",
@@ -16,12 +17,24 @@ const jsAdvantagesData = [
   },
 ];
 
-const JsAdvantages = () => {
+const JsAdvantages = ({ cmsContent }) => {
+  const title = getCmsVal(cmsContent, "Advantages", "jsadvantages");
+  const subtitle = getCmsVal(
+    cmsContent,
+    "Powering dynamic, rich interactive web experiences across web, mobile, and enterprise platforms.",
+    "jsadvantages"
+  );
+
+  const items = jsAdvantagesDefault.map((item) => ({
+    title: getCmsVal(cmsContent, item.title, "jsadvantages"),
+    desc: getCmsVal(cmsContent, item.desc, "jsadvantages"),
+  }));
+
   return (
     <Advantages
-      title="Advantages"
-      subtitle="Powering dynamic, rich interactive web experiences across web, mobile, and enterprise platforms."
-      items={jsAdvantagesData}
+      title={title}
+      subtitle={subtitle}
+      items={items}
     />
   );
 };

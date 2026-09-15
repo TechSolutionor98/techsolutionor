@@ -1,14 +1,18 @@
 "use client";
 import React from "react";
 import HireUs from "@/app/_components/services/eCommerce-developement/HireUs/HireUs";
+import { getCmsVal } from "@/lib/api-helper";
 
-const hireUsData = {
+const defaultHireUsData = {
   line1: "Ready to scale your digital presence?",
   line2: "Hire the TechSolutionor team to handle your project."
 };
 
-const JsHireUs = () => {
-  return <HireUs line1={hireUsData.line1} line2={hireUsData.line2} />;
+const JsHireUs = ({ cmsContent }) => {
+  const line1 = getCmsVal(cmsContent, defaultHireUsData.line1, "jshireus");
+  const line2 = getCmsVal(cmsContent, defaultHireUsData.line2, "jshireus");
+
+  return <HireUs line1={line1} line2={line2} />;
 };
 
 export default JsHireUs;

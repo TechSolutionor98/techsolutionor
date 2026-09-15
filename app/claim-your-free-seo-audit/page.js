@@ -6,7 +6,8 @@ import SeoAuditProcess from '../_components/SeoAudit/SeoAuditProcess';
 import SeoAuditSampleReport from '../_components/SeoAudit/SeoAuditSampleReport';
 import SeoAuditFAQ from '../_components/SeoAudit/SeoAuditFAQ';
 import Newsletter from '../_components/Home/Newsletter/Newsletter';
-import { generateCmsMetadata } from '@/lib/cms-fetch';
+import { generateCmsMetadata, getCmsData } from '@/lib/cms-fetch';
+import CmsJsonLd from '@/components/CmsJsonLd';
 
 export async function generateMetadata() {
   return generateCmsMetadata('/claim-your-free-seo-audit', {
@@ -15,18 +16,25 @@ export async function generateMetadata() {
   });
 }
 
-const ClaimFreeSeoAudit = () => {
-    return (
-        <main className="min-h-screen bg-white">
-            <SeoAuditHero />
-            <SeoAuditContent />
-            <SeoAuditBenefits />
-            <SeoAuditProcess />
-            <SeoAuditSampleReport />
-            <Newsletter />
-            <SeoAuditFAQ />
-        </main>
-    );
-};
+export default async function ClaimFreeSeoAudit() {
+  let cmsContent = null;
+  try {
+    const cmsData = await getCmsData('/claim-your-free-seo-audit');
+    cmsContent = cmsData?.content || null;
+  } catch (err) {
+    console.error('Failed to load CMS content for Claim Free SEO Audit page:', err);
+  }
 
-export default ClaimFreeSeoAudit;
+  return (
+    <main className="min-h-screen bg-white">
+      <CmsJsonLd path="/claim-your-free-seo-audit" />
+      <SeoAuditHero cmsContent={cmsContent} />
+      <SeoAuditContent />
+      <SeoAuditBenefits />
+      <SeoAuditProcess />
+      <SeoAuditSampleReport />
+      <Newsletter />
+      <SeoAuditFAQ cmsContent={cmsContent} />
+    </main>
+  );
+}
