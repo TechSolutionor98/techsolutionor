@@ -2,7 +2,7 @@
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import BlogCard, { resolveImageUrl } from './BlogCard';
-import BlogSidebar from './BlogSidebar';
+import BlogSidebar, { BlogSearchForm } from './BlogSidebar';
 
 const BlogList = ({ posts = [], categories = [], recentPosts = [] }) => {
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -31,6 +31,14 @@ const BlogList = ({ posts = [], categories = [], recentPosts = [] }) => {
 
   return (
     <section className="bg-white overflow-hidden py-10 md:py-14" id="blog-list">
+      {/* Mobile Search Bar: Appears at the top of the Blogs page before blog posts/content */}
+      <div className="lg:hidden container mx-auto px-5 md:px-10 mb-8 max-w-[1240px]">
+        <BlogSearchForm
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+        />
+      </div>
+
       {/* Top Section: Latest Published Blog Post (Replaces Why SEO Audit Matters) */}
       {latestPost && !isFiltering && (
         <div className="container mx-auto px-5 md:px-10 mb-16 max-w-[1240px]">
@@ -118,6 +126,7 @@ const BlogList = ({ posts = [], categories = [], recentPosts = [] }) => {
               onSelectCategory={setSelectedCategory}
               searchQuery={searchQuery}
               onSearchChange={setSearchQuery}
+              hideSearchOnMobile={true}
             />
           </div>
         </div>

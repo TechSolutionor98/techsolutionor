@@ -4,34 +4,50 @@ import Link from 'next/link';
 import { FaSearch } from 'react-icons/fa';
 import { resolveImageUrl, formatDate } from './BlogCard';
 
+export const BlogSearchForm = ({ 
+  searchQuery = '', 
+  onSearchChange = () => {}, 
+  className = '' 
+}) => {
+  return (
+    <div className={className}>
+      <form onSubmit={(e) => e.preventDefault()} className="flex items-center border border-gray-200 rounded-lg overflow-hidden bg-white shadow-xs">
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => onSearchChange(e.target.value)}
+          placeholder="Search ..."
+          className="w-full px-4 py-2.5 text-sm text-gray-800 outline-none bg-transparent"
+        />
+        <button 
+          type="submit"
+          className="bg-[#41b349] hover:bg-black text-white px-5 py-3 transition-colors flex items-center justify-center cursor-pointer"
+          aria-label="Search blogs"
+        >
+          <FaSearch size={14} />
+        </button>
+      </form>
+    </div>
+  );
+};
+
 const BlogSidebar = ({ 
   categories = [], 
   recentPosts = [],
   selectedCategory = 'all',
   onSelectCategory = () => {},
   searchQuery = '',
-  onSearchChange = () => {}
+  onSearchChange = () => {},
+  hideSearchOnMobile = false
 }) => {
   return (
     <aside className="w-full flex flex-col gap-10">
       {/* Search Widget */}
-      <div>
-        <form onSubmit={(e) => e.preventDefault()} className="flex items-center border border-gray-200 rounded-lg overflow-hidden bg-white shadow-xs">
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => onSearchChange(e.target.value)}
-            placeholder="Search ..."
-            className="w-full px-4 py-2.5 text-sm text-gray-800 outline-none bg-transparent"
-          />
-          <button 
-            type="submit"
-            className="bg-[#41b349] hover:bg-black text-white px-5 py-3 transition-colors flex items-center justify-center cursor-pointer"
-          >
-            <FaSearch size={14} />
-          </button>
-        </form>
-      </div>
+      <BlogSearchForm
+        searchQuery={searchQuery}
+        onSearchChange={onSearchChange}
+        className={hideSearchOnMobile ? "hidden lg:block" : ""}
+      />
 
       {/* Categories Widget */}
       <div>
