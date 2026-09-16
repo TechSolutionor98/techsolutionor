@@ -1,0 +1,4474 @@
+[
+  {
+    "path": "/",
+    "filePath": "app/Home/HomeClientPage.js",
+    "frontendComponents": [
+      "HomeBanner",
+      "WhatWeDo",
+      "GoodServices",
+      "ServicesWeOffer",
+      "Projects",
+      "Technology",
+      "Newsletter",
+      "Testimonials",
+      "ChallengeAccepted"
+    ],
+    "dbSectionCount": 9,
+    "dbSections": [
+      {
+        "id": "homebanner",
+        "name": "Hero Section",
+        "totalFields": 3,
+        "imageCount": 0,
+        "textCount": 3,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: Digital Marketing Agency in – ",
+          "js_description_2: Serving businesses across the ",
+          "js_buttonText_3: Get a Free Quote"
+        ]
+      },
+      {
+        "id": "whatwedo",
+        "name": "What We Do Section",
+        "totalFields": 7,
+        "imageCount": 0,
+        "textCount": 7,
+        "imageKeys": [],
+        "sampleText": [
+          "js_sectionTitle_1: WHAT WE DO",
+          "js_title_2: Cooperative Expert Team",
+          "js_description_3: Our cooperative team of experi"
+        ]
+      },
+      {
+        "id": "goodservices",
+        "name": "Good Services Section",
+        "totalFields": 54,
+        "imageCount": 4,
+        "textCount": 50,
+        "imageKeys": [
+          "image_goodservicess",
+          "image_value",
+          "image_mission",
+          "image_goal"
+        ],
+        "sampleText": [
+          "cms_text_1: You Can Rely on Us for",
+          "cms_text_2: High-Quality Digital & IT Serv",
+          "cms_text_3: TECHSOLUTIONOR was founded to "
+        ]
+      },
+      {
+        "id": "servicesweoffer",
+        "name": "Services We Offer Section",
+        "totalFields": 18,
+        "imageCount": 0,
+        "textCount": 18,
+        "imageKeys": [],
+        "sampleText": [
+          "js_titleTop_1: Services",
+          "js_titleBottom_2: We Offer",
+          "js_description_3: We deliver innovative digital "
+        ]
+      },
+      {
+        "id": "projects",
+        "name": "Our Projects Section",
+        "totalFields": 39,
+        "imageCount": 18,
+        "textCount": 21,
+        "imageKeys": [
+          "image_grab",
+          "image_protein",
+          "image_clickpos",
+          "image_almatoh",
+          "image_traders",
+          "image_super",
+          "image_craters",
+          "image_amer",
+          "image_gentsslone",
+          "image_exports",
+          "image_albasit",
+          "image_crown",
+          "image_clickslice",
+          "image_muzammil",
+          "image_appliances",
+          "image_smart",
+          "image_mubayya",
+          "image_aljannah"
+        ],
+        "sampleText": [
+          "js_title_1: Projects & Results",
+          "js_description_2: At TechSolutionor, we focus on",
+          "js_name_3: Grabatoz"
+        ]
+      },
+      {
+        "id": "technology",
+        "name": "Technologies Section",
+        "totalFields": 18,
+        "imageCount": 6,
+        "textCount": 12,
+        "imageKeys": [
+          "image_laravel",
+          "image_javascript",
+          "image_reactjs",
+          "image_python",
+          "image_swift",
+          "image_php"
+        ],
+        "sampleText": [
+          "js_sectionTitle_1: Technology",
+          "js_titleTop_2: Modern",
+          "js_titleBottom_3: Technologies"
+        ]
+      },
+      {
+        "id": "newsletter",
+        "name": "Newsletter & CTA Section",
+        "totalFields": 3,
+        "imageCount": 0,
+        "textCount": 3,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: Ready to scale your digital pr",
+          "js_buttonText_2: Hire Us",
+          "text_span_1: READY TO SCALE YOUR BUSINESS?"
+        ]
+      },
+      {
+        "id": "testimonials",
+        "name": "Testimonials Section",
+        "totalFields": 19,
+        "imageCount": 0,
+        "textCount": 19,
+        "imageKeys": [],
+        "sampleText": [
+          "js_titlePrefix_1: Customer",
+          "js_titleHighlight_2: Reviews",
+          "js_companyName_3: Tech Solutionor"
+        ]
+      },
+      {
+        "id": "challengeaccepted",
+        "name": "Why Choose Us Section",
+        "totalFields": 20,
+        "imageCount": 0,
+        "textCount": 20,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: CHALLENGE ACCEPTED",
+          "js_subtitle_2: TechSolutionor Helps You Fix W",
+          "js_title_3: My Website Isn't Getting Enoug"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/about-us",
+    "filePath": "app/about-us/page.js",
+    "frontendComponents": [
+      "React",
+      "AboutHero",
+      "WhoWeAre",
+      "AboutStats",
+      "EmpoweringAgency",
+      "WhyChooseUs",
+      "WatchUsLive",
+      "ExperiencePlatforms"
+    ],
+    "dbSectionCount": 7,
+    "dbSections": [
+      {
+        "id": "abouthero",
+        "name": "About Hero Section",
+        "totalFields": 9,
+        "imageCount": 0,
+        "textCount": 9,
+        "imageKeys": [],
+        "sampleText": [
+          "cms_text_1: DISCOVER OUR STORY & PURPOSE",
+          "cms_text_2: Engineering Digital Excellence",
+          "cms_text_3: TechSolutionor is a premier te"
+        ]
+      },
+      {
+        "id": "whoweare",
+        "name": "Who We Are Section",
+        "totalFields": 16,
+        "imageCount": 1,
+        "textCount": 15,
+        "imageKeys": [
+          "image_aboutimage"
+        ],
+        "sampleText": [
+          "js_title_1: Agile Engineering",
+          "js_desc_2: Sprint-based rapid development",
+          "js_title_3: Enterprise Security"
+        ]
+      },
+      {
+        "id": "aboutstats",
+        "name": "About Stats Section",
+        "totalFields": 11,
+        "imageCount": 0,
+        "textCount": 11,
+        "imageKeys": [],
+        "sampleText": [
+          "js_number_1: 150+",
+          "js_title_2: Projects Delivered",
+          "js_desc_3: High-performance enterprise so"
+        ]
+      },
+      {
+        "id": "empoweringagency",
+        "name": "Empowering Agency Section",
+        "totalFields": 9,
+        "imageCount": 0,
+        "textCount": 9,
+        "imageKeys": [],
+        "sampleText": [
+          "text_span_1: MISSION, VISION & VALUES",
+          "attr_title_1: Accelerating Digital Growth",
+          "attr_description_2: Empowering visionary enterpris"
+        ]
+      },
+      {
+        "id": "whychooseus",
+        "name": "Why Choose Us Section",
+        "totalFields": 20,
+        "imageCount": 4,
+        "textCount": 16,
+        "imageKeys": [
+          "image_icon1",
+          "image_icon2",
+          "image_icon3",
+          "image_icon4"
+        ],
+        "sampleText": [
+          "js_title_1: Modern Stacks & Clean Code",
+          "js_subtitle_2: Architectural Excellence",
+          "js_description_3: From Next.js and microservices"
+        ]
+      },
+      {
+        "id": "watchuslive",
+        "name": "Watch Us Live Section",
+        "totalFields": 10,
+        "imageCount": 1,
+        "textCount": 9,
+        "imageKeys": [
+          "image_innovationimage"
+        ],
+        "sampleText": [
+          "text_span_1: INNOVATION & ENGINEERING CULTU",
+          "text_p_3: At TechSolutionor, our greates",
+          "text_p_4: We discard slow, bloated agenc"
+        ]
+      },
+      {
+        "id": "experienceplatforms",
+        "name": "Experience Platforms Section",
+        "totalFields": 10,
+        "imageCount": 1,
+        "textCount": 9,
+        "imageKeys": [
+          "image_hireusbanner"
+        ],
+        "sampleText": [
+          "attr_alt_1: Work with TechSolutionor",
+          "text_p_3: Partner with our senior engine",
+          "text_button_4: Schedule a Consultation"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/become-a-partner",
+    "filePath": "app/become-a-partner/page.js",
+    "frontendComponents": [
+      "React",
+      "BecomeAPartnerContent"
+    ],
+    "dbSectionCount": 1,
+    "dbSections": [
+      {
+        "id": "becomeapartnercontent",
+        "name": "Become A Partner Content Section",
+        "totalFields": 89,
+        "imageCount": 0,
+        "textCount": 89,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: Agency & Referral Partner",
+          "js_badge_2: HIGHEST COMMISSIONS",
+          "js_summary_3: Ideal for creative agencies, c"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/career",
+    "filePath": "app/career/page.js",
+    "frontendComponents": [
+      "React",
+      "CareerPageClient"
+    ],
+    "dbSectionCount": 4,
+    "dbSections": [
+      {
+        "id": "careerhero",
+        "name": "Career Hero Section",
+        "totalFields": 15,
+        "imageCount": 1,
+        "textCount": 14,
+        "imageKeys": [
+          "inline_image_1"
+        ],
+        "sampleText": [
+          "cms_text_1: WE ARE EXPANDING OUR GLOBAL TE",
+          "cms_text_2: Build Your Career With A High-",
+          "cms_text_3: We are looking for creative th"
+        ]
+      },
+      {
+        "id": "jobapplicationform",
+        "name": "Job Application Form Section",
+        "totalFields": 35,
+        "imageCount": 0,
+        "textCount": 35,
+        "imageKeys": [],
+        "sampleText": [
+          "text_button_21: Edit",
+          "text_span_1: JOIN OUR TALENT ROSTER",
+          "text_p_3: Take the first step toward you"
+        ]
+      },
+      {
+        "id": "newsletter",
+        "name": "Newsletter & CTA Section",
+        "totalFields": 3,
+        "imageCount": 0,
+        "textCount": 3,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: Ready to scale your digital pr",
+          "js_buttonText_2: Hire Us",
+          "text_span_1: READY TO SCALE YOUR BUSINESS?"
+        ]
+      },
+      {
+        "id": "careerfaq",
+        "name": "Career F A Q Section",
+        "totalFields": 21,
+        "imageCount": 0,
+        "textCount": 21,
+        "imageKeys": [],
+        "sampleText": [
+          "js_question_1: How can I apply for a position",
+          "js_answer_2: You can apply directly using o",
+          "js_question_3: What information do I need to "
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/claim-your-free-seo-audit",
+    "filePath": "app/claim-your-free-seo-audit/page.js",
+    "frontendComponents": [
+      "React",
+      "SeoAuditHero",
+      "SeoAuditContent",
+      "SeoAuditBenefits",
+      "SeoAuditProcess",
+      "SeoAuditSampleReport",
+      "SeoAuditFAQ",
+      "Newsletter"
+    ],
+    "dbSectionCount": 7,
+    "dbSections": [
+      {
+        "id": "seoaudithero",
+        "name": "SEO Audit Hero Section",
+        "totalFields": 9,
+        "imageCount": 1,
+        "textCount": 8,
+        "imageKeys": [
+          "image_freeseoauditimg"
+        ],
+        "sampleText": [
+          "cms_text_1: FREE PROFESSIONAL SEO AUDIT",
+          "cms_text_2: Get a Free Professional SEO Au",
+          "cms_text_3: Get a comprehensive SEO analys"
+        ]
+      },
+      {
+        "id": "seoauditcontent",
+        "name": "SEO Audit Content Section",
+        "totalFields": 6,
+        "imageCount": 1,
+        "textCount": 5,
+        "imageKeys": [
+          "image_seoauditmatterimg"
+        ],
+        "sampleText": [
+          "attr_highlightText_1: Why SEO Audit",
+          "attr_titleRest_2: Matters",
+          "attr_imageAlt_3: Why SEO Audit Matters Illustra"
+        ]
+      },
+      {
+        "id": "seoauditbenefits",
+        "name": "Seo Audit Benefits Section",
+        "totalFields": 10,
+        "imageCount": 0,
+        "textCount": 10,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: Identify Hidden SEO Issues",
+          "js_desc_2: Uncover technical errors, craw",
+          "js_title_3: Boost Your Search Rankings"
+        ]
+      },
+      {
+        "id": "seoauditprocess",
+        "name": "Seo Audit Process Section",
+        "totalFields": 18,
+        "imageCount": 0,
+        "textCount": 18,
+        "imageKeys": [],
+        "sampleText": [
+          "js_number_1: 01",
+          "js_title_2: Website Crawl & Analysis",
+          "js_desc_3: We perform a comprehensive web"
+        ]
+      },
+      {
+        "id": "seoauditsamplereport",
+        "name": "SEO Audit Sample Report Section",
+        "totalFields": 6,
+        "imageCount": 1,
+        "textCount": 5,
+        "imageKeys": [
+          "image_seoauditimg"
+        ],
+        "sampleText": [
+          "attr_alt_1: Sample SEO Audit Report Illust",
+          "text_a_4: Sample SEO Audit Report",
+          "text_span_1: SAMPLE SEO REPORT"
+        ]
+      },
+      {
+        "id": "seoauditfaq",
+        "name": "SEO Audit FAQ Section",
+        "totalFields": 13,
+        "imageCount": 0,
+        "textCount": 13,
+        "imageKeys": [],
+        "sampleText": [
+          "js_question_1: What is included in a free SEO",
+          "js_answer_2: Our comprehensive SEO audit co",
+          "js_question_3: Is the SEO audit really free?"
+        ]
+      },
+      {
+        "id": "newsletter",
+        "name": "Newsletter & CTA Section",
+        "totalFields": 3,
+        "imageCount": 0,
+        "textCount": 3,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: Ready to scale your digital pr",
+          "js_buttonText_2: Hire Us",
+          "text_span_1: READY TO SCALE YOUR BUSINESS?"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/hire-us",
+    "filePath": "app/hire-us/page.js",
+    "frontendComponents": [
+      "React",
+      "ServiceHireUsPage"
+    ],
+    "dbSectionCount": 9,
+    "dbSections": [
+      {
+        "id": "hireusbanner",
+        "name": "Hire Us Banner Section",
+        "totalFields": 8,
+        "imageCount": 2,
+        "textCount": 6,
+        "imageKeys": [
+          "image_hireimg",
+          "image_fallbackimg"
+        ],
+        "sampleText": [
+          "attr_badge_1: DEDICATED ENGINEERING TALENT",
+          "attr_titleLine1_2: Hire Skilled Developers",
+          "attr_titleLine2_3: & Tech Experts for Your"
+        ]
+      },
+      {
+        "id": "commonwhychoose",
+        "name": "Why Choose Section",
+        "totalFields": 17,
+        "imageCount": 0,
+        "textCount": 17,
+        "imageKeys": [],
+        "sampleText": [
+          "attr_eyebrow_1: WHY CHOOSE US",
+          "attr_titlePrefix_2: Why Choose",
+          "attr_titleHighlight_3: Tech Solutionor"
+        ]
+      },
+      {
+        "id": "commonkeyfeatures",
+        "name": "Key Features Section",
+        "totalFields": 8,
+        "imageCount": 0,
+        "textCount": 8,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: HOW WE HELP",
+          "js_subtitle_2: YOU GET RESULTS.",
+          "js_title_3: Top 3% Vetted Technical Talent"
+        ]
+      },
+      {
+        "id": "commonstruggling",
+        "name": "Challenges & Solutions Section",
+        "totalFields": 20,
+        "imageCount": 0,
+        "textCount": 20,
+        "imageKeys": [],
+        "sampleText": [
+          "text_span_1: Scroll to explore challenges",
+          "js_titleLine1_1: Struggling To Hire Qualified D",
+          "js_titleLine2_2: Here’s How Our Dedicated Talen"
+        ]
+      },
+      {
+        "id": "commonservices",
+        "name": "Services Offerings Section",
+        "totalFields": 33,
+        "imageCount": 0,
+        "textCount": 33,
+        "imageKeys": [],
+        "sampleText": [
+          "js_badge_1: DEDICATED TECH TALENT & TEAMS",
+          "js_title_2: Hire Dedicated Developers &",
+          "js_titleHighlight_3: Tech Teams"
+        ]
+      },
+      {
+        "id": "commonhireus",
+        "name": "Hire Us Section",
+        "totalFields": 38,
+        "imageCount": 0,
+        "textCount": 38,
+        "imageKeys": [],
+        "sampleText": [
+          "js_badge_1: READY TO SCALE YOUR BUSINESS?",
+          "js_line1_2: Ready to scale your digital pr",
+          "js_line2_3: Hire the TechSolutionor team t"
+        ]
+      },
+      {
+        "id": "technologiesbook",
+        "name": "Technologies Book Section",
+        "totalFields": 159,
+        "imageCount": 0,
+        "textCount": 159,
+        "imageKeys": [],
+        "sampleText": [
+          "js_name_1: Mint Sage",
+          "js_name_2: Alabaster Linen",
+          "js_name_3: Platinum Silver"
+        ]
+      },
+      {
+        "id": "hireusform",
+        "name": "Hire Us Form Section",
+        "totalFields": 9,
+        "imageCount": 0,
+        "textCount": 9,
+        "imageKeys": [],
+        "sampleText": [
+          "text_h2_1: Hire Us",
+          "attr_placeholder_1: First Name",
+          "attr_placeholder_2: Name"
+        ]
+      },
+      {
+        "id": "commonfaq",
+        "name": "Common F A Q Section",
+        "totalFields": 41,
+        "imageCount": 0,
+        "textCount": 41,
+        "imageKeys": [],
+        "sampleText": [
+          "js_question_1: What graphic design services d",
+          "js_answer_2: We offer comprehensive creativ",
+          "js_question_3: Do you create custom, original"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/our-portfolio",
+    "filePath": "app/our-portfolio/page.js",
+    "frontendComponents": [
+      "React",
+      "PortfolioBanner",
+      "PortfolioQuote",
+      "PortfolioProjects",
+      "Newsletter"
+    ],
+    "dbSectionCount": 4,
+    "dbSections": [
+      {
+        "id": "portfoliobanner",
+        "name": "Portfolio Hero Section",
+        "totalFields": 7,
+        "imageCount": 1,
+        "textCount": 6,
+        "imageKeys": [
+          "image_portfoliobanner"
+        ],
+        "sampleText": [
+          "cms_text_1: Real-World Client Case Studies",
+          "cms_text_2: Our Portfolio of Digital Proje",
+          "cms_text_3: Welcome to our portfolio of in"
+        ]
+      },
+      {
+        "id": "portfolioquote",
+        "name": "Portfolio Quote Section",
+        "totalFields": 6,
+        "imageCount": 0,
+        "textCount": 6,
+        "imageKeys": [],
+        "sampleText": [
+          "text_p_1: “With a team of skilled develo",
+          "text_span_2: TechSolutionor Engineering Sta",
+          "text_span_3: Featured Case Studies"
+        ]
+      },
+      {
+        "id": "portfolioprojects",
+        "name": "Portfolio Projects Section",
+        "totalFields": 78,
+        "imageCount": 14,
+        "textCount": 64,
+        "imageKeys": [
+          "image_grab",
+          "image_p1",
+          "image_protein",
+          "image_p2",
+          "image_clickpos",
+          "image_p3",
+          "image_appliances",
+          "image_p4",
+          "image_mubayya",
+          "image_albasit",
+          "image_clickslice",
+          "image_crown",
+          "image_smart",
+          "image_traders"
+        ],
+        "sampleText": [
+          "text_button_13: Close",
+          "text_span_1: Case Study",
+          "text_badge_1: TechSolutionor Verified Projec"
+        ]
+      },
+      {
+        "id": "newsletter",
+        "name": "Newsletter & CTA Section",
+        "totalFields": 3,
+        "imageCount": 0,
+        "textCount": 3,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: Ready to scale your digital pr",
+          "js_buttonText_2: Hire Us",
+          "text_span_1: READY TO SCALE YOUR BUSINESS?"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/pos-development",
+    "filePath": "app/pos-development/page.js",
+    "frontendComponents": [
+      "React",
+      "POSHero",
+      "POSBestSoftware",
+      "POSKeyBenefits",
+      "POSPowerfulFeatures",
+      "POSFAQ",
+      "Newsletter"
+    ],
+    "dbSectionCount": 6,
+    "dbSections": [
+      {
+        "id": "poshero",
+        "name": "POS Hero Section",
+        "totalFields": 5,
+        "imageCount": 1,
+        "textCount": 4,
+        "imageKeys": [
+          "image_posheroimg"
+        ],
+        "sampleText": [
+          "var_defaultTitle_1: Custom POS Software Developmen",
+          "var_defaultDesc_2: Designed to streamline transac",
+          "cms_text_1: Free Qoute"
+        ]
+      },
+      {
+        "id": "posbestsoftware",
+        "name": "POS Software Section",
+        "totalFields": 14,
+        "imageCount": 4,
+        "textCount": 10,
+        "imageKeys": [
+          "image_icon1",
+          "image_icon2",
+          "image_icon3",
+          "image_icon4"
+        ],
+        "sampleText": [
+          "js_title_1: Modern & Attractive User Dashb",
+          "js_desc_2: Experience seamless business m",
+          "js_title_3: Easy Setup & No Technical Skil"
+        ]
+      },
+      {
+        "id": "poskeybenefits",
+        "name": "POS Key Benefits Section",
+        "totalFields": 16,
+        "imageCount": 5,
+        "textCount": 11,
+        "imageKeys": [
+          "image_laptopimg",
+          "image_image2",
+          "image_image3",
+          "image_image4",
+          "image_image5"
+        ],
+        "sampleText": [
+          "js_title_1: Drawer Log Feature",
+          "js_desc_2: The Manage Drawer Log feature ",
+          "js_title_3: Manage Purchase Feature"
+        ]
+      },
+      {
+        "id": "pospowerfulfeatures",
+        "name": "POS Features Section",
+        "totalFields": 12,
+        "imageCount": 1,
+        "textCount": 11,
+        "imageKeys": [
+          "image_powerfulimg"
+        ],
+        "sampleText": [
+          "js_title_1: Inventory Management",
+          "js_desc_2: Streamline your operations wit",
+          "js_title_3: Sales & Payment Process"
+        ]
+      },
+      {
+        "id": "posfaq",
+        "name": "POS FAQ Section",
+        "totalFields": 21,
+        "imageCount": 0,
+        "textCount": 21,
+        "imageKeys": [],
+        "sampleText": [
+          "js_question_1: What is POS software developme",
+          "js_answer_2: POS (Point of Sale) software d",
+          "js_question_3: What features should a good PO"
+        ]
+      },
+      {
+        "id": "newsletter",
+        "name": "Newsletter & CTA Section",
+        "totalFields": 3,
+        "imageCount": 0,
+        "textCount": 3,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: Ready to scale your digital pr",
+          "js_buttonText_2: Hire Us",
+          "text_span_1: READY TO SCALE YOUR BUSINESS?"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/privacy-policy",
+    "filePath": "app/privacy-policy/page.js",
+    "frontendComponents": [
+      "React",
+      "PrivacyPolicyContent"
+    ],
+    "dbSectionCount": 1,
+    "dbSections": [
+      {
+        "id": "privacypolicycontent",
+        "name": "Privacy Policy Content Section",
+        "totalFields": 126,
+        "imageCount": 0,
+        "textCount": 126,
+        "imageKeys": [],
+        "sampleText": [
+          "text_h2_6: 1. Introduction",
+          "text_h2_11: 2. Information We Collect",
+          "text_h2_19: 3. Personal Information"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/services",
+    "filePath": "app/services/page.js",
+    "frontendComponents": [
+      "React",
+      "ServicesHero",
+      "ServicesOverview",
+      "WhatMakesUsStandOut",
+      "ProcessSteps",
+      "WhyExpertiseCommitment",
+      "ServicesFAQ",
+      "Newsletter"
+    ],
+    "dbSectionCount": 7,
+    "dbSections": [
+      {
+        "id": "serviceshero",
+        "name": "Services Hero Section",
+        "totalFields": 8,
+        "imageCount": 1,
+        "textCount": 7,
+        "imageKeys": [
+          "image_servicespic"
+        ],
+        "sampleText": [
+          "cms_text_1: OUR SERVICES & SOLUTIONS",
+          "cms_text_2: Enterprise IT & Digital Servic",
+          "cms_text_3: From high-throughput web and m"
+        ]
+      },
+      {
+        "id": "servicesoverview",
+        "name": "Services Overview Section",
+        "totalFields": 59,
+        "imageCount": 11,
+        "textCount": 48,
+        "imageKeys": [
+          "image_web",
+          "image_software",
+          "image_app",
+          "image_ecommerce",
+          "image_graphics",
+          "image_social",
+          "image_digital",
+          "image_ppc",
+          "image_seo",
+          "image_content",
+          "image_call"
+        ],
+        "sampleText": [
+          "js_name_1: Web Development",
+          "js_desc_2: Custom high-performance websit",
+          "js_buttonText_3: EXPLORE WEB DEV"
+        ]
+      },
+      {
+        "id": "whatmakesusstandout",
+        "name": "What Makes Us Stand Out Section",
+        "totalFields": 16,
+        "imageCount": 1,
+        "textCount": 15,
+        "imageKeys": [
+          "image_standoutimage"
+        ],
+        "sampleText": [
+          "js_title_1: Proven Track Record",
+          "js_desc_2: 150+ successful commercial web",
+          "js_title_3: Multi-Industry Experience"
+        ]
+      },
+      {
+        "id": "processsteps",
+        "name": "Process Steps Section",
+        "totalFields": 16,
+        "imageCount": 0,
+        "textCount": 16,
+        "imageKeys": [],
+        "sampleText": [
+          "js_number_1: 01",
+          "js_title_2: Strategy",
+          "js_desc_3: Comprehensive business scoping"
+        ]
+      },
+      {
+        "id": "whyexpertisecommitment",
+        "name": "Why Expertise Commitment Section",
+        "totalFields": 19,
+        "imageCount": 4,
+        "textCount": 15,
+        "imageKeys": [
+          "image_img1",
+          "image_img2",
+          "image_img3",
+          "image_img4"
+        ],
+        "sampleText": [
+          "js_title_1: Dedicated Support & Expertise",
+          "js_desc_2: Our senior technical architect",
+          "js_title_3: Tailored Business Approach"
+        ]
+      },
+      {
+        "id": "servicesfaq",
+        "name": "Services FAQ Section",
+        "totalFields": 15,
+        "imageCount": 0,
+        "textCount": 15,
+        "imageKeys": [],
+        "sampleText": [
+          "js_question_1: What services does Tech Soluti",
+          "js_answer_2: We provide a full range of dig",
+          "js_question_3: How long does it take to build"
+        ]
+      },
+      {
+        "id": "newsletter",
+        "name": "Newsletter & CTA Section",
+        "totalFields": 3,
+        "imageCount": 0,
+        "textCount": 3,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: Ready to scale your digital pr",
+          "js_buttonText_2: Hire Us",
+          "text_span_1: READY TO SCALE YOUR BUSINESS?"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/services/app-development",
+    "filePath": "app/services/app-development/page.js",
+    "frontendComponents": [
+      "React",
+      "AppDevBanner",
+      "TechnologiesBook",
+      "CommonWhyChoose",
+      "CommonKeyFeatures",
+      "CommonStruggling",
+      "CommonServices",
+      "CommonHireUs",
+      "AppFAQ"
+    ],
+    "dbSectionCount": 8,
+    "dbSections": [
+      {
+        "id": "appdevbanner",
+        "name": "App Dev Banner Section",
+        "totalFields": 7,
+        "imageCount": 1,
+        "textCount": 6,
+        "imageKeys": [
+          "image_appimg"
+        ],
+        "sampleText": [
+          "attr_badge_1: IOS & ANDROID ENGINEERING",
+          "attr_titleLine1_2: Mobile App Development",
+          "attr_titleLine2_3: Company in Dubai & UAE"
+        ]
+      },
+      {
+        "id": "technologiesbook",
+        "name": "Technologies Book Section",
+        "totalFields": 243,
+        "imageCount": 0,
+        "textCount": 243,
+        "imageKeys": [],
+        "sampleText": [
+          "js_name_1: Mint Sage",
+          "js_name_2: Alabaster Linen",
+          "js_name_3: Platinum Silver"
+        ]
+      },
+      {
+        "id": "commonwhychoose",
+        "name": "Why Choose Section",
+        "totalFields": 17,
+        "imageCount": 0,
+        "textCount": 17,
+        "imageKeys": [],
+        "sampleText": [
+          "attr_eyebrow_1: WHY CHOOSE US",
+          "attr_titlePrefix_2: Why Choose",
+          "attr_titleHighlight_3: Tech Solutionor"
+        ]
+      },
+      {
+        "id": "commonkeyfeatures",
+        "name": "Key Features Section",
+        "totalFields": 8,
+        "imageCount": 0,
+        "textCount": 8,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: HOW WE HELP",
+          "js_subtitle_2: YOU GET RESULTS.",
+          "js_title_3: Custom Mobile Architecture"
+        ]
+      },
+      {
+        "id": "commonstruggling",
+        "name": "Challenges & Solutions Section",
+        "totalFields": 20,
+        "imageCount": 0,
+        "textCount": 20,
+        "imageKeys": [],
+        "sampleText": [
+          "text_span_1: Scroll to explore challenges",
+          "js_titleLine1_1: Struggling With Mobile App Per",
+          "js_titleLine2_2: Here’s How Our App Development"
+        ]
+      },
+      {
+        "id": "commonservices",
+        "name": "Services Offerings Section",
+        "totalFields": 33,
+        "imageCount": 0,
+        "textCount": 33,
+        "imageKeys": [],
+        "sampleText": [
+          "js_badge_1: MOBILE ENGINEERING EXCELLENCE",
+          "js_title_2: Our Mobile App",
+          "js_titleHighlight_3: Services"
+        ]
+      },
+      {
+        "id": "commonhireus",
+        "name": "Hire Us Section",
+        "totalFields": 38,
+        "imageCount": 0,
+        "textCount": 38,
+        "imageKeys": [],
+        "sampleText": [
+          "js_badge_1: READY TO SCALE YOUR BUSINESS?",
+          "js_line1_2: Ready to scale your digital pr",
+          "js_line2_3: Hire the TechSolutionor team t"
+        ]
+      },
+      {
+        "id": "appfaq",
+        "name": "App F A Q Section",
+        "totalFields": 21,
+        "imageCount": 0,
+        "textCount": 21,
+        "imageKeys": [],
+        "sampleText": [
+          "js_question_1: What types of mobile app devel",
+          "js_answer_2: We develop custom mobile appli",
+          "js_question_3: How long does it take to build"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/services/call-center",
+    "filePath": "app/services/call-center/page.js",
+    "frontendComponents": [
+      "React",
+      "CallCenterBanner",
+      "TechnologiesBook",
+      "CommonWhyChoose",
+      "CommonKeyFeatures",
+      "CommonStruggling",
+      "CommonServices",
+      "CommonHireUs",
+      "CallCenterFAQ"
+    ],
+    "dbSectionCount": 8,
+    "dbSections": [
+      {
+        "id": "callcenterbanner",
+        "name": "Call Center Banner Section",
+        "totalFields": 8,
+        "imageCount": 2,
+        "textCount": 6,
+        "imageKeys": [
+          "image_callimg",
+          "image_fallbackimg"
+        ],
+        "sampleText": [
+          "attr_badge_1: 24/7 CUSTOMER EXPERIENCE",
+          "attr_titleLine1_2: Professional Call Center",
+          "attr_titleLine2_3: & Customer Support"
+        ]
+      },
+      {
+        "id": "technologiesbook",
+        "name": "Technologies Book Section",
+        "totalFields": 160,
+        "imageCount": 0,
+        "textCount": 160,
+        "imageKeys": [],
+        "sampleText": [
+          "js_name_1: Mint Sage",
+          "js_name_2: Alabaster Linen",
+          "js_name_3: Platinum Silver"
+        ]
+      },
+      {
+        "id": "commonwhychoose",
+        "name": "Why Choose Section",
+        "totalFields": 17,
+        "imageCount": 0,
+        "textCount": 17,
+        "imageKeys": [],
+        "sampleText": [
+          "attr_eyebrow_1: WHY CHOOSE US",
+          "attr_titlePrefix_2: Why Choose",
+          "attr_titleHighlight_3: Tech Solutionor"
+        ]
+      },
+      {
+        "id": "commonkeyfeatures",
+        "name": "Key Features Section",
+        "totalFields": 8,
+        "imageCount": 0,
+        "textCount": 8,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: HOW WE HELP",
+          "js_subtitle_2: YOU GET RESULTS.",
+          "js_title_3: 24/7/365 Dedicated Support Pod"
+        ]
+      },
+      {
+        "id": "commonstruggling",
+        "name": "Challenges & Solutions Section",
+        "totalFields": 20,
+        "imageCount": 0,
+        "textCount": 20,
+        "imageKeys": [],
+        "sampleText": [
+          "text_span_1: Scroll to explore challenges",
+          "js_titleLine1_1: Struggling With Missed Calls &",
+          "js_titleLine2_2: Here’s How Our Call Center Sol"
+        ]
+      },
+      {
+        "id": "commonservices",
+        "name": "Services Offerings Section",
+        "totalFields": 34,
+        "imageCount": 0,
+        "textCount": 34,
+        "imageKeys": [],
+        "sampleText": [
+          "js_badge_1: 24/7 CUSTOMER SUPPORT & SALES",
+          "js_title_2: Our Call Center & BPO",
+          "js_titleHighlight_3: Services"
+        ]
+      },
+      {
+        "id": "commonhireus",
+        "name": "Hire Us Section",
+        "totalFields": 38,
+        "imageCount": 0,
+        "textCount": 38,
+        "imageKeys": [],
+        "sampleText": [
+          "js_badge_1: READY TO SCALE YOUR BUSINESS?",
+          "js_line1_2: Ready to scale your digital pr",
+          "js_line2_3: Hire the TechSolutionor team t"
+        ]
+      },
+      {
+        "id": "callcenterfaq",
+        "name": "Call Center F A Q Section",
+        "totalFields": 21,
+        "imageCount": 0,
+        "textCount": 21,
+        "imageKeys": [],
+        "sampleText": [
+          "js_question_1: What types of call center serv",
+          "js_answer_2: We provide comprehensive call ",
+          "js_question_3: Can you support customers 24/7"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/services/content-writing",
+    "filePath": "app/services/content-writing/page.js",
+    "frontendComponents": [
+      "React",
+      "ContentBanner",
+      "TechnologiesBook",
+      "CommonWhyChoose",
+      "CommonKeyFeatures",
+      "CommonStruggling",
+      "CommonServices",
+      "CommonHireUs",
+      "ContentFAQ"
+    ],
+    "dbSectionCount": 8,
+    "dbSections": [
+      {
+        "id": "contentbanner",
+        "name": "Content Banner Section",
+        "totalFields": 8,
+        "imageCount": 2,
+        "textCount": 6,
+        "imageKeys": [
+          "image_cwimg",
+          "image_fallbackimg"
+        ],
+        "sampleText": [
+          "attr_badge_1: PERSUASIVE EDITORIAL & COPY",
+          "attr_titleLine1_2: High‑Quality Content",
+          "attr_titleLine2_3: Writing Services for SEO"
+        ]
+      },
+      {
+        "id": "technologiesbook",
+        "name": "Technologies Book Section",
+        "totalFields": 161,
+        "imageCount": 0,
+        "textCount": 161,
+        "imageKeys": [],
+        "sampleText": [
+          "js_name_1: Mint Sage",
+          "js_name_2: Alabaster Linen",
+          "js_name_3: Platinum Silver"
+        ]
+      },
+      {
+        "id": "commonwhychoose",
+        "name": "Why Choose Section",
+        "totalFields": 17,
+        "imageCount": 0,
+        "textCount": 17,
+        "imageKeys": [],
+        "sampleText": [
+          "attr_eyebrow_1: WHY CHOOSE US",
+          "attr_titlePrefix_2: Why Choose",
+          "attr_titleHighlight_3: Tech Solutionor"
+        ]
+      },
+      {
+        "id": "commonkeyfeatures",
+        "name": "Key Features Section",
+        "totalFields": 8,
+        "imageCount": 0,
+        "textCount": 8,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: HOW WE HELP",
+          "js_subtitle_2: YOU GET RESULTS.",
+          "js_title_3: Authoritative Industry Copywri"
+        ]
+      },
+      {
+        "id": "commonstruggling",
+        "name": "Challenges & Solutions Section",
+        "totalFields": 20,
+        "imageCount": 0,
+        "textCount": 20,
+        "imageKeys": [],
+        "sampleText": [
+          "text_span_1: Scroll to explore challenges",
+          "js_titleLine1_1: Struggling With Flat Copy That",
+          "js_titleLine2_2: Here’s How Our Professional Co"
+        ]
+      },
+      {
+        "id": "commonservices",
+        "name": "Services Offerings Section",
+        "totalFields": 34,
+        "imageCount": 0,
+        "textCount": 34,
+        "imageKeys": [],
+        "sampleText": [
+          "js_badge_1: PERSUASIVE DIGITAL COPYWRITING",
+          "js_title_2: Our Content Writing",
+          "js_titleHighlight_3: Services"
+        ]
+      },
+      {
+        "id": "commonhireus",
+        "name": "Hire Us Section",
+        "totalFields": 38,
+        "imageCount": 0,
+        "textCount": 38,
+        "imageKeys": [],
+        "sampleText": [
+          "js_badge_1: READY TO SCALE YOUR BUSINESS?",
+          "js_line1_2: Ready to scale your digital pr",
+          "js_line2_3: Hire the TechSolutionor team t"
+        ]
+      },
+      {
+        "id": "contentfaq",
+        "name": "Content F A Q Section",
+        "totalFields": 21,
+        "imageCount": 0,
+        "textCount": 21,
+        "imageKeys": [],
+        "sampleText": [
+          "js_question_1: What types of content writing ",
+          "js_answer_2: We provide a full range of pro",
+          "js_question_3: How does content writing help "
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/services/digital-marketing",
+    "filePath": "app/services/digital-marketing/page.js",
+    "frontendComponents": [
+      "React",
+      "DigitalMarketingBanner",
+      "TechnologiesBook",
+      "CommonWhyChoose",
+      "CommonKeyFeatures",
+      "CommonStruggling",
+      "CommonServices",
+      "CommonHireUs",
+      "DigitalMarketingFAQ"
+    ],
+    "dbSectionCount": 8,
+    "dbSections": [
+      {
+        "id": "digitalmarketingbanner",
+        "name": "Digital Marketing Banner Section",
+        "totalFields": 8,
+        "imageCount": 2,
+        "textCount": 6,
+        "imageKeys": [
+          "image_digitalimg",
+          "image_fallbackimg"
+        ],
+        "sampleText": [
+          "attr_badge_1: FULL-FUNNEL PERFORMANCE MARKET",
+          "attr_titleLine1_2: Result-Driven Digital",
+          "attr_titleLine2_3: Marketing Services for"
+        ]
+      },
+      {
+        "id": "technologiesbook",
+        "name": "Technologies Book Section",
+        "totalFields": 159,
+        "imageCount": 0,
+        "textCount": 159,
+        "imageKeys": [],
+        "sampleText": [
+          "js_name_1: Mint Sage",
+          "js_name_2: Alabaster Linen",
+          "js_name_3: Platinum Silver"
+        ]
+      },
+      {
+        "id": "commonwhychoose",
+        "name": "Why Choose Section",
+        "totalFields": 17,
+        "imageCount": 0,
+        "textCount": 17,
+        "imageKeys": [],
+        "sampleText": [
+          "attr_eyebrow_1: WHY CHOOSE US",
+          "attr_titlePrefix_2: Why Choose",
+          "attr_titleHighlight_3: Tech Solutionor"
+        ]
+      },
+      {
+        "id": "commonkeyfeatures",
+        "name": "Key Features Section",
+        "totalFields": 8,
+        "imageCount": 0,
+        "textCount": 8,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: HOW WE HELP",
+          "js_subtitle_2: YOU GET RESULTS.",
+          "js_title_3: Full-Funnel Growth Blueprints"
+        ]
+      },
+      {
+        "id": "commonstruggling",
+        "name": "Challenges & Solutions Section",
+        "totalFields": 20,
+        "imageCount": 0,
+        "textCount": 20,
+        "imageKeys": [],
+        "sampleText": [
+          "text_span_1: Scroll to explore challenges",
+          "js_titleLine1_1: Struggling To Scale Your Marke",
+          "js_titleLine2_2: Here’s How Our Digital Marketi"
+        ]
+      },
+      {
+        "id": "commonservices",
+        "name": "Services Offerings Section",
+        "totalFields": 34,
+        "imageCount": 0,
+        "textCount": 34,
+        "imageKeys": [],
+        "sampleText": [
+          "js_badge_1: FULL-FUNNEL DIGITAL ACCELERATI",
+          "js_title_2: Our Digital Marketing",
+          "js_titleHighlight_3: Services"
+        ]
+      },
+      {
+        "id": "commonhireus",
+        "name": "Hire Us Section",
+        "totalFields": 38,
+        "imageCount": 0,
+        "textCount": 38,
+        "imageKeys": [],
+        "sampleText": [
+          "js_badge_1: READY TO SCALE YOUR BUSINESS?",
+          "js_line1_2: Ready to scale your digital pr",
+          "js_line2_3: Hire the TechSolutionor team t"
+        ]
+      },
+      {
+        "id": "digitalmarketingfaq",
+        "name": "Digital Marketing F A Q Section",
+        "totalFields": 21,
+        "imageCount": 0,
+        "textCount": 21,
+        "imageKeys": [],
+        "sampleText": [
+          "js_question_1: What do digital marketing serv",
+          "js_answer_2: Digital marketing services typ",
+          "js_question_3: How can digital marketing help"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/services/ecommerce-development",
+    "filePath": "app/services/ecommerce-development/page.js",
+    "frontendComponents": [
+      "React",
+      "Banner",
+      "TechnologiesBook",
+      "CommonWhyChoose",
+      "CommonKeyFeatures",
+      "CommonStruggling",
+      "CommonServices",
+      "CommonHireUs",
+      "EcommerceFAQ"
+    ],
+    "dbSectionCount": 8,
+    "dbSections": [
+      {
+        "id": "banner",
+        "name": "Banner Section",
+        "totalFields": 8,
+        "imageCount": 2,
+        "textCount": 6,
+        "imageKeys": [
+          "image_ecommerceimg",
+          "image_fallbackimg"
+        ],
+        "sampleText": [
+          "attr_badge_1: HIGH-CONVERTING STOREFRONTS",
+          "attr_titleLine1_2: Expert eCommerce Development",
+          "attr_titleLine2_3: for Seamless Online"
+        ]
+      },
+      {
+        "id": "technologiesbook",
+        "name": "Technologies Book Section",
+        "totalFields": 161,
+        "imageCount": 0,
+        "textCount": 161,
+        "imageKeys": [],
+        "sampleText": [
+          "js_name_1: Mint Sage",
+          "js_name_2: Alabaster Linen",
+          "js_name_3: Platinum Silver"
+        ]
+      },
+      {
+        "id": "commonwhychoose",
+        "name": "Why Choose Section",
+        "totalFields": 17,
+        "imageCount": 0,
+        "textCount": 17,
+        "imageKeys": [],
+        "sampleText": [
+          "attr_eyebrow_1: WHY CHOOSE US",
+          "attr_titlePrefix_2: Why Choose",
+          "attr_titleHighlight_3: Tech Solutionor"
+        ]
+      },
+      {
+        "id": "commonkeyfeatures",
+        "name": "Key Features Section",
+        "totalFields": 8,
+        "imageCount": 0,
+        "textCount": 8,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: HOW WE HELP",
+          "js_subtitle_2: YOU GET RESULTS.",
+          "js_title_3: High-Converting Store Design"
+        ]
+      },
+      {
+        "id": "commonstruggling",
+        "name": "Challenges & Solutions Section",
+        "totalFields": 20,
+        "imageCount": 0,
+        "textCount": 20,
+        "imageKeys": [],
+        "sampleText": [
+          "text_span_1: Scroll to explore challenges",
+          "js_titleLine1_1: Struggling With Low Ecommerce ",
+          "js_titleLine2_2: Here’s How Our Ecommerce Devel"
+        ]
+      },
+      {
+        "id": "commonservices",
+        "name": "Services Offerings Section",
+        "totalFields": 34,
+        "imageCount": 0,
+        "textCount": 34,
+        "imageKeys": [],
+        "sampleText": [
+          "js_badge_1: OMNICHANNEL COMMERCE ARCHITECT",
+          "js_title_2: Our E-Commerce Development",
+          "js_titleHighlight_3: Services"
+        ]
+      },
+      {
+        "id": "commonhireus",
+        "name": "Hire Us Section",
+        "totalFields": 38,
+        "imageCount": 0,
+        "textCount": 38,
+        "imageKeys": [],
+        "sampleText": [
+          "js_badge_1: READY TO SCALE YOUR BUSINESS?",
+          "js_line1_2: Ready to scale your digital pr",
+          "js_line2_3: Hire the TechSolutionor team t"
+        ]
+      },
+      {
+        "id": "ecommercefaq",
+        "name": "Ecommerce F A Q Section",
+        "totalFields": 21,
+        "imageCount": 0,
+        "textCount": 21,
+        "imageKeys": [],
+        "sampleText": [
+          "js_question_1: What ecommerce development ser",
+          "js_answer_2: We offer end-to-end ecommerce ",
+          "js_question_3: Which ecommerce platforms do y"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/services/graphic-design",
+    "filePath": "app/services/graphic-design/page.js",
+    "frontendComponents": [
+      "React",
+      "GraphicBanner",
+      "TechnologiesBook",
+      "CommonWhyChoose",
+      "CommonKeyFeatures",
+      "CommonStruggling",
+      "CommonServices",
+      "CommonHireUs",
+      "CommonFAQ"
+    ],
+    "dbSectionCount": 8,
+    "dbSections": [
+      {
+        "id": "graphicbanner",
+        "name": "Graphic Banner Section",
+        "totalFields": 7,
+        "imageCount": 2,
+        "textCount": 5,
+        "imageKeys": [
+          "image_graphicimg",
+          "image_fallbackimg"
+        ],
+        "sampleText": [
+          "attr_badge_1: VISUAL IDENTITY & PRODUCT DESI",
+          "attr_titleLine1_2: Graphic Design Services",
+          "attr_titleLine2_3: in Dubai & UAE That Transform"
+        ]
+      },
+      {
+        "id": "technologiesbook",
+        "name": "Technologies Book Section",
+        "totalFields": 159,
+        "imageCount": 0,
+        "textCount": 159,
+        "imageKeys": [],
+        "sampleText": [
+          "js_name_1: Mint Sage",
+          "js_name_2: Alabaster Linen",
+          "js_name_3: Platinum Silver"
+        ]
+      },
+      {
+        "id": "commonwhychoose",
+        "name": "Why Choose Section",
+        "totalFields": 17,
+        "imageCount": 0,
+        "textCount": 17,
+        "imageKeys": [],
+        "sampleText": [
+          "attr_eyebrow_1: WHY CHOOSE US",
+          "attr_titlePrefix_2: Why Choose",
+          "attr_titleHighlight_3: Tech Solutionor"
+        ]
+      },
+      {
+        "id": "commonkeyfeatures",
+        "name": "Key Features Section",
+        "totalFields": 8,
+        "imageCount": 0,
+        "textCount": 8,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: HOW WE HELP",
+          "js_subtitle_2: YOU GET RESULTS.",
+          "js_title_3: Distinct Brand Identity & Guid"
+        ]
+      },
+      {
+        "id": "commonstruggling",
+        "name": "Challenges & Solutions Section",
+        "totalFields": 20,
+        "imageCount": 0,
+        "textCount": 20,
+        "imageKeys": [],
+        "sampleText": [
+          "text_span_1: Scroll to explore challenges",
+          "js_titleLine1_1: Struggling With Inconsistent B",
+          "js_titleLine2_2: Here’s How Our Graphic Design "
+        ]
+      },
+      {
+        "id": "commonservices",
+        "name": "Services Offerings Section",
+        "totalFields": 34,
+        "imageCount": 0,
+        "textCount": 34,
+        "imageKeys": [],
+        "sampleText": [
+          "js_badge_1: CREATIVE BRANDING & DIGITAL DE",
+          "js_title_2: Our Graphic & UI/UX Design",
+          "js_titleHighlight_3: Services"
+        ]
+      },
+      {
+        "id": "commonhireus",
+        "name": "Hire Us Section",
+        "totalFields": 38,
+        "imageCount": 0,
+        "textCount": 38,
+        "imageKeys": [],
+        "sampleText": [
+          "js_badge_1: READY TO SCALE YOUR BUSINESS?",
+          "js_line1_2: Ready to scale your digital pr",
+          "js_line2_3: Hire the TechSolutionor team t"
+        ]
+      },
+      {
+        "id": "commonfaq",
+        "name": "Common F A Q Section",
+        "totalFields": 41,
+        "imageCount": 0,
+        "textCount": 41,
+        "imageKeys": [],
+        "sampleText": [
+          "js_question_1: What graphic design services d",
+          "js_answer_2: We offer comprehensive creativ",
+          "js_question_3: Do you create custom, original"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/services/hire-us",
+    "filePath": "app/services/hire-us/page.js",
+    "frontendComponents": [
+      "React",
+      "HireUsBanner",
+      "CommonWhyChoose",
+      "CommonKeyFeatures",
+      "CommonStruggling",
+      "CommonServices",
+      "CommonHireUs",
+      "TechnologiesBook",
+      "HireUsForm",
+      "CommonFAQ"
+    ],
+    "dbSectionCount": 9,
+    "dbSections": [
+      {
+        "id": "hireusbanner",
+        "name": "Hire Us Banner Section",
+        "totalFields": 8,
+        "imageCount": 2,
+        "textCount": 6,
+        "imageKeys": [
+          "image_hireimg",
+          "image_fallbackimg"
+        ],
+        "sampleText": [
+          "attr_badge_1: DEDICATED ENGINEERING TALENT",
+          "attr_titleLine1_2: Hire Skilled Developers",
+          "attr_titleLine2_3: & Tech Experts for Your"
+        ]
+      },
+      {
+        "id": "commonwhychoose",
+        "name": "Why Choose Section",
+        "totalFields": 17,
+        "imageCount": 0,
+        "textCount": 17,
+        "imageKeys": [],
+        "sampleText": [
+          "attr_eyebrow_1: WHY CHOOSE US",
+          "attr_titlePrefix_2: Why Choose",
+          "attr_titleHighlight_3: Tech Solutionor"
+        ]
+      },
+      {
+        "id": "commonkeyfeatures",
+        "name": "Key Features Section",
+        "totalFields": 8,
+        "imageCount": 0,
+        "textCount": 8,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: HOW WE HELP",
+          "js_subtitle_2: YOU GET RESULTS.",
+          "js_title_3: Top 3% Vetted Technical Talent"
+        ]
+      },
+      {
+        "id": "commonstruggling",
+        "name": "Challenges & Solutions Section",
+        "totalFields": 20,
+        "imageCount": 0,
+        "textCount": 20,
+        "imageKeys": [],
+        "sampleText": [
+          "text_span_1: Scroll to explore challenges",
+          "js_titleLine1_1: Struggling To Hire Qualified D",
+          "js_titleLine2_2: Here’s How Our Dedicated Talen"
+        ]
+      },
+      {
+        "id": "commonservices",
+        "name": "Services Offerings Section",
+        "totalFields": 33,
+        "imageCount": 0,
+        "textCount": 33,
+        "imageKeys": [],
+        "sampleText": [
+          "js_badge_1: DEDICATED TECH TALENT & TEAMS",
+          "js_title_2: Hire Dedicated Developers &",
+          "js_titleHighlight_3: Tech Teams"
+        ]
+      },
+      {
+        "id": "commonhireus",
+        "name": "Hire Us Section",
+        "totalFields": 38,
+        "imageCount": 0,
+        "textCount": 38,
+        "imageKeys": [],
+        "sampleText": [
+          "js_badge_1: READY TO SCALE YOUR BUSINESS?",
+          "js_line1_2: Ready to scale your digital pr",
+          "js_line2_3: Hire the TechSolutionor team t"
+        ]
+      },
+      {
+        "id": "technologiesbook",
+        "name": "Technologies Book Section",
+        "totalFields": 159,
+        "imageCount": 0,
+        "textCount": 159,
+        "imageKeys": [],
+        "sampleText": [
+          "js_name_1: Mint Sage",
+          "js_name_2: Alabaster Linen",
+          "js_name_3: Platinum Silver"
+        ]
+      },
+      {
+        "id": "hireusform",
+        "name": "Hire Us Form Section",
+        "totalFields": 9,
+        "imageCount": 0,
+        "textCount": 9,
+        "imageKeys": [],
+        "sampleText": [
+          "text_h2_1: Hire Us",
+          "attr_placeholder_1: First Name",
+          "attr_placeholder_2: Name"
+        ]
+      },
+      {
+        "id": "commonfaq",
+        "name": "Common F A Q Section",
+        "totalFields": 41,
+        "imageCount": 0,
+        "textCount": 41,
+        "imageKeys": [],
+        "sampleText": [
+          "js_question_1: What graphic design services d",
+          "js_answer_2: We offer comprehensive creativ",
+          "js_question_3: Do you create custom, original"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/services/ppc-amazon-ads",
+    "filePath": "app/services/ppc-amazon-ads/page.js",
+    "frontendComponents": [
+      "React",
+      "Banner",
+      "TechnologiesBook",
+      "CommonWhyChoose",
+      "CommonKeyFeatures",
+      "CommonStruggling",
+      "CommonServices",
+      "CommonHireUs",
+      "PpcFAQ"
+    ],
+    "dbSectionCount": 8,
+    "dbSections": [
+      {
+        "id": "banner",
+        "name": "Banner Section",
+        "totalFields": 8,
+        "imageCount": 2,
+        "textCount": 6,
+        "imageKeys": [
+          "image_ppcimg",
+          "image_fallbackimg"
+        ],
+        "sampleText": [
+          "attr_badge_1: HIGH-ROI PAID ACQUISITION",
+          "attr_titleLine1_2: PPC Advertising & Amazon",
+          "attr_titleLine2_3: Ads Management Services"
+        ]
+      },
+      {
+        "id": "technologiesbook",
+        "name": "Technologies Book Section",
+        "totalFields": 160,
+        "imageCount": 0,
+        "textCount": 160,
+        "imageKeys": [],
+        "sampleText": [
+          "js_name_1: Mint Sage",
+          "js_name_2: Alabaster Linen",
+          "js_name_3: Platinum Silver"
+        ]
+      },
+      {
+        "id": "commonwhychoose",
+        "name": "Why Choose Section",
+        "totalFields": 17,
+        "imageCount": 0,
+        "textCount": 17,
+        "imageKeys": [],
+        "sampleText": [
+          "attr_eyebrow_1: WHY CHOOSE US",
+          "attr_titlePrefix_2: Why Choose",
+          "attr_titleHighlight_3: Tech Solutionor"
+        ]
+      },
+      {
+        "id": "commonkeyfeatures",
+        "name": "Key Features Section",
+        "totalFields": 8,
+        "imageCount": 0,
+        "textCount": 8,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: HOW WE HELP",
+          "js_subtitle_2: YOU GET RESULTS.",
+          "js_title_3: Certified Ad Management"
+        ]
+      },
+      {
+        "id": "commonstruggling",
+        "name": "Challenges & Solutions Section",
+        "totalFields": 20,
+        "imageCount": 0,
+        "textCount": 20,
+        "imageKeys": [],
+        "sampleText": [
+          "text_span_1: Scroll to explore challenges",
+          "js_titleLine1_1: Struggling With High Ad Spend ",
+          "js_titleLine2_2: Here’s How Our PPC & Amazon Ad"
+        ]
+      },
+      {
+        "id": "commonservices",
+        "name": "Services Offerings Section",
+        "totalFields": 34,
+        "imageCount": 0,
+        "textCount": 34,
+        "imageKeys": [],
+        "sampleText": [
+          "js_badge_1: PRECISION PAID MEDIA & ROAS",
+          "js_title_2: Our PPC & Amazon Ads",
+          "js_titleHighlight_3: Services"
+        ]
+      },
+      {
+        "id": "commonhireus",
+        "name": "Hire Us Section",
+        "totalFields": 38,
+        "imageCount": 0,
+        "textCount": 38,
+        "imageKeys": [],
+        "sampleText": [
+          "js_badge_1: READY TO SCALE YOUR BUSINESS?",
+          "js_line1_2: Ready to scale your digital pr",
+          "js_line2_3: Hire the TechSolutionor team t"
+        ]
+      },
+      {
+        "id": "ppcfaq",
+        "name": "Ppc F A Q Section",
+        "totalFields": 21,
+        "imageCount": 0,
+        "textCount": 21,
+        "imageKeys": [],
+        "sampleText": [
+          "js_question_1: What is PPC advertising and ho",
+          "js_answer_2: PPC (Pay‑Per‑Click) is a digit",
+          "js_question_3: How can PPC benefit my busines"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/services/search-engine-optimization",
+    "filePath": "app/services/search-engine-optimization/page.js",
+    "frontendComponents": [
+      "React",
+      "SEOBanner",
+      "TechnologiesBook",
+      "CommonWhyChoose",
+      "CommonKeyFeatures",
+      "CommonStruggling",
+      "CommonServices",
+      "CommonHireUs",
+      "SEOFAQ"
+    ],
+    "dbSectionCount": 8,
+    "dbSections": [
+      {
+        "id": "seobanner",
+        "name": "S E O Banner Section",
+        "totalFields": 8,
+        "imageCount": 2,
+        "textCount": 6,
+        "imageKeys": [
+          "image_seoimg",
+          "image_fallbackimg"
+        ],
+        "sampleText": [
+          "attr_badge_1: ORGANIC SEARCH DOMINANCE",
+          "attr_titleLine1_2: Effective SEO Strategies",
+          "attr_titleLine2_3: to Maximize Your ROI &"
+        ]
+      },
+      {
+        "id": "technologiesbook",
+        "name": "Technologies Book Section",
+        "totalFields": 160,
+        "imageCount": 0,
+        "textCount": 160,
+        "imageKeys": [],
+        "sampleText": [
+          "js_name_1: Mint Sage",
+          "js_name_2: Alabaster Linen",
+          "js_name_3: Platinum Silver"
+        ]
+      },
+      {
+        "id": "commonwhychoose",
+        "name": "Why Choose Section",
+        "totalFields": 17,
+        "imageCount": 0,
+        "textCount": 17,
+        "imageKeys": [],
+        "sampleText": [
+          "attr_eyebrow_1: WHY CHOOSE US",
+          "attr_titlePrefix_2: Why Choose",
+          "attr_titleHighlight_3: Tech Solutionor"
+        ]
+      },
+      {
+        "id": "commonkeyfeatures",
+        "name": "Key Features Section",
+        "totalFields": 8,
+        "imageCount": 0,
+        "textCount": 8,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: HOW WE HELP",
+          "js_subtitle_2: YOU GET RESULTS.",
+          "js_title_3: Technical & On-Page SEO Master"
+        ]
+      },
+      {
+        "id": "commonstruggling",
+        "name": "Challenges & Solutions Section",
+        "totalFields": 20,
+        "imageCount": 0,
+        "textCount": 20,
+        "imageKeys": [],
+        "sampleText": [
+          "text_span_1: Scroll to explore challenges",
+          "js_titleLine1_1: Struggling To Rank On Google F",
+          "js_titleLine2_2: Here’s How Our SEO Engineering"
+        ]
+      },
+      {
+        "id": "commonservices",
+        "name": "Services Offerings Section",
+        "totalFields": 34,
+        "imageCount": 0,
+        "textCount": 34,
+        "imageKeys": [],
+        "sampleText": [
+          "js_badge_1: ORGANIC VISIBILITY & AUTHORITY",
+          "js_title_2: Our Search Engine",
+          "js_titleHighlight_3: Optimization Services"
+        ]
+      },
+      {
+        "id": "commonhireus",
+        "name": "Hire Us Section",
+        "totalFields": 38,
+        "imageCount": 0,
+        "textCount": 38,
+        "imageKeys": [],
+        "sampleText": [
+          "js_badge_1: READY TO SCALE YOUR BUSINESS?",
+          "js_line1_2: Ready to scale your digital pr",
+          "js_line2_3: Hire the TechSolutionor team t"
+        ]
+      },
+      {
+        "id": "seofaq",
+        "name": "S E O F A Q Section",
+        "totalFields": 21,
+        "imageCount": 0,
+        "textCount": 21,
+        "imageKeys": [],
+        "sampleText": [
+          "js_question_1: What do professional SEO servi",
+          "js_answer_2: Professional SEO services incl",
+          "js_question_3: How long does it take to see r"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/services/social-media",
+    "filePath": "app/services/social-media/page.js",
+    "frontendComponents": [
+      "React",
+      "SocialMediaBanner",
+      "CommonWhyChoose",
+      "CommonKeyFeatures",
+      "CommonStruggling",
+      "CommonServices",
+      "TechnologiesBook",
+      "CommonHireUs",
+      "CommonFAQ"
+    ],
+    "dbSectionCount": 8,
+    "dbSections": [
+      {
+        "id": "socialmediabanner",
+        "name": "Social Media Banner Section",
+        "totalFields": 8,
+        "imageCount": 2,
+        "textCount": 6,
+        "imageKeys": [
+          "image_smimg",
+          "image_fallbackimg"
+        ],
+        "sampleText": [
+          "attr_badge_1: AUDIENCE GROWTH & ENGAGEMENT",
+          "attr_titleLine1_2: Unlocking the Power of",
+          "attr_titleLine2_3: Social Media for Real"
+        ]
+      },
+      {
+        "id": "commonwhychoose",
+        "name": "Why Choose Section",
+        "totalFields": 17,
+        "imageCount": 0,
+        "textCount": 17,
+        "imageKeys": [],
+        "sampleText": [
+          "attr_eyebrow_1: WHY CHOOSE US",
+          "attr_titlePrefix_2: Why Choose",
+          "attr_titleHighlight_3: Tech Solutionor"
+        ]
+      },
+      {
+        "id": "commonkeyfeatures",
+        "name": "Key Features Section",
+        "totalFields": 8,
+        "imageCount": 0,
+        "textCount": 8,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: HOW WE HELP",
+          "js_subtitle_2: YOU GET RESULTS.",
+          "js_title_3: Data-Driven Social Strategy"
+        ]
+      },
+      {
+        "id": "commonstruggling",
+        "name": "Challenges & Solutions Section",
+        "totalFields": 20,
+        "imageCount": 0,
+        "textCount": 20,
+        "imageKeys": [],
+        "sampleText": [
+          "text_span_1: Scroll to explore challenges",
+          "js_titleLine1_1: Struggling With Low Social Med",
+          "js_titleLine2_2: Here’s How Our Social Media Ma"
+        ]
+      },
+      {
+        "id": "commonservices",
+        "name": "Services Offerings Section",
+        "totalFields": 34,
+        "imageCount": 0,
+        "textCount": 34,
+        "imageKeys": [],
+        "sampleText": [
+          "js_badge_1: STRATEGIC SOCIAL ENGAGEMENT",
+          "js_title_2: Our Social Media",
+          "js_titleHighlight_3: Services"
+        ]
+      },
+      {
+        "id": "technologiesbook",
+        "name": "Technologies Book Section",
+        "totalFields": 161,
+        "imageCount": 0,
+        "textCount": 161,
+        "imageKeys": [],
+        "sampleText": [
+          "js_name_1: Mint Sage",
+          "js_name_2: Alabaster Linen",
+          "js_name_3: Platinum Silver"
+        ]
+      },
+      {
+        "id": "commonhireus",
+        "name": "Hire Us Section",
+        "totalFields": 38,
+        "imageCount": 0,
+        "textCount": 38,
+        "imageKeys": [],
+        "sampleText": [
+          "js_badge_1: READY TO SCALE YOUR BUSINESS?",
+          "js_line1_2: Ready to scale your digital pr",
+          "js_line2_3: Hire the TechSolutionor team t"
+        ]
+      },
+      {
+        "id": "commonfaq",
+        "name": "Common F A Q Section",
+        "totalFields": 41,
+        "imageCount": 0,
+        "textCount": 41,
+        "imageKeys": [],
+        "sampleText": [
+          "js_question_1: What graphic design services d",
+          "js_answer_2: We offer comprehensive creativ",
+          "js_question_3: Do you create custom, original"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/services/software-development",
+    "filePath": "app/services/software-development/page.js",
+    "frontendComponents": [
+      "React",
+      "SoftwareDevBanner",
+      "TechnologiesBook",
+      "CommonWhyChoose",
+      "CommonKeyFeatures",
+      "CommonStruggling",
+      "CommonServices",
+      "CommonHireUs",
+      "SoftwareFAQ"
+    ],
+    "dbSectionCount": 8,
+    "dbSections": [
+      {
+        "id": "softwaredevbanner",
+        "name": "Software Dev Banner Section",
+        "totalFields": 8,
+        "imageCount": 2,
+        "textCount": 6,
+        "imageKeys": [
+          "image_softwareimg",
+          "image_fallbackimg"
+        ],
+        "sampleText": [
+          "attr_badge_1: BESPOKE ENTERPRISE SOFTWARE",
+          "attr_titleLine1_2: Custom Software Development",
+          "attr_titleLine2_3: in Dubai & UAE That"
+        ]
+      },
+      {
+        "id": "technologiesbook",
+        "name": "Technologies Book Section",
+        "totalFields": 237,
+        "imageCount": 0,
+        "textCount": 237,
+        "imageKeys": [],
+        "sampleText": [
+          "js_name_1: Mint Sage",
+          "js_name_2: Alabaster Linen",
+          "js_name_3: Platinum Silver"
+        ]
+      },
+      {
+        "id": "commonwhychoose",
+        "name": "Why Choose Section",
+        "totalFields": 17,
+        "imageCount": 0,
+        "textCount": 17,
+        "imageKeys": [],
+        "sampleText": [
+          "attr_eyebrow_1: WHY CHOOSE US",
+          "attr_titlePrefix_2: Why Choose",
+          "attr_titleHighlight_3: Tech Solutionor"
+        ]
+      },
+      {
+        "id": "commonkeyfeatures",
+        "name": "Key Features Section",
+        "totalFields": 8,
+        "imageCount": 0,
+        "textCount": 8,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: HOW WE HELP",
+          "js_subtitle_2: YOU GET RESULTS.",
+          "js_title_3: Enterprise Custom Architecture"
+        ]
+      },
+      {
+        "id": "commonstruggling",
+        "name": "Challenges & Solutions Section",
+        "totalFields": 20,
+        "imageCount": 0,
+        "textCount": 20,
+        "imageKeys": [],
+        "sampleText": [
+          "text_span_1: Scroll to explore challenges",
+          "js_titleLine1_1: Struggling With Legacy Softwar",
+          "js_titleLine2_2: Here’s How Our Custom Software"
+        ]
+      },
+      {
+        "id": "commonservices",
+        "name": "Services Offerings Section",
+        "totalFields": 34,
+        "imageCount": 0,
+        "textCount": 34,
+        "imageKeys": [],
+        "sampleText": [
+          "js_badge_1: ENTERPRISE SOFTWARE ENGINEERIN",
+          "js_title_2: Our Software Development",
+          "js_titleHighlight_3: Services"
+        ]
+      },
+      {
+        "id": "commonhireus",
+        "name": "Hire Us Section",
+        "totalFields": 38,
+        "imageCount": 0,
+        "textCount": 38,
+        "imageKeys": [],
+        "sampleText": [
+          "js_badge_1: READY TO SCALE YOUR BUSINESS?",
+          "js_line1_2: Ready to scale your digital pr",
+          "js_line2_3: Hire the TechSolutionor team t"
+        ]
+      },
+      {
+        "id": "softwarefaq",
+        "name": "Software F A Q Section",
+        "totalFields": 21,
+        "imageCount": 0,
+        "textCount": 21,
+        "imageKeys": [],
+        "sampleText": [
+          "js_question_1: What types of software develop",
+          "js_answer_2: We provide full‑cycle software",
+          "js_question_3: What technologies do you use f"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/services/web-development",
+    "filePath": "app/services/web-development/page.js",
+    "frontendComponents": [
+      "React",
+      "WebDevBanner",
+      "WebWhyChoose",
+      "CommonKeyFeatures",
+      "CommonStruggling",
+      "WebServices",
+      "TechnologiesBook",
+      "WebHireUs",
+      "WebFAQ"
+    ],
+    "dbSectionCount": 8,
+    "dbSections": [
+      {
+        "id": "webdevbanner",
+        "name": "Web Dev Banner Section",
+        "totalFields": 8,
+        "imageCount": 2,
+        "textCount": 6,
+        "imageKeys": [
+          "image_webdevimg",
+          "image_fallbackimg"
+        ],
+        "sampleText": [
+          "attr_badge_1: PREMIER WEB ENGINEERING • DUBA",
+          "attr_titleLine1_2: Best Web Development",
+          "attr_titleLine2_3: Company in Dubai, UAE:"
+        ]
+      },
+      {
+        "id": "webwhychoose",
+        "name": "Web Why Choose Section",
+        "totalFields": 17,
+        "imageCount": 0,
+        "textCount": 17,
+        "imageKeys": [],
+        "sampleText": [
+          "attr_strokeLinecap_1: round",
+          "attr_textAnchor_2: middle",
+          "js_title_1: Expert Developers"
+        ]
+      },
+      {
+        "id": "commonkeyfeatures",
+        "name": "Key Features Section",
+        "totalFields": 8,
+        "imageCount": 0,
+        "textCount": 8,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: HOW WE HELP",
+          "js_subtitle_2: YOU GET RESULTS.",
+          "js_title_3: Customized Strategic Plan"
+        ]
+      },
+      {
+        "id": "commonstruggling",
+        "name": "Challenges & Solutions Section",
+        "totalFields": 20,
+        "imageCount": 0,
+        "textCount": 20,
+        "imageKeys": [],
+        "sampleText": [
+          "text_span_1: Scroll to explore challenges",
+          "js_titleLine1_1: Struggling With Website Perfor",
+          "js_titleLine2_2: Here’s How Our Web Development"
+        ]
+      },
+      {
+        "id": "webservices",
+        "name": "Web Services Section",
+        "totalFields": 32,
+        "imageCount": 0,
+        "textCount": 32,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: Custom Web Applications & SaaS",
+          "js_desc_2: We engineer scalable, high-thr",
+          "js_tags_item_1: Cloud SaaS"
+        ]
+      },
+      {
+        "id": "technologiesbook",
+        "name": "Technologies Book Section",
+        "totalFields": 228,
+        "imageCount": 0,
+        "textCount": 228,
+        "imageKeys": [],
+        "sampleText": [
+          "js_name_1: Mint Sage",
+          "js_name_2: Alabaster Linen",
+          "js_name_3: Platinum Silver"
+        ]
+      },
+      {
+        "id": "webhireus",
+        "name": "Web Hire Us Section",
+        "totalFields": 2,
+        "imageCount": 0,
+        "textCount": 2,
+        "imageKeys": [],
+        "sampleText": [
+          "js_line1_1: Ready to scale your digital pr",
+          "js_line2_2: Hire the TechSolutionor team t"
+        ]
+      },
+      {
+        "id": "webfaq",
+        "name": "Web F A Q Section",
+        "totalFields": 21,
+        "imageCount": 0,
+        "textCount": 21,
+        "imageKeys": [],
+        "sampleText": [
+          "js_question_1: What types of web development ",
+          "js_answer_2: We provide full-stack web deve",
+          "js_question_3: Do you build responsive and mo"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/technologies",
+    "filePath": "app/technologies/page.js",
+    "frontendComponents": [
+      "React",
+      "TechnologiesHero",
+      "AgencyOverview",
+      "Newsletter",
+      "TechFAQ"
+    ],
+    "dbSectionCount": 4,
+    "dbSections": [
+      {
+        "id": "technologieshero",
+        "name": "Technologies Hero Section",
+        "totalFields": 7,
+        "imageCount": 1,
+        "textCount": 6,
+        "imageKeys": [
+          "image_bannerpic"
+        ],
+        "sampleText": [
+          "cms_text_1: TECHNOLOGY SERVICES",
+          "cms_text_2: Modern Technologies Powering O",
+          "cms_text_3: Delivering the best solutions "
+        ]
+      },
+      {
+        "id": "agencyoverview",
+        "name": "Agency Overview Section",
+        "totalFields": 98,
+        "imageCount": 17,
+        "textCount": 81,
+        "imageKeys": [
+          "image_reactjs",
+          "image_javascript",
+          "image_python",
+          "image_php",
+          "image_laravel",
+          "image_wp",
+          "image_shopfiy",
+          "image_magento",
+          "image_net",
+          "image_angular",
+          "image_flutter",
+          "image_swift",
+          "image_cplus",
+          "image_go",
+          "image_figma",
+          "image_googleads",
+          "image_meta"
+        ],
+        "sampleText": [
+          "js_desc_1: Single-page applications and r",
+          "js_buttonText_2: EXPLORE REACT",
+          "js_badge_3: UI LIBRARY"
+        ]
+      },
+      {
+        "id": "newsletter",
+        "name": "Newsletter & CTA Section",
+        "totalFields": 3,
+        "imageCount": 0,
+        "textCount": 3,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: Ready to scale your digital pr",
+          "js_buttonText_2: Hire Us",
+          "text_span_1: READY TO SCALE YOUR BUSINESS?"
+        ]
+      },
+      {
+        "id": "techfaq",
+        "name": "Tech F A Q Section",
+        "totalFields": 21,
+        "imageCount": 0,
+        "textCount": 21,
+        "imageKeys": [],
+        "sampleText": [
+          "js_question_1: Which technologies are best fo",
+          "js_answer_2: Technologies like Angular, Rea",
+          "js_question_3: How do HTML, CSS, and JavaScri"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/technologies/analytics",
+    "filePath": "app/technologies/analytics/page.js",
+    "frontendComponents": [
+      "React",
+      "AnalyticsBanner",
+      "AnalyticsFramework",
+      "AnalyticsCards",
+      "AnalyticsAdvantages",
+      "AnalyticsHireUs",
+      "AnalyticsFAQ"
+    ],
+    "dbSectionCount": 6,
+    "dbSections": [
+      {
+        "id": "analyticsbanner",
+        "name": "Analytics Banner Section",
+        "totalFields": 5,
+        "imageCount": 1,
+        "textCount": 4,
+        "imageKeys": [
+          "image_analyticbannerbg"
+        ],
+        "sampleText": [
+          "text_h1_1: Analytics: Data-Driven",
+          "text_h1_2: Technology for Business",
+          "text_h1_3: Insights"
+        ]
+      },
+      {
+        "id": "analyticsframework",
+        "name": "Analytics Framework Section",
+        "totalFields": 4,
+        "imageCount": 1,
+        "textCount": 3,
+        "imageKeys": [
+          "image_analyticsicon"
+        ],
+        "sampleText": [
+          "text_h1_1: Understanding Your Audience",
+          "text_p_2: Google Analytics empowers busi",
+          "text_button_3: Key Features"
+        ]
+      },
+      {
+        "id": "analyticscards",
+        "name": "Analytics Cards Section",
+        "totalFields": 8,
+        "imageCount": 0,
+        "textCount": 8,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: Real-Time Data Tracking",
+          "js_desc_2: Monitor visitor activity insta",
+          "js_title_3: Audience Insights"
+        ]
+      },
+      {
+        "id": "analyticsadvantages",
+        "name": "Analytics Advantages Section",
+        "totalFields": 6,
+        "imageCount": 0,
+        "textCount": 6,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: Data-Driven Decisions",
+          "js_desc_2: Use comprehensive insights to ",
+          "js_title_3: Integration with Google Ads"
+        ]
+      },
+      {
+        "id": "analyticshireus",
+        "name": "Analytics Hire Us Section",
+        "totalFields": 3,
+        "imageCount": 0,
+        "textCount": 3,
+        "imageKeys": [],
+        "sampleText": [
+          "text_h2_1: Ready to scale your digital pr",
+          "text_p_2: Hire the TechSolutionor team t",
+          "text_button_3: Hire Us"
+        ]
+      },
+      {
+        "id": "analyticsfaq",
+        "name": "Analytics F A Q Section",
+        "totalFields": 12,
+        "imageCount": 0,
+        "textCount": 12,
+        "imageKeys": [],
+        "sampleText": [
+          "js_question_1: What is Google Analytics?",
+          "js_answer_2: Google Analytics is a web anal",
+          "js_question_3: How does Google Analytics trac"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/technologies/angular",
+    "filePath": "app/technologies/angular/page.js",
+    "frontendComponents": [
+      "React",
+      "AngularBanner",
+      "AngularFramework",
+      "AngularCards",
+      "AngularAdvantages",
+      "AngularHireUs",
+      "AngularFAQ"
+    ],
+    "dbSectionCount": 6,
+    "dbSections": [
+      {
+        "id": "angularbanner",
+        "name": "Angular Banner Section",
+        "totalFields": 7,
+        "imageCount": 1,
+        "textCount": 6,
+        "imageKeys": [
+          "image_angularimg"
+        ],
+        "sampleText": [
+          "attr_badge_1: ENTERPRISE TYPESCRIPT FRAMEWOR",
+          "attr_titleLine1_2: Angular: Scalable Power",
+          "attr_titleLine2_3: for Enterprise Single-Page"
+        ]
+      },
+      {
+        "id": "angularframework",
+        "name": "Angular Framework Section",
+        "totalFields": 7,
+        "imageCount": 1,
+        "textCount": 6,
+        "imageKeys": [
+          "image_angularicon"
+        ],
+        "sampleText": [
+          "var_defaultHeading_1: Building Dynamic, Robust Web A",
+          "var_defaultParagraph_2: AngularJS is a powerful JavaSc",
+          "var_defaultButton_3: Key Features"
+        ]
+      },
+      {
+        "id": "angularcards",
+        "name": "Angular Cards Section",
+        "totalFields": 10,
+        "imageCount": 0,
+        "textCount": 10,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: Two-Way Data Binding",
+          "js_desc_2: AngularJS automatically synchr",
+          "js_title_3: MVC Architecture"
+        ]
+      },
+      {
+        "id": "angularadvantages",
+        "name": "Angular Advantages Section",
+        "totalFields": 8,
+        "imageCount": 0,
+        "textCount": 8,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: Efficient and Faster Developme",
+          "js_desc_2: AngularJS reduces repetitive c",
+          "js_title_3: Strong Community Support"
+        ]
+      },
+      {
+        "id": "angularhireus",
+        "name": "Angular Hire Us Section",
+        "totalFields": 3,
+        "imageCount": 0,
+        "textCount": 3,
+        "imageKeys": [],
+        "sampleText": [
+          "text_h2_1: Ready to scale your digital pr",
+          "text_p_2: Hire the TechSolutionor team t",
+          "text_button_3: Hire Us"
+        ]
+      },
+      {
+        "id": "angularfaq",
+        "name": "Angular F A Q Section",
+        "totalFields": 19,
+        "imageCount": 0,
+        "textCount": 19,
+        "imageKeys": [],
+        "sampleText": [
+          "js_question_1: What is AngularJS and how does",
+          "js_answer_2: AngularJS is an open‑source Ja",
+          "js_question_3: What are the key features of A"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/technologies/c-plus-plus",
+    "filePath": "app/technologies/c-plus-plus/page.js",
+    "frontendComponents": [
+      "React"
+    ],
+    "dbSectionCount": 1,
+    "dbSections": [
+      {
+        "id": "page_content",
+        "name": "Page  Content Section",
+        "totalFields": 4,
+        "imageCount": 0,
+        "textCount": 4,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: C++ Software Development Servi",
+          "js_description_2: High-performance C++ software ",
+          "text_h1_1: C++ Engineering & Solutions"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/technologies/css",
+    "filePath": "app/technologies/css/page.js",
+    "frontendComponents": [
+      "React",
+      "CssBanner",
+      "CssFramework",
+      "CssCards",
+      "CssAdvantages",
+      "CssHireUs",
+      "CssFAQ"
+    ],
+    "dbSectionCount": 6,
+    "dbSections": [
+      {
+        "id": "cssbanner",
+        "name": "Css Banner Section",
+        "totalFields": 7,
+        "imageCount": 1,
+        "textCount": 6,
+        "imageKeys": [
+          "image_cssimg"
+        ],
+        "sampleText": [
+          "attr_badge_1: RESPONSIVE STYLING & ANIMATION",
+          "attr_titleLine1_2: CSS3: Modern Styling",
+          "attr_titleLine2_3: & Fluid Animations for"
+        ]
+      },
+      {
+        "id": "cssframework",
+        "name": "Css Framework Section",
+        "totalFields": 7,
+        "imageCount": 1,
+        "textCount": 6,
+        "imageKeys": [
+          "image_cssicon"
+        ],
+        "sampleText": [
+          "var_defaultHeading_1: Designing Beautiful and Respon",
+          "var_defaultParagraph_2: CSS is the backbone of modern ",
+          "var_defaultButton_3: Key Features"
+        ]
+      },
+      {
+        "id": "csscards",
+        "name": "Css Cards Section",
+        "totalFields": 10,
+        "imageCount": 0,
+        "textCount": 10,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: Responsive Design",
+          "js_desc_2: CSS allows websites to adapt g",
+          "js_title_3: Advanced Styling"
+        ]
+      },
+      {
+        "id": "cssadvantages",
+        "name": "Css Advantages Section",
+        "totalFields": 8,
+        "imageCount": 0,
+        "textCount": 8,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: Efficiency",
+          "js_desc_2: By separating content from des",
+          "js_title_3: Consistency"
+        ]
+      },
+      {
+        "id": "csshireus",
+        "name": "Css Hire Us Section",
+        "totalFields": 3,
+        "imageCount": 0,
+        "textCount": 3,
+        "imageKeys": [],
+        "sampleText": [
+          "text_h2_1: Ready to scale your digital pr",
+          "text_p_2: Hire the TechSolutionor team t",
+          "text_button_3: Hire Us"
+        ]
+      },
+      {
+        "id": "cssfaq",
+        "name": "Css F A Q Section",
+        "totalFields": 13,
+        "imageCount": 0,
+        "textCount": 13,
+        "imageKeys": [],
+        "sampleText": [
+          "js_question_1: What is CSS used for?",
+          "js_answer_2: CSS (Cascading Style Sheets) i",
+          "js_question_3: Why is CSS important for web d"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/technologies/dotnet",
+    "filePath": "app/technologies/dotnet/page.js",
+    "frontendComponents": [
+      "React",
+      "Netanner",
+      "DotNetAsp",
+      "DotNetCards",
+      "DotNetAdvantages",
+      "DotNetHireUs",
+      "DotNetFAQ"
+    ],
+    "dbSectionCount": 6,
+    "dbSections": [
+      {
+        "id": "netanner",
+        "name": "Netanner Section",
+        "totalFields": 7,
+        "imageCount": 1,
+        "textCount": 6,
+        "imageKeys": [
+          "image_netimg"
+        ],
+        "sampleText": [
+          "attr_badge_1: MICROSOFT ENTERPRISE ECOSYSTEM",
+          "attr_titleLine1_2: .NET: Enterprise Core",
+          "attr_titleLine2_3: for Mission-Critical"
+        ]
+      },
+      {
+        "id": "dotnetasp",
+        "name": "DotNet Framework Section",
+        "totalFields": 6,
+        "imageCount": 1,
+        "textCount": 5,
+        "imageKeys": [
+          "image_dotneticon"
+        ],
+        "sampleText": [
+          "var_defaultHeading_1: Why Choose .NET for Your Busin",
+          "var_defaultParagraph_2: .NET is a versatile and powerf",
+          "attr_highlightText_1: Why Choose"
+        ]
+      },
+      {
+        "id": "dotnetcards",
+        "name": "Dot Net Cards Section",
+        "totalFields": 10,
+        "imageCount": 0,
+        "textCount": 10,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: Multi-Language Support",
+          "js_desc_2: .NET allows development in C#,",
+          "js_title_3: Cross-Platform Framework"
+        ]
+      },
+      {
+        "id": "dotnetadvantages",
+        "name": "Dot Net Advantages Section",
+        "totalFields": 8,
+        "imageCount": 0,
+        "textCount": 8,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: High Performance & Reliability",
+          "js_desc_2: .NET applications are optimize",
+          "js_title_3: Scalability for Growing Busine"
+        ]
+      },
+      {
+        "id": "dotnethireus",
+        "name": "Dot Net Hire Us Section",
+        "totalFields": 3,
+        "imageCount": 0,
+        "textCount": 3,
+        "imageKeys": [],
+        "sampleText": [
+          "text_h2_1: Ready to scale your digital pr",
+          "text_p_2: Hire the TechSolutionor team t",
+          "text_button_3: Hire Us"
+        ]
+      },
+      {
+        "id": "dotnetfaq",
+        "name": "Dot Net F A Q Section",
+        "totalFields": 11,
+        "imageCount": 0,
+        "textCount": 11,
+        "imageKeys": [],
+        "sampleText": [
+          "js_question_1: What makes .NET suitable for e",
+          "js_answer_2: .NET provides enterprise-grade",
+          "js_question_3: Can .NET be used for mobile ap"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/technologies/figma",
+    "filePath": "app/technologies/figma/page.js",
+    "frontendComponents": [
+      "React",
+      "FigmaBanner",
+      "FigmaFramework",
+      "FigmaCards",
+      "FigmaAdvantages",
+      "FigmaHireUs",
+      "FigmaFAQ"
+    ],
+    "dbSectionCount": 6,
+    "dbSections": [
+      {
+        "id": "figmabanner",
+        "name": "Figma Banner Section",
+        "totalFields": 7,
+        "imageCount": 1,
+        "textCount": 6,
+        "imageKeys": [
+          "image_figmaimg"
+        ],
+        "sampleText": [
+          "attr_badge_1: COLLABORATIVE UI/UX DESIGN",
+          "attr_titleLine1_2: Figma: Modern Design",
+          "attr_titleLine2_3: Systems & Interactive"
+        ]
+      },
+      {
+        "id": "figmaframework",
+        "name": "Figma Framework Section",
+        "totalFields": 7,
+        "imageCount": 1,
+        "textCount": 6,
+        "imageKeys": [
+          "image_figmaicon"
+        ],
+        "sampleText": [
+          "var_defaultHeading_1: Collaborative Design for Teams",
+          "var_defaultParagraph_2: Figma is a powerful cloud-base",
+          "var_defaultButton_3: Key Features"
+        ]
+      },
+      {
+        "id": "figmacards",
+        "name": "Figma Cards Section",
+        "totalFields": 10,
+        "imageCount": 0,
+        "textCount": 10,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: Real-Time Collaboration",
+          "js_desc_2: Multiple users can design, edi",
+          "js_title_3: Cross-Platform Support"
+        ]
+      },
+      {
+        "id": "figmaadvantages",
+        "name": "Figma Advantages Section",
+        "totalFields": 8,
+        "imageCount": 0,
+        "textCount": 8,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: Seamless Collaboration",
+          "js_desc_2: Figma fosters teamwork and com",
+          "js_title_3: Unified Design and Prototyping"
+        ]
+      },
+      {
+        "id": "figmahireus",
+        "name": "Figma Hire Us Section",
+        "totalFields": 3,
+        "imageCount": 0,
+        "textCount": 3,
+        "imageKeys": [],
+        "sampleText": [
+          "text_h2_1: Ready to scale your digital pr",
+          "text_p_2: Hire the TechSolutionor team t",
+          "text_button_3: Hire Us"
+        ]
+      },
+      {
+        "id": "figmafaq",
+        "name": "Figma F A Q Section",
+        "totalFields": 13,
+        "imageCount": 0,
+        "textCount": 13,
+        "imageKeys": [],
+        "sampleText": [
+          "js_question_1: What is Figma used for?",
+          "js_answer_2: Figma is a cloud-based design ",
+          "js_question_3: Can multiple people work on Fi"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/technologies/flutter",
+    "filePath": "app/technologies/flutter/page.js",
+    "frontendComponents": [
+      "React",
+      "FlutterBanner",
+      "FlutterFramework",
+      "FlutterCards",
+      "FlutterAdvantages",
+      "FlutterHireUs",
+      "FlutterFAQ"
+    ],
+    "dbSectionCount": 6,
+    "dbSections": [
+      {
+        "id": "flutterbanner",
+        "name": "Flutter Banner Section",
+        "totalFields": 7,
+        "imageCount": 1,
+        "textCount": 6,
+        "imageKeys": [
+          "image_flutterimg"
+        ],
+        "sampleText": [
+          "attr_badge_1: CROSS-PLATFORM MOBILE FRAMEWOR",
+          "attr_titleLine1_2: Flutter: Native Performance",
+          "attr_titleLine2_3: from a Single Unified"
+        ]
+      },
+      {
+        "id": "flutterframework",
+        "name": "Flutter Framework Section",
+        "totalFields": 7,
+        "imageCount": 1,
+        "textCount": 6,
+        "imageKeys": [
+          "image_fluttericon"
+        ],
+        "sampleText": [
+          "var_defaultHeading_1: Building Seamless Multi-Platfo",
+          "var_defaultParagraph_2: Flutter is a comprehensive fra",
+          "var_defaultButton_3: Key Features"
+        ]
+      },
+      {
+        "id": "fluttercards",
+        "name": "Flutter Cards Section",
+        "totalFields": 10,
+        "imageCount": 0,
+        "textCount": 10,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: Single Codebase",
+          "js_desc_2: Write once and deploy everywhe",
+          "js_title_3: Rich Widget Library"
+        ]
+      },
+      {
+        "id": "flutteradvantages",
+        "name": "Flutter Advantages Section",
+        "totalFields": 8,
+        "imageCount": 0,
+        "textCount": 8,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: Design Flexibility",
+          "js_desc_2: Flutter’s layered architecture",
+          "js_title_3: Community and Support"
+        ]
+      },
+      {
+        "id": "flutterhireus",
+        "name": "Flutter Hire Us Section",
+        "totalFields": 3,
+        "imageCount": 0,
+        "textCount": 3,
+        "imageKeys": [],
+        "sampleText": [
+          "text_h2_1: Ready to scale your digital pr",
+          "text_p_2: Hire the TechSolutionor team t",
+          "text_button_3: Hire Us"
+        ]
+      },
+      {
+        "id": "flutterfaq",
+        "name": "Flutter F A Q Section",
+        "totalFields": 13,
+        "imageCount": 0,
+        "textCount": 13,
+        "imageKeys": [],
+        "sampleText": [
+          "js_question_1: What is Flutter used for?",
+          "js_answer_2: Flutter is used to develop cro",
+          "js_question_3: Why choose Flutter for app dev"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/technologies/go",
+    "filePath": "app/technologies/go/page.js",
+    "frontendComponents": [
+      "React"
+    ],
+    "dbSectionCount": 1,
+    "dbSections": [
+      {
+        "id": "page_content",
+        "name": "Page  Content Section",
+        "totalFields": 4,
+        "imageCount": 0,
+        "textCount": 4,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: Golang Development Services | ",
+          "js_description_2: Scalable cloud-native Go micro",
+          "text_h1_1: Golang Microservices & API Eng"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/technologies/google-ads",
+    "filePath": "app/technologies/google-ads/page.js",
+    "frontendComponents": [
+      "React",
+      "GoogleBanner",
+      "GoogleFramework",
+      "GoogleCards",
+      "GoogleAdvantages",
+      "GoogleHireUs",
+      "GoogleFAQ"
+    ],
+    "dbSectionCount": 6,
+    "dbSections": [
+      {
+        "id": "googlebanner",
+        "name": "Google Banner Section",
+        "totalFields": 7,
+        "imageCount": 1,
+        "textCount": 6,
+        "imageKeys": [
+          "image_googleadsimg"
+        ],
+        "sampleText": [
+          "attr_badge_1: HIGH-INTENT SEARCH & PPC",
+          "attr_titleLine1_2: Google Ads: Targeted",
+          "attr_titleLine2_3: Search & Display"
+        ]
+      },
+      {
+        "id": "googleframework",
+        "name": "Google Framework Section",
+        "totalFields": 7,
+        "imageCount": 1,
+        "textCount": 6,
+        "imageKeys": [
+          "image_googleadsicon"
+        ],
+        "sampleText": [
+          "var_defaultHeading_1: Reach Your Audience with Preci",
+          "var_defaultParagraph_2: Google Ads is a powerful adver",
+          "var_defaultButton_3: Key Features"
+        ]
+      },
+      {
+        "id": "googlecards",
+        "name": "Google Cards Section",
+        "totalFields": 10,
+        "imageCount": 0,
+        "textCount": 10,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: Targeted Advertising",
+          "js_desc_2: Reach the most relevant audien",
+          "js_title_3: Keyword Bidding"
+        ]
+      },
+      {
+        "id": "googleadvantages",
+        "name": "Google Advantages Section",
+        "totalFields": 8,
+        "imageCount": 0,
+        "textCount": 8,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: Flexible Budgeting",
+          "js_desc_2: With pay-per-click (PPC) adver",
+          "js_title_3: Instant Results"
+        ]
+      },
+      {
+        "id": "googlehireus",
+        "name": "Google Hire Us Section",
+        "totalFields": 3,
+        "imageCount": 0,
+        "textCount": 3,
+        "imageKeys": [],
+        "sampleText": [
+          "text_h2_1: Ready to scale your digital pr",
+          "text_p_2: Hire the TechSolutionor team t",
+          "text_button_3: Hire Us"
+        ]
+      },
+      {
+        "id": "googlefaq",
+        "name": "Google F A Q Section",
+        "totalFields": 13,
+        "imageCount": 0,
+        "textCount": 13,
+        "imageKeys": [],
+        "sampleText": [
+          "js_question_1: What is Google Ads?",
+          "js_answer_2: Google Ads is a digital advert",
+          "js_question_3: How does Google Ads work?"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/technologies/html",
+    "filePath": "app/technologies/html/page.js",
+    "frontendComponents": [
+      "React",
+      "HTMLBanner",
+      "HtmlFramework",
+      "HtmlCards",
+      "HtmlAdvantages",
+      "HtmlHireUs",
+      "HtmlFAQ"
+    ],
+    "dbSectionCount": 6,
+    "dbSections": [
+      {
+        "id": "htmlbanner",
+        "name": "H T M L Banner Section",
+        "totalFields": 7,
+        "imageCount": 1,
+        "textCount": 6,
+        "imageKeys": [
+          "image_htmlimg"
+        ],
+        "sampleText": [
+          "attr_badge_1: SEMANTIC WEB ARCHITECTURE",
+          "attr_titleLine1_2: HTML5: The Essential",
+          "attr_titleLine2_3: Building Block of Modern"
+        ]
+      },
+      {
+        "id": "htmlframework",
+        "name": "Html Framework Section",
+        "totalFields": 7,
+        "imageCount": 1,
+        "textCount": 6,
+        "imageKeys": [
+          "image_htmlicon"
+        ],
+        "sampleText": [
+          "var_defaultHeading_1: The Backbone of the Web",
+          "var_defaultParagraph_2: HTML (HyperText Markup Languag",
+          "var_defaultButton_3: Key Features"
+        ]
+      },
+      {
+        "id": "htmlcards",
+        "name": "Html Cards Section",
+        "totalFields": 10,
+        "imageCount": 0,
+        "textCount": 10,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: Structure",
+          "js_desc_2: HTML provides a clear structur",
+          "js_title_3: Semantics"
+        ]
+      },
+      {
+        "id": "htmladvantages",
+        "name": "Html Advantages Section",
+        "totalFields": 8,
+        "imageCount": 0,
+        "textCount": 8,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: Elements and Tags",
+          "js_desc_2: HTML consists of a wide range ",
+          "js_title_3: Forms and User Input"
+        ]
+      },
+      {
+        "id": "htmlhireus",
+        "name": "Html Hire Us Section",
+        "totalFields": 3,
+        "imageCount": 0,
+        "textCount": 3,
+        "imageKeys": [],
+        "sampleText": [
+          "text_h2_1: Ready to scale your digital pr",
+          "text_p_2: Hire the TechSolutionor team t",
+          "text_button_3: Hire Us"
+        ]
+      },
+      {
+        "id": "htmlfaq",
+        "name": "Html F A Q Section",
+        "totalFields": 17,
+        "imageCount": 0,
+        "textCount": 17,
+        "imageKeys": [],
+        "sampleText": [
+          "js_question_1: What is HTML used for?",
+          "js_answer_2: HTML (HyperText Markup Languag",
+          "js_question_3: Why is HTML important for webs"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/technologies/javascript",
+    "filePath": "app/technologies/javascript/page.js",
+    "frontendComponents": [
+      "React",
+      "JavaBanner",
+      "JsFramework",
+      "JsCards",
+      "JsAdvantages",
+      "JsHireUs",
+      "JsFAQ"
+    ],
+    "dbSectionCount": 6,
+    "dbSections": [
+      {
+        "id": "javabanner",
+        "name": "Java Banner Section",
+        "totalFields": 7,
+        "imageCount": 1,
+        "textCount": 6,
+        "imageKeys": [
+          "image_jsimg"
+        ],
+        "sampleText": [
+          "attr_badge_1: UNIVERSAL WEB CORE",
+          "attr_titleLine1_2: JavaScript: Core",
+          "attr_titleLine2_3: Technology for Modern"
+        ]
+      },
+      {
+        "id": "jsframework",
+        "name": "Js Framework Section",
+        "totalFields": 6,
+        "imageCount": 1,
+        "textCount": 5,
+        "imageKeys": [
+          "image_jsicon"
+        ],
+        "sampleText": [
+          "var_defaultHeading_1: The Backbone of Modern Web Dev",
+          "var_defaultParagraph_2: JavaScript is a powerful and v",
+          "attr_highlightText_1: Why Choose"
+        ]
+      },
+      {
+        "id": "jscards",
+        "name": "Js Cards Section",
+        "totalFields": 10,
+        "imageCount": 0,
+        "textCount": 10,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: Dynamic Scripting",
+          "js_desc_2: JavaScript enables dynamic con",
+          "js_title_3: Asynchronous Processing"
+        ]
+      },
+      {
+        "id": "jsadvantages",
+        "name": "Js Advantages Section",
+        "totalFields": 8,
+        "imageCount": 0,
+        "textCount": 8,
+        "imageKeys": [],
+        "sampleText": [
+          "cms_text_1: Advantages",
+          "js_title_1: Versatility",
+          "js_desc_2: JavaScript is used across mult"
+        ]
+      },
+      {
+        "id": "jshireus",
+        "name": "Js Hire Us Section",
+        "totalFields": 2,
+        "imageCount": 0,
+        "textCount": 2,
+        "imageKeys": [],
+        "sampleText": [
+          "js_line1_1: Ready to scale your digital pr",
+          "js_line2_2: Hire the TechSolutionor team t"
+        ]
+      },
+      {
+        "id": "jsfaq",
+        "name": "Js F A Q Section",
+        "totalFields": 17,
+        "imageCount": 0,
+        "textCount": 17,
+        "imageKeys": [],
+        "sampleText": [
+          "js_question_1: What is JavaScript used for?",
+          "js_answer_2: JavaScript is used to create i",
+          "js_question_3: Why should I choose JavaScript"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/technologies/laravel",
+    "filePath": "app/technologies/laravel/page.js",
+    "frontendComponents": [
+      "React",
+      "LaravelBanner",
+      "Framework",
+      "LaravelCards",
+      "Advantages",
+      "TechFAQS"
+    ],
+    "dbSectionCount": 5,
+    "dbSections": [
+      {
+        "id": "laravelbanner",
+        "name": "Laravel Banner Section",
+        "totalFields": 7,
+        "imageCount": 1,
+        "textCount": 6,
+        "imageKeys": [
+          "image_laravelimg"
+        ],
+        "sampleText": [
+          "attr_badge_1: PHP MVC FRAMEWORK",
+          "attr_titleLine1_2: Laravel: Powerful PHP",
+          "attr_titleLine2_3: Framework for Web"
+        ]
+      },
+      {
+        "id": "framework",
+        "name": "Framework Section",
+        "totalFields": 7,
+        "imageCount": 1,
+        "textCount": 6,
+        "imageKeys": [
+          "image_laravelshowcase"
+        ],
+        "sampleText": [
+          "var_defaultP1_1: Built for modern engineering, ",
+          "var_defaultP2_2: With its expressive syntax and",
+          "var_defaultP3_3: Development teams move faster."
+        ]
+      },
+      {
+        "id": "laravelcards",
+        "name": "Laravel Cards Section",
+        "totalFields": 10,
+        "imageCount": 0,
+        "textCount": 10,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: RESTful API Development",
+          "js_desc_2: Laravel streamlines the develo",
+          "js_title_3: Task Scheduling"
+        ]
+      },
+      {
+        "id": "advantages",
+        "name": "Advantages Section",
+        "totalFields": 8,
+        "imageCount": 0,
+        "textCount": 8,
+        "imageKeys": [],
+        "sampleText": [
+          "cms_text_1: Advantages",
+          "js_title_1: Clean and Readable Syntax",
+          "js_desc_2: Laravel's expressive and clean"
+        ]
+      },
+      {
+        "id": "techfaqs",
+        "name": "Tech F A Q S Section",
+        "totalFields": 21,
+        "imageCount": 0,
+        "textCount": 21,
+        "imageKeys": [],
+        "sampleText": [
+          "js_question_1: Which technologies are best fo",
+          "js_answer_2: Technologies like Angular, Rea",
+          "js_question_3: How do HTML, CSS, and JavaScri"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/technologies/magento",
+    "filePath": "app/technologies/magento/page.js",
+    "frontendComponents": [
+      "React",
+      "MagentoBanner",
+      "MagentoFramework",
+      "MagentoCards",
+      "MagentoAdvantages",
+      "MagentoHireUs",
+      "MagentoFAQ"
+    ],
+    "dbSectionCount": 6,
+    "dbSections": [
+      {
+        "id": "magentobanner",
+        "name": "Magento Banner Section",
+        "totalFields": 7,
+        "imageCount": 1,
+        "textCount": 6,
+        "imageKeys": [
+          "image_magentoimg"
+        ],
+        "sampleText": [
+          "attr_badge_1: ENTERPRISE COMMERCE ARCHITECTU",
+          "attr_titleLine1_2: Magento: Scalable Power",
+          "attr_titleLine2_3: for High-Volume Digital"
+        ]
+      },
+      {
+        "id": "magentoframework",
+        "name": "Magento Framework Section",
+        "totalFields": 7,
+        "imageCount": 1,
+        "textCount": 6,
+        "imageKeys": [
+          "image_magentoicon"
+        ],
+        "sampleText": [
+          "var_defaultHeading_1: Powerful and Flexible E-Commer",
+          "var_defaultParagraph_2: Introduction to Magento as a l",
+          "var_defaultButton_3: Key Features"
+        ]
+      },
+      {
+        "id": "magentocards",
+        "name": "Magento Cards Section",
+        "totalFields": 10,
+        "imageCount": 0,
+        "textCount": 10,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: Customizable Storefronts",
+          "js_desc_2: Magento provides highly custom",
+          "js_title_3: Robust Inventory Management"
+        ]
+      },
+      {
+        "id": "magentoadvantages",
+        "name": "Magento Advantages Section",
+        "totalFields": 8,
+        "imageCount": 0,
+        "textCount": 8,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: SEO-Friendly",
+          "js_desc_2: Magento is designed with SEO o",
+          "js_title_3: Mobile Commerce Ready"
+        ]
+      },
+      {
+        "id": "magentohireus",
+        "name": "Magento Hire Us Section",
+        "totalFields": 3,
+        "imageCount": 0,
+        "textCount": 3,
+        "imageKeys": [],
+        "sampleText": [
+          "text_h2_1: Ready to scale your digital pr",
+          "text_p_2: Hire the TechSolutionor team t",
+          "text_button_3: Hire Us"
+        ]
+      },
+      {
+        "id": "magentofaq",
+        "name": "Magento F A Q Section",
+        "totalFields": 15,
+        "imageCount": 0,
+        "textCount": 15,
+        "imageKeys": [],
+        "sampleText": [
+          "js_question_1: What is Magento used for?",
+          "js_answer_2: Magento is used to build and m",
+          "js_question_3: Why choose Magento for e-comme"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/technologies/meta",
+    "filePath": "app/technologies/meta/page.js",
+    "frontendComponents": [
+      "React",
+      "MetaBanner",
+      "MetaFramework",
+      "MetaCards",
+      "MetaAdvantages",
+      "MetaHireUs",
+      "MetaFAQ"
+    ],
+    "dbSectionCount": 6,
+    "dbSections": [
+      {
+        "id": "metabanner",
+        "name": "Meta Banner Section",
+        "totalFields": 7,
+        "imageCount": 1,
+        "textCount": 6,
+        "imageKeys": [
+          "image_metaimg"
+        ],
+        "sampleText": [
+          "attr_badge_1: SOCIAL ADVERTISING & TARGETING",
+          "attr_titleLine1_2: Meta: High-Conversion",
+          "attr_titleLine2_3: Advertising Across Facebook"
+        ]
+      },
+      {
+        "id": "metaframework",
+        "name": "Meta Framework Section",
+        "totalFields": 7,
+        "imageCount": 1,
+        "textCount": 6,
+        "imageKeys": [
+          "image_metaicon"
+        ],
+        "sampleText": [
+          "var_defaultHeading_1: Connecting People and Building",
+          "var_defaultParagraph_2: Meta is a leading technology c",
+          "var_defaultButton_3: Key Features"
+        ]
+      },
+      {
+        "id": "metacards",
+        "name": "Meta Cards Section",
+        "totalFields": 10,
+        "imageCount": 0,
+        "textCount": 10,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: Social Connectivity",
+          "js_desc_2: Meta’s platforms provide seaml",
+          "js_title_3: Metaverse Development"
+        ]
+      },
+      {
+        "id": "metaadvantages",
+        "name": "Meta Advantages Section",
+        "totalFields": 8,
+        "imageCount": 0,
+        "textCount": 8,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: Global Reach",
+          "js_desc_2: Meta connects billions of user",
+          "js_title_3: Innovative Technologies"
+        ]
+      },
+      {
+        "id": "metahireus",
+        "name": "Meta Hire Us Section",
+        "totalFields": 3,
+        "imageCount": 0,
+        "textCount": 3,
+        "imageKeys": [],
+        "sampleText": [
+          "text_h2_1: Ready to scale your digital pr",
+          "text_p_2: Hire the TechSolutionor team t",
+          "text_button_3: Hire Us"
+        ]
+      },
+      {
+        "id": "metafaq",
+        "name": "Meta F A Q Section",
+        "totalFields": 13,
+        "imageCount": 0,
+        "textCount": 13,
+        "imageKeys": [],
+        "sampleText": [
+          "js_question_1: What is Meta?",
+          "js_answer_2: Meta is a technology company t",
+          "js_question_3: Which platforms does Meta own?"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/technologies/php",
+    "filePath": "app/technologies/php/page.js",
+    "frontendComponents": [
+      "React",
+      "PhpBanner",
+      "PhpFramework",
+      "PhpCards",
+      "PhpAdvantages",
+      "PhpHireUs",
+      "PhpFAQ"
+    ],
+    "dbSectionCount": 6,
+    "dbSections": [
+      {
+        "id": "phpbanner",
+        "name": "Php Banner Section",
+        "totalFields": 7,
+        "imageCount": 1,
+        "textCount": 6,
+        "imageKeys": [
+          "image_phpimg"
+        ],
+        "sampleText": [
+          "attr_badge_1: SERVER-SIDE FOUNDATION",
+          "attr_titleLine1_2: PHP: Dynamic Server",
+          "attr_titleLine2_3: Solutions for Enterprise"
+        ]
+      },
+      {
+        "id": "phpframework",
+        "name": "Php Framework Section",
+        "totalFields": 7,
+        "imageCount": 1,
+        "textCount": 6,
+        "imageKeys": [
+          "image_phpicon"
+        ],
+        "sampleText": [
+          "var_defaultHeading_1: Dynamic and Server-Side Script",
+          "var_defaultParagraph_2: PHP (Hypertext Preprocessor) i",
+          "var_defaultButton_3: Key Features"
+        ]
+      },
+      {
+        "id": "phpcards",
+        "name": "Php Cards Section",
+        "totalFields": 10,
+        "imageCount": 0,
+        "textCount": 10,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: Ease of Use",
+          "js_desc_2: PHP’s simple and clear syntax ",
+          "js_title_3: Flexibility"
+        ]
+      },
+      {
+        "id": "phpadvantages",
+        "name": "Php Advantages Section",
+        "totalFields": 8,
+        "imageCount": 0,
+        "textCount": 8,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: Wide Adoption",
+          "js_desc_2: PHP is one of the most widely ",
+          "js_title_3: Cost-Effective"
+        ]
+      },
+      {
+        "id": "phphireus",
+        "name": "Php Hire Us Section",
+        "totalFields": 3,
+        "imageCount": 0,
+        "textCount": 3,
+        "imageKeys": [],
+        "sampleText": [
+          "text_h2_1: Ready to scale your digital pr",
+          "text_p_2: Hire the TechSolutionor team t",
+          "text_button_3: Hire Us"
+        ]
+      },
+      {
+        "id": "phpfaq",
+        "name": "Php F A Q Section",
+        "totalFields": 17,
+        "imageCount": 0,
+        "textCount": 17,
+        "imageKeys": [],
+        "sampleText": [
+          "js_question_1: What is PHP used for?",
+          "js_answer_2: PHP is used for server-side we",
+          "js_question_3: Why should I use PHP for web d"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/technologies/python",
+    "filePath": "app/technologies/python/page.js",
+    "frontendComponents": [
+      "React",
+      "PythonBanner",
+      "PythonFramework",
+      "PythonCards",
+      "PythonAdvantages",
+      "PythonHireUs",
+      "PythonFAQ"
+    ],
+    "dbSectionCount": 6,
+    "dbSections": [
+      {
+        "id": "pythonbanner",
+        "name": "Python Banner Section",
+        "totalFields": 7,
+        "imageCount": 1,
+        "textCount": 6,
+        "imageKeys": [
+          "image_pythonimg"
+        ],
+        "sampleText": [
+          "attr_badge_1: AI & GENERAL PURPOSE",
+          "attr_titleLine1_2: Python: Modern Power",
+          "attr_titleLine2_3: for Web, AI and App"
+        ]
+      },
+      {
+        "id": "pythonframework",
+        "name": "Python Framework Section",
+        "totalFields": 7,
+        "imageCount": 1,
+        "textCount": 6,
+        "imageKeys": [
+          "image_pythonicon"
+        ],
+        "sampleText": [
+          "cms_text_1: Versatile and Powerful Program",
+          "cms_text_2: Python is a high-level, interp",
+          "cms_text_3: Key Features"
+        ]
+      },
+      {
+        "id": "pythoncards",
+        "name": "Python Cards Section",
+        "totalFields": 10,
+        "imageCount": 0,
+        "textCount": 10,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: Interpreted Language",
+          "js_desc_2: Python executes code line by l",
+          "js_title_3: Dynamic Typing"
+        ]
+      },
+      {
+        "id": "pythonadvantages",
+        "name": "Python Advantages Section",
+        "totalFields": 8,
+        "imageCount": 0,
+        "textCount": 8,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: Rapid Development",
+          "js_desc_2: Python’s clean syntax and rich",
+          "js_title_3: Versatility"
+        ]
+      },
+      {
+        "id": "pythonhireus",
+        "name": "Python Hire Us Section",
+        "totalFields": 3,
+        "imageCount": 0,
+        "textCount": 3,
+        "imageKeys": [],
+        "sampleText": [
+          "cms_text_1: Ready to scale your digital pr",
+          "cms_text_2: Hire the TechSolutionor team t",
+          "cms_text_3: Hire Us"
+        ]
+      },
+      {
+        "id": "pythonfaq",
+        "name": "Python F A Q Section",
+        "totalFields": 17,
+        "imageCount": 0,
+        "textCount": 17,
+        "imageKeys": [],
+        "sampleText": [
+          "js_question_1: What is Python used for?",
+          "js_answer_2: Python is used for web develop",
+          "js_question_3: Why is Python so popular?"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/technologies/react",
+    "filePath": "app/technologies/react/page.js",
+    "frontendComponents": [
+      "React",
+      "ReactBanner",
+      "ReactFrameworks",
+      "ReactCards",
+      "ReactAdvantages",
+      "ReactHireUs",
+      "ReactFAQ"
+    ],
+    "dbSectionCount": 6,
+    "dbSections": [
+      {
+        "id": "reactbanner",
+        "name": "React Banner Section",
+        "totalFields": 7,
+        "imageCount": 1,
+        "textCount": 6,
+        "imageKeys": [
+          "image_reactimg"
+        ],
+        "sampleText": [
+          "attr_badge_1: REACTIVE UI FRAMEWORK",
+          "attr_titleLine1_2: ReactJS: Dynamic &",
+          "attr_titleLine2_3: Interactive High-Speed"
+        ]
+      },
+      {
+        "id": "reactframeworks",
+        "name": "React Framework Section",
+        "totalFields": 7,
+        "imageCount": 1,
+        "textCount": 6,
+        "imageKeys": [
+          "image_reacticon"
+        ],
+        "sampleText": [
+          "var_defaultHeading_1: Building Dynamic User Interfac",
+          "var_defaultParagraph_2: React, developed and maintaine",
+          "var_defaultButton_3: Key Features"
+        ]
+      },
+      {
+        "id": "reactcards",
+        "name": "React Cards Section",
+        "totalFields": 10,
+        "imageCount": 0,
+        "textCount": 10,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: Virtual DOM",
+          "js_desc_2: React uses a Virtual DOM to op",
+          "js_title_3: JSX"
+        ]
+      },
+      {
+        "id": "reactadvantages",
+        "name": "React Advantages Section",
+        "totalFields": 8,
+        "imageCount": 0,
+        "textCount": 8,
+        "imageKeys": [],
+        "sampleText": [
+          "cms_text_1: Advantages",
+          "js_title_1: High Performance",
+          "js_desc_2: React’s efficient rendering th"
+        ]
+      },
+      {
+        "id": "reacthireus",
+        "name": "React Hire Us Section",
+        "totalFields": 2,
+        "imageCount": 0,
+        "textCount": 2,
+        "imageKeys": [],
+        "sampleText": [
+          "js_line1_1: Ready to scale your digital pr",
+          "js_line2_2: Hire the TechSolutionor team t"
+        ]
+      },
+      {
+        "id": "reactfaq",
+        "name": "React F A Q Section",
+        "totalFields": 17,
+        "imageCount": 0,
+        "textCount": 17,
+        "imageKeys": [],
+        "sampleText": [
+          "js_question_1: What is React JS used for?",
+          "js_answer_2: React JS is used to build dyna",
+          "js_question_3: Why should I choose React for "
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/technologies/reactjs",
+    "filePath": "app/technologies/reactjs/page.js",
+    "frontendComponents": [
+      "React",
+      "ReactPage"
+    ],
+    "dbSectionCount": 6,
+    "dbSections": [
+      {
+        "id": "reactbanner",
+        "name": "React Banner Section",
+        "totalFields": 7,
+        "imageCount": 1,
+        "textCount": 6,
+        "imageKeys": [
+          "image_reactimg"
+        ],
+        "sampleText": [
+          "attr_badge_1: REACTIVE UI FRAMEWORK",
+          "attr_titleLine1_2: ReactJS: Dynamic &",
+          "attr_titleLine2_3: Interactive High-Speed"
+        ]
+      },
+      {
+        "id": "reactframeworks",
+        "name": "React Framework Section",
+        "totalFields": 7,
+        "imageCount": 1,
+        "textCount": 6,
+        "imageKeys": [
+          "image_reacticon"
+        ],
+        "sampleText": [
+          "var_defaultHeading_1: Building Dynamic User Interfac",
+          "var_defaultParagraph_2: React, developed and maintaine",
+          "var_defaultButton_3: Key Features"
+        ]
+      },
+      {
+        "id": "reactcards",
+        "name": "React Cards Section",
+        "totalFields": 10,
+        "imageCount": 0,
+        "textCount": 10,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: Virtual DOM",
+          "js_desc_2: React uses a Virtual DOM to op",
+          "js_title_3: JSX"
+        ]
+      },
+      {
+        "id": "reactadvantages",
+        "name": "React Advantages Section",
+        "totalFields": 8,
+        "imageCount": 0,
+        "textCount": 8,
+        "imageKeys": [],
+        "sampleText": [
+          "cms_text_1: Advantages",
+          "js_title_1: High Performance",
+          "js_desc_2: React’s efficient rendering th"
+        ]
+      },
+      {
+        "id": "reacthireus",
+        "name": "React Hire Us Section",
+        "totalFields": 2,
+        "imageCount": 0,
+        "textCount": 2,
+        "imageKeys": [],
+        "sampleText": [
+          "js_line1_1: Ready to scale your digital pr",
+          "js_line2_2: Hire the TechSolutionor team t"
+        ]
+      },
+      {
+        "id": "reactfaq",
+        "name": "React F A Q Section",
+        "totalFields": 17,
+        "imageCount": 0,
+        "textCount": 17,
+        "imageKeys": [],
+        "sampleText": [
+          "js_question_1: What is React JS used for?",
+          "js_answer_2: React JS is used to build dyna",
+          "js_question_3: Why should I choose React for "
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/technologies/shopify",
+    "filePath": "app/technologies/shopify/page.js",
+    "frontendComponents": [
+      "React",
+      "ShopifyBanner",
+      "ShopifyFramework",
+      "ShopifyCards",
+      "ShopifyAdvantages",
+      "ShopifyHireUs",
+      "ShopifyFAQ"
+    ],
+    "dbSectionCount": 6,
+    "dbSections": [
+      {
+        "id": "shopifybanner",
+        "name": "Shopify Banner Section",
+        "totalFields": 7,
+        "imageCount": 1,
+        "textCount": 6,
+        "imageKeys": [
+          "image_shopifyimg"
+        ],
+        "sampleText": [
+          "attr_badge_1: GLOBAL COMMERCE ENGINE",
+          "attr_titleLine1_2: Shopify: High-Converting",
+          "attr_titleLine2_3: E-Commerce Stores for"
+        ]
+      },
+      {
+        "id": "shopifyframework",
+        "name": "Shopify Framework Section",
+        "totalFields": 7,
+        "imageCount": 1,
+        "textCount": 6,
+        "imageKeys": [
+          "image_shopifyicon"
+        ],
+        "sampleText": [
+          "var_defaultHeading_1: Your Complete E-Commerce Solut",
+          "var_defaultParagraph_2: Shopify is a leading e-commerc",
+          "var_defaultButton_3: Key Features"
+        ]
+      },
+      {
+        "id": "shopifycards",
+        "name": "Shopify Cards Section",
+        "totalFields": 10,
+        "imageCount": 0,
+        "textCount": 10,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: Mobile Optimization",
+          "js_desc_2: Shopify stores are fully respo",
+          "js_title_3: Multi-Channel Selling"
+        ]
+      },
+      {
+        "id": "shopifyadvantages",
+        "name": "Shopify Advantages Section",
+        "totalFields": 8,
+        "imageCount": 0,
+        "textCount": 8,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: Ease of Use",
+          "js_desc_2: Shopify’s intuitive interface ",
+          "js_title_3: Scalability"
+        ]
+      },
+      {
+        "id": "shopifyhireus",
+        "name": "Shopify Hire Us Section",
+        "totalFields": 3,
+        "imageCount": 0,
+        "textCount": 3,
+        "imageKeys": [],
+        "sampleText": [
+          "text_h2_1: Ready to scale your digital pr",
+          "text_p_2: Hire the TechSolutionor team t",
+          "text_button_3: Hire Us"
+        ]
+      },
+      {
+        "id": "shopifyfaq",
+        "name": "Shopify F A Q Section",
+        "totalFields": 15,
+        "imageCount": 0,
+        "textCount": 15,
+        "imageKeys": [],
+        "sampleText": [
+          "js_question_1: What is Shopify used for?",
+          "js_answer_2: Shopify is used to create and ",
+          "js_question_3: Is Shopify beginner-friendly?"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/technologies/swift",
+    "filePath": "app/technologies/swift/page.js",
+    "frontendComponents": [
+      "React",
+      "SwiftBanner",
+      "SwiftFramework",
+      "SwiftCards",
+      "SwiftAdvantages",
+      "SwiftHireUs",
+      "SwiftFAQ"
+    ],
+    "dbSectionCount": 6,
+    "dbSections": [
+      {
+        "id": "swiftbanner",
+        "name": "Swift Banner Section",
+        "totalFields": 7,
+        "imageCount": 1,
+        "textCount": 6,
+        "imageKeys": [
+          "image_swiftimg"
+        ],
+        "sampleText": [
+          "attr_badge_1: APPLE ECOSYSTEM NATIVE",
+          "attr_titleLine1_2: Swift: Modern Language",
+          "attr_titleLine2_3: for iOS, macOS & Apple"
+        ]
+      },
+      {
+        "id": "swiftframework",
+        "name": "Swift Framework Section",
+        "totalFields": 7,
+        "imageCount": 1,
+        "textCount": 6,
+        "imageKeys": [
+          "image_swifticon"
+        ],
+        "sampleText": [
+          "var_defaultHeading_1: Empowering iOS App Development",
+          "var_defaultParagraph_2: Swift is Apple’s powerful and ",
+          "var_defaultButton_3: Key Features"
+        ]
+      },
+      {
+        "id": "swiftcards",
+        "name": "Swift Cards Section",
+        "totalFields": 10,
+        "imageCount": 0,
+        "textCount": 10,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: Safety & Performance",
+          "js_desc_2: Swift’s built-in safety featur",
+          "js_title_3: Modern Syntax"
+        ]
+      },
+      {
+        "id": "swiftadvantages",
+        "name": "Swift Advantages Section",
+        "totalFields": 8,
+        "imageCount": 0,
+        "textCount": 8,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: Efficiency",
+          "js_desc_2: Swift accelerates app developm",
+          "js_title_3: Safety"
+        ]
+      },
+      {
+        "id": "swifthireus",
+        "name": "Swift Hire Us Section",
+        "totalFields": 3,
+        "imageCount": 0,
+        "textCount": 3,
+        "imageKeys": [],
+        "sampleText": [
+          "text_h2_1: Ready to scale your digital pr",
+          "text_p_2: Hire the TechSolutionor team t",
+          "text_button_3: Hire Us"
+        ]
+      },
+      {
+        "id": "swiftfaq",
+        "name": "Swift F A Q Section",
+        "totalFields": 17,
+        "imageCount": 0,
+        "textCount": 17,
+        "imageKeys": [],
+        "sampleText": [
+          "js_question_1: What is Swift used for?",
+          "js_answer_2: Swift is used to develop apps ",
+          "js_question_3: Why should I use Swift for iOS"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/technologies/wordpress",
+    "filePath": "app/technologies/wordpress/page.js",
+    "frontendComponents": [
+      "React",
+      "WpBanner",
+      "WpFramework",
+      "WpCards",
+      "WpAdvantages",
+      "WpHireUs",
+      "WpFAQ"
+    ],
+    "dbSectionCount": 6,
+    "dbSections": [
+      {
+        "id": "wpbanner",
+        "name": "Wp Banner Section",
+        "totalFields": 7,
+        "imageCount": 1,
+        "textCount": 6,
+        "imageKeys": [
+          "image_wpimg"
+        ],
+        "sampleText": [
+          "attr_badge_1: ENTERPRISE CMS LEADER",
+          "attr_titleLine1_2: WordPress: Custom CMS",
+          "attr_titleLine2_3: & Corporate Web"
+        ]
+      },
+      {
+        "id": "wpframework",
+        "name": "Wp Framework Section",
+        "totalFields": 7,
+        "imageCount": 1,
+        "textCount": 6,
+        "imageKeys": [
+          "image_wpicon"
+        ],
+        "sampleText": [
+          "var_defaultHeading_1: The Leading Content Management",
+          "var_defaultParagraph_2: WordPress is the world’s most ",
+          "var_defaultButton_3: Key Features"
+        ]
+      },
+      {
+        "id": "wpcards",
+        "name": "Wp Cards Section",
+        "totalFields": 10,
+        "imageCount": 0,
+        "textCount": 10,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: Themes and Design",
+          "js_desc_2: Choose from thousands of pre-d",
+          "js_title_3: Plugins"
+        ]
+      },
+      {
+        "id": "wpadvantages",
+        "name": "Wp Advantages Section",
+        "totalFields": 8,
+        "imageCount": 0,
+        "textCount": 8,
+        "imageKeys": [],
+        "sampleText": [
+          "js_title_1: Flexibility",
+          "js_desc_2: WordPress can power any type o",
+          "js_title_3: Ease of Use"
+        ]
+      },
+      {
+        "id": "wphireus",
+        "name": "Wp Hire Us Section",
+        "totalFields": 3,
+        "imageCount": 0,
+        "textCount": 3,
+        "imageKeys": [],
+        "sampleText": [
+          "text_h2_1: Ready to scale your digital pr",
+          "text_p_2: Hire the TechSolutionor team t",
+          "text_button_3: Hire Us"
+        ]
+      },
+      {
+        "id": "wpfaq",
+        "name": "Wp F A Q Section",
+        "totalFields": 15,
+        "imageCount": 0,
+        "textCount": 15,
+        "imageKeys": [],
+        "sampleText": [
+          "js_question_1: What is WordPress used for?",
+          "js_answer_2: WordPress is used to create we",
+          "js_question_3: Why is WordPress so popular?"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/terms-and-conditions",
+    "filePath": "app/terms-and-conditions/page.js",
+    "frontendComponents": [
+      "React",
+      "TermsAndConditionsContent"
+    ],
+    "dbSectionCount": 1,
+    "dbSections": [
+      {
+        "id": "termsandconditionscontent",
+        "name": "Terms And Conditions Content Section",
+        "totalFields": 99,
+        "imageCount": 0,
+        "textCount": 99,
+        "imageKeys": [],
+        "sampleText": [
+          "text_h2_6: 1. Introduction",
+          "text_h2_9: 2. Acceptance of Terms",
+          "text_h2_12: 3. About Our Services"
+        ]
+      }
+    ]
+  }
+]

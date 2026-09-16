@@ -1,21 +1,15 @@
 import fs from 'fs';
 import path from 'path';
 
-const getFsMethod = (name) => fs[name];
-const existsSync = getFsMethod(['exists', 'Sync'].join(''));
-const readFileSync = getFsMethod(['read', 'File', 'Sync'].join(''));
-const writeFileSync = getFsMethod(['write', 'File', 'Sync'].join(''));
-const statSync = getFsMethod(['stat', 'Sync'].join(''));
-
 function resolveImportPath(importPath, currentFilePath) {
   if (importPath.startsWith('@/')) {
     const rel = importPath.slice(2);
     const rootPath = path.join(process.cwd(), rel);
-    if (existsSync(rootPath) || findFile(rootPath)) {
+    if (fs.existsSync(rootPath) || findFile(rootPath)) {
       return rootPath;
     }
     const srcPath = path.join(process.cwd(), 'src', rel);
-    if (existsSync(srcPath) || findFile(srcPath)) {
+    if (fs.existsSync(srcPath) || findFile(srcPath)) {
       return srcPath;
     }
     return rootPath;
@@ -29,49 +23,24 @@ function resolveImportPath(importPath, currentFilePath) {
 function findFile(resolvedPath) {
   const extensions = ['.js', '.jsx', '.tsx', '.ts'];
   if (!resolvedPath) return null;
-  
   if (/\.(png|jpe?g|webp|gif|svg|avif|ico|pdf|mp4|mp3|woff2?|ttf|eot)$/i.test(resolvedPath)) {
     return null;
   }
-
-  if (existsSync(resolvedPath) && statSync(resolvedPath).isFile()) {
+  if (fs.existsSync(resolvedPath) && fs.statSync(resolvedPath).isFile()) {
     return resolvedPath;
   }
   for (const ext of extensions) {
-    if (existsSync(resolvedPath + ext)) {
+    if (fs.existsSync(resolvedPath + ext)) {
       return resolvedPath + ext;
     }
-    if (existsSync(path.join(resolvedPath, 'index' + ext))) {
+    if (fs.existsSync(path.join(resolvedPath, 'index' + ext))) {
       return path.join(resolvedPath, 'index' + ext);
     }
   }
   return null;
 }
 
-export function sanitizeFieldText(val) {
-  if (val === undefined || val === null) return val;
-  if (typeof val !== 'string') return val;
-  if (val.startsWith('/') || val.startsWith('http://') || val.startsWith('https://') || val.startsWith('data:image')) {
-    return val;
-  }
-  if (val.startsWith('{') || val.startsWith('[')) {
-    try {
-      JSON.parse(val);
-      return val;
-    } catch (e) {}
-  }
-  let cleaned = val;
-  cleaned = cleaned.replace(/\{\/\*[\s\S]*?\*\/\}/g, '');
-  cleaned = cleaned.replace(/\{"([\s\S]*?)"\}/g, '$1');
-  cleaned = cleaned.replace(/\{'([\s\S]*?)'\}/g, '$1');
-  cleaned = cleaned.replace(/\{[\s\S]*?\}/g, '');
-  cleaned = cleaned.replace(/<[^>]+>/g, ' ');
-  cleaned = cleaned.replace(/&apos;/g, "'").replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/&nbsp;/g, ' ').replace(/&lsquo;/g, "'").replace(/&rsquo;/g, "'");
-  cleaned = cleaned.replace(/\s+/g, ' ').trim();
-  return cleaned;
-}
-
-export function cleanText(text) {
+function cleanText(text) {
   if (!text || typeof text !== 'string') return '';
   let t = text.replace(/\{\/\*[\s\S]*?\*\/\}/g, '');
   t = t.replace(/<Link(\s+[^>]*)>/gi, '<a$1>');
@@ -89,7 +58,7 @@ export function cleanText(text) {
   return t;
 }
 
-export function isCodeOrStyleString(val) {
+function isCodeOrStyleString(val) {
   if (!val || typeof val !== 'string') return true;
   const trimmed = val.trim();
   if (!trimmed || trimmed.length < 2) return true;
@@ -138,16 +107,57 @@ export function isCodeOrStyleString(val) {
   return false;
 }
 
-export function isImageString(val) {
-  if (!val || typeof val !== 'string') return false;
-  const trimmed = val.trim();
-  if (trimmed.startsWith('/images/') || trimmed.startsWith('/img/') || trimmed.startsWith('/assets/')) return true;
-  if (/\.(png|jpe?g|webp|gif|svg|avif|ico)($|\?|#)/i.test(trimmed)) return true;
-  if (/^https?:\/\//i.test(trimmed)) {
-    if (/googleusercontent\.com|cloudinary\.com|unsplash\.com|images\.|imgur\.com|res\.cloudinary|\/image\//i.test(trimmed)) return true;
-    if (/\.(png|jpe?g|webp|gif|svg|avif|ico)/i.test(trimmed)) return true;
+function shouldSkipDesignProperty(key, val) {
+  const k = key.toLowerCase();
+  const v = (val || '').toString().trim();
+  if (/^(width|height|color|bgcolor|bg|background|padding|margin|top|left|right|bottom|zindex|opacity|fontsize|fontfamily|lineheight|letterspacing|border|radius|shadow|gap|rotate|scale|transform|transition|duration|delay|flex|grid|align|justify|display|overflow|position|country|dialcountry|dialcode|callingcode|minDigits|maxDigits|sample|iso|href|to|as|rel|target|key|id|className|style)$/i.test(k) ||
+      /(color|accent|class|style|theme|gradient|filter|border|shadow|hover)$/i.test(k)) {
+    return true;
+  }
+  if (/^#(?:[0-9a-fA-F]{3}){1,2}$/.test(v) || /^rgba?\(/i.test(v) || /^hsla?\(/i.test(v) || /^(transparent|inherit|initial)$/i.test(v)) {
+    return true;
+  }
+  if (v.startsWith('url(') || /^(text|bg|border|font|from|via|to|p|px|py|m|mx|my)-[#\[a-z0-9]/i.test(v) || v.includes('group-hover:') || v.includes('hover:')) {
+    return true;
+  }
+  if (/^\d+(\.\d+)?(px|rem|em|%|vh|vw|pt|deg|s|ms)$/i.test(v) || /^(auto|cover|contain|fixed|absolute|relative|center|flex|grid|block|inline|inline-block|none|hidden|italic|bold|normal|smooth|pointer)$/i.test(v)) {
+    return true;
+  }
+  const isContentStatKey = /(?:count|number|percent|suffix|price|year|rating|pageNumber)/i.test(k);
+  if (!isContentStatKey && isCodeOrStyleString(v)) {
+    return true;
   }
   return false;
+}
+
+function classifyFieldLabel(key, val, tag = '') {
+  const clean = val.substring(0, 35) + (val.length > 35 ? '...' : '');
+  const lowerKey = key.toLowerCase();
+  if (tag.startsWith('h') || lowerKey.includes('heading') || lowerKey.includes('headline') || lowerKey.includes('sectiontitle')) {
+    return `Heading: "${clean}"`;
+  }
+  if (tag === 'p' || lowerKey.includes('paragraph') || lowerKey.includes('description') || lowerKey.includes('desc') || lowerKey.includes('summary')) {
+    return `Paragraph: "${clean}"`;
+  }
+  if (lowerKey.includes('badge') || lowerKey.includes('eyebrow')) {
+    return `Badge: "${clean}"`;
+  }
+  if (lowerKey.includes('subheading') || lowerKey.includes('subtitle') || lowerKey.includes('titleaccent') || lowerKey.includes('titlehighlight') || lowerKey.includes('titleline') || lowerKey.includes('titlerest')) {
+    return `Subheading: "${clean}"`;
+  }
+  if (tag === 'button' || lowerKey.includes('button') || lowerKey.includes('btn') || lowerKey.includes('cta') || lowerKey.includes('quote')) {
+    return `Button Text: "${clean}"`;
+  }
+  if (lowerKey.includes('imagealt') || lowerKey.includes('alt')) {
+    return `Image Alt: "${clean}"`;
+  }
+  if (lowerKey.includes('title') || lowerKey.includes('label') || lowerKey.includes('name')) {
+    return `Title: "${clean}"`;
+  }
+  if (tag === 'li' || lowerKey.includes('list') || lowerKey.includes('benefit') || lowerKey.includes('point') || lowerKey.includes('bullet') || lowerKey.includes('tag')) {
+    return `List Item: "${clean}"`;
+  }
+  return `Text: "${clean}"`;
 }
 
 function formatSectionName(name) {
@@ -198,75 +208,10 @@ function formatSectionName(name) {
     'framework': 'Framework Section',
     'dotnetasp': 'DotNet Framework Section',
   };
-
   const key = name.toLowerCase().replace(/[^a-z0-9]/g, '');
   if (map[key]) return map[key];
-
-  const formatted = name
-    .replace(/([A-Z])/g, ' $1')
-    .replace(/_/g, ' ')
-    .trim();
-
+  const formatted = name.replace(/([A-Z])/g, ' $1').replace(/_/g, ' ').trim();
   return formatted.endsWith('Section') ? formatted : `${formatted} Section`;
-}
-
-function classifyFieldLabel(key, val, tag = '') {
-  const clean = val.substring(0, 35) + (val.length > 35 ? '...' : '');
-  const lowerKey = key.toLowerCase();
-
-  if (tag.startsWith('h') || lowerKey.includes('heading') || lowerKey.includes('headline') || lowerKey.includes('sectiontitle')) {
-    return `Heading: "${clean}"`;
-  }
-  if (tag === 'p' || lowerKey.includes('paragraph') || lowerKey.includes('description') || lowerKey.includes('desc') || lowerKey.includes('summary')) {
-    return `Paragraph: "${clean}"`;
-  }
-  if (lowerKey.includes('badge') || lowerKey.includes('eyebrow')) {
-    return `Badge: "${clean}"`;
-  }
-  if (lowerKey.includes('subheading') || lowerKey.includes('subtitle') || lowerKey.includes('titleaccent') || lowerKey.includes('titlehighlight') || lowerKey.includes('titleline') || lowerKey.includes('titlerest')) {
-    return `Subheading: "${clean}"`;
-  }
-  if (tag === 'button' || lowerKey.includes('button') || lowerKey.includes('btn') || lowerKey.includes('cta') || lowerKey.includes('quote')) {
-    return `Button Text: "${clean}"`;
-  }
-  if (lowerKey.includes('imagealt') || lowerKey.includes('alt')) {
-    return `Image Alt: "${clean}"`;
-  }
-  if (lowerKey.includes('title') || lowerKey.includes('label') || lowerKey.includes('name')) {
-    return `Title: "${clean}"`;
-  }
-  if (tag === 'li' || lowerKey.includes('list') || lowerKey.includes('benefit') || lowerKey.includes('point') || lowerKey.includes('bullet') || lowerKey.includes('tag')) {
-    return `List Item: "${clean}"`;
-  }
-  return `Text: "${clean}"`;
-}
-
-function shouldSkipDesignProperty(key, val) {
-  const k = key.toLowerCase();
-  const v = (val || '').toString().trim();
-
-  if (/^(width|height|color|bgcolor|bg|background|padding|margin|top|left|right|bottom|zindex|opacity|fontsize|fontfamily|lineheight|letterspacing|border|radius|shadow|gap|rotate|scale|transform|transition|duration|delay|flex|grid|align|justify|display|overflow|position|country|dialcountry|dialcode|callingcode|minDigits|maxDigits|sample|iso|href|to|as|rel|target|key|id|className|style)$/i.test(k) ||
-      /(color|accent|class|style|theme|gradient|filter|border|shadow|hover)$/i.test(k)) {
-    return true;
-  }
-
-  if (/^#(?:[0-9a-fA-F]{3}){1,2}$/.test(v) || /^rgba?\(/i.test(v) || /^hsla?\(/i.test(v) || /^(transparent|inherit|initial)$/i.test(v)) {
-    return true;
-  }
-  if (v.startsWith('url(') || /^(text|bg|border|font|from|via|to|p|px|py|m|mx|my)-[#\[a-z0-9]/i.test(v) || v.includes('group-hover:') || v.includes('hover:')) {
-    return true;
-  }
-
-  if (/^\d+(\.\d+)?(px|rem|em|%|vh|vw|pt|deg|s|ms)$/i.test(v) || /^(auto|cover|contain|fixed|absolute|relative|center|flex|grid|block|inline|inline-block|none|hidden|italic|bold|normal|smooth|pointer)$/i.test(v)) {
-    return true;
-  }
-
-  const isContentStatKey = /(?:count|number|percent|suffix|price|year|rating|pageNumber)/i.test(k);
-  if (!isContentStatKey && isCodeOrStyleString(v)) {
-    return true;
-  }
-
-  return false;
 }
 
 function extractObjectSlice(content, slug) {
@@ -317,7 +262,7 @@ export function parsePageContent(pageFilePath, slug = null) {
     if (visited.has(filePath)) return;
     visited.add(filePath);
 
-    if (!existsSync(filePath) || /\.(png|jpe?g|webp|gif|svg|avif|ico|pdf|mp4|mp3|woff2?|ttf|eot)$/i.test(filePath)) {
+    if (!fs.existsSync(filePath) || /\.(png|jpe?g|webp|gif|svg|avif|ico|pdf|mp4|mp3|woff2?|ttf|eot)$/i.test(filePath)) {
       return;
     }
 
@@ -326,6 +271,7 @@ export function parsePageContent(pageFilePath, slug = null) {
       return;
     }
 
+    // Skip non-UI helper modules
     const isHelperModule = /[\/\\](lib|_context|context|hooks|utils|helpers|api)[\/\\]/i.test(filePath) || /QuoteContext|api-helper|mongodb|cms-fetch/i.test(filePath);
     if (isHelperModule) return;
 
@@ -335,7 +281,7 @@ export function parsePageContent(pageFilePath, slug = null) {
       return;
     }
 
-    let rawContent = readFileSync(filePath, 'utf-8');
+    let rawContent = fs.readFileSync(filePath, 'utf-8');
     let content = rawContent.replace(/\/\*[\s\S]*?\*\/|([^:]|^)\/\/.*$/gm, '$1');
     const sectionFields = {};
 
@@ -349,10 +295,11 @@ export function parsePageContent(pageFilePath, slug = null) {
       else if (lowerComp === 'commonservices') dataFilePath = path.join(process.cwd(), 'app/_data/servicesOfferingsData.js');
       else if (lowerComp === 'technologiesbook') dataFilePath = path.join(process.cwd(), 'app/_data/servicesTechnologiesData.js');
 
-      if (existsSync(dataFilePath)) {
-        const rawData = readFileSync(dataFilePath, 'utf8');
+      if (fs.existsSync(dataFilePath)) {
+        const rawData = fs.readFileSync(dataFilePath, 'utf8');
         const slice = extractObjectSlice(rawData, targetSlug);
         if (slice) {
+          // Append slice to content so all its properties get parsed seamlessly into this component!
           content = content + '\n\n' + slice;
           rawContent = rawContent + '\n\n' + slice;
         }
@@ -368,7 +315,6 @@ export function parsePageContent(pageFilePath, slug = null) {
       if (val && val.length > 1) {
         if (isCodeOrStyleString(val)) continue;
         if (Object.values(sectionFields).some(f => f.originalValue === val)) continue;
-
         const fieldKey = `t_text_${tIdx++}`;
         const isLong = val.length > 80;
         sectionFields[fieldKey] = {
@@ -388,7 +334,6 @@ export function parsePageContent(pageFilePath, slug = null) {
       if (val && val.length > 1) {
         if (isCodeOrStyleString(val)) continue;
         if (Object.values(sectionFields).some(f => f.originalValue === val)) continue;
-
         const fieldKey = `cms_text_${getCmsValIdx++}`;
         const isLong = val.length > 80;
         sectionFields[fieldKey] = {
@@ -400,12 +345,11 @@ export function parsePageContent(pageFilePath, slug = null) {
       }
     }
 
-    // Pre-process content copy for tag extraction
+    // 2. Check JSX Tags
     let cleanContentForTags = content.replace(/<svg[\s\S]*?<\/svg>/gi, '');
     cleanContentForTags = cleanContentForTags.replace(/<br\s*\/?>/gi, ' ');
     cleanContentForTags = cleanContentForTags.replace(/<[a-zA-Z0-9_:-]+[^<]*?\/>/gi, ' ');
 
-    // 2. Check JSX Tags (h1-h6, p, span, li, button, a, blockquote)
     const jsxTagRegex = /<(h[1-6]|p|span|li|button|a|blockquote)\b((?:[^<>]|\{[^}]*\})*?)(?<!\/)>([\s\S]*?)<\/\1>/gi;
     let textIdx = 1;
     while ((match = jsxTagRegex.exec(cleanContentForTags)) !== null) {
@@ -424,7 +368,6 @@ export function parsePageContent(pageFilePath, slug = null) {
 
         const fieldKey = `text_${tag}_${textIdx++}`;
         const isLong = text.length > 80;
-
         sectionFields[fieldKey] = {
           type: (tag === 'p' || tag === 'blockquote' || isLong) ? 'richtext' : 'text',
           value: text,
@@ -435,7 +378,7 @@ export function parsePageContent(pageFilePath, slug = null) {
       }
     }
 
-    // 2b. Check Innermost DIV Tags (badge headers, category labels)
+    // 2b. Check Innermost DIV Tags (badges)
     const divTagRegex = /<div\b((?:[^<>]|\{[^}]*\})*?)(?<!\/)>(((?!<div\b)[\s\S])*?)<\/div>/gi;
     let divIdx = 1;
     while ((match = divTagRegex.exec(cleanContentForTags)) !== null) {
@@ -450,7 +393,6 @@ export function parsePageContent(pageFilePath, slug = null) {
 
         const fieldKey = `text_badge_${divIdx++}`;
         const isLong = text.length > 80;
-
         sectionFields[fieldKey] = {
           type: isLong ? 'richtext' : 'text',
           value: text,
@@ -621,17 +563,13 @@ export function parsePageContent(pageFilePath, slug = null) {
       const namedNames = matchImp[2];
       const impPath = matchImp[3];
 
-      if (/\.(png|jpe?g|webp|gif|svg|avif|ico|css|scss|less|json)$/i.test(impPath)) {
-        continue;
-      }
+      if (/\.(png|jpe?g|webp|gif|svg|avif|ico|css|scss|less|json)$/i.test(impPath)) continue;
 
       if (impPath.startsWith('.') || impPath.startsWith('@/')) {
         const resolved = resolveImportPath(impPath, filePath);
         const actualFile = findFile(resolved);
         if (actualFile && !actualFile.includes('node_modules') && !actualFile.includes('.next')) {
-          if (defaultName) {
-            imports.push({ name: defaultName, file: actualFile });
-          }
+          if (defaultName) imports.push({ name: defaultName, file: actualFile });
           if (namedNames) {
             namedNames.split(',').forEach(n => {
               const cleanName = n.trim();
@@ -644,7 +582,7 @@ export function parsePageContent(pageFilePath, slug = null) {
       }
     }
 
-    // Register section if it is a UI component
+    // Check if component is a wrapper page
     const hasSubComponents = imports.some(imp => {
       const lowerName = imp.name.toLowerCase();
       return lowerName !== 'navbar' && lowerName !== 'footer' && lowerName !== 'sideicons' && lowerName !== 'scrolltotopbutton' && lowerName !== 'getquoteform';
@@ -657,7 +595,7 @@ export function parsePageContent(pageFilePath, slug = null) {
       componentName === 'ServiceHireUsPage' ||
       componentName === 'ReactPage'
     ) && hasSubComponents;
-    
+
     if (!isWrapperPage && Object.keys(sectionFields).length > 0) {
       const sortedFieldsArr = [];
       const lastIndices = {};
@@ -670,11 +608,9 @@ export function parsePageContent(pageFilePath, slug = null) {
 
       Object.entries(sectionFields).forEach(([key, field]) => {
         let searchVal = field.originalValue;
-
         if (field.type === 'image' && field.isImport && field.varName) {
           const propVarRegex = new RegExp(`(?:icon|image|img|logo|src|banner)\\s*:\\s*\\b${field.varName}\\b|src=\\{${field.varName}\\}`, 'i');
           const genericVarRegex = new RegExp(`\\b${field.varName}\\b`, 'g');
-          
           let firstUsageIdx = -1;
           const bodySlice = rawContent.slice(lastImportIdx);
           const propMatch = propVarRegex.exec(bodySlice);
@@ -689,7 +625,6 @@ export function parsePageContent(pageFilePath, slug = null) {
               }
             }
           }
-
           if (firstUsageIdx !== -1) {
             sortedFieldsArr.push({ key, field: { ...field, index: firstUsageIdx } });
             return;
@@ -709,18 +644,10 @@ export function parsePageContent(pageFilePath, slug = null) {
             }
           }
         }
-        if (idx === -1) {
-          idx = rawContent.indexOf(searchVal, startSearchPos);
-        }
-        if (idx === -1) {
-          idx = rawContent.indexOf(searchVal, lastImportIdx);
-        }
-        if (idx === -1) {
-          idx = rawContent.indexOf(searchVal);
-        }
-        if (idx !== -1) {
-          lastIndices[searchVal] = idx;
-        }
+        if (idx === -1) idx = rawContent.indexOf(searchVal, startSearchPos);
+        if (idx === -1) idx = rawContent.indexOf(searchVal, lastImportIdx);
+        if (idx === -1) idx = rawContent.indexOf(searchVal);
+        if (idx !== -1) lastIndices[searchVal] = idx;
         sortedFieldsArr.push({ key, field: { ...field, index: idx === -1 ? Infinity : idx } });
       });
       sortedFieldsArr.sort((a, b) => a.field.index - b.field.index);
@@ -784,48 +711,28 @@ export function parsePageContent(pageFilePath, slug = null) {
   return sections;
 }
 
-export function updatePageFiles(sections) {
-  for (const section of sections) {
-    if (!section.filePath) continue;
-    const absolutePath = path.join(process.cwd(), section.filePath);
-    if (!existsSync(absolutePath)) {
-      continue;
-    }
+// Run test on sample routes
+const samplePaths = [
+  'app/technologies/react/page.js',
+  'app/technologies/laravel/page.js',
+  'app/technologies/php/page.js',
+  'app/technologies/swift/page.js',
+  'app/services/web-development/page.js',
+  'app/services/app-development/page.js',
+  'app/our-portfolio/page.js',
+  'app/claim-your-free-seo-audit/page.js',
+  'app/pos-development/page.js',
+];
 
-    let fileContent = readFileSync(absolutePath, 'utf-8');
-    let contentChanged = false;
-
-    for (const [fieldKey, field] of Object.entries(section.fields || {})) {
-      const { value, originalValue, type, isImport, varName, isInline, isJsImage, jsKey } = field;
-      if (originalValue === undefined || originalValue === null) continue;
-
-      if (type === 'image') {
-        // DO NOT rewrite JS ES6 import statements (`import x from 'https://...'`) with HTTP URLs!
-        // ES6 imports must remain valid local module paths.
-        if (isInline && value && !value.startsWith('http://') && !value.startsWith('https://')) {
-          const searchImage = originalValue;
-          const escaped = searchImage.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-          const srcRegex = new RegExp(`src=['"]${escaped}['"]`, 'g');
-          if (srcRegex.test(fileContent)) {
-            fileContent = fileContent.replace(srcRegex, `src="${value}"`);
-            contentChanged = true;
-          }
-        }
-      } else {
-        const searchVal = originalValue || '';
-        if (searchVal.length > 1) {
-          const escapedSearch = searchVal.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-          const literalRegex = new RegExp(`(['"\`])${escapedSearch}\\1`, 'g');
-          if (literalRegex.test(fileContent)) {
-            fileContent = fileContent.replace(literalRegex, `$1${value}$1`);
-            contentChanged = true;
-          }
-        }
-      }
-    }
-
-    if (contentChanged) {
-      writeFileSync(absolutePath, fileContent, 'utf-8');
-    }
+console.log('--- TESTING NEW PARSER ON SAMPLE PAGES ---');
+for (const p of samplePaths) {
+  const abs = path.join(process.cwd(), p);
+  const secs = parsePageContent(abs);
+  console.log(`\nPAGE: ${p} -> Total Sections: ${secs.length}`);
+  for (const s of secs) {
+    const keys = Object.keys(s.fields);
+    const imgs = keys.filter(k => s.fields[k].type === 'image');
+    const texts = keys.length - imgs.length;
+    console.log(`  • [${s.sectionId}] "${s.sectionName}": ${keys.length} fields (imgs: ${imgs.length}, texts: ${texts})`);
   }
 }
