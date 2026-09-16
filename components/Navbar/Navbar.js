@@ -520,7 +520,7 @@ function MobileDropdown({ label, parentHref, subLinks = [], setMobileOpen }) {
                             onClick={() => setMobileOpen(false)}
                         >
                             {sub.Image && (
-                                <div className="w-9 h-9 rounded-lg bg-gray-50/10 group-hover:bg-white flex items-center justify-center flex-shrink-0 p-1.5 border border-white/10 group-hover:border-transparent transition-all">
+                                <div className="w-9 h-9 rounded-lg bg-white flex items-center justify-center flex-shrink-0 p-1.5 transition-all">
                                     <Image src={sub.Image} alt={sub.label} width={22} height={22} className="object-contain" />
                                 </div>
                             )}
