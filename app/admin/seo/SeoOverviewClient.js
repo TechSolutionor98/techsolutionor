@@ -52,9 +52,26 @@ export default function SeoOverviewClient({ initialPages = [], apiBase }) {
     }
   };
 
+  const isHiddenSeoRoute = (page) => {
+    if (!page || !page.path) return true;
+    const p = page.path.replace(/\\/g, '/').trim();
+    if (
+      p === '/[slug]' ||
+      p === '/blog/[slug]' ||
+      p === '/technologies/[slug]' ||
+      p === '/technologies/reactjs' ||
+      page.type === 'blog' ||
+      (p.startsWith('/blog/') && p !== '/blog')
+    ) {
+      return true;
+    }
+    return false;
+  };
+
   // Filter pages
   const filteredPages = useMemo(() => {
     return pages.filter(page => {
+      if (isHiddenSeoRoute(page)) return false;
       const matchesSearch = !search ||
         page.path.toLowerCase().includes(search.toLowerCase()) ||
         (page.metaTitle || '').toLowerCase().includes(search.toLowerCase());
@@ -71,12 +88,13 @@ export default function SeoOverviewClient({ initialPages = [], apiBase }) {
 
   // Stats
   const stats = useMemo(() => {
-    const total = pages.length;
-    const withSeo = pages.filter(p => p.hasSeo).length;
-    const avgScore = pages.length > 0
-      ? Math.round(pages.reduce((sum, p) => sum + p.seoScore, 0) / pages.length)
+    const validPages = pages.filter(p => !isHiddenSeoRoute(p));
+    const total = validPages.length;
+    const withSeo = validPages.filter(p => p.hasSeo).length;
+    const avgScore = validPages.length > 0
+      ? Math.round(validPages.reduce((sum, p) => sum + p.seoScore, 0) / validPages.length)
       : 0;
-    const good = pages.filter(p => p.seoScore >= 70).length;
+    const good = validPages.filter(p => p.seoScore >= 70).length;
     return { total, withSeo, avgScore, good };
   }, [pages]);
 

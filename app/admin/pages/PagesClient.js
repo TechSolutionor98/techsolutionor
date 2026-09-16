@@ -132,19 +132,20 @@ export default function PagesClient({ initialRoutes = [], apiBase, initialError 
     }
   };
 
-const HIDDEN_ADMIN_PAGE_ROUTES = new Set([
-  '/[slug]',
-  '/blog',
-  '/contact-us',
-  '/blog/[slug]',
-  '/technologies/[slug]',
-]);
-
 const isHiddenRoute = (route) => {
-  if (!route || !route.path) return false;
+  if (!route || !route.path) return true;
   const p = route.path.replace(/\\/g, '/').trim();
-  const clean = p.length > 1 && p.endsWith('/') ? p.slice(0, -1) : p;
-  return HIDDEN_ADMIN_PAGE_ROUTES.has(clean) || HIDDEN_ADMIN_PAGE_ROUTES.has(p);
+  if (
+    p === '/[slug]' ||
+    p === '/blog/[slug]' ||
+    p === '/technologies/[slug]' ||
+    p === '/technologies/reactjs' ||
+    route.type === 'blog' ||
+    (p.startsWith('/blog/') && p !== '/blog')
+  ) {
+    return true;
+  }
+  return false;
 };
 
   // Filter routes
@@ -153,7 +154,10 @@ const isHiddenRoute = (route) => {
       if (isHiddenRoute(route)) return false;
       const matchesSearch = !search || route.path.toLowerCase().includes(search.toLowerCase());
       const matchesStatus = statusFilter === 'all' || route.status === statusFilter;
-      const matchesType = typeFilter === 'all' || route.type === typeFilter;
+      let matchesType = true;
+      if (typeFilter !== 'all') {
+        matchesType = route.type === typeFilter;
+      }
       return matchesSearch && matchesStatus && matchesType;
     });
   }, [routes, search, statusFilter, typeFilter]);
@@ -165,7 +169,7 @@ const isHiddenRoute = (route) => {
       total: validRoutes.length,
       active: validRoutes.filter(r => r.status === 'active').length,
       static: validRoutes.filter(r => r.type === 'static').length,
-      dynamic: validRoutes.filter(r => r.type === 'dynamic').length,
+      templates: validRoutes.filter(r => r.type === 'dynamic_template' || r.type === 'dynamic').length,
     };
   }, [routes]);
 
@@ -200,14 +204,18 @@ const isHiddenRoute = (route) => {
 
   // Type badge
   const TypeBadge = ({ type }) => {
-    const colors = {
-      static: 'bg-blue-100 text-blue-800',
-      dynamic: 'bg-purple-100 text-purple-800',
-      'catch-all': 'bg-orange-100 text-orange-800',
+    const badges = {
+      static: { label: 'Static Page', class: 'bg-blue-100 text-blue-800' },
+      blog: { label: 'Blog Article', class: 'bg-emerald-100 text-emerald-800' },
+      dynamic_template: { label: 'Dynamic Template', class: 'bg-purple-100 text-purple-800' },
+      dynamic: { label: 'Dynamic Template', class: 'bg-purple-100 text-purple-800' },
+      alias: { label: 'Alias', class: 'bg-amber-100 text-amber-800' },
+      'catch-all': { label: 'Catch-All', class: 'bg-orange-100 text-orange-800' },
     };
+    const b = badges[type] || badges.static;
     return (
-      <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${colors[type] || colors.static}`}>
-        {type}
+      <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${b.class}`}>
+        {b.label}
       </span>
     );
   };
@@ -229,9 +237,9 @@ const isHiddenRoute = (route) => {
       )}
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         <div className="bg-white p-4 rounded-lg shadow border-l-4 border-[#20507C]">
-          <p className="text-sm text-gray-500">Total Pages</p>
+          <p className="text-sm text-gray-500">Total Pages & Routes</p>
           <p className="text-2xl font-bold text-[#20507C]">{stats.total}</p>
         </div>
         <div className="bg-white p-4 rounded-lg shadow border-l-4 border-green-500">
@@ -239,12 +247,8 @@ const isHiddenRoute = (route) => {
           <p className="text-2xl font-bold text-green-600">{stats.active}</p>
         </div>
         <div className="bg-white p-4 rounded-lg shadow border-l-4 border-blue-500">
-          <p className="text-sm text-gray-500">Static</p>
+          <p className="text-sm text-gray-500">Static Pages</p>
           <p className="text-2xl font-bold text-blue-600">{stats.static}</p>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow border-l-4 border-purple-500">
-          <p className="text-sm text-gray-500">Dynamic</p>
-          <p className="text-2xl font-bold text-purple-600">{stats.dynamic}</p>
         </div>
       </div>
 
@@ -280,10 +284,8 @@ const isHiddenRoute = (route) => {
               className="px-3 py-2 rounded-md border border-gray-300 text-gray-700 text-sm
                          focus:border-[#20507C] focus:ring-2 focus:ring-[#34953C] focus:outline-none"
             >
-              <option value="all">All Types</option>
-              <option value="static">Static</option>
-              <option value="dynamic">Dynamic</option>
-              <option value="catch-all">Catch-All</option>
+              <option value="all">All Types ({stats.total})</option>
+              <option value="static">Static Pages ({stats.static})</option>
             </select>
           </div>
 
@@ -409,7 +411,7 @@ const isHiddenRoute = (route) => {
                       </td>
                       <td className="px-4 py-2">
                         <span className="text-xs text-gray-500">
-                          {route.lastScannedAt ? new Date(route.lastScannedAt).toLocaleDateString('en-US', {
+                          {route.lastScanned || route.lastScannedAt ? new Date(route.lastScanned || route.lastScannedAt).toLocaleDateString('en-US', {
                             month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
                           }) : '—'}
                         </span>

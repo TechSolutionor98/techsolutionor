@@ -49,7 +49,7 @@ export default function AdminDashboard() {
         <div className="bg-white p-6 rounded-lg shadow border-l-4 border-[#20507C]">
           <h3 className="text-lg font-semibold mb-2">Pages & Routes</h3>
           <p className="text-3xl font-bold text-[#20507C]">{pagesCount}</p>
-          <p className="text-sm text-gray-600">Detected routes</p>
+          <p className="text-sm text-gray-600">Pages & routes</p>
         </div>
 
         <div className="bg-white p-6 rounded-lg shadow border-l-4 border-pink-500">
