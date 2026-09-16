@@ -128,7 +128,7 @@ const GoodServices = ({ cmsContent }) => {
   const isGoalsImgDynamic = typeof goalsCard.icon === 'string' && (goalsCard.icon.startsWith('http') || goalsCard.icon.startsWith('/'));
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-[#FAFCFB] via-[#FFFFFF] to-[#F5F9F6] py-16 md:py-24 select-none">
+    <section className="relative overflow-hidden bg-gradient-to-b from-[#FAFCFB] via-[#FFFFFF] to-[#F5F9F6] py-12 sm:py-16 md:py-24 select-none">
       {/* Background Honeycomb Patterns (Direct Reference to Screenshot Design) */}
       <HoneycombPatternLeft />
       <HoneycombPatternRight />
@@ -144,14 +144,14 @@ const GoodServices = ({ cmsContent }) => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center max-w-4xl mx-auto mb-14"
+          className="text-center max-w-4xl mx-auto mb-10 sm:mb-14"
         >
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#41B349]/10 border border-[#41B349]/20 text-[#41B349] font-extrabold text-xs sm:text-sm uppercase tracking-widest mb-4">
             <span className="w-2.5 h-2.5 rounded-full bg-[#41B349] animate-pulse" />
             <span>ABOUT TECHSOLUTIONOR</span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-black text-[#0D0F12] tracking-tight leading-tight" style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}>
+          <h2 className="text-2xl sm:text-3xl md:text-5xl lg:text-5xl font-black text-[#0D0F12] tracking-tight leading-tight" style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}>
             {headingLine1}{" "}
             <span className="text-[#41B349] block sm:inline mt-1 sm:mt-0">{headingLine2}</span>
           </h2>
@@ -168,7 +168,7 @@ const GoodServices = ({ cmsContent }) => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="bg-white border-[6px] border-white shadow-[0_20px_50px_rgba(65,179,73,0.12)] hover:shadow-[0_30px_60px_rgba(65,179,73,0.22)] rounded-[32px] p-7 sm:p-9 flex flex-col justify-between transition-all duration-300 transform hover:-translate-y-1.5 relative overflow-hidden"
+              className="bg-white border-[4px] sm:border-[6px] border-white shadow-[0_20px_50px_rgba(65,179,73,0.12)] hover:shadow-[0_30px_60px_rgba(65,179,73,0.22)] rounded-2xl sm:rounded-[32px] p-5 sm:p-7 md:p-9 flex flex-col justify-between transition-all duration-300 transform hover:-translate-y-1.5 relative overflow-hidden"
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-[#41B349]/10 to-transparent rounded-bl-full pointer-events-none" />
               
@@ -182,12 +182,12 @@ const GoodServices = ({ cmsContent }) => {
                   </span>
                 </div>
                 
-                <p className="text-[#334155] text-base sm:text-lg leading-relaxed font-medium">
+                <p className="text-[#334155] text-sm sm:text-base md:text-lg leading-relaxed font-medium">
                   {paragraph1}
                 </p>
               </div>
 
-              <div className="mt-8 pt-6 border-t border-gray-100 flex flex-wrap gap-2.5">
+              <div className="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-gray-100 flex flex-wrap gap-2 sm:gap-2.5">
                 <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#41B349]/10 text-[#41B349] text-xs font-bold">
                   <FaCheckCircle className="text-xs" /> IT Advisory
                 </span>
@@ -206,7 +206,7 @@ const GoodServices = ({ cmsContent }) => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.15 }}
-              className="bg-white border-[6px] border-white shadow-[0_20px_50px_rgba(65,179,73,0.12)] hover:shadow-[0_30px_60px_rgba(65,179,73,0.22)] rounded-[32px] p-7 sm:p-9 flex flex-col justify-between transition-all duration-300 transform hover:-translate-y-1.5 relative overflow-hidden"
+              className="bg-white border-[4px] sm:border-[6px] border-white shadow-[0_20px_50px_rgba(65,179,73,0.12)] hover:shadow-[0_30px_60px_rgba(65,179,73,0.22)] rounded-2xl sm:rounded-[32px] p-5 sm:p-7 md:p-9 flex flex-col justify-between transition-all duration-300 transform hover:-translate-y-1.5 relative overflow-hidden"
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-[#41B349]/10 to-transparent rounded-bl-full pointer-events-none" />
 
@@ -222,12 +222,12 @@ const GoodServices = ({ cmsContent }) => {
                   </div>
                 </div>
 
-                <p className="text-[#334155] text-base sm:text-lg leading-relaxed font-medium">
+                <p className="text-[#334155] text-sm sm:text-base md:text-lg leading-relaxed font-medium">
                   {paragraph2}
                 </p>
               </div>
 
-              <div className="mt-8 pt-6 border-t border-gray-100 flex flex-wrap gap-2.5">
+              <div className="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-gray-100 flex flex-wrap gap-2 sm:gap-2.5">
                 <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#41B349]/10 text-[#41B349] text-xs font-bold">
                   <FaCheckCircle className="text-xs" /> Long-Term Partnership
                 </span>
@@ -249,18 +249,18 @@ const GoodServices = ({ cmsContent }) => {
         {/* ========================================================================= */}
         {/* BENTO-STYLE CREATIVE CORE PILLARS SHOWCASE (VALUES, MISSION & GOALS) */}
         {/* ========================================================================= */}
-        <div className="mt-20 md:mt-28">
+        <div className="mt-14 sm:mt-20 md:mt-28">
           
           {/* Section Sub-Header */}
-          <div className="text-center max-w-3xl mx-auto mb-14">
+          <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#41B349]/10 border border-[#41B349]/20 text-[#41B349] font-extrabold text-xs uppercase tracking-widest mb-3">
               <FaShieldAlt className="text-[#41B349]" />
               <span>CORE ARCHITECTURE</span>
             </div>
-            <h3 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#0D0F12] tracking-tight leading-tight" style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}>
+            <h3 className="text-2xl sm:text-3xl md:text-5xl font-black text-[#0D0F12] tracking-tight leading-tight" style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}>
               Our Values, Mission & Goals
             </h3>
-            <p className="mt-3 text-[#4A5568] text-base sm:text-lg font-medium">
+            <p className="mt-3 text-[#4A5568] text-sm sm:text-base md:text-lg font-medium">
               The foundational principles driving our technical delivery, client partnerships, and digital innovation.
             </p>
           </div>
@@ -274,7 +274,7 @@ const GoodServices = ({ cmsContent }) => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="group relative bg-[#0D0F12] rounded-3xl p-7 sm:p-8 border border-gray-800 flex flex-col justify-between shadow-[0_15px_40px_rgba(0,0,0,0.15)] hover:shadow-[0_25px_50px_rgba(65,179,73,0.25)] hover:border-[#41B349]/70 transform hover:-translate-y-2.5 transition-all duration-300 relative overflow-hidden"
+              className="group relative bg-[#0D0F12] rounded-3xl p-5 sm:p-7 md:p-8 border border-gray-800 flex flex-col justify-between shadow-[0_15px_40px_rgba(0,0,0,0.15)] hover:shadow-[0_25px_50px_rgba(65,179,73,0.25)] hover:border-[#41B349]/70 transform hover:-translate-y-2.5 transition-all duration-300 relative overflow-hidden"
             >
               {/* Top Glowing Accent Bar */}
               <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-transparent via-[#41B349] to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-300" />
@@ -282,27 +282,27 @@ const GoodServices = ({ cmsContent }) => {
               <div>
                 {/* Header Icon Viewport & Badge */}
                 <div className="flex items-center justify-between mb-6">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#181B24] to-[#11131A] border border-gray-800 flex items-center justify-center group-hover:border-[#41B349]/60 shadow-md transition-colors duration-300">
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-[#181B24] to-[#11131A] border border-gray-800 flex items-center justify-center group-hover:border-[#41B349]/60 shadow-md transition-colors duration-300">
                     {isValuesImgDynamic ? (
-                      <img src={valuesCard.icon} alt="Values" width={28} height={28} className="w-7 h-7 object-contain brightness-0 invert group-hover:scale-110 transition-transform duration-300" />
+                      <img src={valuesCard.icon} alt="Values" width={28} height={28} className="w-6 h-6 sm:w-7 sm:h-7 object-contain brightness-0 invert group-hover:scale-110 transition-transform duration-300" />
                     ) : (
-                      <Image src={valuesCard.icon} alt="Values" width={28} height={28} className="w-7 h-7 object-contain brightness-0 invert group-hover:scale-110 transition-transform duration-300" />
+                      <Image src={valuesCard.icon} alt="Values" width={28} height={28} className="w-6 h-6 sm:w-7 sm:h-7 object-contain brightness-0 invert group-hover:scale-110 transition-transform duration-300" />
                     )}
                   </div>
-                  <span className="px-3.5 py-1 rounded-full bg-[#41B349]/15 border border-[#41B349]/30 text-[#41B349] font-black text-xs uppercase tracking-wider">
+                  <span className="px-3 py-1 sm:px-3.5 sm:py-1 rounded-full bg-[#41B349]/15 border border-[#41B349]/30 text-[#41B349] font-black text-xs uppercase tracking-wider">
                     01 • FOUNDATION
                   </span>
                 </div>
 
                 {/* Title */}
                 <h4 
-                  className="text-2xl sm:text-3xl font-black text-white group-hover:text-[#41B349] transition-colors duration-200 mb-3" 
+                  className="text-xl sm:text-2xl md:text-3xl font-black text-white group-hover:text-[#41B349] transition-colors duration-200 mb-3" 
                   style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
                 >
                   {valuesCard.title}
                 </h4>
 
-                <p className="text-[#94A3B8] text-sm leading-relaxed font-normal mb-6">
+                <p className="text-[#94A3B8] text-xs sm:text-sm leading-relaxed font-normal mb-6">
                   Guiding principles driving every client engagement, technical architecture, and digital partnership.
                 </p>
               </div>
@@ -312,7 +312,7 @@ const GoodServices = ({ cmsContent }) => {
                 {valuesCard.list.map((item, idx) => (
                   <div
                     key={idx}
-                    className="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-[#161922] border border-gray-800/90 text-white font-bold text-xs sm:text-sm group-hover:border-[#41B349]/40 hover:bg-[#41B349] hover:text-white transition-all duration-200"
+                    className="flex items-center gap-3 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-[#161922] border border-gray-800/90 text-white font-bold text-xs sm:text-sm group-hover:border-[#41B349]/40 hover:bg-[#41B349] hover:text-white transition-all duration-200"
                   >
                     <FaCheckCircle className="text-[#41B349] group-hover:text-white shrink-0 transition-colors duration-200" size={14} />
                     <span>{item}</span>
@@ -327,7 +327,7 @@ const GoodServices = ({ cmsContent }) => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.15 }}
-              className="group relative bg-[#0D0F12] rounded-3xl p-7 sm:p-8 border border-gray-800 flex flex-col justify-between shadow-[0_15px_40px_rgba(0,0,0,0.15)] hover:shadow-[0_25px_50px_rgba(65,179,73,0.25)] hover:border-[#41B349]/70 transform hover:-translate-y-2.5 transition-all duration-300 relative overflow-hidden"
+              className="group relative bg-[#0D0F12] rounded-3xl p-5 sm:p-7 md:p-8 border border-gray-800 flex flex-col justify-between shadow-[0_15px_40px_rgba(0,0,0,0.15)] hover:shadow-[0_25px_50px_rgba(65,179,73,0.25)] hover:border-[#41B349]/70 transform hover:-translate-y-2.5 transition-all duration-300 relative overflow-hidden"
             >
               {/* Top Glowing Accent Bar */}
               <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-transparent via-[#41B349] to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-300" />
@@ -335,27 +335,27 @@ const GoodServices = ({ cmsContent }) => {
               <div>
                 {/* Header Icon Viewport & Badge */}
                 <div className="flex items-center justify-between mb-6">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#181B24] to-[#11131A] border border-gray-800 flex items-center justify-center group-hover:border-[#41B349]/60 shadow-md transition-colors duration-300">
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-[#181B24] to-[#11131A] border border-gray-800 flex items-center justify-center group-hover:border-[#41B349]/60 shadow-md transition-colors duration-300">
                     {isMissionImgDynamic ? (
-                      <img src={missionCard.icon} alt="Mission" width={28} height={28} className="w-7 h-7 object-contain brightness-0 invert group-hover:scale-110 transition-transform duration-300" />
+                      <img src={missionCard.icon} alt="Mission" width={28} height={28} className="w-6 h-6 sm:w-7 sm:h-7 object-contain brightness-0 invert group-hover:scale-110 transition-transform duration-300" />
                     ) : (
-                      <Image src={missionCard.icon} alt="Mission" width={28} height={28} className="w-7 h-7 object-contain brightness-0 invert group-hover:scale-110 transition-transform duration-300" />
+                      <Image src={missionCard.icon} alt="Mission" width={28} height={28} className="w-6 h-6 sm:w-7 sm:h-7 object-contain brightness-0 invert group-hover:scale-110 transition-transform duration-300" />
                     )}
                   </div>
-                  <span className="px-3.5 py-1 rounded-full bg-[#41B349]/15 border border-[#41B349]/30 text-[#41B349] font-black text-xs uppercase tracking-wider">
+                  <span className="px-3 py-1 sm:px-3.5 sm:py-1 rounded-full bg-[#41B349]/15 border border-[#41B349]/30 text-[#41B349] font-black text-xs uppercase tracking-wider">
                     02 • PURPOSE
                   </span>
                 </div>
 
                 {/* Title */}
                 <h4 
-                  className="text-2xl sm:text-3xl font-black text-white group-hover:text-[#41B349] transition-colors duration-200 mb-3" 
+                  className="text-xl sm:text-2xl md:text-3xl font-black text-white group-hover:text-[#41B349] transition-colors duration-200 mb-3" 
                   style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
                 >
                   {missionCard.title}
                 </h4>
 
-                <p className="text-[#94A3B8] text-sm leading-relaxed font-normal mb-6">
+                <p className="text-[#94A3B8] text-xs sm:text-sm leading-relaxed font-normal mb-6">
                   Dedicated commitment to operational excellence, client growth, 24/7 support, and IT advisory.
                 </p>
               </div>
@@ -365,7 +365,7 @@ const GoodServices = ({ cmsContent }) => {
                 {missionCard.list.map((item, idx) => (
                   <div
                     key={idx}
-                    className="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-[#161922] border border-gray-800/90 text-white font-bold text-xs sm:text-sm group-hover:border-[#41B349]/40 hover:bg-[#41B349] hover:text-[#FFFFFF] transition-all duration-200"
+                    className="flex items-center gap-3 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-[#161922] border border-gray-800/90 text-white font-bold text-xs sm:text-sm group-hover:border-[#41B349]/40 hover:bg-[#41B349] hover:text-[#FFFFFF] transition-all duration-200"
                   >
                     <FaCheckCircle className="text-[#41B349] group-hover:text-white shrink-0 transition-colors duration-200" size={14} />
                     <span>{item}</span>
@@ -380,7 +380,7 @@ const GoodServices = ({ cmsContent }) => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="group relative bg-[#0D0F12] rounded-3xl p-7 sm:p-8 border border-gray-800 flex flex-col justify-between shadow-[0_15px_40px_rgba(0,0,0,0.15)] hover:shadow-[0_25px_50px_rgba(65,179,73,0.25)] hover:border-[#41B349]/70 transform hover:-translate-y-2.5 transition-all duration-300 relative overflow-hidden"
+              className="group relative bg-[#0D0F12] rounded-3xl p-5 sm:p-7 md:p-8 border border-gray-800 flex flex-col justify-between shadow-[0_15px_40px_rgba(0,0,0,0.15)] hover:shadow-[0_25px_50px_rgba(65,179,73,0.25)] hover:border-[#41B349]/70 transform hover:-translate-y-2.5 transition-all duration-300 relative overflow-hidden"
             >
               {/* Top Glowing Accent Bar */}
               <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-transparent via-[#41B349] to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-300" />
@@ -388,27 +388,27 @@ const GoodServices = ({ cmsContent }) => {
               <div>
                 {/* Header Icon Viewport & Badge */}
                 <div className="flex items-center justify-between mb-6">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#181B24] to-[#11131A] border border-gray-800 flex items-center justify-center group-hover:border-[#41B349]/60 shadow-md transition-colors duration-300">
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-[#181B24] to-[#11131A] border border-gray-800 flex items-center justify-center group-hover:border-[#41B349]/60 shadow-md transition-colors duration-300">
                     {isGoalsImgDynamic ? (
-                      <img src={goalsCard.icon} alt="Goals" width={28} height={28} className="w-7 h-7 object-contain brightness-0 invert group-hover:scale-110 transition-transform duration-300" />
+                      <img src={goalsCard.icon} alt="Goals" width={28} height={28} className="w-6 h-6 sm:w-7 sm:h-7 object-contain brightness-0 invert group-hover:scale-110 transition-transform duration-300" />
                     ) : (
-                      <Image src={goalsCard.icon} alt="Goals" width={28} height={28} className="w-7 h-7 object-contain brightness-0 invert group-hover:scale-110 transition-transform duration-300" />
+                      <Image src={goalsCard.icon} alt="Goals" width={28} height={28} className="w-6 h-6 sm:w-7 sm:h-7 object-contain brightness-0 invert group-hover:scale-110 transition-transform duration-300" />
                     )}
                   </div>
-                  <span className="px-3.5 py-1 rounded-full bg-[#41B349]/15 border border-[#41B349]/30 text-[#41B349] font-black text-xs uppercase tracking-wider">
+                  <span className="px-3 py-1 sm:px-3.5 sm:py-1 rounded-full bg-[#41B349]/15 border border-[#41B349]/30 text-[#41B349] font-black text-xs uppercase tracking-wider">
                     03 • STRATEGY
                   </span>
                 </div>
 
                 {/* Title */}
                 <h4 
-                  className="text-2xl sm:text-3xl font-black text-white group-hover:text-[#41B349] transition-colors duration-200 mb-3" 
+                  className="text-xl sm:text-2xl md:text-3xl font-black text-white group-hover:text-[#41B349] transition-colors duration-200 mb-3" 
                   style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
                 >
                   {goalsCard.title}
                 </h4>
 
-                <p className="text-[#94A3B8] text-sm leading-relaxed font-normal mb-6">
+                <p className="text-[#94A3B8] text-xs sm:text-sm leading-relaxed font-normal mb-6">
                   Delivering rapid response times, transparent cooperation, and efficiency across all projects.
                 </p>
               </div>
@@ -418,7 +418,7 @@ const GoodServices = ({ cmsContent }) => {
                 {goalsCard.list.map((item, idx) => (
                   <div
                     key={idx}
-                    className="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-[#161922] border border-gray-800/90 text-white font-bold text-xs sm:text-sm group-hover:border-[#41B349]/40 hover:bg-[#41B349] hover:text-white transition-all duration-200"
+                    className="flex items-center gap-3 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-[#161922] border border-gray-800/90 text-white font-bold text-xs sm:text-sm group-hover:border-[#41B349]/40 hover:bg-[#41B349] hover:text-white transition-all duration-200"
                   >
                     <FaCheckCircle className="text-[#41B349] group-hover:text-white shrink-0 transition-colors duration-200" size={14} />
                     <span>{item}</span>

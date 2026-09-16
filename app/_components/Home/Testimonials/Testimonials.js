@@ -265,8 +265,8 @@ const Testimonials = ({ content, cmsContent, initialReviews = [] }) => {
             )}
 
             {/* Comment Box */}
-            <div className="bg-white border-2 border-[#FDE68A]/80 rounded-2xl p-5 shadow-[0_6px_20px_rgba(0,0,0,0.05)] hover:shadow-[0_12px_30px_rgba(245,158,11,0.12)] hover:border-[#F59E0B]/60 transition-all duration-300 relative">
-              <div className="flex items-start gap-3.5">
+            <div className="bg-white border-2 border-[#FDE68A]/80 rounded-2xl p-4 sm:p-5 shadow-[0_6px_20px_rgba(0,0,0,0.05)] hover:shadow-[0_12px_30px_rgba(245,158,11,0.12)] hover:border-[#F59E0B]/60 transition-all duration-300 relative">
+              <div className="flex items-start gap-3 sm:gap-3.5">
                 {item.avatar && typeof item.avatar === 'string' && item.avatar.trim() ? (
                   <img
                     src={item.avatar}
@@ -278,11 +278,11 @@ const Testimonials = ({ content, cmsContent, initialReviews = [] }) => {
                         e.currentTarget.nextElementSibling.style.display = 'flex';
                       }
                     }}
-                    className="w-10 h-10 rounded-full object-cover shrink-0 mt-0.5 border border-white/60 shadow-xs"
+                    className="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover shrink-0 mt-0.5 border border-white/60 shadow-xs"
                   />
                 ) : null}
                 <div 
-                  className={`w-10 h-10 rounded-full ${item.color} flex items-center justify-center text-white font-black text-base shadow-xs shrink-0 mt-0.5 border border-white/60`}
+                  className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full ${item.color} flex items-center justify-center text-white font-black text-sm sm:text-base shadow-xs shrink-0 mt-0.5 border border-white/60`}
                   style={{ display: (item.avatar && typeof item.avatar === 'string' && item.avatar.trim()) ? 'none' : 'flex' }}
                 >
                   {item.initial}
@@ -291,7 +291,7 @@ const Testimonials = ({ content, cmsContent, initialReviews = [] }) => {
                 <div className="flex-1 min-w-0">
                   <div className="inline">
                     <span 
-                      className="font-bold text-[#2B6DAA] text-sm sm:text-base mr-2 hover:underline cursor-pointer inline-block"
+                      className="font-bold text-[#2B6DAA] text-xs sm:text-base mr-1.5 sm:mr-2 hover:underline cursor-pointer inline-block"
                       style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
                     >
                       {item.name}
@@ -301,7 +301,7 @@ const Testimonials = ({ content, cmsContent, initialReviews = [] }) => {
                     </span>
                   </div>
 
-                  <div className="flex items-center justify-between mt-3 pt-2 border-t border-gray-100 text-xs font-semibold text-[#65676B]">
+                  <div className="flex items-center justify-between mt-2.5 sm:mt-3 pt-2 border-t border-gray-100 text-xs font-semibold text-[#65676B]">
                     <div className="flex items-center gap-2 sm:gap-3">
                       <button type="button" className={`hover:underline cursor-pointer ${rx.color}`}>{rx.action}</button>
                       <span>·</span>
@@ -326,21 +326,21 @@ const Testimonials = ({ content, cmsContent, initialReviews = [] }) => {
   }
 
   return (
-    <section className="py-20 md:py-28 bg-[#FFFFFF] relative overflow-hidden select-none">
+    <section className="py-14 sm:py-20 md:py-28 bg-[#FFFFFF] relative overflow-hidden select-none">
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header Speech Bubble Banner */}
-        <div className="flex justify-center mb-16">
-          <div className="relative bg-[#FDE047]/90 border border-[#FACC15] rounded-3xl px-8 sm:px-12 py-5 text-center shadow-sm max-w-3xl">
+        <div className="flex justify-center mb-10 sm:mb-16">
+          <div className="relative bg-[#FDE047]/90 border border-[#FACC15] rounded-3xl px-5 sm:px-12 py-3.5 sm:py-5 text-center shadow-sm max-w-3xl">
             <h2 
-              className="text-2xl sm:text-3xl md:text-4xl font-black text-[#1C1E21] tracking-tight leading-tight"
+              className="text-lg sm:text-2xl md:text-4xl font-black text-[#1C1E21] tracking-tight leading-tight"
               style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
             >
               <span>{sectionTitlePrefix}</span> <span>{sectionTitleHighlight}</span>: Real Feedback From Our Clients
             </h2>
 
             {/* Pointer Arrow */}
-            <div className="absolute -bottom-3 left-16 w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-t-[14px] border-t-[#FDE047]/90" />
+            <div className="absolute -bottom-3 left-8 sm:left-16 w-0 h-0 border-l-[10px] sm:border-l-[12px] border-l-transparent border-r-[10px] sm:border-r-[12px] border-r-transparent border-t-[12px] sm:border-t-[14px] border-t-[#FDE047]/90" />
           </div>
         </div>
 

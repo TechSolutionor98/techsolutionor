@@ -247,10 +247,10 @@ const LogoCard = ({ icon, cardKey, onMouseEnter, onMouseLeave }) => {
         '--card-accent': icon.accentColor,
         '--card-footer-bg': icon.footerBg,
       }}
-      className="logo-card group w-60 sm:w-68 md:w-72 h-[226px] sm:h-[250px] shrink-0 rounded-2xl flex flex-col justify-between cursor-pointer overflow-hidden select-none"
+      className="logo-card group w-52 min-[380px]:w-56 sm:w-68 md:w-72 h-[200px] min-[380px]:h-[215px] sm:h-[250px] shrink-0 rounded-2xl flex flex-col justify-between cursor-pointer overflow-hidden select-none"
     >
       {/* Top: Project / Company Logo Area */}
-      <div className="relative w-full h-[146px] sm:h-[164px] p-4 sm:p-5 flex items-center justify-center">
+      <div className="relative w-full h-[125px] min-[380px]:h-[135px] sm:h-[164px] p-3 min-[380px]:p-4 sm:p-5 flex items-center justify-center">
         <div className="relative z-1 w-full h-full flex items-center justify-center">
           {isImgDynamic ? (
             <img
@@ -264,7 +264,7 @@ const LogoCard = ({ icon, cardKey, onMouseEnter, onMouseLeave }) => {
               src={icon.Image}
               alt={icon.name}
               fill
-              sizes="(max-width: 640px) 240px, 288px"
+              sizes="(max-width: 640px) 220px, 288px"
               style={{ mixBlendMode: 'multiply' }}
               className="object-contain p-2"
             />
@@ -280,20 +280,20 @@ const LogoCard = ({ icon, cardKey, onMouseEnter, onMouseLeave }) => {
 
       {/* Bottom: Project / Company Name & Category */}
       <div
-        className="w-full py-3 sm:py-3.5 px-4 transition-colors duration-300 flex flex-col items-center justify-center text-center"
+        className="w-full py-2.5 min-[380px]:py-3 sm:py-3.5 px-3 min-[380px]:px-4 transition-colors duration-300 flex flex-col items-center justify-center text-center"
         style={{
           background: 'var(--card-footer-bg)',
           backdropFilter: 'blur(8px)',
         }}
       >
         <h3
-          className="logo-title text-[#0F172A] font-bold text-sm sm:text-base tracking-tight transition-colors duration-300 truncate w-full"
+          className="logo-title text-[#0F172A] font-bold text-xs min-[380px]:text-sm sm:text-base tracking-tight transition-colors duration-300 truncate w-full"
           style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
         >
           {icon.name}
         </h3>
         <span
-          className="text-[11px] sm:text-xs font-semibold truncate w-full mt-0.5 tracking-wide"
+          className="text-[10px] min-[380px]:text-[11px] sm:text-xs font-semibold truncate w-full mt-0.5 tracking-wide"
           style={{ color: 'var(--card-accent)' }}
         >
           {icon.category}
@@ -374,7 +374,7 @@ const Projects = ({ cmsContent }) => {
       {/* Background Ambient Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#41B349]/10 blur-3xl rounded-full pointer-events-none" />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8 sm:mb-12">
         {/* Section Header */}
         <div className="text-center max-w-4xl mx-auto">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#41B349]/15 border border-[#41B349]/30 text-[#41B349] font-extrabold text-xs uppercase tracking-widest mb-3">
@@ -383,25 +383,25 @@ const Projects = ({ cmsContent }) => {
           </div>
 
           <h2
-            className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight leading-tight"
+            className="text-2xl sm:text-3xl md:text-5xl font-black text-white tracking-tight leading-tight"
             style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
           >
             {title}
           </h2>
 
-          <p className="mt-4 text-gray-300 text-base sm:text-lg leading-relaxed font-medium">
+          <p className="mt-3 sm:mt-4 text-gray-300 text-xs min-[360px]:text-sm sm:text-base md:text-lg leading-relaxed font-medium">
             {description}
           </p>
         </div>
       </div>
 
       {/* Dual-Row Smooth Infinite Auto-Moving Marquee Track */}
-      <div className="relative w-full space-y-6 sm:space-y-8 py-4 overflow-hidden">
+      <div className="relative w-full space-y-4 sm:space-y-6 md:space-y-8 py-3 sm:py-4 overflow-hidden">
 
         {/* MARQUEE ROW 1: Forward Motion (Left) */}
         <div className="relative w-full overflow-hidden">
           <div
-            className="flex gap-6 sm:gap-8 w-max marquee-track-1 will-change-transform"
+            className="flex gap-3 sm:gap-6 md:gap-8 w-max marquee-track-1 will-change-transform"
             style={{ animationPlayState: row1Paused ? 'paused' : 'running' }}
           >
             {marqueeRow1.map((icon, idx) => (
@@ -419,7 +419,7 @@ const Projects = ({ cmsContent }) => {
         {/* MARQUEE ROW 2: Reverse Motion (Right) */}
         <div className="relative w-full overflow-hidden">
           <div
-            className="flex gap-6 sm:gap-8 w-max marquee-track-2 will-change-transform"
+            className="flex gap-3 sm:gap-6 md:gap-8 w-max marquee-track-2 will-change-transform"
             style={{ animationPlayState: row2Paused ? 'paused' : 'running' }}
           >
             {marqueeRow2.map((icon, idx) => (

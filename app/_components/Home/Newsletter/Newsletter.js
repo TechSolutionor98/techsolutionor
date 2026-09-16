@@ -48,9 +48,9 @@ const Newsletter = ({ content, cmsContent }) => {
   const { line1, line2, line3 } = formatNewsletterTitle(title);
 
   return (
-    <section className="w-full bg-[#FFFFFF] py-14 sm:py-20 px-4 sm:px-6 lg:px-8 select-none">
+    <section className="w-full bg-[#FFFFFF] py-10 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 select-none">
       {/* Main Glassmorphic CTA Card Container */}
-      <div className="relative z-10 max-w-6xl mx-auto rounded-3xl bg-[#0D0F12] border border-gray-800 p-8 sm:p-12 md:p-16 flex flex-col md:flex-row items-center justify-between gap-8 sm:gap-12 relative overflow-hidden">
+      <div className="relative z-10 max-w-6xl mx-auto rounded-3xl bg-[#0D0F12] border border-gray-800 p-6 sm:p-10 md:p-16 flex flex-col md:flex-row items-center justify-between gap-6 sm:gap-10 md:gap-12 relative overflow-hidden">
         
         {/* Top Glowing Green Accent Line */}
         <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-transparent via-[#41B349] to-transparent opacity-90" />
@@ -63,7 +63,7 @@ const Newsletter = ({ content, cmsContent }) => {
           </div>
 
           <h2 
-            className="text-3xl sm:text-4xl md:text-5xl font-black text-white leading-tight tracking-tight"
+            className="text-xl sm:text-3xl md:text-5xl font-black text-white leading-tight tracking-tight"
             style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
           >
             <span>{line1}</span>
@@ -76,14 +76,14 @@ const Newsletter = ({ content, cmsContent }) => {
         </div>
 
         {/* Right Column: CTA Button */}
-        <div className="shrink-0 z-10">
+        <div className="shrink-0 z-10 w-full sm:w-auto flex justify-center">
           <button
             onClick={openQuote}
-            className="inline-flex items-center gap-4 bg-[#41B349] hover:bg-[#36963d] text-[#FCFCFC] text-base sm:text-lg font-extrabold px-8 sm:px-10 py-4 sm:py-5 rounded-full hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer border-2 border-white/60 group"
+            className="w-full sm:w-auto justify-center inline-flex items-center gap-3 sm:gap-4 bg-[#41B349] hover:bg-[#36963d] text-[#FCFCFC] text-sm sm:text-base md:text-lg font-extrabold px-6 sm:px-10 py-3.5 sm:py-5 rounded-full hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer border-2 border-white/60 group"
           >
             <span>{buttonText}</span>
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white text-[#0D0F12] flex items-center justify-center shadow-md group-hover:translate-x-1 transition-transform duration-300">
-              <FaArrowRight size={14} className="text-[#0D0F12]" />
+            <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-white text-[#0D0F12] flex items-center justify-center shadow-md group-hover:translate-x-1 transition-transform duration-300">
+              <FaArrowRight size={13} className="text-[#0D0F12]" />
             </div>
           </button>
         </div>

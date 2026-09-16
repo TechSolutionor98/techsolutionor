@@ -81,11 +81,11 @@ const WhatWeDo = ({ cmsContent }) => {
   const activeTheme = cardThemes[activeIndex % cardThemes.length];
 
   return (
-    <section className="relative overflow-hidden py-16 md:py-24 select-none bg-[#FFFFFF]">
+    <section className="relative overflow-hidden py-12 sm:py-16 md:py-24 select-none bg-[#FFFFFF]">
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12 md:mb-16">
+        <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-12 md:mb-16">
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -102,7 +102,7 @@ const WhatWeDo = ({ cmsContent }) => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-3xl sm:text-4xl md:text-5xl font-black text-[#0D0F12] tracking-tight leading-tight"
+            className="text-2xl sm:text-3xl md:text-5xl font-black text-[#0D0F12] tracking-tight leading-tight"
             style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
           >
             Empowering Digital Growth & Tech Excellence
@@ -112,14 +112,14 @@ const WhatWeDo = ({ cmsContent }) => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="mt-3 text-base sm:text-lg text-[#4A5568] font-medium"
+            className="mt-3 text-sm sm:text-base md:text-lg text-[#4A5568] font-medium"
           >
             Tailored digital strategies and cutting-edge engineering designed for scale.
           </motion.p>
         </div>
 
-        {/* Stacked Card Deck Viewport with Fixed Identical Height */}
-        <div className="relative max-w-3xl mx-auto h-[370px] sm:h-[330px] flex items-center justify-center px-2">
+        {/* Stacked Card Deck Viewport with Responsive Height */}
+        <div className="relative max-w-3xl mx-auto h-[400px] min-[390px]:h-[380px] sm:h-[330px] flex items-center justify-center px-2">
           {cardsData.map((item, i) => {
             const offset = (i - activeIndex + cardsData.length) % cardsData.length;
             const isTopCard = offset === 0;
@@ -146,7 +146,7 @@ const WhatWeDo = ({ cmsContent }) => {
                   ease: [0.25, 1, 0.5, 1], // Smooth, fluid cubic-bezier decelerate curve
                 }}
                 onClick={() => setActiveIndex(i)}
-                className={`absolute w-full h-[310px] sm:h-[270px] rounded-3xl p-7 sm:p-9 flex flex-col justify-center transition-all duration-300 cursor-pointer overflow-hidden bg-white shadow-xl ${
+                className={`absolute w-full h-[340px] min-[390px]:h-[320px] sm:h-[270px] rounded-3xl p-5 min-[390px]:p-6 sm:p-9 flex flex-col justify-center transition-all duration-300 cursor-pointer overflow-hidden bg-white shadow-xl ${
                   isTopCard
                     ? `${theme.border} ${theme.shadow}`
                     : `${theme.border} border-opacity-90 shadow-md`
@@ -162,14 +162,14 @@ const WhatWeDo = ({ cmsContent }) => {
                 <div className="flex flex-col justify-center h-full">
                   {/* Card Title */}
                   <h3
-                    className={`text-2xl sm:text-3xl md:text-4xl font-black tracking-tight ${theme.titleColor}`}
+                    className={`text-xl min-[390px]:text-2xl sm:text-3xl md:text-4xl font-black tracking-tight ${theme.titleColor}`}
                     style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
                   >
                     {item.title}
                   </h3>
 
                   {/* Card Description (Main Center Data) */}
-                  <p className="mt-3.5 text-[#4A5568] text-sm sm:text-base md:text-lg leading-relaxed font-normal">
+                  <p className="mt-2.5 sm:mt-3.5 text-[#4A5568] text-xs min-[390px]:text-sm sm:text-base md:text-lg leading-relaxed font-normal">
                     {item.description}
                   </p>
                 </div>

@@ -74,7 +74,7 @@ const Technology = ({ cmsContent }) => {
   const marqueeCards = [...cardsData, ...cardsData, ...cardsData];
 
   return (
-    <section className="relative overflow-hidden bg-[#FFFFFF] py-16 md:py-24 select-none">
+    <section className="relative overflow-hidden bg-[#FFFFFF] py-12 sm:py-16 md:py-24 select-none">
       <style jsx>{`
         @keyframes marqueeScroll {
           0% {
@@ -113,27 +113,27 @@ const Technology = ({ cmsContent }) => {
       `}</style>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-14">
+        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#41B349]/10 border border-[#41B349]/20 text-[#41B349] font-extrabold text-xs uppercase tracking-widest mb-3">
             <span className="w-2 h-2 rounded-full bg-[#41B349] animate-pulse" />
             <span>{sectionTitle.toUpperCase()}</span>
           </div>
 
           <h2 
-            className="text-3xl sm:text-4xl md:text-5xl font-black text-[#0D0F12] tracking-tight leading-tight"
+            className="text-2xl sm:text-3xl md:text-5xl font-black text-[#0D0F12] tracking-tight leading-tight"
             style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
           >
             {titleTop} <span className="text-[#41B349]">{titleBottom}</span>
           </h2>
 
-          <p className="mt-4 text-[#4A5568] text-base sm:text-lg leading-relaxed font-medium">
+          <p className="mt-3 sm:mt-4 text-[#4A5568] text-xs min-[360px]:text-sm sm:text-base md:text-lg leading-relaxed font-medium">
             {description}
           </p>
         </div>
       </div>
 
-      <div className="relative w-full overflow-hidden py-4">
-        <div className="flex gap-6 sm:gap-8 w-max cursor-pointer tech-marquee-track">
+      <div className="relative w-full overflow-hidden py-3 sm:py-4">
+        <div className="flex gap-4 sm:gap-6 md:gap-8 w-max cursor-pointer tech-marquee-track">
           {marqueeCards.map((item, i) => {
             const isImgDynamic = typeof item.image === 'string' && (item.image.startsWith('http') || item.image.startsWith('/'));
             const cardConfigs = [
@@ -204,7 +204,7 @@ const Technology = ({ cmsContent }) => {
             return (
               <Link key={i} href={item.link} className="block group shrink-0">
                 <div 
-                  className={`w-[280px] sm:w-[320px] md:w-[350px] h-[400px] sm:h-[430px] rounded-3xl border border-transparent p-6 sm:p-7 flex flex-col justify-between transform group-hover:-translate-y-2.5 transition-all duration-300 relative overflow-hidden shadow-md ${cfg.borderHover}`}
+                  className={`w-[240px] min-[380px]:w-[270px] sm:w-[320px] md:w-[350px] h-[350px] min-[380px]:h-[380px] sm:h-[430px] rounded-3xl border border-transparent p-5 min-[380px]:p-6 sm:p-7 flex flex-col justify-between transform group-hover:-translate-y-2.5 transition-all duration-300 relative overflow-hidden shadow-md ${cfg.borderHover}`}
                   style={{ backgroundColor: cfg.bgColor }}
                   onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = cfg.hoverBg; }}
                   onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = cfg.bgColor; }}
@@ -236,7 +236,7 @@ const Technology = ({ cmsContent }) => {
                   
                   <div className="relative z-10">
                     <h3 
-                      className={`text-xl sm:text-2xl font-black leading-tight tracking-tight transition-colors duration-200 ${cfg.titleColor}`}
+                      className={`text-lg min-[380px]:text-xl sm:text-2xl font-black leading-tight tracking-tight transition-colors duration-200 ${cfg.titleColor}`}
                       style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
                     >
                       <span>{item.titleLine1}</span>
@@ -244,14 +244,14 @@ const Technology = ({ cmsContent }) => {
                     </h3>
                   </div>
 
-                  <div className="my-3 sm:my-4 w-full h-[180px] sm:h-[200px] flex items-center justify-center p-3 sm:p-4 relative z-10">
+                  <div className="my-2 min-[380px]:my-3 sm:my-4 w-full h-[145px] min-[380px]:h-[170px] sm:h-[200px] flex items-center justify-center p-2 min-[380px]:p-3 sm:p-4 relative z-10">
                     {isImgDynamic ? (
                       <img
                         alt={item.title}
                         src={item.image}
                         width={150}
                         height={150}
-                        className="w-28 h-28 sm:w-36 sm:h-36 max-h-[145px] object-contain filter drop-shadow-md group-hover:scale-105 transition-transform duration-300"
+                        className="w-24 h-24 min-[380px]:w-28 min-[380px]:h-28 sm:w-36 sm:h-36 max-h-[120px] min-[380px]:max-h-[145px] object-contain filter drop-shadow-md group-hover:scale-105 transition-transform duration-300"
                       />
                     ) : (
                       <Image
@@ -259,7 +259,7 @@ const Technology = ({ cmsContent }) => {
                         src={item.image}
                         width={150}
                         height={150}
-                        className="w-28 h-28 sm:w-36 sm:h-36 max-h-[145px] object-contain filter drop-shadow-md group-hover:scale-105 transition-transform duration-300"
+                        className="w-24 h-24 min-[380px]:w-28 min-[380px]:h-28 sm:w-36 sm:h-36 max-h-[120px] min-[380px]:max-h-[145px] object-contain filter drop-shadow-md group-hover:scale-105 transition-transform duration-300"
                       />
                     )}
                   </div>

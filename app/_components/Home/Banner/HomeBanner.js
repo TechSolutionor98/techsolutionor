@@ -160,7 +160,7 @@ const HomeBanner = ({ content, cmsContent, locations, countries }) => {
         >
           {/* Top Line: Digital Marketing Agency in [Country] - Natural normal heading text, no badge */}
           <div className="w-full text-center">
-            <h1 className="text-2xl sm:text-4xl md:text-[42px] lg:text-[46px] xl:text-[50px] font-black text-[#0D0F12] leading-tight tracking-tight inline-block">
+            <h1 className="text-base min-[400px]:text-lg sm:text-3xl md:text-[42px] lg:text-[46px] xl:text-[50px] font-black text-[#0D0F12] leading-tight tracking-tight inline-block">
               <span className="inline">{prefix} </span>
               <span className="inline-block whitespace-nowrap align-baseline">
                 <AnimatePresence mode="wait">
@@ -193,19 +193,19 @@ const HomeBanner = ({ content, cmsContent, locations, countries }) => {
             initial={{ opacity: 0, x: -28 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
-            className="relative inline-flex items-center justify-center my-1.5 sm:my-2.5 group"
+            className="relative inline-flex items-center justify-center my-1.5 sm:my-2.5 group max-w-full"
           >
-            <span className="px-5 sm:px-9 py-2 sm:py-3.5 rounded-full bg-[#41B349] text-[#FCFCFC] shadow-[0_12px_35px_rgba(65,179,73,0.35)] border-2 sm:border-[3px] border-[#FFE7A8] text-2xl sm:text-4xl md:text-5xl lg:text-[54px] font-black tracking-tight leading-none inline-block transform hover:scale-[1.02] transition-transform duration-300">
+            <span className="px-3.5 min-[360px]:px-4 py-1.5 sm:px-8 sm:py-3 lg:px-9 lg:py-3.5 rounded-full bg-[#41B349] text-[#FCFCFC] shadow-[0_6px_20px_rgba(65,179,73,0.25)] sm:shadow-[0_12px_35px_rgba(65,179,73,0.35)] border-2 sm:border-[3px] border-[#FFE7A8] text-xs min-[360px]:text-sm min-[420px]:text-base sm:text-3xl md:text-5xl lg:text-[54px] font-black tracking-tight leading-tight sm:leading-none inline-block text-center transform hover:scale-[1.02] transition-transform duration-300">
               {middlePillText}
             </span>
           </motion.div>
 
           {/* Bottom Line */}
           {bottomLineText && (
-            <span className="block text-2xl sm:text-4xl md:text-5xl lg:text-[62px] font-black text-[#0D0F12] leading-[1.1] tracking-tight relative">
-              <span className="text-[#41B349] text-2xl sm:text-4xl md:text-5xl font-serif mr-1 sm:mr-2" aria-hidden="true">&lsquo;</span>
+            <span className="block text-base min-[400px]:text-lg sm:text-3xl md:text-5xl lg:text-[62px] font-black text-[#0D0F12] leading-[1.1] tracking-tight relative">
+              <span className="text-[#41B349] text-base min-[400px]:text-lg sm:text-3xl md:text-5xl font-serif mr-1 sm:mr-2" aria-hidden="true">&lsquo;</span>
               {bottomLineText}
-              <span className="text-[#41B349] text-2xl sm:text-4xl md:text-5xl font-serif ml-1 sm:ml-2" aria-hidden="true">&rsquo;</span>
+              <span className="text-[#41B349] text-base min-[400px]:text-lg sm:text-3xl md:text-5xl font-serif ml-1 sm:mr-2" aria-hidden="true">&rsquo;</span>
             </span>
           )}
         </div>
@@ -214,7 +214,7 @@ const HomeBanner = ({ content, cmsContent, locations, countries }) => {
 
     // Fallback for custom title strings without " – "
     return (
-      <span className="block text-3xl sm:text-5xl md:text-6xl lg:text-[62px] font-black text-[#0D0F12] leading-[1.15] tracking-tight">
+      <span className="block text-lg min-[400px]:text-xl sm:text-4xl md:text-5xl lg:text-[62px] font-black text-[#0D0F12] leading-[1.15] tracking-tight">
         {titleString}
       </span>
     );
@@ -222,7 +222,7 @@ const HomeBanner = ({ content, cmsContent, locations, countries }) => {
 
   return (
     <section 
-      className="relative overflow-hidden w-full flex items-center justify-center py-10 lg:py-16 select-none"
+      className="relative overflow-hidden w-full flex items-center justify-center py-8 sm:py-12 lg:py-16 select-none"
       style={{
         background: "linear-gradient(135deg, #41B349 0%, rgba(65, 179, 73, 0.45) 30%, rgba(255, 231, 168, 0.2) 60%, #FFFFFF 100%)",
       }}
@@ -243,7 +243,7 @@ const HomeBanner = ({ content, cmsContent, locations, countries }) => {
 
         {/* Sub-headline / Description */}
         <div 
-          className="mt-4 sm:mt-5 text-[#4A5568] text-base sm:text-lg md:text-xl leading-relaxed max-w-3xl font-medium space-y-1.5 text-center"
+          className="mt-3 sm:mt-5 text-[#4A5568] text-xs min-[360px]:text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed max-w-3xl font-medium space-y-1 sm:space-y-1.5 text-center px-2 sm:px-0"
         >
           {descriptionLines.map((line, index) => (
             <p key={`${line}-${index}`} className="flex items-center justify-center gap-2">
@@ -254,10 +254,10 @@ const HomeBanner = ({ content, cmsContent, locations, countries }) => {
 
         {/* Primary CTA Button */}
         <div 
-          className="mt-5 sm:mt-6 flex flex-col items-center gap-4 w-full sm:w-auto"
+          className="mt-4 sm:mt-6 flex flex-col items-center gap-4 w-full sm:w-auto"
         >
           <Link href={bannerButtonLink} className="w-full sm:w-auto group">
-            <button className="w-full sm:w-auto inline-flex items-center justify-center gap-3 bg-[#41B349] text-[#FCFCFC] text-base sm:text-lg font-bold px-9 sm:px-11 py-4 sm:py-4.5 rounded-full shadow-[0_10px_30px_rgba(65,179,73,0.35)] hover:shadow-[0_15px_40px_rgba(65,179,73,0.5)] hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer border-2 border-[#FFE7A8]/60 shine-btn relative overflow-hidden">
+            <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 sm:gap-3 bg-[#41B349] text-[#FCFCFC] text-sm sm:text-base md:text-lg font-bold px-6 min-[360px]:px-7 sm:px-9 md:px-11 py-3.5 sm:py-4.5 rounded-full shadow-[0_10px_30px_rgba(65,179,73,0.35)] hover:shadow-[0_15px_40px_rgba(65,179,73,0.5)] hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer border-2 border-[#FFE7A8]/60 shine-btn relative overflow-hidden">
               <span>{bannerButtonText}</span>
               <FaArrowRight size={17} className="transition-transform group-hover:translate-x-1.5" />
             </button>

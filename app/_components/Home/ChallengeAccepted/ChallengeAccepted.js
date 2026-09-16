@@ -73,30 +73,30 @@ const ChallengeAccepted = ({ content, cmsContent }) => {
   });
 
   return (
-    <section className="py-20 md:py-28 bg-[#FFFFFF] relative overflow-hidden select-none">
+    <section className="py-12 sm:py-18 md:py-28 bg-[#FFFFFF] relative overflow-hidden select-none">
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-14">
+        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#41B349]/10 border border-[#41B349]/20 text-[#41B349] font-extrabold text-xs uppercase tracking-widest mb-3">
             <span className="w-2 h-2 rounded-full bg-[#41B349] animate-pulse" />
             <span>BUSINESS SOLUTIONS</span>
           </div>
 
           <h2 
-            className="text-3xl sm:text-4xl md:text-5xl font-black text-[#0D0F12] tracking-tight leading-tight"
+            className="text-2xl sm:text-3xl md:text-5xl font-black text-[#0D0F12] tracking-tight leading-tight"
             style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
           >
             {titleBlack} <span className="text-[#41B349]">{titleGreen}</span>
           </h2>
 
-          <p className="mt-4 text-[#4A5568] text-base sm:text-lg leading-relaxed font-medium">
+          <p className="mt-3 sm:mt-4 text-[#4A5568] text-xs min-[360px]:text-sm sm:text-base md:text-lg leading-relaxed font-medium">
             {subtitle}
           </p>
         </div>
 
         {/* Dark Glassmorphic Feature Showcase Container */}
-        <div className="bg-[#0D0F12] border border-gray-800/80 rounded-3xl p-6 sm:p-10 md:p-12 relative overflow-hidden shadow-2xl">
+        <div className="bg-[#0D0F12] border border-gray-800/80 rounded-3xl p-5 sm:p-8 md:p-12 relative overflow-hidden shadow-2xl">
           
           {/* Ambient Background Glows */}
           <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-transparent via-[#41B349] to-transparent" />
@@ -108,7 +108,7 @@ const ChallengeAccepted = ({ content, cmsContent }) => {
             {cards.map((item, i) => (
               <div
                 key={i}
-                className="bg-[#13161C] border border-gray-800/80 rounded-3xl p-7 flex flex-col justify-between h-full relative overflow-hidden group hover:border-[#41B349]/50 hover:-translate-y-2 transition-all duration-300 shadow-xl"
+                className="bg-[#13161C] border border-gray-800/80 rounded-3xl p-5 sm:p-7 flex flex-col justify-between h-full relative overflow-hidden group hover:border-[#41B349]/50 hover:-translate-y-2 transition-all duration-300 shadow-xl"
               >
                 {/* Glowing Hover Top Accent */}
                 <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#41B349] to-[#6BE874] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -119,21 +119,21 @@ const ChallengeAccepted = ({ content, cmsContent }) => {
                   </span>
 
                   <h3 
-                    className="text-xl sm:text-2xl font-black text-white leading-snug tracking-tight mb-4 group-hover:text-[#6BE874] transition-colors duration-200"
+                    className="text-lg sm:text-xl md:text-2xl font-black text-white leading-snug tracking-tight mb-3 sm:mb-4 group-hover:text-[#6BE874] transition-colors duration-200"
                     style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
                   >
                     {item.title}
                   </h3>
 
-                  <p className="text-gray-300 text-sm leading-relaxed font-medium mb-6">
+                  <p className="text-gray-300 text-xs sm:text-sm leading-relaxed font-medium mb-5 sm:mb-6">
                     {item.desc}
                   </p>
 
                   {/* Bullet Checklist */}
-                  <ul className="space-y-2.5 mb-6">
+                  <ul className="space-y-2 sm:space-y-2.5 mb-5 sm:mb-6">
                     {(Array.isArray(item.list) ? item.list : []).map((listItem, index) => (
                       <li key={index} className="flex items-start gap-2.5 text-xs sm:text-sm font-semibold text-gray-200">
-                        <FaCheckCircle className="text-[#41B349] text-base shrink-0 mt-0.5" />
+                        <FaCheckCircle className="text-[#41B349] text-sm sm:text-base shrink-0 mt-0.5" />
                         <span>{listItem}</span>
                       </li>
                     ))}
