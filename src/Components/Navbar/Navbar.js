@@ -159,7 +159,7 @@ const Navbar = () => {
             {/* Desktop & Mobile Top Navbar */}
             <nav className='sticky top-0 z-50 bg-[#181918] w-full h-[90px] flex items-center justify-between px-10 lg:px-20 lg:pl-40 py-10'>
                 <div className="navbar-logo">
-                    <Link href='/'><Image src={Logo} alt="Logo" width={200} height={56} className='w-[80px] h-[50px]' /></Link>
+                    <Link href='/'><Image src={Logo} alt="Logo" width={200} height={56} className='w-[54px] h-[35px] min-[380px]:w-[58px] min-[380px]:h-[38px] sm:w-[68px] sm:h-[44px] lg:w-[80px] lg:h-[50px] object-contain' priority /></Link>
                 </div>
                 {/* Desktop links/buttons */}
                 <div className="hidden lg:flex navbar-links items-center gap-1 ml-15">
@@ -189,16 +189,6 @@ const Navbar = () => {
                     `}
                                     >
                                         <div className="bg-white rounded-2xl p-6 relative shadow-[0_25px_60px_rgba(0,0,0,0.18)] border-0 overflow-hidden">
-                                            {/* Shared SVG Gradient Definition for Button Link Borders */}
-                                            <svg className="absolute w-0 h-0 pointer-events-none" aria-hidden="true">
-                                                <defs>
-                                                    <linearGradient id="dropdown-btn-border-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                                        <stop offset="0%" stopColor="#FFFFFF" />
-                                                        <stop offset="50%" stopColor="#000000" />
-                                                        <stop offset="100%" stopColor="#FFFFFF" />
-                                                    </linearGradient>
-                                                </defs>
-                                            </svg>
                                             <div className="grid grid-cols-3 gap-x-5 gap-y-2.5">
                                                 {techSubLinks.map((sub) => (
                                                     <Link
@@ -210,7 +200,7 @@ const Navbar = () => {
                                                         {/* SVG Animated Moving Border Line on Hover */}
                                                         <div className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
                                                             <svg className="w-full h-full overflow-visible">
-                                                                {/* Subtle base border track with white-black gradient */}
+                                                                {/* Subtle base border track with pure white */}
                                                                 <rect
                                                                     x="1"
                                                                     y="1"
@@ -218,11 +208,11 @@ const Navbar = () => {
                                                                     height="calc(100% - 2px)"
                                                                     rx="11"
                                                                     fill="none"
-                                                                    stroke="url(#dropdown-btn-border-gradient)"
+                                                                    stroke="#FFFFFF"
                                                                     strokeWidth="1.5"
-                                                                    strokeOpacity="0.35"
+                                                                    strokeOpacity="0.4"
                                                                 />
-                                                                {/* Animated moving border line with smooth white-black gradient */}
+                                                                {/* Animated moving border line with pure white */}
                                                                 <rect
                                                                     x="1"
                                                                     y="1"
@@ -230,7 +220,7 @@ const Navbar = () => {
                                                                     height="calc(100% - 2px)"
                                                                     rx="11"
                                                                     fill="none"
-                                                                    stroke="url(#dropdown-btn-border-gradient)"
+                                                                    stroke="#FFFFFF"
                                                                     strokeWidth="2"
                                                                     strokeLinecap="round"
                                                                     pathLength="100"
@@ -275,16 +265,6 @@ const Navbar = () => {
                     `}
                                     >
                                         <div className="bg-white rounded-2xl p-6 relative shadow-[0_25px_60px_rgba(0,0,0,0.18)] border-0 overflow-hidden">
-                                            {/* Shared SVG Gradient Definition for Button Link Borders */}
-                                            <svg className="absolute w-0 h-0 pointer-events-none" aria-hidden="true">
-                                                <defs>
-                                                    <linearGradient id="dropdown-btn-border-gradient-services" x1="0%" y1="0%" x2="100%" y2="100%">
-                                                        <stop offset="0%" stopColor="#FFFFFF" />
-                                                        <stop offset="50%" stopColor="#000000" />
-                                                        <stop offset="100%" stopColor="#FFFFFF" />
-                                                    </linearGradient>
-                                                </defs>
-                                            </svg>
                                             <div className="grid grid-cols-3 gap-x-5 gap-y-2.5">
                                                 {servicesSubLinks.map((sub) => (
                                                     <Link
@@ -296,7 +276,7 @@ const Navbar = () => {
                                                         {/* SVG Animated Moving Border Line on Hover */}
                                                         <div className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
                                                             <svg className="w-full h-full overflow-visible">
-                                                                {/* Subtle base border track with white-black gradient */}
+                                                                {/* Subtle base border track with pure white */}
                                                                 <rect
                                                                     x="1"
                                                                     y="1"
@@ -304,11 +284,11 @@ const Navbar = () => {
                                                                     height="calc(100% - 2px)"
                                                                     rx="11"
                                                                     fill="none"
-                                                                    stroke="url(#dropdown-btn-border-gradient-services)"
+                                                                    stroke="#FFFFFF"
                                                                     strokeWidth="1.5"
-                                                                    strokeOpacity="0.35"
+                                                                    strokeOpacity="0.4"
                                                                 />
-                                                                {/* Animated moving border line with smooth white-black gradient */}
+                                                                {/* Animated moving border line with pure white */}
                                                                 <rect
                                                                     x="1"
                                                                     y="1"
@@ -316,7 +296,7 @@ const Navbar = () => {
                                                                     height="calc(100% - 2px)"
                                                                     rx="11"
                                                                     fill="none"
-                                                                    stroke="url(#dropdown-btn-border-gradient-services)"
+                                                                    stroke="#FFFFFF"
                                                                     strokeWidth="2"
                                                                     strokeLinecap="round"
                                                                     pathLength="100"
@@ -420,7 +400,7 @@ const Navbar = () => {
                 <div className="flex items-center justify-between px-6 py-6">
                     {/* Logo top left */}
                     <Link href='/' onClick={() => setMobileOpen(false)}>
-                        <Image src={Logo} alt="Logo" width={150} height={52} className='w-[72px] h-[46px]' />
+                        <Image src={Logo} alt="Logo" width={150} height={52} className='w-[54px] h-[35px] min-[380px]:w-[58px] min-[380px]:h-[38px] sm:w-[68px] sm:h-[44px] object-contain' />
                     </Link>
                     {/* Close icon top right */}
                     <button
