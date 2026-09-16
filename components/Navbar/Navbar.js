@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Logo from '@/src/Components/Images/Logo.png'
 import Image from 'next/image'
 import { FaChevronDown, FaBars, FaTimes } from "react-icons/fa";
@@ -151,6 +151,17 @@ const Navbar = () => {
             }
         };
     }, []);
+
+    useEffect(() => {
+        if (mobileOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [mobileOpen]);
 
     // Helper to check if navlink or any sublink is active
     const isActive = (link) => {
@@ -396,79 +407,72 @@ const Navbar = () => {
 
             {/* Mobile Navbar Overlay */}
             <div
-                className={`fixed inset-0 z-50 transition-all duration-300 ${
+                className={`fixed inset-0 z-[60] flex flex-col h-full w-full transition-all duration-300 ${
                     mobileOpen
-                        ? 'translate-x-0 opacity-100 visible'
-                        : '-translate-x-full opacity-0 invisible'
+                        ? 'translate-x-0 opacity-100 visible pointer-events-auto'
+                        : '-translate-x-full opacity-0 invisible pointer-events-none'
                 }`}
                 style={{
                     background: '#181918',
                 }}
             >
-                <div className="flex items-center justify-between px-6 py-6">
+                {/* Fixed Top Header inside Mobile Drawer */}
+                <div className="flex-shrink-0 flex items-center justify-between px-6 py-5 border-b border-white/10 bg-[#181918] z-20">
                     {/* Logo top left */}
                     <Link href='/' onClick={() => setMobileOpen(false)}>
                         <Image src={Logo} alt="Logo" width={150} height={52} className='w-[54px] h-[35px] min-[380px]:w-[58px] min-[380px]:h-[38px] sm:w-[68px] sm:h-[44px] object-contain' />
                     </Link>
                     {/* Close icon top right */}
                     <button
-                        className="text-white text-2xl"
+                        className="text-white text-2xl p-2 -mr-2 cursor-pointer hover:text-[#41B349] transition-colors focus:outline-none"
                         onClick={() => setMobileOpen(false)}
                         aria-label="Close menu"
                     >
                         <FaTimes />
                     </button>
                 </div>
-                {/* Mobile nav links */}
-                <div className="flex flex-col gap-4 mt-10 px-8">
-                    {navLinks.map((link, idx) => (
-                        <div key={link.label} className="relative ">
-                            {link.subLinks ? (
-                                <MobileDropdown  label={link.label} parentHref={link.href} subLinks={
-                                    idx === 0 ? techSubLinks.map(sub => ({ label: sub.label, href: sub.href })) :
-                                    idx === 1 ? servicesSubLinks.map(sub => ({ label: sub.label, href: sub.href })) :
-                                    link.subLinks
-                                } setMobileOpen={setMobileOpen} />
-                            ) : (
-                                <Link
-                                    href={link.href}
-                                    className={`${montserrat.className} text-white text-lg py-3 px-2 rounded  hover:bg-[#41B349]/20 transition-colors duration-200`}
-                                    onClick={() => setMobileOpen(false)}
-                                >
-                                    {link.label}
-                                </Link>
-                            )}
-                        </div>
-                    ))}
-                    {/* Mobile buttons */}
-                    {/* <div className="flex flex-col gap-3 mt-8">
+
+                {/* Vertically Scrollable Content Area */}
+                <div className="flex-1 overflow-y-auto overscroll-contain px-6 py-6 pb-28">
+                    <div className="flex flex-col gap-2">
+                        {navLinks.map((link, idx) => (
+                            <div key={link.label} className="border-b border-white/5 pb-2 last:border-b-0">
+                                {link.subLinks ? (
+                                    <MobileDropdown 
+                                        label={link.label} 
+                                        parentHref={link.href} 
+                                        subLinks={
+                                            idx === 0 ? techSubLinks :
+                                            idx === 1 ? servicesSubLinks :
+                                            link.subLinks
+                                        } 
+                                        setMobileOpen={setMobileOpen} 
+                                    />
+                                ) : (
+                                    <Link
+                                        href={link.href}
+                                        className={`${montserrat.className} block text-white text-lg font-medium py-3 px-2 rounded-lg hover:bg-[#41B349]/20 hover:text-[#41B349] transition-colors duration-200`}
+                                        onClick={() => setMobileOpen(false)}
+                                    >
+                                        {link.label}
+                                    </Link>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Mobile Action Button at bottom of scroll */}
+                    <div className="flex flex-col gap-3 mt-8 pt-6 border-t border-white/10">
                         <button
-                            style={{
-                                backgroundColor: '#41B349',
-                                color: '#fff',
-                                fontSize: '15px',
-                                fontWeight: 500,
-                                width: '100%',
-                                height: '44px',
-                                borderRadius: '20px',
+                            onClick={() => {
+                                setMobileOpen(false);
+                                if (openQuote) openQuote();
                             }}
+                            className={`${roboto.className} bg-[#41B349] text-white text-[16px] font-semibold w-full h-[46px] rounded-full hover:bg-white hover:text-black transition ease-in-out duration-200 cursor-pointer shadow-lg`}
                         >
-                            Get Post
+                            Get A Quote
                         </button>
-                        <button
-                            style={{
-                                backgroundColor: '#41B349',
-                                color: '#fff',
-                                fontSize: '15px',
-                                fontWeight: 500,
-                                width: '100%',
-                                height: '44px',
-                                borderRadius: '20px',
-                            }}
-                        >
-                            Get a Quote
-                        </button>
-                    </div> */}
+                    </div>
                 </div>
             </div>
         </>
@@ -476,41 +480,60 @@ const Navbar = () => {
 }
 
 // MobileDropdown component for smooth dropdown transition
-function MobileDropdown({ label, parentHref, subLinks, setMobileOpen }) {
+function MobileDropdown({ label, parentHref, subLinks = [], setMobileOpen }) {
     const [open, setOpen] = useState(false);
     return (
-        <div>
-            <button
-                className={`${montserrat.className} flex items-center justify-between w-full text-white text-lg  px-2  rounded hover:bg-[#41B349]/20 transition-colors duration-200`}
-                onClick={() => setOpen(o => !o)}
-                aria-expanded={open}
-            >
-                <span>{label}</span>
-                <div className='w-[40px] h-[20px] rounded-[10px] border flex items-center justify-center'>
-                    <FaChevronDown className={` ml-0 text-xs transition-transform duration-300 ${open ? 'rotate-180' : ''}`} />
-                </div>
-            </button>
+        <div className="w-full">
+            <div className="flex items-center justify-between w-full">
+                {parentHref ? (
+                    <Link
+                        href={parentHref}
+                        onClick={() => setMobileOpen(false)}
+                        className={`${montserrat.className} flex-1 text-white text-lg font-medium py-2.5 px-2 rounded-lg hover:text-[#41B349] transition-colors duration-200 cursor-pointer`}
+                    >
+                        {label}
+                    </Link>
+                ) : (
+                    <span className={`${montserrat.className} flex-1 text-white text-lg font-medium py-2.5 px-2`}>
+                        {label}
+                    </span>
+                )}
+                <button
+                    type="button"
+                    className="w-8 h-8 rounded-full bg-[#41B349] hover:bg-[#389e3f] active:scale-95 flex items-center justify-center flex-shrink-0 transition-all duration-200 cursor-pointer shadow-sm ml-2"
+                    onClick={() => setOpen(o => !o)}
+                    aria-label={`Toggle ${label} dropdown`}
+                    aria-expanded={open}
+                >
+                    <FaChevronDown className={`text-xs text-white transition-transform duration-300 ${open ? 'rotate-180' : ''}`} />
+                </button>
+            </div>
             <div
-                className={`overflow-hidden transition-all duration-300 ${open ? 'max-h-96 mt-2' : 'max-h-0'}`}
+                className={`overflow-hidden transition-all duration-300 ${open ? 'max-h-[3000px] opacity-100 mt-2' : 'max-h-0 opacity-0 pointer-events-none'}`}
             >
-                <div className="flex flex-col gap-2 pl-4">
-                    {parentHref ? (
-                        <Link
-                            href={parentHref}
-                            className="text-white text-base py-2 px-2 rounded hover:bg-[#41B349]/20 transition-colors duration-200 font-semibold"
-                            onClick={() => setMobileOpen(false)}
-                        >
-                            {label}
-                        </Link>
-                    ) : null}
+                <div className="flex flex-col gap-1 pl-2 pr-1 py-1">
                     {subLinks.map((sub) => (
                         <Link
                             key={sub.label}
                             href={sub.href}
-                            className="text-white text-base py-2 px-2 rounded hover:bg-[#41B349]/20 transition-colors duration-200"
+                            className="group flex items-center gap-3 p-2.5 rounded-xl hover:bg-[#41B349] transition-all duration-200 cursor-pointer"
                             onClick={() => setMobileOpen(false)}
                         >
-                            {sub.label}
+                            {sub.Image && (
+                                <div className="w-9 h-9 rounded-lg bg-gray-50/10 group-hover:bg-white flex items-center justify-center flex-shrink-0 p-1.5 border border-white/10 group-hover:border-transparent transition-all">
+                                    <Image src={sub.Image} alt={sub.label} width={22} height={22} className="object-contain" />
+                                </div>
+                            )}
+                            <div className="flex flex-col min-w-0">
+                                <span className={`${plusJakarta.className} text-[13.5px] font-bold text-white group-hover:text-white leading-tight truncate`}>
+                                    {sub.label}
+                                </span>
+                                {sub.desc && (
+                                    <span className="text-[11px] text-gray-400 group-hover:text-white/80 transition-colors truncate">
+                                        {sub.desc}
+                                    </span>
+                                )}
+                            </div>
                         </Link>
                     ))}
                 </div>
