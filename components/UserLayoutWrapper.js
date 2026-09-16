@@ -6,6 +6,7 @@ import Navbar from '@/src/Components/Navbar/Navbar';
 import SideIcons from '@/app/_components/SideIcons';
 import ScrollToTopButton from '@/app/_components/ScrollToTopButton';
 import Footer from '@/src/Components/Footer/Footer';
+import MobileBottomNav from '@/app/_components/MobileBottomNav';
 import { QuoteProvider } from '@/app/_context/QuoteContext';
 import { LanguageProvider } from '@/app/_context/LanguageContext';
 import GetQuoteForm from '@/app/_components/GetQuoteForm';
@@ -25,6 +26,7 @@ export default function UserLayoutWrapper({ children }) {
         {!isAdmin && <GetQuoteForm />}
         {!isAdmin && <GetInTouch />}
         {!isAdmin && <Footer />}
+        {!isAdmin && <MobileBottomNav />}
       </QuoteProvider>
     </LanguageProvider>
   );

@@ -69,7 +69,7 @@ const Footer = () => {
             <div className="absolute top-1/2 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] bg-[#41B349]/10 blur-[150px] rounded-full pointer-events-none" />
             <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[#41B349]/5 blur-[120px] rounded-full pointer-events-none" />
 
-            <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-12 md:py-16">
+            <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-12 md:py-16 pb-24 lg:pb-16">
                 
                 {/* ================= 4 EQUAL COLUMNS ================= */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12 items-start">
