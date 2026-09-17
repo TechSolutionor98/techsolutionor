@@ -409,7 +409,7 @@ const GetQuoteForm = () => {
                             {/* Header */}
                             <div className="mb-3">
                                 <h2 className="text-white text-xl sm:text-2xl font-extrabold tracking-wide leading-tight">
-                                    Get A Quote
+                                    Get Appointments
                                 </h2>
                             </div>
 

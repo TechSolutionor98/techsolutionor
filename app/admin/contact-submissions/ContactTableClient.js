@@ -136,7 +136,7 @@ export default function ContactTableClient({ initialData = [], apiBase = process
         <div className="flex bg-gray-100 p-1 rounded-lg text-xs font-semibold">
           {[
             { key: 'all', label: 'All Submissions', count: counts.all },
-            { key: 'quote', label: 'Get A Quote', count: counts.quote },
+            { key: 'quote', label: 'Appointments', count: counts.quote },
             { key: 'contact', label: 'Contact Us', count: counts.contact },
           ].map(tab => (
             <button
@@ -291,7 +291,7 @@ export default function ContactTableClient({ initialData = [], apiBase = process
                     <td className="px-4 py-2.5 align-middle">
                       {isQuote ? (
                         <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
-                          Get A Quote
+                          Appointments
                         </span>
                       ) : (
                         <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800">

@@ -392,7 +392,7 @@ const Navbar = () => {
                         onClick={openQuote}
                         className={`${roboto.className} bg-[#41B349] text-white text-[16px] font-medium leading-[20px] w-[130px] h-[40px] rounded-full hover:bg-white hover:text-black transition ease-in-out duration-200 cursor-pointer`}
                     >
-                        Get A Quote
+                        Book Now
                     </button>
                 </div>
                 {/* Mobile menu button */}
@@ -470,7 +470,7 @@ const Navbar = () => {
                             }}
                             className={`${roboto.className} bg-[#41B349] text-white text-[16px] font-semibold w-full h-[46px] rounded-full hover:bg-white hover:text-black transition ease-in-out duration-200 cursor-pointer shadow-lg`}
                         >
-                            Get A Quote
+                            Book Now
                         </button>
                     </div>
                 </div>

@@ -69,15 +69,17 @@ export default function PagesClient({ initialRoutes = [], apiBase, initialError 
         setRoutes(routesData.routes || []);
       }
     } catch (err) {
-      console.error('Failed to fetch routes:', err);
+      console.warn('Failed to fetch routes from API:', err?.message || err);
     }
   };
 
   useEffect(() => {
-    if (!initialRoutes || initialRoutes.length === 0) {
+    if (initialRoutes && initialRoutes.length > 0) {
+      setRoutes(initialRoutes);
+    } else {
       fetchRoutes();
     }
-  }, []);
+  }, [initialRoutes]);
 
   // Scan routes from project
   const handleScanRoutes = async () => {

@@ -8,7 +8,30 @@ import Image from 'next/image';
 import Logo from '@/src/Components/Images/blacklogo.png';
 import { FiLock } from 'react-icons/fi';
 import { IoIosLogOut } from "react-icons/io";
-import { Wrench } from 'lucide-react';
+import {
+  LayoutDashboard,
+  Globe,
+  FileText,
+  Image as ImageIcon,
+  Sparkles,
+  Search,
+  TrendingUp,
+  ArrowRightLeft,
+  BookOpen,
+  FilePlus,
+  MessageSquare,
+  Users,
+  Inbox,
+  Mail,
+  Briefcase,
+  Calendar,
+  Star,
+  Settings,
+  Sliders,
+  ShieldCheck,
+  History,
+  ChevronDown
+} from 'lucide-react';
 
 const ROLE_ALLOWED_ROUTES = {
   super_admin: ["*"],
@@ -22,9 +45,11 @@ const ROLE_ALLOWED_ROUTES = {
     "/admin/seo",
     "/admin/redirects",
     "/admin/media",
+    "/admin/logos",
     "/admin/activity",
     "/admin/blogs",
     "/admin/appointments",
+    "/admin/users",
     "/admin/quote-submissions"
   ],
   client: [
@@ -37,6 +62,7 @@ const ROLE_ALLOWED_ROUTES = {
     "/admin/seo",
     "/admin/redirects",
     "/admin/media",
+    "/admin/logos",
     "/admin/blogs",
     "/admin/appointments",
     "/admin/quote-submissions"
@@ -59,7 +85,8 @@ const ROLE_ALLOWED_ROUTES = {
     "/admin/contact-submissions",
     "/admin/pages",
     "/admin/redirects",
-    "/admin/media"
+    "/admin/media",
+    "/admin/logos"
   ],
   viewer: [
     "/admin",
@@ -71,11 +98,63 @@ const ROLE_ALLOWED_ROUTES = {
   ]
 };
 
+// Logical navigation structure grouped into exactly 4 functional dropdown sections
+const NAV_GROUPS = [
+  {
+    id: "inquiries",
+    label: "Leads & Inquiries",
+    icon: Inbox,
+    items: [
+      { href: "/admin/contact-submissions", label: "Contact Messages", icon: Mail, description: "Inquiries from contact forms" },
+      { href: "/admin/applications", label: "Job Applications", icon: Briefcase, description: "Career applicant resumes" },
+      { href: "/admin/reviews", label: "Customer Reviews", icon: Star, description: "Ratings and testimonials" },
+    ]
+  },
+  {
+    id: "content_seo",
+    label: "SEO & Content",
+    icon: Globe,
+    items: [
+      { href: "/admin/pages", label: "Pages & Sections", icon: FileText, description: "Manage pages and section content" },
+      { href: "/admin/seo", label: "SEO Manager", icon: TrendingUp, description: "Meta tags, schema, and SEO scores" },
+      { href: "/admin/media", label: "Media Library", icon: ImageIcon, description: "Manage images and asset files" },
+      { href: "/admin/redirects", label: "URL Redirects", icon: ArrowRightLeft, description: "Manage 301/302 link forwarding" },
+      { href: "/admin/logos", label: "Website Logo", icon: Sparkles, description: "Update header and footer logo" },
+    ]
+  },
+  {
+    id: "blogs",
+    label: "Blog Management",
+    icon: BookOpen,
+    items: [
+      { href: "/admin/blogs", label: "All Articles", icon: FileText, description: "View and edit blog posts" },
+      { href: "/admin/blogs/add", label: "Create Article", icon: FilePlus, description: "Write and publish new article" },
+      { href: "/admin/blogs/comments", label: "Comments", icon: MessageSquare, description: "Moderate user comments" },
+      { href: "/admin/blogs/users", label: "Authors & Writers", icon: Users, description: "Manage blog contributors" },
+    ]
+  },
+  {
+    id: "system",
+    label: "System & Settings",
+    icon: Settings,
+    items: [
+      { href: "/admin/settings", label: "Business Settings", icon: Sliders, description: "Company information and socials" },
+      { href: "/admin/users", label: "Admin Accounts", icon: ShieldCheck, description: "Manage user roles and logins" },
+      { href: "/admin/activity", label: "Activity Logs", icon: History, description: "System audit trail and history" },
+    ]
+  }
+];
+
 export default function AdminLayout({ children, title = '' }) {
   const pathname = usePathname();
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [blogsOpen, setBlogsOpen] = useState(false);
+  const [openDropdowns, setOpenDropdowns] = useState({
+    inquiries: true,
+    content_seo: true,
+    blogs: false,
+    system: false,
+  });
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -96,11 +175,27 @@ export default function AdminLayout({ children, title = '' }) {
     setLoading(false);
   }, []);
 
+  // Automatically open the dropdown that contains the current pathname
   useEffect(() => {
-    if (pathname && pathname.startsWith("/admin/blogs")) {
-      setBlogsOpen(true);
+    if (!pathname) return;
+    for (const group of NAV_GROUPS) {
+      const hasActiveChild = group.items.some(item => {
+        const target = item.href.replace(/\/$/, "");
+        const current = pathname.replace(/\/$/, "");
+        return current === target || pathname.startsWith(target + "/");
+      });
+      if (hasActiveChild) {
+        setOpenDropdowns(prev => ({ ...prev, [group.id]: true }));
+      }
     }
   }, [pathname]);
+
+  const toggleDropdown = (groupId) => {
+    setOpenDropdowns(prev => ({
+      ...prev,
+      [groupId]: !prev[groupId]
+    }));
+  };
 
   const role = currentUser?.role || 'super_admin';
 
@@ -118,34 +213,6 @@ export default function AdminLayout({ children, title = '' }) {
     });
   };
 
-  const navLinks = [
-    { href: "/admin/quote-submissions", label: "Quote Requests", group: "Management", hidden: true },
-    { href: "/admin/applications", label: "Career Applications", group: "Management" },
-    { href: "/admin/contact-submissions", label: "Contact Submissions", group: "Management" },
-    { href: "/admin/reviews", label: "Reviews", group: "Management" },
-    { href: "/admin/settings", label: "Business Settings", group: "Management" },
-    { href: "/admin/pages", label: "Pages & Routes", group: "CMS" },
-    { href: "/admin/seo", label: "SEO Manager", group: "CMS" },
-    { href: "/admin/redirects", label: "URL Redirects", group: "CMS" },
-    { href: "/admin/media", label: "Media Library", group: "CMS" },
-    { href: "/admin/blogs", label: "List Blogs", group: "Blogs" },
-    { href: "/admin/blogs/add", label: "Add Blog", group: "Blogs" },
-    { href: "/admin/blogs/comments", label: "Comment List", group: "Blogs" },
-    { href: "/admin/blogs/users", label: "Blog Users", group: "Blogs" },
-    { href: "/admin/appointments", label: "Appointment Links", group: "Scheduling" },
-    { href: "/admin/users", label: "Users", group: "Management" },
-    { href: "/admin/activity", label: "Activity Logs", group: "Management" },
-  ];
-
-  const filteredLinks = navLinks.filter(link => !link.hidden && isRouteAllowed(link.href));
-
-  const groupedLinks = filteredLinks.reduce((acc, link) => {
-    const group = link.group || 'Other';
-    if (!acc[group]) acc[group] = [];
-    acc[group].push(link);
-    return acc;
-  }, {});
-
   const isAllowed = loading || isRouteAllowed(pathname);
 
   const isLinkActive = (href) => {
@@ -158,101 +225,130 @@ export default function AdminLayout({ children, title = '' }) {
     return current === target || pathname.startsWith(target + "/");
   };
 
+  const isGroupActive = (group) => {
+    return group.items.some(item => isLinkActive(item.href));
+  };
+
+  // Filter groups according to current role permissions
+  const visibleGroups = NAV_GROUPS.map(group => {
+    const allowedItems = group.items.filter(item => isRouteAllowed(item.href));
+    return { ...group, items: allowedItems };
+  }).filter(group => group.items.length > 0);
+
+  const isDashboardActive = isLinkActive("/admin");
+
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-white text-black relative">
+    <div className="min-h-screen flex flex-col md:flex-row bg-[#F8FAFC] text-gray-900 relative">
 
       {/* Top-right Logout */}
-      <div className="fixed top-4 right-4 z-50 flex items-center gap-3 bg-white/90 backdrop-blur-xs py-1 px-2 rounded-lg shadow-xs">
+      <div className="fixed top-3 right-4 z-50 flex items-center gap-3 bg-white/95 backdrop-blur-sm py-1.5 px-3 rounded-xl shadow-sm border border-gray-200/80">
         {currentUser && (
           <span className="hidden md:inline-block text-xs text-gray-500 font-medium">
-            Logged in as: <strong className="text-[#20507C]">{currentUser.name}</strong> ({role.replace('_', ' ')})
+            Logged in as: <strong className="text-[#20507C]">{currentUser.name}</strong> <span className="capitalize font-semibold text-gray-600">({role.replace('_', ' ')})</span>
           </span>
         )}
         <LogoutButton>
-          <div className="cursor-pointer flex items-center gap-2 px-4 py-2 bg-[#34953C] text-white text-sm rounded hover:bg-[#2b7e32] transition-colors duration-200 shadow-xs">
-            <IoIosLogOut />
+          <div className="cursor-pointer flex items-center gap-1.5 px-3 py-1.5 bg-[#34953C] hover:bg-[#2b7e32] text-white text-xs font-semibold rounded-lg transition-all duration-200 shadow-xs">
+            <IoIosLogOut className="w-4 h-4" />
             <span>Logout</span>
           </div>
         </LogoutButton>
       </div>
 
       {/* Fixed Admin Sidebar */}
-      <aside className="w-full md:w-64 flex-shrink-0 border-b md:border-b-0 md:border-r border-gray-200 p-6 pt-16 md:pt-6 md:fixed md:top-0 md:left-0 md:h-screen md:z-40 bg-white overflow-y-auto">
-        <div className="mb-6 flex justify-center items-center">
-          <Link href="/admin" className="inline-block group no-underline">
+      <aside className="w-full md:w-64 flex-shrink-0 border-b md:border-b-0 md:border-r border-gray-200 p-4 pt-16 md:pt-5 md:fixed md:top-0 md:left-0 md:h-screen md:z-40 bg-white overflow-y-auto">
+        {/* Brand Logo */}
+        <div className="mb-4 flex justify-center items-center px-2">
+          <Link href="/admin" className="inline-block group no-underline transition-transform hover:scale-[1.01]">
             <Image 
               src={Logo} 
               alt="TechSolutionor Logo" 
               width={260} 
               height={80} 
-              className="h-20 sm:h-24 w-auto object-contain"
+              className="h-16 sm:h-20 w-auto object-contain"
               priority
             />
           </Link>
         </div>
-        <hr className='bg-gray-400 text-gray-400 w-full h-[2px] mb-7' />
-        <nav className="flex flex-col gap-1 text-sm pb-10">
-          {Object.entries(groupedLinks).map(([group, links]) => {
-            if (group === 'Blogs') {
-              return (
-                <div key={group} className="mb-3">
-                  <button
-                    onClick={() => setBlogsOpen(!blogsOpen)}
-                    className="w-full flex items-center justify-between px-3 py-2 text-left hover:bg-gray-100 rounded transition duration-150 cursor-pointer text-sm font-bold text-gray-400 uppercase tracking-wider"
-                  >
-                    <span>Blogs</span>
-                    <span className="text-gray-400">
-                      {blogsOpen ? (
-                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 15l7-7 7 7" /></svg>
-                      ) : (
-                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" /></svg>
-                      )}
-                    </span>
-                  </button>
-                  {blogsOpen && (
-                    <div className="mt-1 pl-2 ml-1 flex flex-col gap-0.5 border-l border-gray-150">
-                      {links.map(link => {
-                        const isActive = isLinkActive(link.href);
-                        return (
-                          <Link key={link.href} href={link.href}>
-                            <p
-                              className={`px-3 py-2 text-sm rounded ${
-                                isActive
-                                  ? "bg-[#34953C] text-white font-semibold"
-                                  : "hover:bg-gray-100 text-gray-800"
-                              }`}
-                              style={isActive ? { cursor: "default" } : {}}
-                            >
-                              {link.label}
-                            </p>
-                          </Link>
-                        );
-                      })}
-                    </div>
-                  )}
+
+        <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-gray-200 to-transparent mb-4" />
+
+        {/* Sidebar Navigation */}
+        <nav className="flex flex-col gap-1.5 text-sm pb-16">
+          
+          {/* Main Dashboard Link */}
+          {isRouteAllowed("/admin") && (
+            <div className="mb-2">
+              <Link href="/admin" className="no-underline block">
+                <div
+                  className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    isDashboardActive
+                      ? "bg-[#34953C] text-white shadow-xs"
+                      : "text-gray-700 hover:text-gray-950 hover:bg-gray-100/90"
+                  }`}
+                >
+                  <LayoutDashboard className={`w-4 h-4 ${isDashboardActive ? 'text-white' : 'text-gray-500'}`} />
+                  <span>Dashboard</span>
                 </div>
-              );
-            }
+              </Link>
+            </div>
+          )}
+
+          {/* Dropdown Groups */}
+          {visibleGroups.map(group => {
+            const GroupIcon = group.icon;
+            const isOpen = !!openDropdowns[group.id];
+            const hasActive = isGroupActive(group);
+
             return (
-              <div key={group} className="mb-3">
-                <p className="px-3 py-1 text-[10px] font-bold text-gray-400 uppercase tracking-wider">{group}</p>
-                {links.map(link => {
-                  const isActive = isLinkActive(link.href);
-                  return (
-                    <Link key={link.href} href={link.href}>
-                      <p
-                        className={`px-3 py-2 rounded ${
-                          isActive
-                            ? "bg-[#34953C] text-white font-semibold"
-                            : "hover:bg-gray-100"
-                        }`}
-                        style={isActive ? { cursor: "default" } : {}}
-                      >
-                        {link.label}
-                      </p>
-                    </Link>
-                  );
-                })}
+              <div key={group.id} className="rounded-lg transition-all duration-150">
+                {/* Dropdown Header Button */}
+                <button
+                  type="button"
+                  onClick={() => toggleDropdown(group.id)}
+                  aria-expanded={isOpen}
+                  className={`w-full flex items-center justify-between px-3 py-2 text-left rounded-lg transition-all duration-150 cursor-pointer ${
+                    hasActive && !isOpen
+                      ? "bg-green-50/70 text-[#2b7e32] font-semibold"
+                      : "text-gray-700 hover:text-gray-950 hover:bg-gray-100/80 font-medium"
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <GroupIcon className={`w-4 h-4 flex-shrink-0 ${hasActive ? 'text-[#34953C]' : 'text-gray-500'}`} />
+                    <span className="text-sm truncate">{group.label}</span>
+                  </div>
+                  <ChevronDown
+                    className={`w-3.5 h-3.5 text-gray-400 transition-transform duration-200 flex-shrink-0 ${
+                      isOpen ? 'rotate-180 text-gray-600' : ''
+                    }`}
+                  />
+                </button>
+
+                {/* Dropdown Children */}
+                {isOpen && (
+                  <div className="mt-1 ml-3.5 pl-3 border-l-2 border-gray-100 flex flex-col gap-0.5 py-0.5 animate-fadeIn">
+                    {group.items.map(item => {
+                      const ItemIcon = item.icon;
+                      const isActive = isLinkActive(item.href);
+
+                      return (
+                        <Link key={item.href} href={item.href} className="no-underline block">
+                          <div
+                            className={`flex items-center gap-2.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-150 ${
+                              isActive
+                                ? "bg-[#34953C] text-white shadow-xs font-semibold"
+                                : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                            }`}
+                            title={item.description}
+                          >
+                            <ItemIcon className={`w-3.5 h-3.5 flex-shrink-0 ${isActive ? 'text-white' : 'text-gray-400'}`} />
+                            <span className="truncate">{item.label}</span>
+                          </div>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             );
           })}

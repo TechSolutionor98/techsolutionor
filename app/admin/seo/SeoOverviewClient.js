@@ -34,15 +34,17 @@ export default function SeoOverviewClient({ initialPages = [], apiBase }) {
         setPages(data.pages || []);
       }
     } catch (err) {
-      console.error('Failed to fetch SEO pages:', err);
+      console.warn('Failed to fetch SEO pages from API:', err?.message || err);
     }
   };
 
   useEffect(() => {
-    if (!initialPages || initialPages.length === 0) {
+    if (initialPages && initialPages.length > 0) {
+      setPages(initialPages);
+    } else {
       fetchSeoPages();
     }
-  }, []);
+  }, [initialPages]);
 
   const handleCopy = (text) => {
     if (typeof window !== "undefined" && navigator.clipboard) {
