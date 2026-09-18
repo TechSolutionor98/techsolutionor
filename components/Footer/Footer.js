@@ -52,12 +52,12 @@ const Footer = () => {
             "Retail & E-commerce", "Manufacturing", "Non-profit & NGOs", "Automotive"
         ],
         "Company": [
-            { name: "About Us", href: "/about" },
-            { name: "Contact Us", href: "/contact" },
+            { name: "About Us", href: "/about-us" },
+            { name: "Contact Us", href: "/contact-us" },
             { name: "Privacy Policy", href: "/privacy-policy" },
             { name: "Terms and Conditions", href: "/terms-and-conditions" },
             { name: "Blogs", href: "/blog" },
-            { name: "Our Projects", href: "/projects" },
+            { name: "Our Projects", href: "/our-portfolio" },
             { name: "Career", href: "/career" },
             { name: "Become a Partner", href: "/become-a-partner" }
         ]
