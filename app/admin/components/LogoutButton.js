@@ -10,6 +10,7 @@ export default function LogoutButton({ children }) {
       localStorage.removeItem("user");
       sessionStorage.removeItem("jwt");
       sessionStorage.removeItem("user");
+      document.cookie = "jwt=; path=/; max-age=0; SameSite=Lax";
     }
     // Optionally, call your backend logout API if needed
     await fetch("/api/auth/logout", { method: "POST" }).catch(() => {});

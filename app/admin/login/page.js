@@ -8,22 +8,37 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const router = useRouter();
 
+  const [loading, setLoading] = useState(false);
+
   async function handleLogin(e) {
     e.preventDefault();
     setError("");
-    const res = await fetch("/api/auth/login", {
-      method: "POST",
-      body: JSON.stringify({ email, password }),
-      headers: { "Content-Type": "application/json" },
-    });
-    if (res.ok) {
-      const { token, user } = await res.json();
-      localStorage.setItem("jwt", token);
-      localStorage.setItem("user", JSON.stringify(user || { role: 'super_admin' }));
-      document.cookie = `jwt=${token}; path=/; max-age=86400; SameSite=Lax`;
-      window.location.href = "/admin"; // Force reload and navigate to admin
-    } else {
-      setError("Invalid email or password");
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        body: JSON.stringify({ email: email.trim(), password }),
+        headers: { "Content-Type": "application/json" },
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (res.ok) {
+        const { token, user } = data;
+        localStorage.setItem("jwt", token);
+        localStorage.setItem("user", JSON.stringify(user || { role: 'super_admin' }));
+        const isHttps = typeof window !== "undefined" && window.location.protocol === "https:";
+        document.cookie = `jwt=${token}; path=/; max-age=604800; SameSite=Lax${isHttps ? "; Secure" : ""}`;
+        window.location.href = "/admin"; // Force reload and navigate to admin
+      } else {
+        setError(data?.error || "Invalid email or password");
+      }
+    } catch (err) {
+      console.error("Login request failed:", err);
+      setError("Connection error. Please check your network and try again.");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -79,6 +94,7 @@ export default function LoginPage() {
         />
         <button
           type="submit"
+          disabled={loading}
           style={{
             padding: "12px",
             borderRadius: "8px",
@@ -87,11 +103,12 @@ export default function LoginPage() {
             fontWeight: "bold",
             fontSize: "16px",
             border: "none",
-            cursor: "pointer",
+            cursor: loading ? "not-allowed" : "pointer",
+            opacity: loading ? 0.7 : 1,
             marginTop: "8px"
           }}
         >
-          Login
+          {loading ? "Logging in..." : "Login"}
         </button>
         {error && (
           <div style={{ color: "red", textAlign: "center", marginTop: "4px" }}>
