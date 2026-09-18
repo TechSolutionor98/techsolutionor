@@ -127,15 +127,21 @@ const Navbar = () => {
     const pathname = usePathname();
     const { openQuote } = useQuote();
 
-    const handleMouseEnter = (index) => {
-        if (timeoutRef.current) clearTimeout(timeoutRef.current);
-        setDropdownIndex(index);
+    const handleMouseEnter = (idx) => {
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+            timeoutRef.current = null;
+        }
+        setDropdownIndex(idx);
     };
 
     const handleMouseLeave = () => {
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+        }
         timeoutRef.current = setTimeout(() => {
             setDropdownIndex(null);
-        }, 150);
+        }, 200);
     };
 
     React.useEffect(() => {
@@ -168,238 +174,276 @@ const Navbar = () => {
     return (
         <>
             {/* Desktop & Mobile Top Navbar */}
-            <nav className='sticky top-0 z-50 bg-[#181918] w-full h-[90px] flex items-center justify-between px-10 lg:px-20 lg:pl-40 py-10'>
-                <div className="navbar-logo">
-                    <Link href='/'><Image src={Logo} alt="Logo" width={200} height={56} className='w-[54px] h-[35px] min-[380px]:w-[58px] min-[380px]:h-[38px] sm:w-[68px] sm:h-[44px] lg:w-[80px] lg:h-[50px] object-contain' priority /></Link>
-                </div>
-                {/* Desktop links/buttons */}
-                <div className="hidden lg:flex navbar-links items-center gap-1 ml-15">
-                    {navLinks.map((link, idx) => (
-                        <div
-                            key={link.label}
-                            className="relative"
-                            onMouseEnter={() => link.subLinks ? handleMouseEnter(idx) : handleMouseLeave()}
-                            onMouseLeave={handleMouseLeave}
-                        >
-                            {idx === 0 ? (
-                                // Technologies dropdown with clean 3-column list
-                                <>
-                                    <Link
-                                        href={link.href}
-                                        className={`${plusJakarta.className} cursor-pointer text-[15px] font-semibold tracking-wide text-white/90 px-3.5 py-2 flex items-center gap-1.5 transition-colors duration-200 hover:text-[#41B349] ${isActive(link) ? 'text-[#41B349] font-bold' : ''
-                                            }`}
-                                    >
-                                        {link.label}
-                                        <FaChevronDown className="ml-0.5 text-xs opacity-80" />
-                                    </Link>
-                                    <div
-                                        onMouseEnter={() => handleMouseEnter(idx)}
-                                        onMouseLeave={handleMouseLeave}
-                                        className={`fixed left-1/2 -translate-x-1/2 top-[65px] pt-4 z-50 w-[900px] max-w-[calc(100vw-2rem)] transition-all duration-200
-                      ${dropdownIndex === idx ? 'opacity-100 visible translate-y-0 pointer-events-auto' : 'opacity-0 invisible -translate-y-2 pointer-events-none'}
-                    `}
-                                    >
-                                        <div className="bg-white rounded-2xl p-6 relative shadow-[0_25px_60px_rgba(0,0,0,0.18)] border-0 overflow-hidden">
-                                            <div className="grid grid-cols-3 gap-x-5 gap-y-2.5">
-                                                {techSubLinks.map((sub) => (
-                                                    <Link
-                                                        key={sub.label}
-                                                        href={sub.href}
-                                                        onClick={() => setDropdownIndex(null)}
-                                                        className="group relative flex items-center gap-3.5 p-2.5 rounded-xl bg-white hover:bg-[#41B349] border border-gray-200/80 hover:border-transparent hover:shadow-lg hover:shadow-[#41B349]/25 transition-all duration-300 ease-in-out cursor-pointer overflow-hidden"
-                                                    >
-                                                        {/* SVG Animated Moving Border Line on Hover */}
-                                                        <div className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
-                                                            <svg className="w-full h-full overflow-visible">
-                                                                {/* Subtle base border track with pure white */}
-                                                                <rect
-                                                                    x="1"
-                                                                    y="1"
-                                                                    width="calc(100% - 2px)"
-                                                                    height="calc(100% - 2px)"
-                                                                    rx="11"
-                                                                    fill="none"
-                                                                    stroke="#FFFFFF"
-                                                                    strokeWidth="1.5"
-                                                                    strokeOpacity="0.4"
-                                                                />
-                                                                {/* Animated moving border line with pure white */}
-                                                                <rect
-                                                                    x="1"
-                                                                    y="1"
-                                                                    width="calc(100% - 2px)"
-                                                                    height="calc(100% - 2px)"
-                                                                    rx="11"
-                                                                    fill="none"
-                                                                    stroke="#FFFFFF"
-                                                                    strokeWidth="2"
-                                                                    strokeLinecap="round"
-                                                                    pathLength="100"
-                                                                    className="dropdown-btn-svg-border-line"
-                                                                />
-                                                            </svg>
-                                                        </div>
-                                                        <div className="w-11 h-11 rounded-xl bg-gray-50 border border-gray-200/80 flex items-center justify-center flex-shrink-0 group-hover:bg-white group-hover:border-transparent group-hover:scale-105 transition-all duration-300 p-2 shadow-xs relative z-10">
-                                                            <Image src={sub.Image} alt={sub.label} width={28} height={28} className="object-contain dropdown-icon-bounce" />
-                                                        </div>
-                                                        <div className="flex flex-col min-w-0 relative z-10">
-                                                            <span className={`${plusJakarta.className} text-[13.5px] font-bold text-gray-900 group-hover:text-white transition-colors duration-200 truncate`}>
-                                                                {sub.label}
-                                                            </span>
-                                                            <span className="text-[11px] text-gray-500 group-hover:text-white/90 transition-colors duration-200 truncate">
-                                                                {sub.desc}
-                                                            </span>
-                                                        </div>
-                                                    </Link>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </>
-                            ) : idx === 1 ? (
-                                // Services dropdown with clean 3-column list
-                                <div className='relative'>
-                                    <Link
-                                        href={link.href || '/services'}
-                                        onClick={() => setDropdownIndex(null)}
-                                        className={`${plusJakarta.className} cursor-pointer text-[15px] font-semibold tracking-wide text-white/90 px-3.5 py-2 flex items-center gap-1.5 transition-colors duration-200 hover:text-[#41B349] ${isActive(link) ? 'text-[#41B349] font-bold' : ''
-                                            }`}
-                                    >
-                                        {link.label}
-                                        <FaChevronDown className="ml-0.5 text-xs opacity-80" />
-                                    </Link>
-                                    <div
-                                        onMouseEnter={() => handleMouseEnter(idx)}
-                                        onMouseLeave={handleMouseLeave}
-                                        className={`fixed left-1/2 -translate-x-1/2 top-[65px] pt-4 z-50 w-[900px] max-w-[calc(100vw-2rem)] transition-all duration-200
-                      ${dropdownIndex === idx ? 'opacity-100 visible translate-y-0 pointer-events-auto' : 'opacity-0 invisible -translate-y-2 pointer-events-none'}
-                    `}
-                                    >
-                                        <div className="bg-white rounded-2xl p-6 relative shadow-[0_25px_60px_rgba(0,0,0,0.18)] border-0 overflow-hidden">
-                                            <div className="grid grid-cols-3 gap-x-5 gap-y-2.5">
-                                                {servicesSubLinks.map((sub) => (
-                                                    <Link
-                                                        key={sub.label}
-                                                        href={sub.href}
-                                                        onClick={() => setDropdownIndex(null)}
-                                                        className="group relative flex items-center gap-3.5 p-2.5 rounded-xl bg-white hover:bg-[#41B349] border border-gray-200/80 hover:border-transparent hover:shadow-lg hover:shadow-[#41B349]/25 transition-all duration-300 ease-in-out cursor-pointer overflow-hidden"
-                                                    >
-                                                        {/* SVG Animated Moving Border Line on Hover */}
-                                                        <div className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
-                                                            <svg className="w-full h-full overflow-visible">
-                                                                {/* Subtle base border track with pure white */}
-                                                                <rect
-                                                                    x="1"
-                                                                    y="1"
-                                                                    width="calc(100% - 2px)"
-                                                                    height="calc(100% - 2px)"
-                                                                    rx="11"
-                                                                    fill="none"
-                                                                    stroke="#FFFFFF"
-                                                                    strokeWidth="1.5"
-                                                                    strokeOpacity="0.4"
-                                                                />
-                                                                {/* Animated moving border line with pure white */}
-                                                                <rect
-                                                                    x="1"
-                                                                    y="1"
-                                                                    width="calc(100% - 2px)"
-                                                                    height="calc(100% - 2px)"
-                                                                    rx="11"
-                                                                    fill="none"
-                                                                    stroke="#FFFFFF"
-                                                                    strokeWidth="2"
-                                                                    strokeLinecap="round"
-                                                                    pathLength="100"
-                                                                    className="dropdown-btn-svg-border-line"
-                                                                />
-                                                            </svg>
-                                                        </div>
-                                                        <div className="w-11 h-11 rounded-xl bg-gray-50 border border-gray-200/80 flex items-center justify-center flex-shrink-0 group-hover:bg-white group-hover:border-transparent group-hover:scale-105 transition-all duration-300 p-2 shadow-xs relative z-10">
-                                                            <Image src={sub.Image} alt={sub.label} width={28} height={28} className="object-contain dropdown-icon-bounce" />
-                                                        </div>
-                                                        <div className="flex flex-col min-w-0 relative z-10">
-                                                            <span className={`${plusJakarta.className} text-[13.5px] font-bold text-gray-900 group-hover:text-white transition-colors duration-200 truncate`}>
-                                                                {sub.label}
-                                                            </span>
-                                                            <span className="text-[11px] text-gray-500 group-hover:text-white/90 transition-colors duration-200 truncate">
-                                                                {sub.desc}
-                                                            </span>
-                                                        </div>
-                                                    </Link>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            ) : link.subLinks ? (
-                                <>
-                                    <Link
-                                        href={link.href}
-                                        className={`${plusJakarta.className} cursor-pointer text-[15px] font-semibold tracking-wide text-white/90 px-3.5 py-2 flex items-center gap-1.5 transition-colors duration-200 hover:text-[#41B349] ${isActive(link) ? 'text-[#41B349] font-bold' : ''
-                                            }`}
-                                    >
-                                        {link.label}
-                                        <FaChevronDown className="ml-0.5 text-xs opacity-80" />
-                                    </Link>
-                                    <div
-                                        onMouseEnter={() => handleMouseEnter(idx)}
-                                        onMouseLeave={handleMouseLeave}
-                                        className={`absolute left-0 mt-2 bg-[#181918] border border-gray-800 shadow-xl rounded-lg z-10 min-w-[160px] transition-all duration-200
-                      ${dropdownIndex === idx ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}
-                    `}
-                                    >
-                                        {link.subLinks.map((sub) => (
-                                            <Link
-                                                key={sub.label}
-                                                href={sub.href}
-                                                onClick={() => setDropdownIndex(null)}
-                                                className={`${plusJakarta.className} block px-4 py-2.5 text-[14px] font-medium text-white/90 transition-colors duration-200 hover:text-[#41B349] hover:bg-white/5 ${pathname === sub.href ? 'text-[#41B349] font-bold' : ''
-                                                    }`}
-                                            >
-                                                {sub.label}
-                                            </Link>
-                                        ))}
-                                    </div>
-                                </>
-                            ) : (
-                                <Link
-                                    href={link.href}
-                                    className={`${plusJakarta.className} text-[15px] font-semibold tracking-wide text-white/90 px-3.5 py-2 transition-colors duration-200 hover:text-[#41B349] ${isActive(link) ? 'text-[#41B349] font-bold' : ''
-                                        }`}
+            <nav className='sticky top-0 z-50 bg-[#181918] w-full border-b border-white/[0.08] shadow-[0_4px_24px_rgba(0,0,0,0.35)]'>
+                <div className='w-full max-w-7xl mx-auto px-6 sm:px-8 md:px-10 lg:px-14 xl:px-16 2xl:px-20 h-[72px] lg:h-[84px] flex items-center justify-between'>
+                    {/* Left Zone: Brand Logo (Left-aligned within flex-1) */}
+                    <div className="flex-1 flex items-center justify-start min-w-0">
+                        <Link href='/' className="flex items-center flex-shrink-0 focus:outline-none">
+                            <Image 
+                                src={Logo} 
+                                alt="Tech Solutionor Logo" 
+                                width={200} 
+                                height={56} 
+                                className='w-[54px] min-[380px]:w-[58px] sm:w-[68px] lg:w-[74px] xl:w-[80px] h-auto object-contain flex-shrink-0' 
+                                priority 
+                            />
+                        </Link>
+                    </div>
+
+                    {/* Middle Zone: Desktop Navigation Links (Dead-Center on Page) */}
+                    <div className="hidden lg:flex items-center justify-center flex-shrink-0">
+                        <div className="flex items-center gap-0.5 xl:gap-1.5 2xl:gap-2.5">
+                            {navLinks.map((link, idx) => (
+                                <div
+                                    key={link.label}
+                                    className="relative flex-shrink-0 group"
+                                    onMouseEnter={() => link.subLinks ? handleMouseEnter(idx) : handleMouseLeave()}
+                                    onMouseLeave={handleMouseLeave}
                                 >
-                                    {link.label}
-                                </Link>
-                            )}
+                                    {idx === 0 ? (
+                                        // Technologies dropdown with clean 3-column list
+                                        <>
+                                            <Link
+                                                href={link.href}
+                                                className={`${plusJakarta.className} whitespace-nowrap cursor-pointer text-[13px] xl:text-[14px] 2xl:text-[14.5px] font-semibold tracking-wide text-white/90 px-2 xl:px-2.5 2xl:px-3 py-1.5 xl:py-2 flex items-center gap-1.5 transition-colors duration-200 hover:text-[#41B349] ${
+                                                    isActive(link) ? 'text-[#41B349] font-bold' : ''
+                                                }`}
+                                            >
+                                                {link.label}
+                                                <FaChevronDown className={`text-[10px] xl:text-xs opacity-75 flex-shrink-0 transition-transform duration-200 ${
+                                                    dropdownIndex === idx ? 'rotate-180 text-[#41B349]' : 'group-hover:rotate-180'
+                                                }`} />
+                                            </Link>
+                                            <div
+                                                onMouseEnter={() => handleMouseEnter(idx)}
+                                                onMouseLeave={handleMouseLeave}
+                                                className={`fixed left-1/2 -translate-x-1/2 top-[72px] lg:top-[84px] pt-2 z-50 w-[920px] max-w-[calc(100vw-2rem)] transition-all duration-200 ${
+                                                    dropdownIndex === idx 
+                                                        ? 'opacity-100 visible translate-y-0 pointer-events-auto' 
+                                                        : 'opacity-0 invisible -translate-y-2 pointer-events-none'
+                                                }`}
+                                            >
+                                                <div className="bg-white rounded-2xl p-5 sm:p-6 relative shadow-[0_25px_60px_rgba(0,0,0,0.18)] border border-gray-100 max-h-[calc(100vh-96px)] overflow-y-auto">
+                                                    <div className="grid grid-cols-3 gap-x-5 gap-y-2.5">
+                                                        {techSubLinks.map((sub) => (
+                                                            <Link
+                                                                key={sub.label}
+                                                                href={sub.href}
+                                                                onClick={() => setDropdownIndex(null)}
+                                                                className="group/item relative flex items-center gap-3.5 p-2.5 rounded-xl bg-white hover:bg-[#41B349] border border-gray-200/80 hover:border-transparent hover:shadow-lg hover:shadow-[#41B349]/25 transition-all duration-300 ease-in-out cursor-pointer overflow-hidden"
+                                                            >
+                                                                {/* SVG Animated Moving Border Line on Hover */}
+                                                                <div className="absolute inset-0 pointer-events-none opacity-0 group-hover/item:opacity-100 transition-opacity duration-300 z-20">
+                                                                    <svg className="w-full h-full overflow-visible">
+                                                                        {/* Subtle base border track with pure white */}
+                                                                        <rect
+                                                                            x="1"
+                                                                            y="1"
+                                                                            width="calc(100% - 2px)"
+                                                                            height="calc(100% - 2px)"
+                                                                            rx="11"
+                                                                            fill="none"
+                                                                            stroke="#FFFFFF"
+                                                                            strokeWidth="1.5"
+                                                                            strokeOpacity="0.4"
+                                                                        />
+                                                                        {/* Animated moving border line with pure white */}
+                                                                        <rect
+                                                                            x="1"
+                                                                            y="1"
+                                                                            width="calc(100% - 2px)"
+                                                                            height="calc(100% - 2px)"
+                                                                            rx="11"
+                                                                            fill="none"
+                                                                            stroke="#FFFFFF"
+                                                                            strokeWidth="2"
+                                                                            strokeLinecap="round"
+                                                                            pathLength="100"
+                                                                            className="dropdown-btn-svg-border-line"
+                                                                        />
+                                                                    </svg>
+                                                                </div>
+                                                                <div className="w-11 h-11 rounded-xl bg-gray-50 border border-gray-200/80 flex items-center justify-center flex-shrink-0 group-hover/item:bg-white group-hover/item:border-transparent group-hover/item:scale-105 transition-all duration-300 p-2 shadow-xs relative z-10">
+                                                                    <Image src={sub.Image} alt={sub.label} width={28} height={28} className="object-contain dropdown-icon-bounce" />
+                                                                </div>
+                                                                <div className="flex flex-col min-w-0 relative z-10">
+                                                                    <span className={`${plusJakarta.className} text-[13.5px] font-bold text-gray-900 group-hover/item:text-white transition-colors duration-200 truncate`}>
+                                                                        {sub.label}
+                                                                    </span>
+                                                                    <span className="text-[11px] text-gray-500 group-hover/item:text-white/90 transition-colors duration-200 truncate">
+                                                                        {sub.desc}
+                                                                    </span>
+                                                                </div>
+                                                            </Link>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </>
+                                    ) : idx === 1 ? (
+                                        // Services dropdown with clean 3-column list
+                                        <div className='relative'>
+                                            <Link
+                                                href={link.href || '/services'}
+                                                onClick={() => setDropdownIndex(null)}
+                                                className={`${plusJakarta.className} whitespace-nowrap cursor-pointer text-[13px] xl:text-[14px] 2xl:text-[14.5px] font-semibold tracking-wide text-white/90 px-2 xl:px-2.5 2xl:px-3 py-1.5 xl:py-2 flex items-center gap-1.5 transition-colors duration-200 hover:text-[#41B349] ${
+                                                    isActive(link) ? 'text-[#41B349] font-bold' : ''
+                                                }`}
+                                            >
+                                                {link.label}
+                                                <FaChevronDown className={`text-[10px] xl:text-xs opacity-75 flex-shrink-0 transition-transform duration-200 ${
+                                                    dropdownIndex === idx ? 'rotate-180 text-[#41B349]' : 'group-hover:rotate-180'
+                                                }`} />
+                                            </Link>
+                                            <div
+                                                onMouseEnter={() => handleMouseEnter(idx)}
+                                                onMouseLeave={handleMouseLeave}
+                                                className={`fixed left-1/2 -translate-x-1/2 top-[72px] lg:top-[84px] pt-2 z-50 w-[920px] max-w-[calc(100vw-2rem)] transition-all duration-200 ${
+                                                    dropdownIndex === idx 
+                                                        ? 'opacity-100 visible translate-y-0 pointer-events-auto' 
+                                                        : 'opacity-0 invisible -translate-y-2 pointer-events-none'
+                                                }`}
+                                            >
+                                                <div className="bg-white rounded-2xl p-5 sm:p-6 relative shadow-[0_25px_60px_rgba(0,0,0,0.18)] border border-gray-100 max-h-[calc(100vh-96px)] overflow-y-auto">
+                                                    <div className="grid grid-cols-3 gap-x-5 gap-y-2.5">
+                                                        {servicesSubLinks.map((sub) => (
+                                                            <Link
+                                                                key={sub.label}
+                                                                href={sub.href}
+                                                                onClick={() => setDropdownIndex(null)}
+                                                                className="group/item relative flex items-center gap-3.5 p-2.5 rounded-xl bg-white hover:bg-[#41B349] border border-gray-200/80 hover:border-transparent hover:shadow-lg hover:shadow-[#41B349]/25 transition-all duration-300 ease-in-out cursor-pointer overflow-hidden"
+                                                            >
+                                                                {/* SVG Animated Moving Border Line on Hover */}
+                                                                <div className="absolute inset-0 pointer-events-none opacity-0 group-hover/item:opacity-100 transition-opacity duration-300 z-20">
+                                                                    <svg className="w-full h-full overflow-visible">
+                                                                        {/* Subtle base border track with pure white */}
+                                                                        <rect
+                                                                            x="1"
+                                                                            y="1"
+                                                                            width="calc(100% - 2px)"
+                                                                            height="calc(100% - 2px)"
+                                                                            rx="11"
+                                                                            fill="none"
+                                                                            stroke="#FFFFFF"
+                                                                            strokeWidth="1.5"
+                                                                            strokeOpacity="0.4"
+                                                                        />
+                                                                        {/* Animated moving border line with pure white */}
+                                                                        <rect
+                                                                            x="1"
+                                                                            y="1"
+                                                                            width="calc(100% - 2px)"
+                                                                            height="calc(100% - 2px)"
+                                                                            rx="11"
+                                                                            fill="none"
+                                                                            stroke="#FFFFFF"
+                                                                            strokeWidth="2"
+                                                                            strokeLinecap="round"
+                                                                            pathLength="100"
+                                                                            className="dropdown-btn-svg-border-line"
+                                                                        />
+                                                                    </svg>
+                                                                </div>
+                                                                <div className="w-11 h-11 rounded-xl bg-gray-50 border border-gray-200/80 flex items-center justify-center flex-shrink-0 group-hover/item:bg-white group-hover/item:border-transparent group-hover/item:scale-105 transition-all duration-300 p-2 shadow-xs relative z-10">
+                                                                    <Image src={sub.Image} alt={sub.label} width={28} height={28} className="object-contain dropdown-icon-bounce" />
+                                                                </div>
+                                                                <div className="flex flex-col min-w-0 relative z-10">
+                                                                    <span className={`${plusJakarta.className} text-[13.5px] font-bold text-gray-900 group-hover/item:text-white transition-colors duration-200 truncate`}>
+                                                                        {sub.label}
+                                                                    </span>
+                                                                    <span className="text-[11px] text-gray-500 group-hover/item:text-white/90 transition-colors duration-200 truncate">
+                                                                        {sub.desc}
+                                                                    </span>
+                                                                </div>
+                                                            </Link>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ) : link.subLinks ? (
+                                        <>
+                                            <Link
+                                                href={link.href}
+                                                className={`${plusJakarta.className} whitespace-nowrap cursor-pointer text-[13px] xl:text-[14px] 2xl:text-[14.5px] font-semibold tracking-wide text-white/90 px-2 xl:px-2.5 2xl:px-3 py-1.5 xl:py-2 flex items-center gap-1.5 transition-colors duration-200 hover:text-[#41B349] ${
+                                                    isActive(link) ? 'text-[#41B349] font-bold' : ''
+                                                }`}
+                                            >
+                                                {link.label}
+                                                <FaChevronDown className={`text-[10px] xl:text-xs opacity-75 flex-shrink-0 transition-transform duration-200 ${
+                                                    dropdownIndex === idx ? 'rotate-180 text-[#41B349]' : 'group-hover:rotate-180'
+                                                }`} />
+                                            </Link>
+                                            <div
+                                                onMouseEnter={() => handleMouseEnter(idx)}
+                                                onMouseLeave={handleMouseLeave}
+                                                className={`absolute left-0 mt-2 bg-[#181918] border border-gray-800 shadow-xl rounded-lg z-10 min-w-[160px] transition-all duration-200 ${
+                                                    dropdownIndex === idx ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'
+                                                }`}
+                                            >
+                                                {link.subLinks.map((sub) => (
+                                                    <Link
+                                                        key={sub.label}
+                                                        href={sub.href}
+                                                        onClick={() => setDropdownIndex(null)}
+                                                        className={`${plusJakarta.className} block px-4 py-2.5 text-[14px] font-medium text-white/90 transition-colors duration-200 hover:text-[#41B349] hover:bg-white/5 ${
+                                                            pathname === sub.href ? 'text-[#41B349] font-bold' : ''
+                                                        }`}
+                                                    >
+                                                        {sub.label}
+                                                    </Link>
+                                                ))}
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <Link
+                                            href={link.href}
+                                            className={`${plusJakarta.className} whitespace-nowrap text-[13px] xl:text-[14px] 2xl:text-[14.5px] font-semibold tracking-wide text-white/90 px-2 xl:px-2.5 2xl:px-3 py-1.5 xl:py-2 transition-colors duration-200 hover:text-[#41B349] ${
+                                                isActive(link) ? 'text-[#41B349] font-bold' : ''
+                                            }`}
+                                        >
+                                            {link.label}
+                                        </Link>
+                                    )}
+                                </div>
+                            ))}
                         </div>
-                    ))}
+                    </div>
+
+                    {/* Right Zone: Action Buttons (Desktop) or Hamburger (Mobile/Tablet) */}
+                    <div className="flex-1 flex items-center justify-end min-w-0">
+                        {/* Desktop action buttons */}
+                        <div className="hidden lg:flex items-center gap-2.5 xl:gap-3.5 flex-shrink-0">
+                            <Link href="/pos-development" className="inline-block flex-shrink-0">
+                                <button
+                                    className={`${roboto.className} whitespace-nowrap bg-[#41B349] text-white text-[13px] xl:text-[14px] font-medium px-3.5 xl:px-4.5 h-[36px] xl:h-[40px] rounded-full hover:bg-white hover:text-black transition ease-in-out duration-200 cursor-pointer flex-shrink-0 shadow-sm active:scale-95`}
+                                >
+                                    Get POS
+                                </button>
+                            </Link>
+                            <button
+                                onClick={openQuote}
+                                className={`${roboto.className} whitespace-nowrap bg-[#41B349] text-white text-[13px] xl:text-[14px] font-medium px-4 xl:px-5 h-[36px] xl:h-[40px] rounded-full hover:bg-white hover:text-black transition ease-in-out duration-200 cursor-pointer flex-shrink-0 shadow-sm active:scale-95`}
+                            >
+                                Book Now
+                            </button>
+                        </div>
+
+                        {/* Mobile menu button */}
+                        <button
+                            className="lg:hidden flex items-center justify-center text-white text-2xl p-2 rounded-lg hover:text-[#41B349] transition-colors focus:outline-none cursor-pointer flex-shrink-0"
+                            onClick={() => setMobileOpen(true)}
+                            aria-label="Open menu"
+                        >
+                            <FaBars />
+                        </button>
+                    </div>
                 </div>
-                <div className="hidden lg:flex navbar-buttons items-center gap-4">
-                    <button
-                        className={`${roboto.className} bg-[#41B349] text-white text-[16px] font-medium leading-[20px] w-[106px] h-[40px] rounded-full hover:bg-white hover:text-black transition ease-in-out duration-200 cursor-pointer`}
-                    >
-                        Get POS
-                    </button>
-                    <button
-                        onClick={openQuote}
-                        className={`${roboto.className} bg-[#41B349] text-white text-[16px] font-medium leading-[20px] w-[130px] h-[40px] rounded-full hover:bg-white hover:text-black transition ease-in-out duration-200 cursor-pointer`}
-                    >
-                        Book Now
-                    </button>
-                </div>
-                {/* Mobile menu button */}
-                <button
-                    className="lg:hidden flex items-center justify-between text-white text-2xl"
-                    onClick={() => setMobileOpen(true)}
-                    aria-label="Open menu"
-                >
-                    <FaBars />
-                </button>
             </nav>
 
             {/* Mobile Navbar Overlay */}
             <div
-                className={`fixed inset-0 z-[60] flex flex-col h-full w-full transition-all duration-300 ${
+                className={`fixed inset-0 z-[60] flex flex-col h-full h-[100dvh] w-full transition-all duration-300 ${
                     mobileOpen
                         ? 'translate-x-0 opacity-100 visible pointer-events-auto'
                         : '-translate-x-full opacity-0 invisible pointer-events-none'
