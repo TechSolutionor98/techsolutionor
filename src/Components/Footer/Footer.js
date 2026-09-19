@@ -125,8 +125,10 @@ const Footer = () => {
                     {/* Center: Social Media Icons */}
                     <div className="flex items-center justify-center gap-3 text-white">
                         <a 
-                            href="#" 
-                            aria-label="YouTube" 
+                            href="https://www.youtube.com/@techsolutionor" 
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="YouTube - Tech Solutionor" 
                             className="w-8 h-8 rounded-full bg-white/5 border border-white/10 hover:bg-[#41B349] hover:border-[#41B349] hover:text-white flex items-center justify-center transition-all duration-200"
                         >
                             <FaYoutube size={14} />
@@ -139,8 +141,10 @@ const Footer = () => {
                             <FaLinkedinIn size={13} />
                         </a>
                         <a 
-                            href="#" 
-                            aria-label="Instagram" 
+                            href="https://www.instagram.com/tech_solutionor/?hl=en"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="Instagram - Tech Solutionor" 
                             className="w-8 h-8 rounded-full bg-white/5 border border-white/10 hover:bg-[#41B349] hover:border-[#41B349] hover:text-white flex items-center justify-center transition-all duration-200"
                         >
                             <FaInstagram size={13} />
