@@ -134,14 +134,16 @@ const Footer = () => {
                             <FaYoutube size={14} />
                         </a>
                         <a 
-                            href="#" 
-                            aria-label="LinkedIn" 
+                            href="https://www.linkedin.com/company/techsolutionor/posts/?feedView=all" 
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="LinkedIn - Tech Solutionor" 
                             className="w-8 h-8 rounded-full bg-white/5 border border-white/10 hover:bg-[#41B349] hover:border-[#41B349] hover:text-white flex items-center justify-center transition-all duration-200"
                         >
                             <FaLinkedinIn size={13} />
                         </a>
                         <a 
-                            href="https://www.instagram.com/techsolutionor" 
+                            href="https://www.instagram.com/tech_solutionor/?hl=en"
                             target="_blank"
                             rel="noopener noreferrer"
                             aria-label="Instagram - Tech Solutionor" 
@@ -150,15 +152,19 @@ const Footer = () => {
                             <FaInstagram size={13} />
                         </a>
                         <a 
-                            href="#" 
-                            aria-label="Facebook" 
+                            href="https://www.facebook.com/techsolutionor" 
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="Facebook - Tech Solutionor" 
                             className="w-8 h-8 rounded-full bg-white/5 border border-white/10 hover:bg-[#41B349] hover:border-[#41B349] hover:text-white flex items-center justify-center transition-all duration-200"
                         >
                             <FaFacebookF size={13} />
                         </a>
                         <a 
-                            href="#" 
-                            aria-label="Twitter" 
+                            href="https://x.com/techsolutionors" 
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="Twitter / X - Tech Solutionor" 
                             className="w-8 h-8 rounded-full bg-white/5 border border-white/10 hover:bg-[#41B349] hover:border-[#41B349] hover:text-white flex items-center justify-center transition-all duration-200"
                         >
                             <FaXTwitter size={13} />
