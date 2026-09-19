@@ -10,6 +10,7 @@ import {
     FaFacebookF 
 } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
+import { SiGooglecalendar } from "react-icons/si";
 
 const plusJakarta = Plus_Jakarta_Sans({
     subsets: ['latin'],
@@ -168,6 +169,16 @@ const Footer = () => {
                             className="w-8 h-8 rounded-full bg-white/5 border border-white/10 hover:bg-[#41B349] hover:border-[#41B349] hover:text-white flex items-center justify-center transition-all duration-200"
                         >
                             <FaXTwitter size={13} />
+                        </a>
+                        <a 
+                            href="https://calendar.google.com" 
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="Google Calendar - Schedule an Appointment" 
+                            title="Schedule an Appointment via Google Calendar"
+                            className="w-8 h-8 rounded-full bg-white/5 border border-white/10 hover:bg-[#41B349] hover:border-[#41B349] hover:text-white flex items-center justify-center transition-all duration-200"
+                        >
+                            <SiGooglecalendar size={13} />
                         </a>
                     </div>
 
