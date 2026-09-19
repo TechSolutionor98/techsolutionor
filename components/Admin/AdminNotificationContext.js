@@ -152,9 +152,9 @@ export function AdminNotificationProvider({ children }) {
 
   // Mark a single notification item as read
   const markAsRead = useCallback(async (type, id) => {
-    // Optimistic UI update
+    // Optimistic UI update: remove read item from notification list
     setNotifications(prev =>
-      prev.map(item => ((item.id === id || item._id === id) ? { ...item, isRead: true } : item))
+      prev.filter(item => !(item.id === id || item._id === id))
     );
 
     setUnreadCounts(prev => {
@@ -182,6 +182,9 @@ export function AdminNotificationProvider({ children }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id, type, isRead: true }),
       });
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('admin-notifications-refresh'));
+      }
     } catch (err) {
       console.error('Failed to mark notification as read:', err);
       // Resync in case of error
@@ -191,9 +194,9 @@ export function AdminNotificationProvider({ children }) {
 
   // Mark all notifications of a specific type or all types as read
   const markAllAsRead = useCallback(async (type = 'all') => {
-    // Optimistic UI update
+    // Optimistic UI update: remove read items from notification list
     if (type === 'all') {
-      setNotifications(prev => prev.map(item => ({ ...item, isRead: true })));
+      setNotifications([]);
       setUnreadCounts({
         contactMessages: 0,
         jobApplications: 0,
@@ -204,7 +207,7 @@ export function AdminNotificationProvider({ children }) {
       setUnreadByGroup({ inquiries: 0, blogs: 0 });
     } else {
       setNotifications(prev =>
-        prev.map(item => (item.type === type ? { ...item, isRead: true } : item))
+        prev.filter(item => item.type !== type)
       );
       setUnreadCounts(prev => {
         const fieldMap = {
@@ -231,6 +234,9 @@ export function AdminNotificationProvider({ children }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ type, markAll: true }),
       });
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('admin-notifications-refresh'));
+      }
     } catch (err) {
       console.error('Failed to mark all as read:', err);
       fetchNotifications(true);

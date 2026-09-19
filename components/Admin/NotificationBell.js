@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAdminNotifications } from './AdminNotificationContext';
@@ -78,10 +78,22 @@ export default function NotificationBell() {
   const router = useRouter();
   const { unreadCounts, notifications, markAsRead, markAllAsRead } = useAdminNotifications();
   const [isOpen, setIsOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState('all'); // 'all' | 'unread'
+  const [categoryFilter, setCategoryFilter] = useState('all'); // 'all' | 'contact' | 'job' | 'review' | 'blog'
   const dropdownRef = useRef(null);
 
   const totalUnread = unreadCounts.total || 0;
+
+  const unreadContact = unreadCounts.contactMessages || 0;
+  const unreadJob = unreadCounts.jobApplications || 0;
+  const unreadReview = unreadCounts.customerReviews || 0;
+  const unreadBlog = unreadCounts.blogComments || 0;
+
+  const CATEGORIES = [
+    { id: 'contact', label: 'Contact', icon: Mail, count: unreadContact },
+    { id: 'job', label: 'Job', icon: Briefcase, count: unreadJob },
+    { id: 'review', label: 'Review', icon: Star, count: unreadReview },
+    { id: 'blog', label: 'Blog', icon: MessageSquare, count: unreadBlog },
+  ];
 
   // Close dropdown on outside click or Escape key
   useEffect(() => {
@@ -104,10 +116,30 @@ export default function NotificationBell() {
     };
   }, [isOpen]);
 
-  const filteredNotifications = notifications.filter(item => {
-    if (activeTab === 'unread') return !item.isRead;
-    return true;
-  });
+  const filteredNotifications = useMemo(() => {
+    return notifications.filter(item => {
+      // 1. Strictly only unread notifications in the dropdown
+      if (item.isRead) {
+        return false;
+      }
+
+      // 2. Category filter
+      if (categoryFilter === 'contact') {
+        return item.type === 'contact' || item.type === 'appointment';
+      }
+      if (categoryFilter === 'job') {
+        return item.type === 'application';
+      }
+      if (categoryFilter === 'review') {
+        return item.type === 'review';
+      }
+      if (categoryFilter === 'blog') {
+        return item.type === 'comment';
+      }
+
+      return true;
+    });
+  }, [notifications, categoryFilter]);
 
   const handleNotificationClick = (item) => {
     if (!item.isRead) {
@@ -119,8 +151,12 @@ export default function NotificationBell() {
     }
   };
 
+  const handleCategoryClick = (catId) => {
+    setCategoryFilter(prev => prev === catId ? 'all' : catId);
+  };
+
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div ref={dropdownRef}>
       {/* Bell Button */}
       <button
         type="button"
@@ -139,11 +175,14 @@ export default function NotificationBell() {
         )}
       </button>
 
-      {/* Notification Dropdown Panel */}
+      {/* Notification Dropdown Panel - Exactly matches the Logout bar's width & fixed height */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-[340px] sm:w-[390px] bg-white rounded-2xl shadow-2xl border border-gray-200/90 z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+        <div className="absolute top-full left-0 right-0 w-full mt-2.5 bg-white rounded-2xl shadow-2xl border border-gray-200/90 z-50 overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-150">
+          {/* Top arrow indicator aligned with bell */}
+          <div className="absolute -top-1.5 left-[22.5px] w-3 h-3 bg-gray-50 border-t border-l border-gray-200/90 rotate-45 pointer-events-none" />
+
           {/* Header */}
-          <div className="p-3.5 border-b border-gray-100 bg-gray-50/80 flex items-center justify-between">
+          <div className="p-3.5 border-b border-gray-100 bg-gray-50/90 flex items-center justify-between relative z-10 flex-shrink-0">
             <div className="flex items-center gap-2">
               <h3 className="text-sm font-bold text-gray-900">Notifications</h3>
               {totalUnread > 0 ? (
@@ -170,48 +209,90 @@ export default function NotificationBell() {
             )}
           </div>
 
-          {/* Filter Tabs */}
-          <div className="px-3.5 pt-2 pb-1 flex items-center gap-2 border-b border-gray-100 text-xs font-semibold text-gray-500">
+          {/* Row 1: All Filter Tab */}
+          <div className="px-3.5 pt-2 pb-1.5 flex items-center justify-between border-b border-gray-100 text-xs font-semibold flex-shrink-0">
             <button
               type="button"
-              onClick={() => setActiveTab('all')}
-              className={`pb-1.5 border-b-2 transition-all cursor-pointer ${
-                activeTab === 'all'
+              onClick={() => setCategoryFilter('all')}
+              className={`pb-1 border-b-2 transition-all cursor-pointer ${
+                categoryFilter === 'all'
                   ? 'border-[#34953C] text-[#34953C] font-bold'
-                  : 'border-transparent hover:text-gray-900'
+                  : 'border-transparent text-gray-500 hover:text-gray-900'
               }`}
             >
-              All ({notifications.length})
+              All ({totalUnread})
             </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab('unread')}
-              className={`pb-1.5 border-b-2 transition-all cursor-pointer flex items-center gap-1 ${
-                activeTab === 'unread'
-                  ? 'border-[#34953C] text-[#34953C] font-bold'
-                  : 'border-transparent hover:text-gray-900'
-              }`}
-            >
-              <span>Unread</span>
-              {totalUnread > 0 && (
-                <span className="px-1.5 py-0.2 bg-red-500 text-white rounded-full text-[9px] font-bold">
-                  {totalUnread}
-                </span>
-              )}
-            </button>
+
+            {categoryFilter !== 'all' && (
+              <button
+                type="button"
+                onClick={() => setCategoryFilter('all')}
+                className="text-[11px] text-gray-500 hover:text-[#34953C] font-medium transition-colors cursor-pointer"
+              >
+                Clear filter
+              </button>
+            )}
           </div>
 
-          {/* Notification Items List */}
-          <div className="max-h-[360px] overflow-y-auto divide-y divide-gray-100">
+          {/* Row 2: 4 Category Filter Buttons in a Single Inline Row */}
+          <div className="px-3 py-2 bg-gray-50/70 border-b border-gray-100 flex-shrink-0">
+            <div className="grid grid-cols-4 gap-1.5">
+              {CATEGORIES.map(cat => {
+                const isActive = categoryFilter === cat.id;
+                const CatIcon = cat.icon;
+                return (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => handleCategoryClick(cat.id)}
+                    className={`flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg text-xs font-semibold transition-all duration-150 cursor-pointer ${
+                      isActive
+                        ? 'bg-[#34953C] text-white shadow-xs font-bold'
+                        : 'bg-white text-gray-700 hover:bg-gray-100/90 border border-gray-200/90'
+                    }`}
+                    title={`Filter by ${cat.label} (${cat.count} unread)`}
+                  >
+                    <CatIcon className={`w-3.5 h-3.5 flex-shrink-0 ${isActive ? 'text-white' : 'text-gray-500'}`} />
+                    <span>{cat.label}</span>
+                    <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded-full ${
+                      isActive
+                        ? 'bg-white text-[#34953C]'
+                        : cat.count > 0
+                        ? 'bg-red-500 text-white'
+                        : 'bg-gray-100 text-gray-400'
+                    }`}>
+                      {cat.count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Notification Items List - Fixed height matching scrolling limit */}
+          <div className="h-[360px] overflow-y-auto divide-y divide-gray-100 flex-shrink-0">
             {filteredNotifications.length === 0 ? (
-              <div className="py-12 px-4 text-center">
-                <div className="w-10 h-10 rounded-full bg-gray-100 text-gray-400 mx-auto flex items-center justify-center mb-2">
-                  <Bell className="w-5 h-5" />
+              <div className="h-full flex flex-col items-center justify-center py-10 px-4 text-center">
+                <div className="w-10 h-10 rounded-full bg-emerald-50 text-[#34953C] mx-auto flex items-center justify-center mb-2">
+                  <CheckCheck className="w-5 h-5" />
                 </div>
-                <p className="text-xs font-semibold text-gray-700">No {activeTab === 'unread' ? 'unread ' : ''}notifications</p>
-                <p className="text-[11px] text-gray-400 mt-0.5">
-                  New submissions from frontend forms will appear here in real time.
+                <p className="text-xs font-bold text-gray-800">
+                  {categoryFilter !== 'all' ? `No unread ${categoryFilter} notifications` : 'All caught up!'}
                 </p>
+                <p className="text-[11px] text-gray-400 mt-0.5">
+                  {categoryFilter !== 'all'
+                    ? 'There are no pending unread notifications in this category.'
+                    : 'You have reviewed all new requests and submissions.'}
+                </p>
+                {categoryFilter !== 'all' && (
+                  <button
+                    type="button"
+                    onClick={() => setCategoryFilter('all')}
+                    className="mt-3 px-3 py-1 bg-emerald-50 text-[#34953C] border border-emerald-200 rounded-md text-xs font-semibold hover:bg-emerald-100 transition-colors cursor-pointer inline-block"
+                  >
+                    Show All
+                  </button>
+                )}
               </div>
             ) : (
               filteredNotifications.map((item) => {
@@ -263,7 +344,7 @@ export default function NotificationBell() {
           </div>
 
           {/* Footer */}
-          <div className="p-2.5 bg-gray-50 border-t border-gray-100 flex items-center justify-between text-xs">
+          <div className="p-2.5 bg-gray-50 border-t border-gray-100 flex items-center justify-between text-xs flex-shrink-0">
             <Link
               href="/admin/contact-submissions"
               onClick={() => setIsOpen(false)}

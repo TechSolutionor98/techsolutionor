@@ -257,21 +257,35 @@ function AdminLayoutContent({ children, title = '' }) {
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-[#F8FAFC] text-gray-900 relative">
 
-      {/* Top-right Controls: Notification Bell + User Role + Logout */}
-      <div className="fixed top-3 right-4 z-50 flex items-center gap-2 sm:gap-3 bg-white/95 backdrop-blur-sm py-1.5 px-3 rounded-xl shadow-sm border border-gray-200/80">
-        <NotificationBell />
-        <div className="h-4 w-[1px] bg-gray-200 hidden sm:block" />
-        {currentUser && (
-          <span className="hidden md:inline-block text-xs text-gray-500 font-medium">
-            Logged in as: <strong className="text-[#20507C]">{currentUser.name}</strong> <span className="capitalize font-semibold text-gray-600">({role.replace('_', ' ')})</span>
+      {/* Top-right Controls: Notification Bell + User Role + Logout - Fixed Height & Width */}
+      <div className="fixed top-3 right-4 z-50 flex items-center justify-between h-[46px] w-[calc(100vw-2rem)] sm:w-[460px] bg-white/95 backdrop-blur-sm px-3 rounded-xl shadow-sm border border-gray-200/80">
+        <div className="flex-shrink-0 flex items-center">
+          <NotificationBell />
+        </div>
+
+        <div className="h-4 w-[1px] bg-gray-200 hidden sm:block flex-shrink-0 mx-1" />
+
+        <div className="hidden sm:flex items-center justify-center flex-1 min-w-0 px-2 overflow-hidden">
+          <span
+            className="text-xs text-gray-500 font-medium truncate block text-center"
+            title={`Logged in as: ${currentUser?.name || 'Super Admin'} (${(currentUser?.role || role || 'super_admin').replace('_', ' ')})`}
+          >
+            Logged in as:{' '}
+            <strong className="text-[#20507C] font-semibold">{currentUser?.name || 'Super Admin'}</strong>{' '}
+            <span className="capitalize font-semibold text-gray-600">
+              ({(currentUser?.role || role || 'super_admin').replace('_', ' ')})
+            </span>
           </span>
-        )}
-        <LogoutButton>
-          <div className="cursor-pointer flex items-center gap-1.5 px-3 py-1.5 bg-[#34953C] hover:bg-[#2b7e32] text-white text-xs font-semibold rounded-lg transition-all duration-200 shadow-xs">
-            <IoIosLogOut className="w-4 h-4" />
-            <span>Logout</span>
-          </div>
-        </LogoutButton>
+        </div>
+
+        <div className="flex-shrink-0 flex items-center">
+          <LogoutButton>
+            <div className="cursor-pointer flex items-center gap-1.5 px-3 py-1.5 bg-[#34953C] hover:bg-[#2b7e32] text-white text-xs font-semibold rounded-lg transition-all duration-200 shadow-xs h-8">
+              <IoIosLogOut className="w-4 h-4" />
+              <span>Logout</span>
+            </div>
+          </LogoutButton>
+        </div>
       </div>
 
       {/* Fixed Admin Sidebar */}
