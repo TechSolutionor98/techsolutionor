@@ -156,16 +156,9 @@ function getItemUnreadCount(href, unreadCounts) {
   return 0;
 }
 
-function getGroupUnreadCount(groupId, unreadByGroup) {
-  // Do not show notification count on Leads & Inquiries main section title/heading
-  if (groupId === 'inquiries') return 0;
-  if (!unreadByGroup) return 0;
-  return unreadByGroup[groupId] || 0;
-}
-
 function AdminLayoutContent({ children, title = '' }) {
   const pathname = usePathname();
-  const { unreadCounts, unreadByGroup } = useAdminNotifications();
+  const { unreadCounts } = useAdminNotifications();
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [openDropdowns, setOpenDropdowns] = useState({
@@ -334,7 +327,6 @@ function AdminLayoutContent({ children, title = '' }) {
             const GroupIcon = group.icon;
             const isOpen = !!openDropdowns[group.id];
             const hasActive = isGroupActive(group);
-            const groupUnread = getGroupUnreadCount(group.id, unreadByGroup);
 
             return (
               <div key={group.id} className="rounded-lg transition-all duration-150">
@@ -354,11 +346,6 @@ function AdminLayoutContent({ children, title = '' }) {
                     <span className="text-sm truncate">{group.label}</span>
                   </div>
                   <div className="flex items-center gap-1.5 flex-shrink-0">
-                    {group.id !== 'inquiries' && groupUnread > 0 && (
-                      <span className="px-1.5 py-0.2 text-[10px] font-bold rounded-full bg-red-500 text-white shadow-xs">
-                        {groupUnread > 99 ? '99+' : groupUnread}
-                      </span>
-                    )}
                     <ChevronDown
                       className={`w-3.5 h-3.5 text-gray-400 transition-transform duration-200 flex-shrink-0 ${
                         isOpen ? 'rotate-180 text-gray-600' : ''
