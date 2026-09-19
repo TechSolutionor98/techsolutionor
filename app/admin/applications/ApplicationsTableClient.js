@@ -18,7 +18,8 @@ import {
   Loader2,
   AlertCircle,
   ExternalLink,
-  ChevronDown
+  ChevronDown,
+  CheckCheck
 } from 'lucide-react';
 
 function getCvViewUrl(app, index = 0, isDownload = false) {
@@ -159,11 +160,13 @@ export default function ApplicationsTableClient({ initialData = [], apiBase = ''
 
   // Tab counts
   const counts = useMemo(() => {
+    const unreadCount = sorted.filter(r => !r.isRead).length;
     const pendingCount = sorted.filter(r => (r.status || 'Pending').toLowerCase() === 'pending').length;
     const approvedCount = sorted.filter(r => (r.status || '').toLowerCase() === 'approved').length;
     const rejectedCount = sorted.filter(r => (r.status || '').toLowerCase() === 'rejected').length;
     return {
       all: sorted.length,
+      unread: unreadCount,
       pending: pendingCount,
       approved: approvedCount,
       rejected: rejectedCount,
@@ -173,8 +176,10 @@ export default function ApplicationsTableClient({ initialData = [], apiBase = ''
   const filtered = useMemo(() => {
     let result = sorted;
 
-    // Filter by status tab
-    if (statusFilter === 'pending') {
+    // Filter by status tab / unread
+    if (statusFilter === 'unread') {
+      result = result.filter(r => !r.isRead);
+    } else if (statusFilter === 'pending') {
       result = result.filter(r => (r.status || 'Pending').toLowerCase() === 'pending');
     } else if (statusFilter === 'approved') {
       result = result.filter(r => (r.status || '').toLowerCase() === 'approved');
@@ -201,6 +206,45 @@ export default function ApplicationsTableClient({ initialData = [], apiBase = ''
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
   const pageData = filtered.slice((page - 1) * pageSize, page * pageSize);
+
+  async function handleOpenApp(app, idx) {
+    setViewRow({ ...app, appNo: getGlobalIndex(idx) });
+    setStatusNote(app.statusNote || '');
+    if (!app.isRead) {
+      const appId = app.id || app._id;
+      setRows(prev => prev.map(r => ((r.id === appId || r._id === appId) ? { ...r, isRead: true } : r)));
+      try {
+        const baseUrl = apiBase || '';
+        await fetch(`${baseUrl}/api/applications`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: appId, isRead: true })
+        });
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('admin-notifications-refresh'));
+        }
+      } catch (e) {
+        console.error('Failed to mark application as read:', e);
+      }
+    }
+  }
+
+  async function handleMarkAllRead() {
+    setRows(prev => prev.map(r => ({ ...r, isRead: true })));
+    try {
+      const baseUrl = apiBase || '';
+      await fetch(`${baseUrl}/api/applications`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ markAll: true })
+      });
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('admin-notifications-refresh'));
+      }
+    } catch (e) {
+      console.error('Failed to mark all applications read:', e);
+    }
+  }
 
   async function refresh() {
     try {
@@ -443,9 +487,10 @@ export default function ApplicationsTableClient({ initialData = [], apiBase = ''
       {/* Row 1: Status Filter Tabs on Left | Action Buttons on Right */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-3">
         {/* Status Filter Tabs */}
-        <div className="flex bg-gray-100 p-1 rounded-lg text-xs font-semibold">
+        <div className="flex flex-wrap bg-gray-100 p-1 rounded-lg text-xs font-semibold gap-1">
           {[
             { key: 'all', label: 'All Applications', count: counts.all },
+            { key: 'unread', label: 'Unread', count: counts.unread, isHighlight: counts.unread > 0 },
             { key: 'pending', label: 'Pending Review', count: counts.pending },
             { key: 'approved', label: 'Approved', count: counts.approved },
             { key: 'rejected', label: 'Rejected', count: counts.rejected },
@@ -456,13 +501,17 @@ export default function ApplicationsTableClient({ initialData = [], apiBase = ''
               onClick={() => { setStatusFilter(tab.key); setPage(1); }}
               className={`px-3 py-1.5 rounded-md transition-all cursor-pointer flex items-center gap-1.5 ${
                 statusFilter === tab.key
-                  ? 'bg-white text-[#34953C] font-bold'
+                  ? 'bg-white text-[#34953C] font-bold shadow-xs'
                   : 'text-gray-600 hover:text-gray-900'
               }`}
             >
               <span>{tab.label}</span>
               <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded-full ${
-                statusFilter === tab.key ? 'bg-gray-100 text-[#34953C]' : 'bg-gray-200 text-gray-600'
+                tab.isHighlight
+                  ? 'bg-red-500 text-white'
+                  : statusFilter === tab.key
+                  ? 'bg-gray-100 text-[#34953C]'
+                  : 'bg-gray-200 text-gray-600'
               }`}>
                 {tab.count}
               </span>
@@ -472,6 +521,16 @@ export default function ApplicationsTableClient({ initialData = [], apiBase = ''
 
         {/* Global Action Buttons */}
         <div className="flex items-center gap-2">
+          {counts.unread > 0 && (
+            <button
+              onClick={handleMarkAllRead}
+              className="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs transition-all cursor-pointer flex items-center gap-1.5 shadow-xs"
+              title="Mark all applications as read"
+            >
+              <CheckCheck className="w-3.5 h-3.5" />
+              <span>Mark All Read</span>
+            </button>
+          )}
           <button
             onClick={refresh}
             className={`px-3.5 py-1.5 rounded-lg bg-[#34953C] hover:bg-[#2b7e32] text-white font-semibold text-xs ${loading ? 'opacity-60' : ''} transition-all cursor-pointer`}
@@ -556,20 +615,25 @@ export default function ApplicationsTableClient({ initialData = [], apiBase = ''
                 const dt = app.createdAt ? new Date(app.createdAt) : null;
                 const formattedDate = dt ? dt.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '—';
                 const formattedTime = dt ? dt.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '';
-                const initial = app.name ? app.name.trim().charAt(0).toUpperCase() : (app.email ? app.email.trim().charAt(0).toUpperCase() : 'C');
+                const isUnread = !app.isRead;
 
                 return (
-                  <tr key={appId ?? idx} className="hover:bg-gray-50/80 align-middle transition-all">
+                  <tr key={appId ?? idx} className={`align-middle transition-all ${isUnread ? 'bg-green-50/50 hover:bg-green-50/80 font-medium' : 'hover:bg-gray-50/80'}`}>
                     {/* 1. Candidate Column: Avatar circle on left, Name inline, Email on line below */}
                     <td className="px-4 py-2.5 text-left align-middle min-w-[220px]">
                       <div className="flex flex-col space-y-0.5">
                         <div className="flex items-center gap-2 min-w-0">
                           <div className="w-7 h-7 bg-gray-200 text-gray-700 rounded-full flex items-center justify-center font-bold text-xs shrink-0">
-                            {initial}
+                            {app.name ? app.name.charAt(0).toUpperCase() : 'A'}
                           </div>
-                          <span className="font-bold text-gray-900 text-xs break-words min-w-0 leading-tight">
+                          <span className={`text-xs break-words min-w-0 leading-tight ${isUnread ? 'font-extrabold text-gray-950' : 'font-bold text-gray-900'}`}>
                             {app.name || 'Anonymous'}
                           </span>
+                          {isUnread && (
+                            <span className="px-1.5 py-0.5 rounded text-[9px] font-extrabold bg-emerald-100 text-[#2b7e32] border border-emerald-200 uppercase tracking-wider shrink-0">
+                              NEW
+                            </span>
+                          )}
                         </div>
 
                         {app.email && (
@@ -658,11 +722,8 @@ export default function ApplicationsTableClient({ initialData = [], apiBase = ''
                       <div className="flex flex-col items-end gap-1.5 min-w-[80px]">
                         <button
                           type="button"
-                          onClick={() => {
-                            setViewRow({ ...app, appNo: getGlobalIndex(idx) });
-                            setStatusNote(app.statusNote || '');
-                          }}
-                          className="w-20 px-2 py-1 bg-[#34953C] hover:bg-[#2b7e32] text-white text-[11px] font-bold rounded-md transition-all cursor-pointer text-center"
+                          onClick={() => handleOpenApp(app, idx)}
+                          className="w-20 px-2 py-1 bg-[#34953C] hover:bg-[#2b7e32] text-white text-[11px] font-bold rounded-md transition-all cursor-pointer text-center shadow-2xs"
                         >
                           View
                         </button>

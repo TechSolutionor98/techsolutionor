@@ -149,6 +149,7 @@ function CommentRowContent({
   onQuickEditSave,
   onReplySubmit,
   onDelete,
+  onMarkRead,
   loading
 }) {
   const [isReplying, setIsReplying] = useState(false);
@@ -165,6 +166,9 @@ function CommentRowContent({
     if (!replyText.trim()) return;
     setReplySubmitting(true);
     await onReplySubmit(comment, replyText.trim());
+    if (onMarkRead && !comment.isRead) {
+      onMarkRead(comment._id);
+    }
     setReplySubmitting(false);
     setReplyText('');
     setIsReplying(false);
@@ -174,6 +178,9 @@ function CommentRowContent({
     if (!quickEditText.trim()) return;
     setQuickEditSaving(true);
     await onQuickEditSave(comment._id, quickEditText.trim());
+    if (onMarkRead && !comment.isRead) {
+      onMarkRead(comment._id);
+    }
     setQuickEditSaving(false);
     setIsQuickEditing(false);
   };
@@ -222,6 +229,18 @@ function CommentRowContent({
       {/* WordPress-style Hover Actions Underneath Comment */}
       {!isQuickEditing && !isReplying && (
         <div className="flex items-center gap-1.5 text-[11px] font-medium pt-1 opacity-90 sm:opacity-0 group-hover:opacity-100 transition-opacity flex-wrap select-none">
+          {!comment.isRead && onMarkRead && (
+            <>
+              <button
+                onClick={() => onMarkRead(comment._id)}
+                className="text-emerald-700 font-bold hover:underline cursor-pointer"
+              >
+                Mark Read
+              </button>
+              <span className="text-gray-300">|</span>
+            </>
+          )}
+
           {currentStatus === 'approved' ? (
             <button
               onClick={() => onStatusChange(comment._id, 'pending')}
@@ -432,10 +451,11 @@ export default function CommentsListClient({
 
   // Tab counts for the currently active dataset
   const tabCounts = useMemo(() => {
-    const counts = { all: 0, mine: 0, pending: 0, approved: 0, spam: 0, trash: 0 };
+    const counts = { all: 0, unread: 0, mine: 0, pending: 0, approved: 0, spam: 0, trash: 0 };
     activeComments.forEach((c) => {
       const status = getStatus(c);
       counts.all += 1;
+      if (!c.isRead) counts.unread += 1;
       if (status === 'approved') counts.approved += 1;
       else if (status === 'pending') counts.pending += 1;
       else if (status === 'spam') counts.spam += 1;
@@ -451,6 +471,7 @@ export default function CommentsListClient({
       const status = getStatus(c);
 
       // Status Tab filter
+      if (statusTab === 'unread' && c.isRead) return false;
       if (statusTab === 'approved' && status !== 'approved') return false;
       if (statusTab === 'pending' && status !== 'pending') return false;
       if (statusTab === 'spam' && status !== 'spam') return false;
@@ -490,6 +511,43 @@ export default function CommentsListClient({
     }
   };
 
+  // Mark single comment as read
+  const markCommentRead = async (id) => {
+    setComments((prev) => prev.map((c) => (c._id === id ? { ...c, isRead: true } : c)));
+    try {
+      await fetch(`${apiBase}/api/blogs/comments`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, isRead: true }),
+      });
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('admin-notifications-refresh'));
+      }
+    } catch (err) {
+      console.error('Failed to mark comment read:', err);
+    }
+  };
+
+  // Mark all comments as read
+  const handleMarkAllRead = async () => {
+    try {
+      setLoading(true);
+      await fetch(`${apiBase}/api/blogs/comments`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ markAll: true }),
+      });
+      setComments((prev) => prev.map((c) => ({ ...c, isRead: true })));
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('admin-notifications-refresh'));
+      }
+    } catch (err) {
+      alert('Failed to mark all read: ' + err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Open specific blog view
   const openSpecificBlog = (blogId, blogTitle = '', blogSlug = '') => {
     const blogObj = blogsMap[blogId] || { _id: blogId, title: blogTitle || 'Blog Post', slug: blogSlug };
@@ -506,14 +564,17 @@ export default function CommentsListClient({
       const res = await fetch(`${apiBase}/api/blogs/comments`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id, status: newStatus }),
+        body: JSON.stringify({ id, status: newStatus, isRead: true }),
       });
       if (!res.ok) throw new Error('Failed to update status');
       setComments((prev) =>
         prev.map((c) =>
-          c._id === id ? { ...c, status: newStatus, approved: newStatus === 'approved' } : c
+          c._id === id ? { ...c, status: newStatus, approved: newStatus === 'approved', isRead: true } : c
         )
       );
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('admin-notifications-refresh'));
+      }
     } catch (err) {
       alert('Failed to update status: ' + err.message);
     } finally {
@@ -527,15 +588,18 @@ export default function CommentsListClient({
       const res = await fetch(`${apiBase}/api/blogs/comments`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id, comment: newText }),
+        body: JSON.stringify({ id, comment: newText, isRead: true }),
       });
       if (!res.ok) throw new Error('Failed to update comment');
       setComments((prev) =>
         prev.map((c) =>
-          c._id === id ? { ...c, comment: newText, editedAt: new Date().toISOString() } : c
+          c._id === id ? { ...c, comment: newText, editedAt: new Date().toISOString(), isRead: true } : c
         )
       );
       setEditingComment(null);
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('admin-notifications-refresh'));
+      }
     } catch (err) {
       alert('Failed to save: ' + err.message);
     }
@@ -566,6 +630,9 @@ export default function CommentsListClient({
         setComments((prev) => [data.comment, ...prev]);
       } else {
         await refresh();
+      }
+      if (!parentComment.isRead) {
+        markCommentRead(parentComment._id);
       }
     } catch (err) {
       alert('Failed to post reply: ' + err.message);
@@ -754,10 +821,22 @@ export default function CommentsListClient({
               {loading ? 'Refreshing...' : 'Refresh'}
             </button>
 
-            {/* Status Tabs: All | Mine | Pending | Approved | Spam | Trash */}
+            {tabCounts.unread > 0 && (
+              <button
+                onClick={handleMarkAllRead}
+                disabled={loading}
+                className="flex items-center gap-1.5 px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg text-xs transition cursor-pointer shadow-xs"
+                title="Mark all comments as read"
+              >
+                <span>Mark All Read</span>
+              </button>
+            )}
+
+            {/* Status Tabs: All | Unread | Mine | Pending | Approved | Spam | Trash */}
             <div className="flex bg-gray-100 p-0.5 rounded-lg text-xs flex-wrap">
               {[
                 { key: 'all', label: 'All', count: tabCounts.all },
+                { key: 'unread', label: 'Unread', count: tabCounts.unread, isUnreadTab: true },
                 { key: 'mine', label: 'Mine', count: tabCounts.mine },
                 { key: 'pending', label: 'Pending', count: tabCounts.pending },
                 { key: 'approved', label: 'Approved', count: tabCounts.approved },
@@ -782,7 +861,9 @@ export default function CommentsListClient({
                 >
                   <span>{tab.label}</span>
                   <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded-full ${
-                    statusTab === tab.key ? 'bg-gray-100 text-gray-800' : 'bg-gray-200 text-gray-600'
+                    tab.isUnreadTab && tab.count > 0
+                      ? 'bg-red-500 text-white'
+                      : statusTab === tab.key ? 'bg-gray-100 text-gray-800' : 'bg-gray-200 text-gray-600'
                   }`}>
                     {tab.count}
                   </span>
@@ -896,11 +977,13 @@ export default function CommentsListClient({
                   const blogSlug = c.blogSlug || bObj?.slug || '';
                   const bStats = blogStats[c.blogId] || { total: 0, latestCommentAt: null };
 
+                  const isUnread = !c.isRead;
+
                   return (
                     <tr
                       key={c._id}
                       className={`group hover:bg-gray-50/80 transition-colors align-top ${
-                        isSelected ? 'bg-orange-50/40' : ''
+                        isSelected ? 'bg-orange-50/40' : isUnread ? 'bg-emerald-50/40' : ''
                       }`}
                     >
                       {/* Checkbox */}
@@ -921,9 +1004,16 @@ export default function CommentsListClient({
                             <div className="w-7 h-7 bg-gray-200 text-gray-700 rounded-full flex items-center justify-center font-bold text-xs shrink-0 border border-gray-300">
                               {c.authorName ? c.authorName.charAt(0).toUpperCase() : 'U'}
                             </div>
-                            <span className="font-bold text-gray-900 text-xs break-words min-w-0 leading-tight">
-                              {c.authorName}
-                            </span>
+                            <div className="flex items-center gap-1.5 min-w-0">
+                              <span className="font-bold text-gray-900 text-xs break-words min-w-0 leading-tight">
+                                {c.authorName}
+                              </span>
+                              {isUnread && (
+                                <span className="px-1.5 py-0.5 rounded text-[9px] font-extrabold bg-emerald-100 text-[#2b7e32] border border-emerald-200 uppercase tracking-wider shrink-0">
+                                  NEW
+                                </span>
+                              )}
+                            </div>
                           </div>
 
                           {/* Bottom Row: Email address on next line below profile image/name, wrapping naturally */}
@@ -951,6 +1041,7 @@ export default function CommentsListClient({
                           onQuickEditSave={saveEdit}
                           onReplySubmit={handleReplySubmit}
                           onDelete={deleteComment}
+                          onMarkRead={markCommentRead}
                           loading={loading}
                         />
                       </td>

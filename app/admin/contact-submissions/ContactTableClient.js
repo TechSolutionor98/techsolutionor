@@ -1,6 +1,6 @@
 "use client"
 import React, { useState, useMemo, useEffect } from 'react';
-import { Search, X, Phone, Mail, DollarSign, Calendar, Briefcase, MapPin, Clock } from 'lucide-react';
+import { Search, X, Phone, Mail, DollarSign, Calendar, Briefcase, MapPin, Clock, CheckCheck } from 'lucide-react';
 
 export default function ContactTableClient({ initialData = [], apiBase = process.env.NEXT_PUBLIC_API_URL }) {
   const [rows, setRows] = useState(initialData || []);
@@ -28,10 +28,12 @@ export default function ContactTableClient({ initialData = [], apiBase = process
 
   // Tab counts
   const counts = useMemo(() => {
+    const unreadCount = sorted.filter(r => !r.isRead).length;
     const quoteCount = sorted.filter(r => (r.source || '').toLowerCase().includes('quote')).length;
     const contactCount = sorted.filter(r => !(r.source || '').toLowerCase().includes('quote')).length;
     return {
       all: sorted.length,
+      unread: unreadCount,
       quote: quoteCount,
       contact: contactCount
     };
@@ -40,8 +42,10 @@ export default function ContactTableClient({ initialData = [], apiBase = process
   const filtered = useMemo(() => {
     let result = sorted;
 
-    // Filter by source
-    if (sourceFilter === 'quote') {
+    // Filter by source / unread
+    if (sourceFilter === 'unread') {
+      result = result.filter(r => !r.isRead);
+    } else if (sourceFilter === 'quote') {
       result = result.filter(r => (r.source || '').toLowerCase().includes('quote'));
     } else if (sourceFilter === 'contact') {
       result = result.filter(r => !(r.source || '').toLowerCase().includes('quote'));
@@ -119,6 +123,43 @@ export default function ContactTableClient({ initialData = [], apiBase = process
     URL.revokeObjectURL(url);
   }
 
+  async function handleOpenView(row, idx) {
+    setViewRow({ ...row, inquiryNo: getGlobalIndex(idx) });
+    if (!row.isRead) {
+      setRows(prev => prev.map(r => ((r.id === row.id || r._id === row._id) ? { ...r, isRead: true } : r)));
+      try {
+        const baseUrl = apiBase || '';
+        await fetch(`${baseUrl}/api/contact-submissions`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: row.id || row._id, isRead: true })
+        });
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('admin-notifications-refresh'));
+        }
+      } catch (e) {
+        console.error('Failed to mark read:', e);
+      }
+    }
+  }
+
+  async function handleMarkAllRead() {
+    setRows(prev => prev.map(r => ({ ...r, isRead: true })));
+    try {
+      const baseUrl = apiBase || '';
+      await fetch(`${baseUrl}/api/contact-submissions`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ markAll: true })
+      });
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('admin-notifications-refresh'));
+      }
+    } catch (e) {
+      console.error('Failed to mark all read:', e);
+    }
+  }
+
   const getGlobalIndex = (pageIndex) => (page - 1) * pageSize + pageIndex + 1;
 
   const isQuoteSource = (src) => (src || '').toLowerCase().includes('quote');
@@ -133,9 +174,10 @@ export default function ContactTableClient({ initialData = [], apiBase = process
       {/* Row 1: Source Filter Tabs on Left | Action Buttons on Right */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-3">
         {/* Source Filter Tabs */}
-        <div className="flex bg-gray-100 p-1 rounded-lg text-xs font-semibold">
+        <div className="flex flex-wrap bg-gray-100 p-1 rounded-lg text-xs font-semibold gap-1">
           {[
             { key: 'all', label: 'All Submissions', count: counts.all },
+            { key: 'unread', label: 'Unread', count: counts.unread, isHighlight: counts.unread > 0 },
             { key: 'quote', label: 'Appointments', count: counts.quote },
             { key: 'contact', label: 'Contact Us', count: counts.contact },
           ].map(tab => (
@@ -145,13 +187,17 @@ export default function ContactTableClient({ initialData = [], apiBase = process
               onClick={() => { setSourceFilter(tab.key); setPage(1); }}
               className={`px-3 py-1.5 rounded-md transition-all cursor-pointer flex items-center gap-1.5 ${
                 sourceFilter === tab.key
-                  ? 'bg-white text-[#34953C] font-bold'
+                  ? 'bg-white text-[#34953C] font-bold shadow-xs'
                   : 'text-gray-600 hover:text-gray-900'
               }`}
             >
               <span>{tab.label}</span>
               <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded-full ${
-                sourceFilter === tab.key ? 'bg-gray-100 text-[#34953C]' : 'bg-gray-200 text-gray-600'
+                tab.isHighlight
+                  ? 'bg-red-500 text-white'
+                  : sourceFilter === tab.key
+                  ? 'bg-gray-100 text-[#34953C]'
+                  : 'bg-gray-200 text-gray-600'
               }`}>
                 {tab.count}
               </span>
@@ -161,6 +207,16 @@ export default function ContactTableClient({ initialData = [], apiBase = process
 
         {/* Global Action Buttons */}
         <div className="flex items-center gap-2">
+          {counts.unread > 0 && (
+            <button
+              onClick={handleMarkAllRead}
+              className="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs transition-all cursor-pointer flex items-center gap-1.5 shadow-xs"
+              title="Mark all submissions as read"
+            >
+              <CheckCheck className="w-3.5 h-3.5" />
+              <span>Mark All Read</span>
+            </button>
+          )}
           <button
             onClick={refresh}
             className={`px-3.5 py-1.5 rounded-lg bg-[#34953C] hover:bg-[#2b7e32] text-white font-semibold text-xs ${loading ? 'opacity-60' : ''} transition-all cursor-pointer`}
@@ -247,8 +303,10 @@ export default function ContactTableClient({ initialData = [], apiBase = process
                 const formattedTime = dt ? dt.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '';
                 const initial = s.name ? s.name.trim().charAt(0).toUpperCase() : (s.email ? s.email.trim().charAt(0).toUpperCase() : 'U');
 
+                const isUnread = !s.isRead;
+
                 return (
-                  <tr key={s.id ?? s._id ?? idx} className="hover:bg-gray-50/80 align-middle transition-all">
+                  <tr key={s.id ?? s._id ?? idx} className={`align-middle transition-all ${isUnread ? 'bg-green-50/50 hover:bg-green-50/80 font-medium' : 'hover:bg-gray-50/80'}`}>
                     {/* 1. Author Column: Profile avatar on left, Name inline, Email on line below */}
                     <td className="px-4 py-2.5 text-left align-middle min-w-[220px]">
                       <div className="flex flex-col space-y-0.5">
@@ -261,12 +319,17 @@ export default function ContactTableClient({ initialData = [], apiBase = process
                             />
                           ) : (
                             <div className="w-7 h-7 bg-gray-200 text-gray-700 rounded-full flex items-center justify-center font-bold text-xs shrink-0">
-                              {initial}
+                              {s.name ? s.name.charAt(0).toUpperCase() : 'U'}
                             </div>
                           )}
-                          <span className="font-bold text-gray-900 text-xs break-words min-w-0 leading-tight">
+                          <span className={`text-xs break-words min-w-0 leading-tight ${isUnread ? 'font-extrabold text-gray-950' : 'font-bold text-gray-900'}`}>
                             {s.name || 'Anonymous'}
                           </span>
+                          {isUnread && (
+                            <span className="px-1.5 py-0.5 rounded text-[9px] font-extrabold bg-emerald-100 text-[#2b7e32] border border-emerald-200 uppercase tracking-wider shrink-0">
+                              NEW
+                            </span>
+                          )}
                         </div>
 
                         {s.email && (
@@ -309,8 +372,8 @@ export default function ContactTableClient({ initialData = [], apiBase = process
                     {/* 6. Action */}
                     <td className="px-4 py-2.5 text-right align-middle whitespace-nowrap">
                       <button
-                        onClick={() => setViewRow({ ...s, inquiryNo: getGlobalIndex(idx) })}
-                        className="px-3 py-1 bg-[#34953C] hover:bg-[#2b7e32] text-white text-[11px] font-bold rounded-md transition cursor-pointer"
+                        onClick={() => handleOpenView(s, idx)}
+                        className="px-3 py-1 bg-[#34953C] hover:bg-[#2b7e32] text-white text-[11px] font-bold rounded-md transition cursor-pointer shadow-2xs"
                       >
                         View
                       </button>

@@ -8,6 +8,8 @@ import Image from 'next/image';
 import Logo from '@/src/Components/Images/blacklogo.png';
 import { FiLock } from 'react-icons/fi';
 import { IoIosLogOut } from "react-icons/io";
+import { AdminNotificationProvider, useAdminNotifications } from './AdminNotificationContext';
+import NotificationBell from './NotificationBell';
 import {
   LayoutDashboard,
   Globe,
@@ -145,8 +147,23 @@ const NAV_GROUPS = [
   }
 ];
 
-export default function AdminLayout({ children, title = '' }) {
+function getItemUnreadCount(href, unreadCounts) {
+  if (!unreadCounts) return 0;
+  if (href === '/admin/contact-submissions') return unreadCounts.contactMessages || 0;
+  if (href === '/admin/applications') return unreadCounts.jobApplications || 0;
+  if (href === '/admin/reviews') return unreadCounts.customerReviews || 0;
+  if (href === '/admin/blogs/comments') return unreadCounts.blogComments || 0;
+  return 0;
+}
+
+function getGroupUnreadCount(groupId, unreadByGroup) {
+  if (!unreadByGroup) return 0;
+  return unreadByGroup[groupId] || 0;
+}
+
+function AdminLayoutContent({ children, title = '' }) {
   const pathname = usePathname();
+  const { unreadCounts, unreadByGroup } = useAdminNotifications();
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [openDropdowns, setOpenDropdowns] = useState({
@@ -240,8 +257,10 @@ export default function AdminLayout({ children, title = '' }) {
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-[#F8FAFC] text-gray-900 relative">
 
-      {/* Top-right Logout */}
-      <div className="fixed top-3 right-4 z-50 flex items-center gap-3 bg-white/95 backdrop-blur-sm py-1.5 px-3 rounded-xl shadow-sm border border-gray-200/80">
+      {/* Top-right Controls: Notification Bell + User Role + Logout */}
+      <div className="fixed top-3 right-4 z-50 flex items-center gap-2 sm:gap-3 bg-white/95 backdrop-blur-sm py-1.5 px-3 rounded-xl shadow-sm border border-gray-200/80">
+        <NotificationBell />
+        <div className="h-4 w-[1px] bg-gray-200 hidden sm:block" />
         {currentUser && (
           <span className="hidden md:inline-block text-xs text-gray-500 font-medium">
             Logged in as: <strong className="text-[#20507C]">{currentUser.name}</strong> <span className="capitalize font-semibold text-gray-600">({role.replace('_', ' ')})</span>
@@ -299,6 +318,7 @@ export default function AdminLayout({ children, title = '' }) {
             const GroupIcon = group.icon;
             const isOpen = !!openDropdowns[group.id];
             const hasActive = isGroupActive(group);
+            const groupUnread = getGroupUnreadCount(group.id, unreadByGroup);
 
             return (
               <div key={group.id} className="rounded-lg transition-all duration-150">
@@ -317,11 +337,18 @@ export default function AdminLayout({ children, title = '' }) {
                     <GroupIcon className={`w-4 h-4 flex-shrink-0 ${hasActive ? 'text-[#34953C]' : 'text-gray-500'}`} />
                     <span className="text-sm truncate">{group.label}</span>
                   </div>
-                  <ChevronDown
-                    className={`w-3.5 h-3.5 text-gray-400 transition-transform duration-200 flex-shrink-0 ${
-                      isOpen ? 'rotate-180 text-gray-600' : ''
-                    }`}
-                  />
+                  <div className="flex items-center gap-1.5 flex-shrink-0">
+                    {groupUnread > 0 && (
+                      <span className="px-1.5 py-0.2 text-[10px] font-bold rounded-full bg-red-500 text-white shadow-xs">
+                        {groupUnread > 99 ? '99+' : groupUnread}
+                      </span>
+                    )}
+                    <ChevronDown
+                      className={`w-3.5 h-3.5 text-gray-400 transition-transform duration-200 flex-shrink-0 ${
+                        isOpen ? 'rotate-180 text-gray-600' : ''
+                      }`}
+                    />
+                  </div>
                 </button>
 
                 {/* Dropdown Children */}
@@ -330,19 +357,33 @@ export default function AdminLayout({ children, title = '' }) {
                     {group.items.map(item => {
                       const ItemIcon = item.icon;
                       const isActive = isLinkActive(item.href);
+                      const unreadCount = getItemUnreadCount(item.href, unreadCounts);
 
                       return (
                         <Link key={item.href} href={item.href} className="no-underline block">
                           <div
-                            className={`flex items-center gap-2.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-150 ${
+                            className={`flex items-center justify-between px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-150 ${
                               isActive
                                 ? "bg-[#34953C] text-white shadow-xs font-semibold"
                                 : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
                             }`}
                             title={item.description}
                           >
-                            <ItemIcon className={`w-3.5 h-3.5 flex-shrink-0 ${isActive ? 'text-white' : 'text-gray-400'}`} />
-                            <span className="truncate">{item.label}</span>
+                            <div className="flex items-center gap-2.5 min-w-0">
+                              <ItemIcon className={`w-3.5 h-3.5 flex-shrink-0 ${isActive ? 'text-white' : 'text-gray-400'}`} />
+                              <span className="truncate">{item.label}</span>
+                            </div>
+                            {unreadCount > 0 && (
+                              <span
+                                className={`px-1.5 py-0.5 text-[10px] font-bold rounded-full transition-all flex-shrink-0 ml-1.5 ${
+                                  isActive
+                                    ? "bg-white text-[#34953C]"
+                                    : "bg-red-500 text-white"
+                                }`}
+                              >
+                                {unreadCount > 99 ? '99+' : unreadCount}
+                              </span>
+                            )}
                           </div>
                         </Link>
                       );
@@ -389,5 +430,15 @@ export default function AdminLayout({ children, title = '' }) {
         </section>
       </main>
     </div>
+  );
+}
+
+export default function AdminLayout({ children, title = '' }) {
+  return (
+    <AdminNotificationProvider>
+      <AdminLayoutContent title={title}>
+        {children}
+      </AdminLayoutContent>
+    </AdminNotificationProvider>
   );
 }

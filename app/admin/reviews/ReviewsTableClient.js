@@ -2,7 +2,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import ReviewPopupForm from './ReviewPopupForm';
 import { FaGoogle, FaStar, FaSyncAlt, FaCheck, FaEyeSlash, FaTrash, FaPlus, FaEdit } from 'react-icons/fa';
-import { Search, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Search, X, ChevronLeft, ChevronRight, CheckCheck } from 'lucide-react';
 
 export default function ReviewsTableClient({ initialData = [], apiBase = '' }) {
   const [rows, setRows] = useState(initialData || []);
@@ -73,16 +73,16 @@ export default function ReviewsTableClient({ initialData = [], apiBase = '' }) {
   async function toggleApprove(id, currentApproved) {
     const nextApproved = !currentApproved;
 
-    // Optimistic UI update: instantly toggle status in Admin panel
+    // Optimistic UI update: instantly toggle status in Admin panel & mark as read
     setRows((prev) =>
-      prev.map((r) => (r._id === id ? { ...r, approved: nextApproved } : r))
+      prev.map((r) => (r._id === id ? { ...r, approved: nextApproved, isRead: true } : r))
     );
 
     try {
       const res = await fetch(`${baseUrl}/api/reviews`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id, approve: nextApproved }),
+        body: JSON.stringify({ id, approve: nextApproved, isRead: true }),
       });
       const json = await res.json();
       if (!res.ok) {
@@ -91,6 +91,10 @@ export default function ReviewsTableClient({ initialData = [], apiBase = '' }) {
           prev.map((r) => (r._id === id ? { ...r, approved: currentApproved } : r))
         );
         alert('Failed to update status: ' + (json?.error || 'Unknown error'));
+      } else {
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('admin-notifications-refresh'));
+        }
       }
     } catch (err) {
       // Revert on error
@@ -98,6 +102,24 @@ export default function ReviewsTableClient({ initialData = [], apiBase = '' }) {
         prev.map((r) => (r._id === id ? { ...r, approved: currentApproved } : r))
       );
       alert('Failed to update status: ' + (err.message || err));
+    }
+  }
+
+  async function handleMarkRead(id) {
+    setRows((prev) =>
+      prev.map((r) => (r._id === id ? { ...r, isRead: true } : r))
+    );
+    try {
+      await fetch(`${baseUrl}/api/reviews`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, isRead: true }),
+      });
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('admin-notifications-refresh'));
+      }
+    } catch (err) {
+      console.error('Failed to mark review read:', err);
     }
   }
 
@@ -116,9 +138,26 @@ export default function ReviewsTableClient({ initialData = [], apiBase = '' }) {
     }
   }
 
+  async function handleMarkAllRead() {
+    setRows(prev => prev.map(r => ({ ...r, isRead: true })));
+    try {
+      await fetch(`${baseUrl}/api/reviews`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ markAll: true })
+      });
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('admin-notifications-refresh'));
+      }
+    } catch (err) {
+      console.error('Failed to mark all reviews read:', err);
+    }
+  }
+
   const counts = useMemo(() => {
     return {
       all: rows.length,
+      unread: rows.filter((r) => !r.isRead).length,
       approved: rows.filter((r) => r.approved).length,
       hidden: rows.filter((r) => !r.approved).length,
       google: rows.filter((r) => r.source === 'Google' || r.googleReviewId).length,
@@ -129,6 +168,7 @@ export default function ReviewsTableClient({ initialData = [], apiBase = '' }) {
   const filtered = useMemo(() => {
     // 1. Tab filter
     const tabFiltered = rows.filter((r) => {
+      if (activeTab === 'unread') return !r.isRead;
       if (activeTab === 'approved') return !!r.approved;
       if (activeTab === 'hidden') return !r.approved;
       if (activeTab === 'google') return r.source === 'Google' || !!r.googleReviewId;
@@ -238,6 +278,16 @@ export default function ReviewsTableClient({ initialData = [], apiBase = '' }) {
             <span>{syncing ? 'Syncing...' : 'Sync from Google'}</span>
           </button>
 
+          {counts.unread > 0 && (
+            <button
+              onClick={handleMarkAllRead}
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold shadow-xs transition-all cursor-pointer"
+              title="Mark all reviews as read"
+            >
+              <CheckCheck size={14} />
+              <span>Mark All Read</span>
+            </button>
+          )}
           <button
             onClick={refresh}
             disabled={loading}
@@ -295,6 +345,22 @@ export default function ReviewsTableClient({ initialData = [], apiBase = '' }) {
           }`}
         >
           All Reviews ({counts.all})
+        </button>
+
+        <button
+          onClick={() => handleTabChange('unread')}
+          className={`px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-t-lg transition-all cursor-pointer flex items-center gap-1.5 ${
+            activeTab === 'unread'
+              ? 'border-b-2 border-[#34953C] text-[#34953C] bg-emerald-50/50'
+              : 'text-gray-500 hover:text-gray-900'
+          }`}
+        >
+          <span>Unread</span>
+          {counts.unread > 0 && (
+            <span className="px-1.5 py-0.2 bg-red-500 text-white rounded-full text-[10px] font-bold">
+              {counts.unread}
+            </span>
+          )}
         </button>
 
         <button
@@ -427,9 +493,10 @@ export default function ReviewsTableClient({ initialData = [], apiBase = '' }) {
               paginatedRows.map((r) => {
                 const isGoogle = r.source === 'Google' || !!r.googleReviewId;
                 const hasAvatar = Boolean(r.avatar && typeof r.avatar === 'string' && r.avatar.trim());
+                const isUnread = !r.isRead;
 
                 return (
-                  <tr key={r._id} className="hover:bg-[#f4fbf7] transition-all">
+                  <tr key={r._id} className={`hover:bg-[#f4fbf7] transition-all ${isUnread ? 'bg-emerald-50/40' : ''}`}>
                     {/* Reviewer info: exact reviewer image if provided; empty with initial circle if not */}
                     <td className="px-4 py-3.5 align-top">
                       <div className="flex items-center gap-2.5">
@@ -456,7 +523,14 @@ export default function ReviewsTableClient({ initialData = [], apiBase = '' }) {
                           {r.initial || (r.name ? r.name.charAt(0).toUpperCase() : 'C')}
                         </div>
                         <div>
-                          <div className="font-bold text-gray-900">{r.name}</div>
+                          <div className="flex items-center gap-1.5">
+                            <span className="font-bold text-gray-900">{r.name}</span>
+                            {isUnread && (
+                              <span className="px-1.5 py-0.5 rounded text-[9px] font-extrabold bg-emerald-100 text-[#2b7e32] border border-emerald-200 uppercase tracking-wider shrink-0">
+                                NEW
+                              </span>
+                            )}
+                          </div>
                           <div className="text-xs text-gray-500">
                             {r.company || r.position || r.time || 'Recently'}
                           </div>
@@ -512,7 +586,7 @@ export default function ReviewsTableClient({ initialData = [], apiBase = '' }) {
                       )}
                     </td>
 
-                    {/* Actions Column: Vertically arranged, one per line (Top: Delete, Center: Edit, Bottom: Approve/Hide) */}
+                    {/* Actions Column: Vertically arranged, one per line (Top: Delete, Center: Edit, Bottom: Approve/Hide, Plus Mark Read) */}
                     <td className="px-4 py-3.5 align-top whitespace-nowrap">
                       <div className="flex flex-col items-stretch gap-1.5 w-[90px] mx-auto">
                         
@@ -531,6 +605,7 @@ export default function ReviewsTableClient({ initialData = [], apiBase = '' }) {
                         <button
                           type="button"
                           onClick={() => {
+                            if (isUnread) handleMarkRead(r._id);
                             setEditingReview(r);
                             setShowPopup(true);
                           }}
@@ -561,6 +636,19 @@ export default function ReviewsTableClient({ initialData = [], apiBase = '' }) {
                           >
                             <FaCheck size={11} />
                             <span>Approve</span>
+                          </button>
+                        )}
+
+                        {/* 4. Quick Mark Read if unread */}
+                        {isUnread && (
+                          <button
+                            type="button"
+                            onClick={() => handleMarkRead(r._id)}
+                            className="inline-flex items-center justify-center gap-1 px-2.5 py-1 text-xs font-semibold rounded bg-emerald-50 text-emerald-700 border border-emerald-300 hover:bg-emerald-100 transition-all cursor-pointer w-full"
+                            title="Mark review as read"
+                          >
+                            <CheckCheck size={11} />
+                            <span>Mark Read</span>
                           </button>
                         )}
 
