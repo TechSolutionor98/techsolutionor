@@ -648,4 +648,110 @@ export const servicesStrugglingData = {
       },
     ],
   },
+
+  // =========================================================================
+  // 12. GOOGLE ADS
+  // =========================================================================
+  "google-ads": {
+    eyebrow: "MAXIMUM SEARCH ROI & REVENUE",
+    titleLine1: "Struggling With Wasted Google Ads Spend?",
+    titleLine2: "Here’s How Our Google Ads Management Helps",
+    subtitle:
+      "As an ROI-focused Google Ads agency in Dubai and across the UAE, we eliminate ad waste and capture high-intent leads that turn into revenue.",
+    cards: [
+      {
+        id: 0,
+        badge: "CHALLENGE 01 // WASTED AD SPEND",
+        title: "High Click Costs With Zero Lead Quality",
+        desc: "Broad-match keywords and unchecked search queries bleed your daily budget on irrelevant clicks. We enforce strict single-theme keyword structures and daily negative keyword scrubbing to ensure every dirham targets ready-to-buy prospects.",
+        ctaText: "Audit My Google Ads Budget →",
+        color: "#FF4646",
+        textColor: "#FF4646",
+        btnTextColor: "#FFFFFF",
+      },
+      {
+        id: 1,
+        badge: "CHALLENGE 02 // BROKEN TRACKING",
+        title: "Untracked Conversions & Blind Smart Bidding",
+        desc: "Google's smart bidding algorithms fail without accurate conversion data. We implement server-side Google Tag Manager and enhanced conversions so algorithms optimize toward verified revenue rather than vanity page views.",
+        ctaText: "Fix My Conversion Tracking →",
+        color: "#417F51",
+        textColor: "#417F51",
+        btnTextColor: "#FFFFFF",
+      },
+      {
+        id: 2,
+        badge: "CHALLENGE 03 // LOW QUALITY SCORE",
+        title: "Weak Ad Relevance & Expensive Click Bids",
+        desc: "Mismatched ad copy and sluggish landing pages trigger low Google Quality Scores, driving up your cost-per-click. We align keywords, responsive search ads, and high-speed landing pages to achieve top Quality Scores and lower bids.",
+        ctaText: "Lower My Cost-Per-Click →",
+        color: "#FFB904",
+        textColor: "#B47F00",
+        btnTextColor: "#111827",
+      },
+      {
+        id: 3,
+        badge: "CHALLENGE 04 // PMAX INEFFICIENCY",
+        title: "Uncontrolled Performance Max Campaigns",
+        desc: "Untuned PMax campaigns waste budget on low-intent display spam and brand cannibalization. We structure PMax asset groups with tight audience signals, brand exclusions, and product feed optimizations that deliver real commercial ROAS.",
+        ctaText: "Scale My PMax ROAS →",
+        color: "#F78B40",
+        textColor: "#E06E22",
+        btnTextColor: "#FFFFFF",
+      },
+    ],
+  },
+
+  // =========================================================================
+  // 13. META (FACEBOOK & INSTAGRAM)
+  // =========================================================================
+  "meta": {
+    eyebrow: "HIGH-CONVERSION SOCIAL CAMPAIGNS",
+    titleLine1: "Struggling With Rising Meta Ad Costs?",
+    titleLine2: "Here’s How Our Meta Advertising Services Help",
+    subtitle:
+      "We build resilient, creative-driven Meta ad funnels that combat rising CPMs, bypass tracking loss, and scale profitable conversions across Facebook and Instagram.",
+    cards: [
+      {
+        id: 0,
+        badge: "CHALLENGE 01 // AD FATIGUE",
+        title: "Ad Fatigue & Rising Cost-Per-Acquisition",
+        desc: "Running the same creative for weeks saturates your audience and drives up CPMs. We implement a systematic creative testing pipeline with fresh hooks, high-performing Reels, and UGC angles to keep customer acquisition costs low.",
+        ctaText: "Revamp My Ad Creatives →",
+        color: "#FF4646",
+        textColor: "#FF4646",
+        btnTextColor: "#FFFFFF",
+      },
+      {
+        id: 1,
+        badge: "CHALLENGE 02 // TRACKING LOSS",
+        title: "iOS Tracking Loss & Inaccurate Attribution",
+        desc: "Browser privacy changes and ad blockers prevent standard browser pixels from recording sales. We deploy server-side Meta Conversions API (CAPI) and first-party event tracking to restore 100% data fidelity.",
+        ctaText: "Setup Meta CAPI Tracking →",
+        color: "#417F51",
+        textColor: "#417F51",
+        btnTextColor: "#FFFFFF",
+      },
+      {
+        id: 2,
+        badge: "CHALLENGE 03 // LOW FUNNEL CONVERSION",
+        title: "Clicks Without Sales or Qualified Leads",
+        desc: "Traffic that bounces hurts ROAS. We optimize the complete post-click experience, connecting dynamic product ads (DPA) and instant lead forms with custom landing pages engineered specifically for mobile conversion.",
+        ctaText: "Optimize My Social Funnel →",
+        color: "#FFB904",
+        textColor: "#B47F00",
+        btnTextColor: "#111827",
+      },
+      {
+        id: 3,
+        badge: "CHALLENGE 04 // SCALING BOTTLENECK",
+        title: "Campaign Breakdown When Scaling Spend",
+        desc: "Increasing daily ad spend often causes performance to plummet. We leverage Advantage+ Shopping, horizontal audience segmentation, and algorithmic budget allocation to scale budgets profitably without diminishing returns.",
+        ctaText: "Scale My Meta Ad Spend →",
+        color: "#F78B40",
+        textColor: "#E06E22",
+        btnTextColor: "#FFFFFF",
+      },
+    ],
+  },
 };

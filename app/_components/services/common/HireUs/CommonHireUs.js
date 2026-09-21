@@ -76,6 +76,18 @@ export const servicesHireUsData = {
     line2: "Hire dedicated developer teams with zero hiring overheads.",
     buttonText: "Get In Touch",
   },
+  "google-ads": {
+    badge: "MAXIMIZE YOUR SEARCH & PPC ROI",
+    line1: "Ready to dominate Google Search and drive high-intent leads?",
+    line2: "Hire Tech Solutionor's Google Ads and PPC specialists today.",
+    buttonText: "Hire Us",
+  },
+  "meta": {
+    badge: "SCALE YOUR SOCIAL ADVERTISING REVENUE",
+    line1: "Ready to scale high-converting ad campaigns across Facebook and Instagram?",
+    line2: "Hire Tech Solutionor's Meta advertising experts today.",
+    buttonText: "Hire Us",
+  },
 };
 
 import { getCmsVal } from "@/lib/api-helper";

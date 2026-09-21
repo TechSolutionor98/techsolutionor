@@ -1,23 +1,23 @@
 "use client";
 
 import React from "react";
-import CommonTechHero from "@/app/_components/Technologies/CommonTechHero";
+import CommonServiceHero from "@/app/_components/services/common/CommonServiceHero";
 import GoogleAdsImg from "@/components/Images/Google-Adsicon2.png";
 
 const GoogleBanner = ({ cmsContent }) => {
   return (
-    <CommonTechHero
+    <CommonServiceHero
       cmsContent={cmsContent}
       cmsPrefix="googleadsbanner"
       badge="HIGH-INTENT SEARCH & PPC"
-      titleLine1="Google Ads: Targeted"
-      titleLine2="Search & Display"
-      titleAccent="Campaigns."
-      description="Google Ads captures customers at the exact moment of intent. We build and optimize search, Performance Max, shopping, and display campaigns engineered to minimize cost-per-click and maximize qualified conversions."
+      titleLine1="Google Ads Management"
+      titleLine2="Targeted Search, Shopping"
+      titleAccent="& Performance Max."
+      description="Capture high-intent customers at the exact moment of search. We architect, manage, and continuously optimize data-driven Google Ads campaigns engineered to lower CPA and maximize qualified conversions."
       image={GoogleAdsImg}
-      imageAlt="Google Ads"
-      ctaText="Explore Google Ads"
-      ctaHref="#framework"
+      imageAlt="Google Ads Management Services"
+      ctaText="Explore PPC Solutions"
+      ctaHref="#overview"
     />
   );
 };

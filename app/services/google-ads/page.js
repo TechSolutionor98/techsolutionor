@@ -1,16 +1,19 @@
 import React from 'react';
 import GoogleBanner from '../../_components/GoogleAds/GoogleBanner/JavaBanner';
-import GoogleFramework from '../../_components/GoogleAds/GoogleFramework/Framework';
-import GoogleCards from '../../_components/GoogleAds/GoogleCards/LaravelCards';
-import GoogleAdvantages from '../../_components/GoogleAds/GoogleAdvantages/GoogleAdvantages';
-import GoogleHireUs from '../../_components/GoogleAds/HireUs/GoogleHireUs';
+import CommonWhyChoose from '@/app/_components/services/common/WhyChoose/CommonWhyChoose';
+import CommonKeyFeatures from '@/app/_components/services/common/KeyFeatures/CommonKeyFeatures';
+import CommonStruggling from '@/app/_components/services/common/Struggling/CommonStruggling';
+import CommonServices from '@/app/_components/services/common/Services/CommonServices';
+import TechnologiesBook from '@/app/_components/services/common/TechnologiesBook/TechnologiesBook';
+import CommonHireUs from '@/app/_components/services/common/HireUs/CommonHireUs';
 import GoogleFAQ from '../../_components/GoogleAds/GoogleFAQ/GoogleFAQ';
 import { getCmsData, generateCmsMetadata } from '@/lib/cms-fetch';
+import CmsJsonLd from '@/components/CmsJsonLd';
 
 export async function generateMetadata() {
   return generateCmsMetadata('/services/google-ads', {
     title: 'Google Ads Management Services | TechSolutionor',
-    description: 'Google Ads digital advertising platform for business growth and ROI.',
+    description: 'Expert Google Ads management and PPC campaign services designed to drive qualified leads, maximize ROAS, and scale enterprise growth.',
   });
 }
 
@@ -24,13 +27,17 @@ export default async function GoogleAdsPage() {
   }
 
   return (
-    <div>
-      <GoogleBanner cmsContent={cmsContent}/>
-      <GoogleFramework cmsContent={cmsContent}/>
-      <GoogleCards cmsContent={cmsContent}/>
-      <GoogleAdvantages cmsContent={cmsContent}/>
-      <GoogleHireUs cmsContent={cmsContent}/>
-      <GoogleFAQ cmsContent={cmsContent}/>
+    <div className="bg-white w-full">
+      <CmsJsonLd path="/services/google-ads" />
+      <GoogleBanner cmsContent={cmsContent} />
+      <CommonWhyChoose serviceKey="google-ads" cmsContent={cmsContent} />
+      <CommonKeyFeatures serviceKey="google-ads" cmsContent={cmsContent} />
+      <CommonStruggling serviceKey="google-ads" cmsContent={cmsContent} />
+      <CommonServices serviceKey="google-ads" cmsContent={cmsContent} />
+      <TechnologiesBook serviceKey="google-ads" bgColor="#FFFFFF" cmsContent={cmsContent} />
+      <CommonHireUs serviceKey="google-ads" cmsContent={cmsContent} />
+      <GoogleFAQ cmsContent={cmsContent} />
     </div>
   );
 }
+

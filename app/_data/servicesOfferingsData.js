@@ -598,6 +598,100 @@ export const servicesOfferingsData = {
       },
     ],
   },
+
+  // 12. GOOGLE ADS
+  "google-ads": {
+    badge: "PERFORMANCE PPC & SEARCH MARKETING",
+    title: "Our Google Ads",
+    titleHighlight: "Solutions",
+    subtitle:
+      "Capture high-intent prospects and accelerate sales pipeline growth with precision Google Ads campaigns managed by certified PPC specialists in Dubai.",
+    services: [
+      {
+        icon: Search,
+        title: "Google Search Ads & Intent Capture",
+        desc: "High-relevance Google Search campaigns capturing commercial and transactional queries with tightly themed ad groups, exact match targeting, and negative keyword filtering.",
+        tags: ["Search Campaigns", "Negative Keywords", "Quality Score 10/10"],
+      },
+      {
+        icon: TrendingUp,
+        title: "Performance Max (PMax) Campaigns",
+        desc: "Algorithmic cross-channel campaigns spanning Search, YouTube, Display, Discover, and Maps with structured asset groups and custom audience signals.",
+        tags: ["Cross-Channel PMax", "Audience Signals", "Dynamic Assets"],
+      },
+      {
+        icon: ShoppingBag,
+        title: "Google Shopping & Merchant Center",
+        desc: "Optimized product feeds, custom labels, and automated Smart Shopping setups engineered to drive high-volume retail transactions at profitable ROAS.",
+        tags: ["Merchant Center", "Feed Optimization", "Shopping Ads"],
+      },
+      {
+        icon: Monitor,
+        title: "YouTube & Video Advertising",
+        desc: "Engaging TrueView, bumper, and in-feed video ads driving brand awareness and direct-response customer action across YouTube's massive viewer base.",
+        tags: ["YouTube Video", "TrueView Ads", "Direct Response Video"],
+      },
+      {
+        icon: Target,
+        title: "Remarketing & Display Network (GDN)",
+        desc: "Strategic banner retargeting and responsive display ads keeping your brand top-of-mind with previous site visitors across millions of websites and apps.",
+        tags: ["Dynamic Retargeting", "Responsive Display", "Audience Lists"],
+      },
+      {
+        icon: BarChart3,
+        title: "Conversion Tracking & Analytics Audit",
+        desc: "Server-side Google Tag Manager, GA4 event modeling, enhanced conversions, and offline CRM sync for pristine measurement and algorithmic bidding.",
+        tags: ["Server-Side GTM", "Enhanced Conversions", "GA4 Attribution"],
+      },
+    ],
+  },
+
+  // 13. META (FACEBOOK & INSTAGRAM)
+  "meta": {
+    badge: "FULL-FUNNEL SOCIAL ADVERTISING",
+    title: "Our Meta Advertising",
+    titleHighlight: "Solutions",
+    subtitle:
+      "Transform social media engagement into predictable, scalable revenue with data-driven advertising campaigns across Facebook, Instagram, and WhatsApp.",
+    services: [
+      {
+        icon: Megaphone,
+        title: "Facebook & Instagram Feed Campaigns",
+        desc: "High-impact image, carousel, and collection ads placed natively in target user feeds, engineered with thumb-stopping hooks and conversion-focused copy.",
+        tags: ["Feed Ads", "Carousel Formats", "Conversion Copy"],
+      },
+      {
+        icon: Smartphone,
+        title: "Instagram Reels & Story Video Ads",
+        desc: "Vertical 9:16 short-form video creatives and UGC-style storytelling tailored for maximum mobile engagement, brand trust, and click-through rates.",
+        tags: ["Reels Ads", "9:16 Vertical Video", "UGC Creative"],
+      },
+      {
+        icon: Cpu,
+        title: "Conversions API (CAPI) & Pixel Setup",
+        desc: "Server-to-server data pipelines that send web and CRM events directly to Meta servers, ensuring 100% accurate tracking and attribution.",
+        tags: ["Meta CAPI", "Pixel Tracking", "First-Party Data"],
+      },
+      {
+        icon: ShoppingCart,
+        title: "Advantage+ Shopping & Catalog Ads",
+        desc: "Automated machine learning ad sets matching your full product catalog with high-intent shoppers to drive online store sales at scale.",
+        tags: ["Advantage+ Shopping", "Dynamic Catalog", "E-Commerce ROAS"],
+      },
+      {
+        icon: Users,
+        title: "Custom & Lookalike Audience Modeling",
+        desc: "Segmenting customer lifetime value (LTV) lists, website visitors, and video engagers into high-value lookalikes to expand customer acquisition.",
+        tags: ["Lookalike Audiences", "LTV Segmentation", "Retargeting Pools"],
+      },
+      {
+        icon: MessageSquare,
+        title: "Lead Generation & WhatsApp Direct Ads",
+        desc: "Frictionless on-platform lead forms and click-to-WhatsApp messaging ads that capture verified contact details and accelerate sales outreach.",
+        tags: ["Instant Forms", "Click-to-WhatsApp", "High-Quality Leads"],
+      },
+    ],
+  },
 };
 
 export const getServiceOfferings = (serviceKey) => {

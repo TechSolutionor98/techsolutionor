@@ -1,23 +1,23 @@
 "use client";
 
 import React from "react";
-import CommonTechHero from "@/app/_components/Technologies/CommonTechHero";
+import CommonServiceHero from "@/app/_components/services/common/CommonServiceHero";
 import MetaImg from "@/components/Images/Metaicon2.png";
 
 const MetaBanner = ({ cmsContent }) => {
   return (
-    <CommonTechHero
+    <CommonServiceHero
       cmsContent={cmsContent}
       cmsPrefix="metabanner"
       badge="SOCIAL ADVERTISING & TARGETING"
-      titleLine1="Meta: High-Conversion"
-      titleLine2="Advertising Across Facebook"
-      titleAccent="& Instagram."
-      description="Meta's ecosystem reaches billions of active users. We architect high-ROAS social ad campaigns, custom conversion APIs, dynamic creative testing, and retargeting funnels that scale brand revenue."
+      titleLine1="Meta Ads Management"
+      titleLine2="High-Conversion Campaigns Across"
+      titleAccent="Facebook & Instagram."
+      description="Reach billions of active buyers across Meta's ecosystem. We design high-ROAS social advertising funnels, conversion tracking architectures, and creative testing frameworks that scale brand revenue."
       image={MetaImg}
-      imageAlt="Meta Advertising"
+      imageAlt="Meta Advertising Services"
       ctaText="Explore Meta Ads"
-      ctaHref="#framework"
+      ctaHref="#overview"
     />
   );
 };

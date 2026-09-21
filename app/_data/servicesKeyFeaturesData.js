@@ -274,6 +274,52 @@ export const servicesKeyFeaturesData = {
       },
     ],
   },
+
+  // 13. Google Ads
+  "google-ads": {
+    title: "HOW WE HELP",
+    subtitle: "YOU GET RESULTS.",
+    features: [
+      {
+        title: "Intent-Driven Search Strategy",
+        desc: "We capture high-intent buyers with single-theme ad groups, precision keyword match types, and negative keyword scrubbing.",
+        checks: [true, true, true, true, true],
+      },
+      {
+        title: "Smart Bidding & PMax Architecture",
+        desc: "Algorithmic bidding calibrated for target CPA and ROAS, combined with audience signals across Search, Display, and YouTube.",
+        checks: [false, false, true, true, false],
+      },
+      {
+        title: "Measurable Revenue & ROAS Impact",
+        desc: "Server-side enhanced conversion tracking and real-time executive dashboards that trace every dollar directly to closed revenue.",
+        checks: [false, false, true, true, true],
+      },
+    ],
+  },
+
+  // 14. Meta
+  "meta": {
+    title: "HOW WE HELP",
+    subtitle: "YOU GET RESULTS.",
+    features: [
+      {
+        title: "Full-Funnel Social Acquisition",
+        desc: "Tailored campaigns across Facebook and Instagram designed to convert cold audiences, capture qualified leads, and scale purchases.",
+        checks: [true, true, true, true, true],
+      },
+      {
+        title: "Precision Audience & CAPI Sync",
+        desc: "Server-side Conversions API (CAPI) and first-party data sync ensuring accurate tracking despite browser privacy restrictions.",
+        checks: [false, false, true, true, false],
+      },
+      {
+        title: "High-ROAS Creative Testing",
+        desc: "Continuous creative iteration, dynamic product ads, and Advantage+ shopping architectures that combat ad fatigue and lower CPA.",
+        checks: [false, false, true, true, true],
+      },
+    ],
+  },
 };
 
 export default servicesKeyFeaturesData;

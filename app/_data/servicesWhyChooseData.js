@@ -641,6 +641,92 @@ export const servicesWhyChooseData = {
       },
     ],
   },
+
+  // 12. Google Ads
+  "google-ads": {
+    subtitle: "Intent-driven search, Performance Max, and conversion-optimized PPC campaigns engineered to maximize ROAS.",
+    items: [
+      {
+        id: 0,
+        title: "Google Certified PPC Specialists",
+        desc: "Dedicated search and media buyers managing bidding scripts, search term audits, and conversion tracking protocols.",
+        icon: icons.target,
+      },
+      {
+        id: 1,
+        title: "High-Intent Keyword Architecture",
+        desc: "Precision single-theme ad groups, negative keyword scrubbing, and search intent segmentation that eliminate wasted spend.",
+        icon: icons.searchEngine,
+      },
+      {
+        id: 2,
+        title: "Algorithmic PMax Optimization",
+        desc: "First-party audience signals, dynamic asset groups, and smart bidding models tailored to out-convert market competitors.",
+        icon: icons.rocket,
+      },
+      {
+        id: 3,
+        title: "Transparent Ad Spend & Fees",
+        desc: "You retain 100% direct ownership of your Google Ads account, daily billing limits, and transparent management retainers.",
+        icon: icons.shieldCheck,
+      },
+      {
+        id: 4,
+        title: "Full-Funnel Conversion Tracking",
+        desc: "Server-side GTM, enhanced conversions, and offline CRM revenue tracking ensure absolute measurement accuracy.",
+        icon: icons.support247,
+      },
+      {
+        id: 5,
+        title: "Compounding ROAS & Profitability",
+        desc: "Rigorous continuous testing of ad copy, landing pages, and automated bid strategies to lower your cost per acquisition.",
+        icon: icons.chartGrowth,
+      },
+    ],
+  },
+
+  // 13. Meta
+  "meta": {
+    subtitle: "High-converting social advertising, first-party data sync, and dynamic creative funnels across Facebook & Instagram.",
+    items: [
+      {
+        id: 0,
+        title: "Meta Certified Media Strategists",
+        desc: "Expert social media buyers crafting full-funnel customer journeys from cold awareness to high-converting remarketing.",
+        icon: icons.network,
+      },
+      {
+        id: 1,
+        title: "Dynamic Creative & Angle Testing",
+        desc: "Iterative testing of hooks, video reels, static graphics, and benefit-driven copy to identify sustainable winning creatives.",
+        icon: icons.solutions,
+      },
+      {
+        id: 2,
+        title: "Server-Side Conversions API (CAPI)",
+        desc: "Resilient first-party data tracking and Meta Pixel integrations that bypass browser tracking blocks for accurate attribution.",
+        icon: icons.fastAgile,
+      },
+      {
+        id: 3,
+        title: "Transparent Account Ownership",
+        desc: "Complete administrative control of your Meta Business Manager, ad spend limits, and pixel assets with zero lock-in.",
+        icon: icons.shieldCheck,
+      },
+      {
+        id: 4,
+        title: "Advantage+ & AI Bidding",
+        desc: "Leveraging Meta's machine learning, Advantage+ Shopping campaigns, and tailored lookalike models to scale customer volume.",
+        icon: icons.support247,
+      },
+      {
+        id: 5,
+        title: "Scalable Customer Acquisition",
+        desc: "Campaign architectures engineered for stable CPMs, healthy return on ad spend, and predictable enterprise growth.",
+        icon: icons.chartGrowth,
+      },
+    ],
+  },
 };
 
 export default servicesWhyChooseData;
