@@ -126,7 +126,7 @@ const CommonServiceHero = ({
         <div className="w-full md:w-1/2 flex justify-center items-center">
           <div className="relative w-[280px] h-[280px] sm:w-[350px] sm:h-[350px] md:w-[420px] md:h-[420px]">
             {/* Ambient circular frame backdrop */}
-            <div className="absolute inset-4 rounded-full bg-gradient-to-tr from-[#36963D]/10 via-[#36963D]/5 to-transparent pointer-events-none" />
+            <div className="absolute inset-4 rounded-full bg-[#FFFFFF] pointer-events-none" />
             <div className="absolute inset-0 flex items-center justify-center p-6">
               {dynamicImage && (typeof dynamicImage === 'string' && (dynamicImage.startsWith('http') || dynamicImage.startsWith('/')) ? (
                 <img 
@@ -136,10 +136,10 @@ const CommonServiceHero = ({
                 />
               ) : (
                 <Image 
-                  src={dynamicImage} 
+                  src={dynamicImage || image} 
                   alt={imageAlt} 
-                  width={350}
-                  height={350}
+                  width={350} 
+                  height={350} 
                   priority
                   className="object-contain filter drop-shadow-md transition-transform duration-300 hover:scale-105"
                 />
