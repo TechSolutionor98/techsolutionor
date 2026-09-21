@@ -84,7 +84,7 @@ const TechnologiesHero = ({ cmsContent }) => {
         <div className="w-full md:w-1/2 flex justify-center items-center">
           <div className="relative w-[300px] h-[300px] sm:w-[380px] sm:h-[380px] md:w-[440px] md:h-[440px]">
             {/* Ambient circular frame backdrop */}
-            <div className="absolute inset-4 rounded-full bg-gradient-to-tr from-[#36963D]/10 via-[#36963D]/5 to-transparent pointer-events-none" />
+            <div className="absolute inset-4 rounded-full bg-[#F8FBF8] pointer-events-none" />
             <div className="absolute inset-0 flex items-center justify-center">
               {typeof image === 'string' && (image.startsWith('http') || image.startsWith('/')) ? (
                 <img 
