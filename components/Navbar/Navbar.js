@@ -277,7 +277,7 @@ const Navbar = () => {
                                                                         />
                                                                     </svg>
                                                                 </div>
-                                                                <div className="w-11 h-11 rounded-xl bg-gray-50 border border-gray-200/80 flex items-center justify-center flex-shrink-0 group-hover/item:bg-white group-hover/item:border-transparent group-hover/item:scale-105 transition-all duration-300 p-2 shadow-xs relative z-10">
+                                                                <div className="w-11 h-11 rounded-xl bg-white border border-gray-200/80 flex items-center justify-center flex-shrink-0 group-hover/item:bg-white group-hover/item:border-transparent group-hover/item:scale-105 transition-all duration-300 p-2 shadow-xs relative z-10">
                                                                     <Image src={sub.Image} alt={sub.label} width={28} height={28} className="object-contain dropdown-icon-bounce" />
                                                                 </div>
                                                                 <div className="flex flex-col min-w-0 relative z-10">
