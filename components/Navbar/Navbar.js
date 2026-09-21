@@ -358,7 +358,7 @@ const Navbar = () => {
                                                                         />
                                                                     </svg>
                                                                 </div>
-                                                                <div className="w-11 h-11 rounded-xl bg-gray-50 border border-gray-200/80 flex items-center justify-center flex-shrink-0 group-hover/item:bg-white group-hover/item:border-transparent group-hover/item:scale-105 transition-all duration-300 p-2 shadow-xs relative z-10">
+                                                                <div className="w-11 h-11 rounded-xl bg-white border border-gray-200/80 flex items-center justify-center flex-shrink-0 group-hover/item:bg-white group-hover/item:border-transparent group-hover/item:scale-105 transition-all duration-300 p-2 shadow-xs relative z-10">
                                                                     {sub.icon ? (
                                                                         <sub.icon className="w-7 h-7 dropdown-icon-bounce" />
                                                                     ) : (
