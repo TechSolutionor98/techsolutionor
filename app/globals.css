@@ -64,6 +64,8 @@ body {
   transition: transform 0.2s ease;
 }
 
-.group:hover .dropdown-icon-bounce {
+.group\/item:hover .dropdown-icon-bounce,
+[class*="group/item"]:hover .dropdown-icon-bounce {
   animation: iconBounce 0.55s cubic-bezier(0.25, 1, 0.5, 1);
 }
+

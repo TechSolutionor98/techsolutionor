@@ -37,6 +37,20 @@ import Seo from '@/src/Components/Images/seo.png'
 import Content from '@/src/Components/Images/content.png'
 import Call from '@/src/Components/Images/call.png'
 import Hire from '@/src/Components/Images/hire.png'
+import {
+    WebDevIcon,
+    AppDevIcon,
+    SoftwareDevIcon,
+    EcommerceDevIcon,
+    GraphicsDevIcon,
+    SocialMediaDevIcon,
+    DigitalMarketingDevIcon,
+    PpcAmazonDevIcon,
+    SeoDevIcon,
+    ContentWritingDevIcon,
+    CallCenterDevIcon,
+    HireUsDevIcon,
+} from './ServiceIcons';
 
 const plusJakarta = Plus_Jakarta_Sans({
     subsets: ['latin'],
@@ -74,20 +88,20 @@ const techSubLinks = [
 
 // Services sublinks
 const servicesSubLinks = [
-    { Image: Web, label: 'Web Development', href: '/services/web-development', desc: 'Custom websites & web apps' },
-    { Image: App, label: 'App Development', href: '/services/app-development', desc: 'iOS & Android mobile apps' },
-    { Image: Software, label: 'Software Development', href: '/services/software-development', desc: 'Enterprise custom systems' },
-    { Image: Ecommerce, label: 'Ecommerce Development', href: '/services/ecommerce-development', desc: 'Scalable online stores' },
-    { Image: Graphics, label: 'Graphics & UI/UX', href: '/services/graphic-design', desc: 'Brand identity & product design' },
-    { Image: SocialMedia, label: 'Social Media', href: '/services/social-media', desc: 'Audience growth & engagement' },
-    { Image: Digital, label: 'Digital Marketing', href: '/services/digital-marketing', desc: 'Full-funnel marketing strategy' },
-    { Image: Ppc, label: 'PPC & Amazon', href: '/services/ppc-amazon-ads', desc: 'Targeted ads & campaign ROI' },
+    { icon: WebDevIcon, label: 'Web Development', href: '/services/web-development', desc: 'Custom websites & web apps' },
+    { icon: AppDevIcon, label: 'App Development', href: '/services/app-development', desc: 'iOS & Android mobile apps' },
+    { icon: SoftwareDevIcon, label: 'Software Development', href: '/services/software-development', desc: 'Enterprise custom systems' },
+    { icon: EcommerceDevIcon, label: 'Ecommerce Development', href: '/services/ecommerce-development', desc: 'Scalable online stores' },
+    { icon: GraphicsDevIcon, label: 'Graphics & UI/UX', href: '/services/graphic-design', desc: 'Brand identity & product design' },
+    { icon: SocialMediaDevIcon, label: 'Social Media', href: '/services/social-media', desc: 'Audience growth & engagement' },
+    { icon: DigitalMarketingDevIcon, label: 'Digital Marketing', href: '/services/digital-marketing', desc: 'Full-funnel marketing strategy' },
+    { icon: PpcAmazonDevIcon, label: 'PPC & Amazon', href: '/services/ppc-amazon-ads', desc: 'Targeted ads & campaign ROI' },
     { Image: GoogleAds, label: 'Google Ads', href: '/services/google-ads', desc: 'PPC & Search Campaigns' },
     { Image: Meta, label: 'Meta', href: '/services/meta', desc: 'Social Ads & Marketing' },
-    { Image: Seo, label: 'Search Engine Optimization', href: '/services/search-engine-optimization', desc: 'Organic ranking & visibility' },
-    { Image: Content, label: 'Content Writing', href: '/services/content-writing', desc: 'SEO copywriting & articles' },
-    { Image: Call, label: 'Call Center', href: '/services/call-center', desc: '24/7 inbound & support' },
-    { Image: Hire, label: 'Hire Us', href: '/services/hire-us', desc: 'Dedicated developer teams' },
+    { icon: SeoDevIcon, label: 'Search Engine Optimization', href: '/services/search-engine-optimization', desc: 'Organic ranking & visibility' },
+    { icon: ContentWritingDevIcon, label: 'Content Writing', href: '/services/content-writing', desc: 'SEO copywriting & articles' },
+    { icon: CallCenterDevIcon, label: 'Call Center', href: '/services/call-center', desc: '24/7 inbound & support' },
+    { icon: HireUsDevIcon, label: 'Hire Us', href: '/services/hire-us', desc: 'Dedicated developer teams' },
 ];
 
 // Navlinks data
@@ -345,7 +359,11 @@ const Navbar = () => {
                                                                     </svg>
                                                                 </div>
                                                                 <div className="w-11 h-11 rounded-xl bg-gray-50 border border-gray-200/80 flex items-center justify-center flex-shrink-0 group-hover/item:bg-white group-hover/item:border-transparent group-hover/item:scale-105 transition-all duration-300 p-2 shadow-xs relative z-10">
-                                                                    <Image src={sub.Image} alt={sub.label} width={28} height={28} className="object-contain dropdown-icon-bounce" />
+                                                                    {sub.icon ? (
+                                                                        <sub.icon className="w-7 h-7 dropdown-icon-bounce" />
+                                                                    ) : (
+                                                                        <Image src={sub.Image} alt={sub.label} width={28} height={28} className="object-contain dropdown-icon-bounce" />
+                                                                    )}
                                                                 </div>
                                                                 <div className="flex flex-col min-w-0 relative z-10">
                                                                     <span className={`${plusJakarta.className} text-[13.5px] font-bold text-gray-900 group-hover/item:text-white transition-colors duration-200 truncate`}>
@@ -555,9 +573,13 @@ function MobileDropdown({ label, parentHref, subLinks = [], setMobileOpen }) {
                             className="group flex items-center gap-3 p-2.5 rounded-xl hover:bg-[#41B349] transition-all duration-200 cursor-pointer"
                             onClick={() => setMobileOpen(false)}
                         >
-                            {sub.Image && (
+                            {(sub.icon || sub.Image) && (
                                 <div className="w-9 h-9 rounded-lg bg-white flex items-center justify-center flex-shrink-0 p-1.5 transition-all">
-                                    <Image src={sub.Image} alt={sub.label} width={22} height={22} className="object-contain" />
+                                    {sub.icon ? (
+                                        <sub.icon className="w-5 h-5" />
+                                    ) : (
+                                        <Image src={sub.Image} alt={sub.label} width={22} height={22} className="object-contain" />
+                                    )}
                                 </div>
                             )}
                             <div className="flex flex-col min-w-0">
