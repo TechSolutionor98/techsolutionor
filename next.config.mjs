@@ -44,6 +44,16 @@ const nextConfig = {
         destination: '/our-portfolio',
         permanent: true,
       },
+      {
+        source: '/technologies/google-ads',
+        destination: '/services/google-ads',
+        permanent: true,
+      },
+      {
+        source: '/technologies/meta',
+        destination: '/services/meta',
+        permanent: true,
+      },
     ];
   },
 };

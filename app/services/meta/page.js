@@ -8,7 +8,7 @@ import MetaFAQ from '../../_components/Meta/MetaFAQ/MetaFAQ';
 import { getCmsData, generateCmsMetadata } from '@/lib/cms-fetch';
 
 export async function generateMetadata() {
-  return generateCmsMetadata('/technologies/meta', {
+  return generateCmsMetadata('/services/meta', {
     title: 'Meta Social Technology Services | TechSolutionor',
     description: 'Meta social platforms and digital experiences technology services.',
   });
@@ -17,7 +17,7 @@ export async function generateMetadata() {
 export default async function MetaPage() {
   let cmsContent = null;
   try {
-    const cmsData = await getCmsData('/technologies/meta');
+    const cmsData = await getCmsData('/services/meta');
     cmsContent = cmsData?.content || null;
   } catch (err) {
     console.error('Failed to load CMS content for Meta page:', err);

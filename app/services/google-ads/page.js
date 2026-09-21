@@ -8,7 +8,7 @@ import GoogleFAQ from '../../_components/GoogleAds/GoogleFAQ/GoogleFAQ';
 import { getCmsData, generateCmsMetadata } from '@/lib/cms-fetch';
 
 export async function generateMetadata() {
-  return generateCmsMetadata('/technologies/google-ads', {
+  return generateCmsMetadata('/services/google-ads', {
     title: 'Google Ads Management Services | TechSolutionor',
     description: 'Google Ads digital advertising platform for business growth and ROI.',
   });
@@ -17,7 +17,7 @@ export async function generateMetadata() {
 export default async function GoogleAdsPage() {
   let cmsContent = null;
   try {
-    const cmsData = await getCmsData('/technologies/google-ads');
+    const cmsData = await getCmsData('/services/google-ads');
     cmsContent = cmsData?.content || null;
   } catch (err) {
     console.error('Failed to load CMS content for Google Ads page:', err);

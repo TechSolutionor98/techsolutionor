@@ -68,9 +68,7 @@ const techSubLinks = [
     { Image: Net, label: '.NET', href: '/technologies/dotnet', desc: 'Enterprise Applications' },
     { Image: Flutter, label: 'Flutter', href: '/technologies/flutter', desc: 'Cross-Platform Mobile' },
     { Image: Figma, label: 'Figma', href: '/technologies/figma', desc: 'UI/UX & Prototyping' },
-    { Image: Meta, label: 'Meta', href: '/technologies/meta', desc: 'Social Ads & Marketing' },
     { Image: Analytics, label: 'Analytics', href: '/technologies/analytics', desc: 'Data & Performance Tracking' },
-    { Image: GoogleAds, label: 'Google Ads', href: '/technologies/google-ads', desc: 'PPC & Search Campaigns' },
     { Image: Angular, label: 'Angular', href: '/technologies/angular', desc: 'Scalable Web Platforms' },
 ];
 
@@ -84,6 +82,8 @@ const servicesSubLinks = [
     { Image: SocialMedia, label: 'Social Media', href: '/services/social-media', desc: 'Audience growth & engagement' },
     { Image: Digital, label: 'Digital Marketing', href: '/services/digital-marketing', desc: 'Full-funnel marketing strategy' },
     { Image: Ppc, label: 'PPC & Amazon', href: '/services/ppc-amazon-ads', desc: 'Targeted ads & campaign ROI' },
+    { Image: GoogleAds, label: 'Google Ads', href: '/services/google-ads', desc: 'PPC & Search Campaigns' },
+    { Image: Meta, label: 'Meta', href: '/services/meta', desc: 'Social Ads & Marketing' },
     { Image: Seo, label: 'Search Engine Optimization', href: '/services/search-engine-optimization', desc: 'Organic ranking & visibility' },
     { Image: Content, label: 'Content Writing', href: '/services/content-writing', desc: 'SEO copywriting & articles' },
     { Image: Call, label: 'Call Center', href: '/services/call-center', desc: '24/7 inbound & support' },
