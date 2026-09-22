@@ -36,6 +36,12 @@ function getNotificationIcon(type) {
         bgColor: 'bg-purple-100 text-purple-700 border-purple-200',
         label: 'Job Application',
       };
+    case 'email':
+      return {
+        icon: Mail,
+        bgColor: 'bg-indigo-100 text-indigo-700 border-indigo-200',
+        label: 'Email',
+      };
     case 'review':
       return {
         icon: Star,
@@ -87,9 +93,11 @@ export default function NotificationBell() {
   const unreadJob = unreadCounts.jobApplications || 0;
   const unreadReview = unreadCounts.customerReviews || 0;
   const unreadBlog = unreadCounts.blogComments || 0;
+  const unreadEmail = unreadCounts.unreadEmails || 0;
 
   const CATEGORIES = [
     { id: 'contact', label: 'Contact', icon: Mail, count: unreadContact },
+    { id: 'email', label: 'Email', icon: Mail, count: unreadEmail },
     { id: 'job', label: 'Job', icon: Briefcase, count: unreadJob },
     { id: 'review', label: 'Review', icon: Star, count: unreadReview },
     { id: 'blog', label: 'Blog', icon: MessageSquare, count: unreadBlog },
@@ -126,6 +134,9 @@ export default function NotificationBell() {
       // 2. Category filter
       if (categoryFilter === 'contact') {
         return item.type === 'contact' || item.type === 'appointment';
+      }
+      if (categoryFilter === 'email') {
+        return item.type === 'email';
       }
       if (categoryFilter === 'job') {
         return item.type === 'application';

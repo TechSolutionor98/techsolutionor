@@ -276,7 +276,7 @@ export default function ContactTableClient({ initialData = [], apiBase = process
       </div>
 
       {/* Submissions Table - subtle 1px border */}
-      <div style={{ overflowX: "auto", maxHeight: "620px", overflowY: "auto" }} className="w-full border border-gray-200 rounded-lg">
+      <div style={{ overflowX: "auto", minHeight: "560px", maxHeight: "620px", overflowY: "auto" }} className="w-full border border-gray-200 rounded-lg bg-white">
         <table style={{ whiteSpace: "nowrap" }} className="w-full text-xs text-left">
           <thead className="bg-[#34953C] text-white sticky top-0 z-10">
             <tr>
@@ -291,7 +291,7 @@ export default function ContactTableClient({ initialData = [], apiBase = process
           <tbody className="divide-y divide-gray-100 bg-white">
             {pageData.length === 0 ? (
               <tr>
-                <td colSpan={6} className="px-4 py-12 text-center text-gray-400 font-medium">
+                <td colSpan={6} className="px-4 py-28 text-center text-gray-400 font-medium">
                   No submissions found.
                 </td>
               </tr>

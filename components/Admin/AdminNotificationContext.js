@@ -8,6 +8,7 @@ const AdminNotificationContext = createContext({
     jobApplications: 0,
     customerReviews: 0,
     blogComments: 0,
+    unreadEmails: 0,
     total: 0,
   },
   unreadByGroup: {
@@ -66,6 +67,7 @@ export function AdminNotificationProvider({ children }) {
     jobApplications: 0,
     customerReviews: 0,
     blogComments: 0,
+    unreadEmails: 0,
     total: 0,
   });
   const [unreadByGroup, setUnreadByGroup] = useState({
@@ -91,6 +93,7 @@ export function AdminNotificationProvider({ children }) {
         jobApplications: 0,
         customerReviews: 0,
         blogComments: 0,
+        unreadEmails: 0,
         total: 0,
       };
 
@@ -121,13 +124,13 @@ export function AdminNotificationProvider({ children }) {
     }
   }, []);
 
-  // Initial load and periodic polling every 20 seconds
+  // Initial load and periodic polling every 10 seconds
   useEffect(() => {
     fetchNotifications();
 
     const interval = setInterval(() => {
       fetchNotifications(true);
-    }, 20000);
+    }, 10000);
 
     // Refresh when tab gains focus
     const handleVisibilityChange = () => {

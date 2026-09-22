@@ -615,7 +615,7 @@ export default function CommentsListClient({
         body: JSON.stringify({
           blogId: parentComment.blogId,
           authorName: 'Admin',
-          authorEmail: 'admin@osumfix.com',
+          authorEmail: 'admin@techsolutionor.com',
           comment: replyText,
           inReplyTo: parentComment.authorName,
           isAdmin: true,

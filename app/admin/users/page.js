@@ -4,7 +4,7 @@ import UsersClient from './UsersClient';
 export const metadata = { title: 'Users - Admin' };
 
 export default function UsersPage() {
-  const websites = [{ _id: 'default', name: 'OsumFix (default)' }];
+  const websites = [{ _id: 'default', name: 'Tech Solutionor (default)' }];
 
   return (
     <div>

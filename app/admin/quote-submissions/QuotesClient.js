@@ -335,7 +335,7 @@ export default function QuotesClient() {
                         Close
                       </button>
                       <a
-                        href={`mailto:${q.email}?subject=Regarding your OsumFix Quote Request for ${q.service}`}
+                        href={`mailto:${q.email}?subject=Regarding your Tech Solutionor Quote Request for ${q.service}`}
                         className="px-5 py-2.5 bg-[var(--primary)] hover:bg-[var(--secondary)] text-white rounded-lg text-sm font-bold transition flex items-center gap-2"
                       >
                         <Mail className="w-4 h-4" />
