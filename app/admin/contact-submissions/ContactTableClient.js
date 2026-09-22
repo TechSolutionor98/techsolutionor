@@ -281,8 +281,8 @@ export default function ContactTableClient({ initialData = [], apiBase = process
           <thead className="bg-[#34953C] text-white sticky top-0 z-10">
             <tr>
               <th className="px-4 py-2.5 text-left font-semibold min-w-[220px]">Author</th>
-              <th className="px-4 py-2.5 text-left font-semibold max-w-[320px]">Message</th>
-              <th className="px-4 py-2.5 text-left font-semibold min-w-[140px]">Service</th>
+              <th className="px-4 py-2.5 text-left font-semibold w-[220px] max-w-[220px]">Message</th>
+              <th className="px-4 py-2.5 text-left font-semibold w-[120px] max-w-[130px]">Service</th>
               <th className="px-4 py-2.5 text-left font-semibold w-28">Source</th>
               <th className="px-4 py-2.5 text-left font-semibold w-36">Submitted At</th>
               <th className="px-4 py-2.5 text-right font-semibold w-20">Action</th>
@@ -340,14 +340,36 @@ export default function ContactTableClient({ initialData = [], apiBase = process
                       </div>
                     </td>
 
-                    {/* 2. Message Preview */}
-                    <td className="px-4 py-2.5 align-middle text-gray-600 truncate max-w-[320px]" title={s.message}>
-                      {s.message || '—'}
+                    {/* 2. Message Preview (narrower column, up to 3 lines) */}
+                    <td className="px-4 py-2.5 align-middle text-gray-600 whitespace-normal w-[220px] max-w-[220px]">
+                      <div
+                        className="text-gray-600 text-xs leading-relaxed break-words line-clamp-3 whitespace-normal"
+                        style={{
+                          display: '-webkit-box',
+                          WebkitLineClamp: 3,
+                          WebkitBoxOrient: 'vertical',
+                          overflow: 'hidden',
+                        }}
+                        title={s.message || ''}
+                      >
+                        {s.message || '—'}
+                      </div>
                     </td>
 
-                    {/* 3. Service */}
-                    <td className="px-4 py-2.5 align-middle">
-                      <span className="font-medium text-gray-800 text-xs">{s.serviceRequired || '—'}</span>
+                    {/* 3. Service (reduced width, wrapped up to 2 lines) */}
+                    <td className="px-4 py-2.5 align-middle text-gray-800 whitespace-normal w-[120px] max-w-[130px]">
+                      <div
+                        className="font-medium text-gray-800 text-xs leading-snug break-words line-clamp-2"
+                        style={{
+                          display: '-webkit-box',
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: 'vertical',
+                          overflow: 'hidden',
+                        }}
+                        title={s.serviceRequired || ''}
+                      >
+                        {s.serviceRequired || '—'}
+                      </div>
                     </td>
 
                     {/* 4. Source Badge */}
