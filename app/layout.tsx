@@ -6,6 +6,11 @@ import { getDb } from "@/lib/mongodb";
 export const metadata: Metadata = {
   title: "Tech Solutioner | Technical Services & Engineering",
   description: "Professional Technical Services and Engineering Solutions.",
+  verification: {
+    other: {
+      "msvalidate.01": "FD0260234609FF418A3C532AF7A69169",
+    },
+  },
   icons: {
     icon: [
       { url: "/favicon.png", type: "image/png" },
@@ -57,6 +62,8 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <head>
+        {/* Bing Webmaster Verification */}
+        <meta name="msvalidate.01" content="FD0260234609FF418A3C532AF7A69169" />
         <link rel="icon" href="/favicon.png" type="image/png" sizes="any" />
         <link rel="shortcut icon" href="/favicon.png" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
