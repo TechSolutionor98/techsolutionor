@@ -11,6 +11,7 @@ import {
   Trash2,
   Archive,
   ChevronDown,
+  ChevronUp,
   User,
   Clock,
   Briefcase,
@@ -22,8 +23,17 @@ import {
   Eye,
   ArrowUpDown,
   ExternalLink,
-  Loader2
+  Loader2,
+  CornerUpLeft,
+  Printer,
+  Sparkles,
+  Info,
+  Check,
+  Maximize2,
+  Minimize2
 } from 'lucide-react';
+import { PREBUILT_EMAIL_TEMPLATES, populateTemplate } from '@/lib/email-templates-catalog';
+import { wrapWithTechSolutionorTemplate } from '@/lib/email-branded-template';
 
 const STATUS_CONFIG = {
   open: { label: 'Open', color: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
@@ -54,19 +64,24 @@ export default function EmailInboxClient() {
   const [threadMessages, setThreadMessages] = useState([]);
   const [loadingMessages, setLoadingMessages] = useState(false);
 
-  // Reply Composer inside Modal
+  // Gmail-style Reply Composer State inside Modal
   const [replyBody, setReplyBody] = useState('');
   const [replySubject, setReplySubject] = useState('');
   const [selectedTemplateId, setSelectedTemplateId] = useState('');
   const [statusUpdate, setStatusUpdate] = useState('');
   const [includeSignature, setIncludeSignature] = useState(true);
   const [sendingReply, setSendingReply] = useState(false);
+  const [composerTab, setComposerTab] = useState('write'); // 'write' | 'preview'
+  const [showQuotedContext, setShowQuotedContext] = useState(false);
+  const [expandedHeaderId, setExpandedHeaderId] = useState(null);
 
   // Templates
   const [templates, setTemplates] = useState([]);
   const [showTemplateModal, setShowTemplateModal] = useState(false);
 
   const messagesEndRef = useRef(null);
+  const composerRef = useRef(null);
+  const replyInputRef = useRef(null);
 
   // Initial load: fetch incoming threads and templates
   useEffect(() => {
@@ -184,6 +199,9 @@ export default function EmailInboxClient() {
       setStatusUpdate(data.thread?.status || 'open');
       setReplyBody('');
       setSelectedTemplateId('');
+      setComposerTab('write');
+      setShowQuotedContext(false);
+      setExpandedHeaderId(null);
 
       // Mark locally as read
       setThreads(prev =>
@@ -202,35 +220,61 @@ export default function EmailInboxClient() {
     }
   }
 
-  // Template selection inside reply composer
+  // Pre-built template selection inside reply composer
   function handleSelectTemplate(tmplId) {
     setSelectedTemplateId(tmplId);
     if (!tmplId || !viewThread) return;
 
-    const tmpl = templates.find(t => t.id === tmplId);
+    // Check catalog or fetched templates
+    const tmpl = PREBUILT_EMAIL_TEMPLATES.find(t => t.id === tmplId) ||
+                 templates.find(t => t.id === tmplId);
     if (!tmpl) return;
 
-    const candidateName = viewThread.applicant?.name || 'Applicant';
-    const position = viewThread.subject?.replace(/^(re|fwd):\s*/i, '').replace(/^Application for /i, '') || 'Open Position';
-    const companyName = 'Tech Solutionor';
-    const senderName = 'HR Team';
+    const populated = populateTemplate(tmpl, {
+      candidateName: viewThread.applicant?.name || 'Applicant',
+      senderName: 'Talent Acquisition Team',
+      position: viewThread.subject || 'Open Position',
+      companyName: 'Tech Solutionor',
+      interviewDate: 'Upcoming business day (or your preferred time)',
+      interviewLink: 'https://meet.google.com/techsolutionor',
+    });
 
-    let replacedBody = tmpl.bodyHtml
-      .replace(/{{candidateName}}/g, candidateName)
-      .replace(/{{position}}/g, position)
-      .replace(/{{companyName}}/g, companyName)
-      .replace(/{{senderName}}/g, senderName)
-      .replace(/{{interviewDate}}/g, 'To be confirmed upon your reply')
-      .replace(/{{interviewLink}}/g, 'https://meet.google.com/techsolutionor');
+    // Populate editable reply text
+    setReplyBody(populated.bodyText);
 
-    setReplyBody(replacedBody.replace(/<p>/gi, '').replace(/<\/p>/gi, '\n\n').replace(/<br\s*[\/]?>/gi, '\n').replace(/<[^>]*>/g, '').trim());
+    // Populate subject
+    if (populated.subject) {
+      setReplySubject(populated.subject.startsWith('Re:') ? populated.subject : `Re: ${populated.subject}`);
+    }
 
-    let replacedSubj = tmpl.subject
-      .replace(/{{candidateName}}/g, candidateName)
-      .replace(/{{position}}/g, position)
-      .replace(/{{companyName}}/g, companyName);
+    // Auto set recommended status
+    if (populated.recommendedStatus) {
+      setStatusUpdate(populated.recommendedStatus);
+    }
+  }
 
-    setReplySubject(replacedSubj.startsWith('Re:') ? replacedSubj : `Re: ${replacedSubj}`);
+  // Compute live branded HTML preview for the Tech Solutionor master template
+  const previewBrandedHtml = useMemo(() => {
+    if (!viewThread) return '';
+    const bodyHtml = replyBody.trim()
+      ? replyBody.split('\n\n').map(p => `<p style="margin: 0 0 16px; line-height: 1.6;">${p.replace(/\n/g, '<br/>')}</p>`).join('')
+      : '<p style="color: #94a3b8; font-style: italic;">Start typing your reply or choose a pre-built template from the dropdown above to preview the branded email...</p>';
+
+    return wrapWithTechSolutionorTemplate({
+      contentHtml: bodyHtml,
+      subject: replySubject || `Re: ${viewThread.subject || ''}`,
+      recipientName: viewThread.applicant?.name || 'Recipient',
+      includeSignature,
+    });
+  }, [replyBody, replySubject, viewThread, includeSignature]);
+
+  // Jump to and focus reply composer
+  function handleFocusComposer() {
+    setComposerTab('write');
+    composerRef.current?.scrollIntoView({ behavior: 'smooth' });
+    setTimeout(() => {
+      replyInputRef.current?.focus();
+    }, 150);
   }
 
   // Send reply from inside the modal
@@ -241,11 +285,24 @@ export default function EmailInboxClient() {
 
     try {
       setSendingReply(true);
-      const signatureHtml = includeSignature
-        ? '<br/><br/>--<br/><strong>HR & Talent Acquisition Team</strong><br/>Tech Solutionor &bull; Global Digital Solutions<br/><a href="https://techsolutionor.com">techsolutionor.com</a>'
-        : '';
 
-      const bodyHtml = `<p>${replyBody.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br/>')}</p>${signatureHtml}`;
+      let finalBodyHtml = replyBody.split('\n\n').map(p => `<p>${p.replace(/\n/g, '<br/>')}</p>`).join('');
+
+      // If quoted original context is enabled, include Gmail-style quoted block
+      if (showQuotedContext && threadMessages.length > 0) {
+        const originalMsg = threadMessages.find(m => m.direction === 'inbound') || threadMessages[0];
+        const dateStr = originalMsg?.createdAt ? new Date(originalMsg.createdAt).toLocaleString() : '';
+        const senderStr = `${originalMsg?.from?.name || viewThread.applicant?.name || 'Sender'} <${originalMsg?.from?.email || viewThread.applicant?.email || ''}>`;
+        const snippetText = (originalMsg?.bodyText || viewThread.lastSnippet || '').replace(/\n/g, '<br/>');
+
+        finalBodyHtml += `
+          <br/><br/>
+          <div style="border-left: 2px solid #cbd5e1; padding-left: 12px; margin-left: 4px; color: #64748b; font-size: 13px;">
+            <p style="margin: 0 0 6px;">On ${dateStr}, ${senderStr} wrote:</p>
+            <blockquote style="margin: 0; padding: 0;">${snippetText}</blockquote>
+          </div>
+        `;
+      }
 
       const res = await fetch('/api/emails', {
         method: 'POST',
@@ -256,7 +313,7 @@ export default function EmailInboxClient() {
           toName: viewThread.applicant.name,
           subject: replySubject || `Re: ${viewThread.subject}`,
           bodyText: replyBody,
-          bodyHtml,
+          bodyHtml: finalBodyHtml,
           templateId: selectedTemplateId || null,
           statusUpdate,
         }),
@@ -269,6 +326,8 @@ export default function EmailInboxClient() {
 
       setReplyBody('');
       setSelectedTemplateId('');
+      setComposerTab('write');
+      setShowQuotedContext(false);
 
       // Reload messages in the modal
       const convRes = await fetch(`/api/emails/${viewThread.threadId}`);
@@ -278,7 +337,7 @@ export default function EmailInboxClient() {
         setViewThread(convData.thread);
       }
 
-      await fetchThreads();
+      await fetchThreads(true);
     } catch (err) {
       alert('Error sending reply: ' + err.message);
     } finally {
@@ -741,214 +800,416 @@ export default function EmailInboxClient() {
         </div>
       </div>
 
-      {/* MODAL: Full Thread Conversation View & Integrated Reply Composer */}
+      {/* MODAL: Full Google/Gmail-Style Email Viewing & Reply Composer Experience */}
       {viewThread && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 sm:p-6" onClick={() => setViewThread(null)}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-2 sm:p-4 md:p-6 backdrop-blur-2xs" onClick={() => setViewThread(null)}>
           <div
-            className="bg-white rounded-2xl shadow-2xl w-full max-w-[820px] max-h-[92vh] flex flex-col overflow-hidden border border-gray-100 animate-in fade-in zoom-in-95 duration-200"
+            className="bg-white rounded-2xl shadow-2xl w-full max-w-[920px] max-h-[94vh] flex flex-col overflow-hidden border border-gray-200 animate-in fade-in zoom-in-95 duration-200"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Modal Header */}
-            <div className="bg-[#34953C] px-6 py-4 flex items-center justify-between text-white shrink-0">
+            {/* 1. Gmail-Style Top Header Bar */}
+            <div className="bg-white border-b border-gray-200 px-5 sm:px-6 py-3.5 flex items-center justify-between gap-3 shrink-0">
               <div className="flex items-center gap-3 min-w-0">
-                <div className="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center font-bold text-sm shrink-0">
-                  <Mail className="w-4 h-4 text-white" />
+                <div className="w-8 h-8 rounded-full bg-emerald-50 text-[#34953C] flex items-center justify-center font-bold text-sm shrink-0 border border-emerald-100">
+                  <Mail className="w-4 h-4" />
                 </div>
-                <div className="min-w-0">
-                  <h2 className="text-white text-base sm:text-lg font-bold leading-tight truncate">
-                    {viewThread.subject}
+                <div className="min-w-0 flex items-center gap-2 flex-wrap">
+                  <h2 className="text-gray-900 text-base sm:text-lg font-bold leading-tight truncate" title={viewThread.subject}>
+                    {viewThread.subject || '(No Subject)'}
                   </h2>
-                  <p className="text-white/80 text-[11px] font-medium">
-                    Conversation with {viewThread.applicant?.name} &bull; {viewThread.mailbox || 'hr@techsolutionor.com'}
-                  </p>
+                  <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-gray-100 text-gray-700 border border-gray-200">
+                    Inbox
+                  </span>
+                  <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#34953C]"></span>
+                    {viewThread.mailbox || 'hr@techsolutionor.com'}
+                  </span>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2.5 shrink-0">
-                <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold shadow-2xs border bg-white text-emerald-800 border-white/60`}>
+              <div className="flex items-center gap-2 shrink-0">
+                <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold border ${STATUS_CONFIG[viewThread.status]?.color || 'bg-gray-100 text-gray-700 border-gray-200'}`}>
                   {STATUS_CONFIG[viewThread.status]?.label || viewThread.status}
                 </span>
                 <button
                   type="button"
+                  onClick={() => window.print()}
+                  className="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center text-gray-500 hover:text-gray-700 transition cursor-pointer"
+                  title="Print conversation"
+                >
+                  <Printer className="w-4 h-4" />
+                </button>
+                <button
+                  type="button"
                   onClick={() => setViewThread(null)}
-                  className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/25 flex items-center justify-center text-white/90 hover:text-white transition cursor-pointer"
-                  title="Close modal"
+                  className="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center text-gray-500 hover:text-gray-800 transition cursor-pointer"
+                  title="Close conversation"
                 >
                   <X className="w-4 h-4" />
                 </button>
               </div>
             </div>
 
-            {/* Modal Scrollable Body */}
-            <div className="p-5 sm:p-6 space-y-4 overflow-y-auto flex-1 bg-[#f8fafc]">
-              {/* Communication Messages Timeline */}
-              <div className="space-y-3">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400 block">
-                  Communication History ({threadMessages.length} Messages)
+            {/* 2. Gmail-Style Message Conversation Scroll Area */}
+            <div className="p-4 sm:p-6 space-y-4 overflow-y-auto flex-1 bg-[#f6f8fc]">
+              <div className="flex items-center justify-between gap-2 px-1">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-gray-500">
+                  Conversation Thread ({threadMessages.length} Messages)
                 </span>
+                <button
+                  type="button"
+                  onClick={handleFocusComposer}
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-[#34953C] hover:text-[#23732a] transition cursor-pointer"
+                >
+                  <CornerUpLeft className="w-3.5 h-3.5" />
+                  <span>Reply to this email</span>
+                </button>
+              </div>
 
-                {loadingMessages ? (
-                  <div className="p-8 text-center text-xs text-gray-400 bg-white rounded-xl border border-gray-200">
-                    <RefreshCw className="w-4 h-4 animate-spin mx-auto mb-2 text-[#34953C]" />
-                    Loading conversation messages...
-                  </div>
-                ) : threadMessages.length === 0 ? (
-                  <div className="p-6 text-center text-xs text-gray-400 bg-white rounded-xl border border-gray-200">
-                    No messages recorded in this thread yet.
-                  </div>
-                ) : (
-                  threadMessages.map((msg, idx) => {
-                    const isInbound = msg.direction === 'inbound';
-                    return (
-                      <div
-                        key={msg.id || idx}
-                        className={`rounded-xl border p-4 shadow-2xs transition-all ${
-                          isInbound
-                            ? 'bg-white border-gray-200'
-                            : 'bg-emerald-50/40 border-emerald-200/80 ml-4 sm:ml-8'
-                        }`}
-                      >
-                        {/* Header */}
-                        <div className="flex items-center justify-between gap-2 pb-2 mb-2 border-b border-gray-100">
-                          <div className="flex items-center gap-2">
-                            <div className={`w-6 h-6 rounded-full flex items-center justify-center font-bold text-[10px] ${
-                              isInbound ? 'bg-blue-100 text-blue-800' : 'bg-emerald-600 text-white'
-                            }`}>
-                              {isInbound ? 'IN' : 'HR'}
-                            </div>
-                            <div>
-                              <span className="text-xs font-bold text-gray-900 mr-2">
-                                {isInbound ? msg.from?.name || 'Applicant' : 'Tech Solutionor HR'}
-                              </span>
-                              <span className="text-[11px] font-mono text-gray-500">
-                                {isInbound ? `<${msg.from?.email}>` : '<hr@techsolutionor.com>'}
-                              </span>
-                            </div>
+              {loadingMessages ? (
+                <div className="p-12 text-center text-xs text-gray-400 bg-white rounded-2xl border border-gray-200 shadow-2xs">
+                  <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-2.5 text-[#34953C]" />
+                  Loading conversation history...
+                </div>
+              ) : threadMessages.length === 0 ? (
+                <div className="p-8 text-center text-xs text-gray-400 bg-white rounded-2xl border border-gray-200">
+                  No previous messages recorded in this conversation yet.
+                </div>
+              ) : (
+                threadMessages.map((msg, idx) => {
+                  const isInbound = msg.direction === 'inbound';
+                  const senderInitial = (isInbound ? (msg.from?.name || viewThread.applicant?.name || 'A') : 'TS').charAt(0).toUpperCase();
+                  const isHeaderExpanded = expandedHeaderId === (msg.id || idx);
+
+                  return (
+                    <div
+                      key={msg.id || idx}
+                      className={`rounded-2xl border p-5 shadow-2xs transition-all ${
+                        isInbound
+                          ? 'bg-white border-gray-200'
+                          : 'bg-white border-emerald-200 border-l-4 border-l-[#34953C]'
+                      }`}
+                    >
+                      {/* Gmail Message Card Top Header */}
+                      <div className="flex items-start justify-between gap-3 pb-3 mb-3 border-b border-gray-100">
+                        <div className="flex items-center gap-3 min-w-0">
+                          {/* Avatar */}
+                          <div
+                            className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs shrink-0 shadow-2xs ${
+                              isInbound
+                                ? 'bg-linear-to-br from-indigo-500 to-purple-600 text-white'
+                                : 'bg-[#34953C] text-white'
+                            }`}
+                          >
+                            {isInbound ? senderInitial : 'TS'}
                           </div>
 
-                          <div className="flex items-center gap-1 text-[10px] text-gray-400 font-medium">
-                            <Clock className="w-3 h-3" />
-                            <span>{formatDate(msg.createdAt)} {formatTime(msg.createdAt)}</span>
+                          <div className="min-w-0">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="text-xs sm:text-sm font-bold text-gray-900 leading-tight">
+                                {isInbound ? (msg.from?.name || viewThread.applicant?.name || 'Email Sender') : 'Tech Solutionor HR'}
+                              </span>
+                              <span className="text-[11px] font-mono text-gray-500 truncate">
+                                {isInbound ? `<${msg.from?.email || viewThread.applicant?.email}>` : '<hr@techsolutionor.com>'}
+                              </span>
+                              {!isInbound && (
+                                <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                  Official Reply
+                                </span>
+                              )}
+                            </div>
+
+                            {/* Collapsible 'to me / details' dropdown toggle */}
+                            <div className="relative mt-0.5">
+                              <button
+                                type="button"
+                                onClick={() => setExpandedHeaderId(isHeaderExpanded ? null : (msg.id || idx))}
+                                className="inline-flex items-center gap-1 text-[11px] text-gray-500 hover:text-gray-700 cursor-pointer"
+                              >
+                                <span>{isInbound ? 'to me' : `to ${viewThread.applicant?.name || 'Recipient'}`}</span>
+                                <ChevronDown className={`w-3 h-3 transition-transform ${isHeaderExpanded ? 'rotate-180' : ''}`} />
+                              </button>
+
+                              {/* Gmail Full Details Popover Box */}
+                              {isHeaderExpanded && (
+                                <div className="mt-2 p-3 bg-gray-50 border border-gray-200 rounded-lg text-xs space-y-1 font-sans text-gray-700 shadow-2xs max-w-md">
+                                  <div><span className="font-semibold text-gray-900">from:</span> {isInbound ? (msg.from?.name || viewThread.applicant?.name) : 'Tech Solutionor HR'} &lt;{isInbound ? (msg.from?.email || viewThread.applicant?.email) : 'hr@techsolutionor.com'}&gt;</div>
+                                  <div><span className="font-semibold text-gray-900">to:</span> {isInbound ? (viewThread.mailbox || 'hr@techsolutionor.com') : `${viewThread.applicant?.name} <${viewThread.applicant?.email}>`}</div>
+                                  <div><span className="font-semibold text-gray-900">date:</span> {new Date(msg.createdAt).toLocaleString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</div>
+                                  <div><span className="font-semibold text-gray-900">subject:</span> {viewThread.subject}</div>
+                                  <div><span className="font-semibold text-gray-900">security:</span> Standard TLS Encryption</div>
+                                </div>
+                              )}
+                            </div>
                           </div>
                         </div>
 
-                        {/* Body */}
-                        <div
-                          className="text-xs sm:text-[13px] text-gray-800 leading-relaxed space-y-2 break-words"
-                          dangerouslySetInnerHTML={{ __html: msg.bodyHtml || `<p>${msg.bodyText || ''}</p>` }}
-                        />
-
-                        {/* Attachments */}
-                        {Array.isArray(msg.attachments) && msg.attachments.length > 0 && (
-                          <div className="mt-3 pt-2.5 border-t border-gray-100 space-y-1.5">
-                            <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400 block">
-                              Attached Files ({msg.attachments.length})
-                            </span>
-                            <div className="flex flex-wrap gap-2">
-                              {msg.attachments.map((att, i) => (
-                                <a
-                                  key={i}
-                                  href={att.fileUrl || '#'}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-xs font-medium text-gray-700 shadow-2xs transition group"
-                                >
-                                  <Paperclip className="w-3.5 h-3.5 text-gray-400 group-hover:text-[#34953C]" />
-                                  <span className="truncate max-w-[220px]">{att.fileName || 'Document'}</span>
-                                  <Download className="w-3 h-3 text-gray-400 ml-1" />
-                                </a>
-                              ))}
-                            </div>
-                          </div>
-                        )}
+                        {/* Right: Date and Quick Reply Action */}
+                        <div className="flex items-center gap-3 shrink-0">
+                          <span className="text-[11px] text-gray-500 font-medium whitespace-nowrap">
+                            {formatDate(msg.createdAt)} {formatTime(msg.createdAt)}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={handleFocusComposer}
+                            className="p-1.5 text-gray-400 hover:text-[#34953C] hover:bg-emerald-50 rounded-lg transition cursor-pointer"
+                            title="Reply to message"
+                          >
+                            <CornerUpLeft className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
                       </div>
-                    );
-                  })
-                )}
-                <div ref={messagesEndRef} />
-              </div>
 
-              {/* 3. Integrated Reply Composer */}
-              <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-2xs space-y-3">
-                <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
-                  <div className="flex items-center gap-2">
-                    <span className="text-[11px] font-bold text-gray-700">Email Template:</span>
-                    <select
-                      value={selectedTemplateId}
-                      onChange={e => handleSelectTemplate(e.target.value)}
-                      className="border border-gray-300 rounded-lg px-2.5 py-1 text-xs outline-none focus:border-[#34953C] bg-white cursor-pointer"
-                    >
-                      <option value="">-- Choose Pre-built Template --</option>
-                      {templates.map(tmpl => (
-                        <option key={tmpl.id} value={tmpl.id}>
-                          {tmpl.title} ({tmpl.category})
-                        </option>
-                      ))}
-                    </select>
+                      {/* Message Content Body */}
+                      <div
+                        className="text-xs sm:text-sm text-gray-800 leading-relaxed space-y-2.5 break-words font-sans selection:bg-emerald-100"
+                        dangerouslySetInnerHTML={{ __html: msg.bodyHtml || `<p>${(msg.bodyText || '').replace(/\n/g, '<br/>')}</p>` }}
+                      />
+
+                      {/* Gmail Style Attachment Cards */}
+                      {Array.isArray(msg.attachments) && msg.attachments.length > 0 && (
+                        <div className="mt-4 pt-3 border-t border-gray-100 space-y-2">
+                          <span className="text-[11px] font-bold uppercase tracking-wider text-gray-500 block">
+                            Attachments ({msg.attachments.length})
+                          </span>
+                          <div className="flex flex-wrap gap-2.5">
+                            {msg.attachments.map((att, i) => (
+                              <a
+                                key={i}
+                                href={att.fileUrl || '#'}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-2.5 px-3 py-2 rounded-xl border border-gray-200 bg-gray-50/80 hover:bg-white text-xs font-semibold text-gray-800 shadow-2xs transition group"
+                              >
+                                <div className="w-6 h-6 rounded-md bg-emerald-100 text-[#34953C] flex items-center justify-center shrink-0">
+                                  <Paperclip className="w-3.5 h-3.5" />
+                                </div>
+                                <div className="truncate max-w-[200px]">
+                                  <div className="truncate text-gray-900 group-hover:text-[#34953C]">{att.fileName || 'Attachment'}</div>
+                                  <div className="text-[10px] text-gray-400 font-normal">{att.contentType || 'File'}</div>
+                                </div>
+                                <Download className="w-3.5 h-3.5 text-gray-400 group-hover:text-[#34953C] ml-1" />
+                              </a>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })
+              )}
+              <div ref={messagesEndRef} />
+
+              {/* 3. Google/Gmail-Style Inline Reply Composer */}
+              <div ref={composerRef} className="bg-white rounded-2xl border border-gray-300 shadow-md overflow-hidden transition-all mt-5">
+                {/* Composer Header Bar */}
+                <div className="bg-[#f8fafc] border-b border-gray-200 px-4 py-3 flex flex-wrap items-center justify-between gap-2.5">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <CornerUpLeft className="w-4 h-4 text-[#34953C] shrink-0" />
+                    <span className="text-xs text-gray-700">
+                      Reply to <strong className="text-gray-900">{viewThread.applicant?.name || 'Applicant'}</strong>
+                      <span className="text-gray-400 font-mono text-[11px] ml-1.5 hidden sm:inline">&lt;{viewThread.applicant?.email}&gt;</span>
+                    </span>
                   </div>
 
-                  <div className="text-[11px] text-gray-500 font-medium">
-                    Replying from: <span className="font-bold text-gray-900">hr@techsolutionor.com</span>
+                  <div className="flex items-center gap-2.5 flex-wrap">
+                    {/* Pre-built Email Template Selector */}
+                    <div className="flex items-center gap-1.5 bg-white border border-gray-300 rounded-lg px-2.5 py-1.5 shadow-2xs hover:border-[#34953C] transition">
+                      <Sparkles className="w-3.5 h-3.5 text-[#34953C] shrink-0" />
+                      <span className="text-[11px] font-bold text-gray-700 whitespace-nowrap">Template:</span>
+                      <select
+                        value={selectedTemplateId}
+                        onChange={e => handleSelectTemplate(e.target.value)}
+                        className="bg-transparent text-xs font-semibold text-gray-900 outline-none cursor-pointer max-w-[240px] sm:max-w-[280px] truncate"
+                      >
+                        <option value="">-- Choose Pre-built Template --</option>
+                        {PREBUILT_EMAIL_TEMPLATES.map(tmpl => (
+                          <option key={tmpl.id} value={tmpl.id}>
+                            {tmpl.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Editor / Live Branded Preview Tabs */}
+                    <div className="flex items-center bg-gray-200/80 p-0.5 rounded-lg text-xs font-semibold">
+                      <button
+                        type="button"
+                        onClick={() => setComposerTab('write')}
+                        className={`px-3 py-1 rounded-md transition cursor-pointer text-xs ${
+                          composerTab === 'write' ? 'bg-white text-gray-900 shadow-2xs font-bold' : 'text-gray-600 hover:text-gray-900'
+                        }`}
+                      >
+                        ✏️ Edit Message
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setComposerTab('preview')}
+                        className={`px-3 py-1 rounded-md transition cursor-pointer text-xs ${
+                          composerTab === 'preview' ? 'bg-white text-[#34953C] shadow-2xs font-bold' : 'text-gray-600 hover:text-gray-900'
+                        }`}
+                      >
+                        👁️ Branded Preview
+                      </button>
+                    </div>
                   </div>
                 </div>
 
-                <input
-                  value={replySubject}
-                  onChange={e => setReplySubject(e.target.value)}
-                  placeholder="Subject line..."
-                  className="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs font-semibold outline-none focus:border-[#34953C]"
-                />
+                {/* Subject Input Row */}
+                <div className="px-4 py-2 border-b border-gray-100 flex items-center gap-2 text-xs bg-white">
+                  <span className="font-semibold text-gray-400 select-none">Subject:</span>
+                  <input
+                    value={replySubject}
+                    onChange={e => setReplySubject(e.target.value)}
+                    placeholder="Subject line..."
+                    className="w-full text-xs font-bold text-gray-900 outline-none placeholder:text-gray-400"
+                  />
+                </div>
 
-                <textarea
-                  rows={4}
-                  value={replyBody}
-                  onChange={e => setReplyBody(e.target.value)}
-                  placeholder={`Write your reply to ${viewThread.applicant?.name}...`}
-                  className="w-full p-3 border border-gray-300 rounded-lg text-xs outline-none focus:border-[#34953C] leading-relaxed resize-none"
-                />
-
-                <div className="flex items-center justify-between gap-2 pt-1">
-                  <label className="flex items-center gap-1.5 text-xs text-gray-600 cursor-pointer select-none">
-                    <input
-                      type="checkbox"
-                      checked={includeSignature}
-                      onChange={e => setIncludeSignature(e.target.checked)}
-                      className="rounded text-[#34953C] focus:ring-[#34953C]"
+                {/* Composer Tab 1: Write & Edit Message */}
+                {composerTab === 'write' ? (
+                  <div className="p-4 space-y-3">
+                    <textarea
+                      ref={replyInputRef}
+                      rows={6}
+                      value={replyBody}
+                      onChange={e => setReplyBody(e.target.value)}
+                      placeholder={`Write your reply to ${viewThread.applicant?.name || 'the sender'}...\nTip: Choose a pre-built template from the dropdown above to auto-load ready-to-send content, then customize any text freely before sending.`}
+                      className="w-full text-xs sm:text-sm text-gray-900 leading-relaxed outline-none resize-y min-h-[160px] font-sans placeholder:text-gray-400 selection:bg-emerald-100"
                     />
-                    <span>Attach Official HR Signature</span>
-                  </label>
 
-                  <button
-                    type="button"
-                    onClick={handleSendReply}
-                    disabled={sendingReply || !replyBody.trim()}
-                    className="px-4 py-2 rounded-lg bg-[#34953C] hover:bg-[#2b7e32] text-white text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-xs disabled:opacity-50"
-                  >
-                    {sendingReply ? (
-                      <>
-                        <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                        <span>Sending Reply...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Send className="w-3.5 h-3.5" />
-                        <span>Send from hr@techsolutionor.com</span>
-                      </>
-                    )}
-                  </button>
+                    {/* Collapsible Quoted Original Message Context (Gmail-style ... button) */}
+                    <div className="pt-2 border-t border-gray-100">
+                      <div className="flex items-center justify-between">
+                        <button
+                          type="button"
+                          onClick={() => setShowQuotedContext(prev => !prev)}
+                          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-gray-100 hover:bg-gray-200 text-gray-700 text-[11px] font-mono transition cursor-pointer"
+                          title="Toggle original quoted email context"
+                        >
+                          <span className="font-bold">...</span>
+                          <span className="text-[10px] font-sans font-medium text-gray-600">
+                            {showQuotedContext ? 'Hide quoted text' : 'Show quoted original message'}
+                          </span>
+                        </button>
+
+                        <span className="text-[11px] text-gray-400 hidden sm:inline">
+                          Automatically formatted with Tech Solutionor header logo &amp; social links upon sending
+                        </span>
+                      </div>
+
+                      {showQuotedContext && (
+                        <div className="mt-3 p-3 bg-gray-50 rounded-lg border-l-2 border-l-gray-400 text-xs text-gray-600 font-mono space-y-1">
+                          <div className="text-[11px] text-gray-500 font-sans font-bold">Original Message Context:</div>
+                          <div className="text-[11px]">
+                            On {formatDate(viewThread.lastMessageAt)} at {formatTime(viewThread.lastMessageAt)}, {viewThread.applicant?.name} &lt;{viewThread.applicant?.email}&gt; wrote:
+                          </div>
+                          <blockquote className="pl-2 border-l border-gray-300 text-gray-700 italic font-sans text-xs mt-1">
+                            {viewThread.lastSnippet || 'Original email content...'}
+                          </blockquote>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  /* Composer Tab 2: Live Tech Solutionor Branded Preview */
+                  <div className="p-4 bg-gray-100 space-y-2.5">
+                    <div className="flex items-center justify-between text-xs px-3 py-1.5 bg-emerald-50 border border-emerald-200 rounded-lg text-emerald-800 font-medium">
+                      <span className="flex items-center gap-2">
+                        <Sparkles className="w-4 h-4 text-[#34953C]" />
+                        <span><strong>Official Email Preview:</strong> Tech Solutionor top logo, customized message body, HR signature, and social footer.</span>
+                      </span>
+                      <span className="text-[11px] text-emerald-700 font-bold">Gmail / Outlook Ready</span>
+                    </div>
+
+                    <div className="rounded-xl overflow-hidden border border-gray-300 shadow-xs bg-white">
+                      <iframe
+                        title="Tech Solutionor Branded Email Preview"
+                        srcDoc={previewBrandedHtml}
+                        className="w-full h-[470px] border-0"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Composer Bottom Action Toolbar */}
+                <div className="bg-[#f8fafc] border-t border-gray-200 px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <button
+                      type="button"
+                      onClick={handleSendReply}
+                      disabled={sendingReply || !replyBody.trim()}
+                      className="px-5 py-2 rounded-lg bg-[#34953C] hover:bg-[#2b7e32] text-white text-xs font-bold flex items-center gap-2 transition cursor-pointer shadow-xs disabled:opacity-50"
+                    >
+                      {sendingReply ? (
+                        <>
+                          <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                          <span>Sending Email...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Send className="w-3.5 h-3.5" />
+                          <span>Send from hr@techsolutionor.com</span>
+                        </>
+                      )}
+                    </button>
+
+                    <div className="flex items-center gap-1.5 text-xs">
+                      <span className="text-gray-500 font-medium">Update Status:</span>
+                      <select
+                        value={statusUpdate}
+                        onChange={e => setStatusUpdate(e.target.value)}
+                        className="border border-gray-300 bg-white rounded-md px-2 py-1 text-xs font-semibold text-gray-800 outline-none cursor-pointer focus:border-[#34953C]"
+                      >
+                        <option value="open">Open</option>
+                        <option value="under_review">Pending Review</option>
+                        <option value="interview_scheduled">Interview</option>
+                        <option value="approved">Approved</option>
+                        <option value="rejected">Rejected</option>
+                        <option value="closed">Closed</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <label className="flex items-center gap-1.5 text-xs text-gray-600 cursor-pointer select-none">
+                      <input
+                        type="checkbox"
+                        checked={includeSignature}
+                        onChange={e => setIncludeSignature(e.target.checked)}
+                        className="rounded text-[#34953C] focus:ring-[#34953C]"
+                      />
+                      <span>HR Signature</span>
+                    </label>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (confirm('Discard this draft reply?')) {
+                          setReplyBody('');
+                          setSelectedTemplateId('');
+                          setComposerTab('write');
+                        }
+                      }}
+                      className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-md transition cursor-pointer"
+                      title="Discard draft"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Modal Footer */}
-            <div className="px-6 py-3 bg-gray-50 border-t border-gray-200 flex items-center justify-between shrink-0">
-              <span className="text-xs text-gray-500 hidden sm:inline">
-                Thread #{viewThread.threadId} &bull; {viewThread.applicant?.name}
+            {/* Modal Bottom Status Bar */}
+            <div className="px-6 py-2.5 bg-gray-50 border-t border-gray-200 flex items-center justify-between text-xs text-gray-500 shrink-0">
+              <span>
+                Thread <code className="font-mono text-gray-700">#{viewThread.threadId}</code> &bull; {viewThread.applicant?.name}
               </span>
               <button
                 type="button"
                 onClick={() => setViewThread(null)}
-                className="px-5 py-1.5 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg text-xs font-bold transition cursor-pointer"
+                className="px-4 py-1.5 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg text-xs font-bold transition cursor-pointer"
               >
                 Close
               </button>
@@ -977,10 +1238,10 @@ export default function EmailInboxClient() {
               </p>
 
               <div className="divide-y divide-gray-200 border border-gray-200 rounded-xl overflow-hidden bg-white">
-                {templates.map(tmpl => (
+                {(templates && templates.length > 0 ? templates : PREBUILT_EMAIL_TEMPLATES).map(tmpl => (
                   <div key={tmpl.id} className="p-4 hover:bg-gray-50/80 transition-colors">
                     <div className="flex items-center justify-between gap-2 mb-1">
-                      <h4 className="text-xs font-bold text-gray-900">{tmpl.title}</h4>
+                      <h4 className="text-xs font-bold text-gray-900">{tmpl.label || tmpl.title}</h4>
                       <span className="px-2 py-0.5 rounded text-[9px] font-bold bg-gray-100 text-gray-700 uppercase">
                         {tmpl.category}
                       </span>

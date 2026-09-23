@@ -85,16 +85,28 @@ export function AdminNotificationProvider({ children }) {
     try {
       if (!isSilent) setLoading(true);
       const res = await fetch('/api/admin/notifications', { cache: 'no-store' });
-      if (!res.ok) throw new Error('Failed to load notifications');
-      const data = await res.json();
+      if (!res.ok) {
+        // Silently handle non-200 responses to prevent disrupting admin UI or triggering error overlays
+        console.warn(`[AdminNotifications] Polling endpoint returned HTTP ${res.status}`);
+        return;
+      }
 
-      const newCounts = data.counts || {
-        contactMessages: 0,
-        jobApplications: 0,
-        customerReviews: 0,
-        blogComments: 0,
-        unreadEmails: 0,
-        total: 0,
+      let data;
+      try {
+        data = await res.json();
+      } catch (_) {
+        return;
+      }
+
+      if (!data || typeof data !== 'object') return;
+
+      const newCounts = {
+        contactMessages: Number(data.counts?.contactMessages) || 0,
+        jobApplications: Number(data.counts?.jobApplications) || 0,
+        customerReviews: Number(data.counts?.customerReviews) || 0,
+        blogComments: Number(data.counts?.blogComments) || 0,
+        unreadEmails: Number(data.counts?.unreadEmails) || 0,
+        total: Number(data.counts?.total) || 0,
       };
 
       // If new unread items arrived while admin is on the panel (not on first load)
@@ -116,9 +128,9 @@ export function AdminNotificationProvider({ children }) {
 
       setUnreadCounts(newCounts);
       setUnreadByGroup(data.unreadByGroup || { inquiries: 0, blogs: 0 });
-      setNotifications(data.notifications || []);
+      setNotifications(Array.isArray(data.notifications) ? data.notifications : []);
     } catch (err) {
-      console.error('Error fetching admin notifications:', err);
+      console.warn('[AdminNotifications] Non-fatal error refreshing notifications:', err?.message || err);
     } finally {
       setLoading(false);
     }
@@ -206,6 +218,7 @@ export function AdminNotificationProvider({ children }) {
         jobApplications: 0,
         customerReviews: 0,
         blogComments: 0,
+        unreadEmails: 0,
         total: 0,
       });
       setUnreadByGroup({ inquiries: 0, blogs: 0 });
@@ -220,6 +233,7 @@ export function AdminNotificationProvider({ children }) {
           application: 'jobApplications',
           review: 'customerReviews',
           comment: 'blogComments',
+          email: 'unreadEmails',
         };
         const field = fieldMap[type];
         if (!field) return prev;
