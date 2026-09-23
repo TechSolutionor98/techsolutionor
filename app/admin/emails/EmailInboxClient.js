@@ -5,7 +5,6 @@ import { useSearchParams } from 'next/navigation';
 import {
   Mail,
   Search,
-  Plus,
   RefreshCw,
   Send,
   Paperclip,
@@ -15,7 +14,6 @@ import {
   User,
   Clock,
   Briefcase,
-  Sparkles,
   FileText,
   X,
   Download,
@@ -43,10 +41,9 @@ export default function EmailInboxClient() {
 
   // Threads & Table State
   const [threads, setThreads] = useState([]);
-  const [counts, setCounts] = useState({ all: 0, unread: 0, career: 0, inquiry: 0 });
+  const [counts, setCounts] = useState({ all: 0, unread: 0 });
   const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('all'); // all, career, inquiry
   const [unreadOnly, setUnreadOnly] = useState(false);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -69,34 +66,13 @@ export default function EmailInboxClient() {
   const [templates, setTemplates] = useState([]);
   const [showTemplateModal, setShowTemplateModal] = useState(false);
 
-  // Compose New Outbound Email Modal
-  const [showComposeModal, setShowComposeModal] = useState(false);
-  const [newEmailTo, setNewEmailTo] = useState('');
-  const [newEmailName, setNewEmailName] = useState('');
-  const [newEmailSubject, setNewEmailSubject] = useState('');
-  const [newEmailBody, setNewEmailBody] = useState('');
-  const [newEmailTemplateId, setNewEmailTemplateId] = useState('');
-  const [sendingNewEmail, setSendingNewEmail] = useState(false);
-
-  // Simulate Inbound Email Modal
-  const [showSimulateModal, setShowSimulateModal] = useState(false);
-  const [simSenderName, setSimSenderName] = useState('John Doe');
-  const [simSenderEmail, setSimSenderEmail] = useState('john.doe@example.com');
-  const [simSubject, setSimSubject] = useState('Application for Senior Web Developer - CV Attached');
-  const [simMessage, setSimMessage] = useState('Hello Hiring Team,\n\nI came across your job opening on social media and would love to submit my CV and portfolio for consideration.\n\nPlease find my resume attached.\n\nBest regards,\nJohn Doe');
-  const [simulating, setSimulating] = useState(false);
-
-  // Mailbox IMAP Sync State
-  const [syncing, setSyncing] = useState(false);
-  const [syncFeedback, setSyncFeedback] = useState('');
-
   const messagesEndRef = useRef(null);
 
-  // Initial load: fetch threads and templates (no manual sync required)
+  // Initial load: fetch incoming threads and templates
   useEffect(() => {
     fetchThreads();
     fetchTemplates();
-  }, [categoryFilter, unreadOnly]);
+  }, [unreadOnly]);
 
   // Real-time automatic polling & event listener for instant incoming emails
   useEffect(() => {
@@ -124,7 +100,7 @@ export default function EmailInboxClient() {
       clearInterval(pollInterval);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [categoryFilter, unreadOnly, query]);
+  }, [unreadOnly, query]);
 
   // Handle URL threadId query param
   useEffect(() => {
@@ -142,7 +118,6 @@ export default function EmailInboxClient() {
     try {
       if (!isSilent) setLoading(true);
       const params = new URLSearchParams();
-      if (categoryFilter !== 'all') params.append('category', categoryFilter);
       if (unreadOnly) params.append('filter', 'unread');
       if (query.trim()) params.append('search', query.trim());
       params.append('limit', '100'); // Fetch enough for client-side sorting & pagination
@@ -151,7 +126,7 @@ export default function EmailInboxClient() {
       if (!res.ok) throw new Error('Failed to fetch emails');
       const data = await res.json();
       setThreads(data.threads || []);
-      setCounts(data.counts || { all: 0, unread: 0, career: 0, inquiry: 0 });
+      setCounts(data.counts || { all: 0, unread: 0 });
     } catch (err) {
       console.error('Failed to load email threads:', err);
     } finally {
@@ -170,42 +145,9 @@ export default function EmailInboxClient() {
     }
   }
 
-  // Synchronize incoming emails from real mail server via IMAP
-  async function handleSyncMailbox() {
-    try {
-      setSyncing(true);
-      setSyncFeedback('Checking mailbox for new emails...');
-      const res = await fetch('/api/emails/sync');
-      const data = await res.json();
-      if (data.success) {
-        if (data.syncedCount > 0) {
-          setSyncFeedback(`Successfully synced ${data.syncedCount} new incoming email${data.syncedCount > 1 ? 's' : ''}!`);
-        } else {
-          setSyncFeedback('Mailbox is up to date.');
-        }
-        await fetchThreads();
-        if (typeof window !== 'undefined') {
-          window.dispatchEvent(new CustomEvent('admin-notifications-refresh'));
-        }
-      } else {
-        setSyncFeedback(data.error || 'Could not sync emails.');
-      }
-    } catch (err) {
-      console.error('Mailbox sync failed:', err);
-      setSyncFeedback('Sync error: ' + err.message);
-    } finally {
-      setSyncing(false);
-      setTimeout(() => setSyncFeedback(''), 5000);
-    }
-  }
-
   // Filtered and paginated rows
   const filteredThreads = useMemo(() => {
     let result = threads;
-
-    if (categoryFilter !== 'all') {
-      result = result.filter(t => t.category === categoryFilter);
-    }
 
     if (unreadOnly) {
       result = result.filter(t => t.unreadByAdmin);
@@ -223,7 +165,7 @@ export default function EmailInboxClient() {
     }
 
     return result;
-  }, [threads, query, categoryFilter, unreadOnly]);
+  }, [threads, query, unreadOnly]);
 
   const totalPages = Math.max(1, Math.ceil(filteredThreads.length / pageSize));
   const pageData = filteredThreads.slice((page - 1) * pageSize, page * pageSize);
@@ -383,7 +325,7 @@ export default function EmailInboxClient() {
     }
   }
 
-  // Update thread status directly from the table dropdown (matching Career Applications)
+  // Update thread status directly from the table dropdown
   async function handleTableStatusChange(thread, newStatus) {
     if (!thread?.threadId) return;
     if (thread.status === newStatus) return;
@@ -412,105 +354,17 @@ export default function EmailInboxClient() {
     }
   }
 
-  // Send new outbound email
-  async function handleSendNewEmail(e) {
-    e?.preventDefault();
-    if (!newEmailTo.trim() || !newEmailSubject.trim() || !newEmailBody.trim()) {
-      return alert('Please fill in recipient, subject, and message.');
-    }
-
-    try {
-      setSendingNewEmail(true);
-      const signatureHtml = '<br/><br/>--<br/><strong>HR & Talent Acquisition Team</strong><br/>Tech Solutionor &bull; Global Digital Solutions<br/><a href="https://techsolutionor.com">techsolutionor.com</a>';
-      const bodyHtml = `<p>${newEmailBody.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br/>')}</p>${signatureHtml}`;
-
-      const res = await fetch('/api/emails', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          to: newEmailTo.trim(),
-          toName: newEmailName.trim(),
-          subject: newEmailSubject.trim(),
-          bodyText: newEmailBody,
-          bodyHtml,
-          templateId: newEmailTemplateId || null,
-        }),
-      });
-
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || 'Failed to send email');
-      }
-
-      const resData = await res.json();
-      setShowComposeModal(false);
-      setNewEmailTo('');
-      setNewEmailName('');
-      setNewEmailSubject('');
-      setNewEmailBody('');
-      setNewEmailTemplateId('');
-
-      await fetchThreads();
-      if (resData.threadId) {
-        handleOpenThreadModal(resData.threadId);
-      }
-    } catch (err) {
-      alert('Error sending new email: ' + err.message);
-    } finally {
-      setSendingNewEmail(false);
-    }
-  }
-
-  // Simulate inbound candidate email
-  async function handleSimulateInbound() {
-    try {
-      setSimulating(true);
-      const res = await fetch('/api/emails/inbound', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          senderName: simSenderName.trim(),
-          senderEmail: simSenderEmail.trim(),
-          recipient: 'hr@techsolutionor.com',
-          subject: simSubject.trim(),
-          bodyText: simMessage,
-          attachments: [
-            {
-              fileName: `${simSenderName.replace(/\s+/g, '_')}_CV.pdf`,
-              mimeType: 'application/pdf',
-              size: 245000,
-              fileUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-              storageProvider: 'simulated',
-            },
-          ],
-        }),
-      });
-
-      if (!res.ok) throw new Error('Simulation failed');
-      const data = await res.json();
-      setShowSimulateModal(false);
-      await fetchThreads();
-      if (data.threadId) {
-        handleOpenThreadModal(data.threadId);
-      }
-    } catch (err) {
-      alert('Simulation error: ' + err.message);
-    } finally {
-      setSimulating(false);
-    }
-  }
-
   // Export CSV
   function downloadCSV() {
     if (!threads || threads.length === 0) return alert('No emails to export');
-    const headers = ['#', 'Sender Name', 'Sender Email', 'Subject', 'Category', 'Status', 'Messages', 'Last Activity'];
+    const headers = ['#', 'Sender Name', 'Sender Email', 'Subject', 'Recipient Mailbox', 'Status', 'Messages', 'Last Activity'];
     const csv = [headers.join(',')].concat(threads.map((t, i) => {
       const vals = [
         i + 1,
         t.applicant?.name || 'Anonymous',
         t.applicant?.email || '',
         t.subject || '',
-        t.category || 'career',
+        t.mailbox || 'hr@techsolutionor.com',
         t.status || 'open',
         t.messageCount || 1,
         t.lastMessageAt ? new Date(t.lastMessageAt).toLocaleString() : ''
@@ -525,7 +379,7 @@ export default function EmailInboxClient() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'admin_email_inbox.csv';
+    a.download = 'incoming_email_inbox.csv';
     document.body.appendChild(a);
     a.click();
     a.remove();
@@ -553,15 +407,13 @@ export default function EmailInboxClient() {
 
       {/* Row 1: Source Filter Tabs on Left | Global Action Buttons on Right */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-3">
-        {/* Category Tabs */}
+        {/* Email Inbox Filter Tabs */}
         <div className="flex flex-wrap bg-gray-100 p-1 rounded-lg text-xs font-semibold gap-1">
           {[
-            { key: 'all', label: 'All Emails', count: counts.all, onClick: () => { setCategoryFilter('all'); setUnreadOnly(false); setPage(1); } },
+            { key: 'all', label: 'All Emails', count: counts.all, onClick: () => { setUnreadOnly(false); setPage(1); } },
             { key: 'unread', label: 'Unread', count: counts.unread, isHighlight: counts.unread > 0, onClick: () => { setUnreadOnly(true); setPage(1); } },
-            { key: 'career', label: 'Job Applications / CVs', count: counts.career, onClick: () => { setCategoryFilter('career'); setUnreadOnly(false); setPage(1); } },
-            { key: 'inquiry', label: 'Inquiries', count: counts.inquiry, onClick: () => { setCategoryFilter('inquiry'); setUnreadOnly(false); setPage(1); } },
           ].map(tab => {
-            const isActive = tab.key === 'unread' ? unreadOnly : (!unreadOnly && categoryFilter === tab.key);
+            const isActive = tab.key === 'unread' ? unreadOnly : !unreadOnly;
             return (
               <button
                 key={tab.key}
@@ -602,17 +454,6 @@ export default function EmailInboxClient() {
             </button>
           )}
 
-          {/* Simulate Inbound Test Email */}
-          <button
-            type="button"
-            onClick={() => setShowSimulateModal(true)}
-            className="px-3 py-1.5 rounded-lg border border-purple-200 bg-purple-50 hover:bg-purple-100 text-purple-700 text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs"
-            title="Simulate receiving an applicant email with CV attachment"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-purple-600" />
-            <span>Simulate Inbound</span>
-          </button>
-
           {/* Email Templates */}
           <button
             type="button"
@@ -621,18 +462,6 @@ export default function EmailInboxClient() {
           >
             <FileText className="w-3.5 h-3.5 text-gray-500" />
             <span>Templates</span>
-          </button>
-
-          {/* Sync Mailbox (Manual Fallback / Diagnostic) */}
-          <button
-            type="button"
-            onClick={handleSyncMailbox}
-            disabled={syncing}
-            className={`px-3 py-1.5 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs ${syncing ? 'opacity-60 cursor-wait' : ''}`}
-            title="Manual diagnostic utility: poll IMAP mailbox directly if needed"
-          >
-            <RefreshCw className={`w-3.5 h-3.5 ${syncing ? 'animate-spin' : ''}`} />
-            <span>{syncing ? 'Syncing...' : 'Sync Mail'}</span>
           </button>
 
           {/* Refresh Table */}
@@ -644,16 +473,6 @@ export default function EmailInboxClient() {
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
             <span>{loading ? 'Refreshing...' : 'Refresh'}</span>
-          </button>
-
-          {/* Compose New Email */}
-          <button
-            type="button"
-            onClick={() => setShowComposeModal(true)}
-            className="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition-all cursor-pointer flex items-center gap-1.5 shadow-xs"
-          >
-            <Plus className="w-3.5 h-3.5" />
-            <span>Compose</span>
           </button>
 
           {/* Export CSV */}
@@ -710,35 +529,18 @@ export default function EmailInboxClient() {
         </div>
       </div>
 
-      {/* Sync Feedback Toast Banner */}
-      {syncFeedback && (
-        <div className="mb-3 px-3.5 py-2 rounded-lg bg-emerald-50 border border-emerald-200 text-xs font-semibold text-emerald-800 flex items-center justify-between shadow-2xs animate-fade-in">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0 animate-pulse"></span>
-            <span>{syncFeedback}</span>
-          </div>
-          <button
-            type="button"
-            onClick={() => setSyncFeedback('')}
-            className="text-emerald-600 hover:text-emerald-900 cursor-pointer p-0.5"
-            title="Dismiss"
-          >
-            <X className="w-3.5 h-3.5" />
-          </button>
-        </div>
-      )}
 
       {/* Main Email Inbox Table */}
       <div style={{ overflowX: "auto", minHeight: "560px", maxHeight: "620px", overflowY: "auto" }} className="w-full border border-gray-200 rounded-lg shadow-2xs bg-white">
         <table style={{ whiteSpace: "nowrap" }} className="w-full text-xs text-left">
           <thead className="bg-[#34953C] text-white sticky top-0 z-10">
             <tr>
-              <th className="px-4 py-2.5 text-left font-semibold min-w-[220px]">Sender</th>
-              <th className="px-4 py-2.5 text-left font-semibold min-w-[170px] max-w-[240px]">Subject</th>
-              <th className="px-4 py-2.5 text-left font-semibold w-[220px] max-w-[240px]">Message Preview</th>
-              <th className="px-4 py-2.5 text-left font-semibold w-[150px]">Status</th>
-              <th className="px-4 py-2.5 text-left font-semibold w-36">Date & Time</th>
-              <th className="px-4 py-2.5 text-right font-semibold w-24">Actions</th>
+              <th className="px-3.5 py-2.5 text-left font-semibold min-w-[190px]">Sender</th>
+              <th className="px-3 py-2.5 text-left font-semibold min-w-[150px] max-w-[210px]">Subject</th>
+              <th className="px-3 py-2.5 text-left font-semibold w-[160px] max-w-[175px]">Message Preview</th>
+              <th className="px-3 py-2.5 text-center font-semibold w-[120px]">Status</th>
+              <th className="px-3 py-2.5 text-left font-semibold w-28">Date & Time</th>
+              <th className="px-3 py-2.5 text-right font-semibold w-24">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100 bg-white">
@@ -753,10 +555,8 @@ export default function EmailInboxClient() {
                 const isUnread = thread.unreadByAdmin;
                 const initial = (thread.applicant?.name || 'A').trim().charAt(0).toUpperCase();
                 const hasAttachment = thread.hasAttachments === true ||
-                  thread.subject?.toLowerCase().includes('cv') ||
-                  thread.subject?.toLowerCase().includes('resume') ||
                   thread.subject?.toLowerCase().includes('attached') ||
-                  thread.category === 'career';
+                  thread.subject?.toLowerCase().includes('attachment');
 
                 return (
                   <tr
@@ -769,7 +569,7 @@ export default function EmailInboxClient() {
                     }`}
                   >
                     {/* 1. Sender Column: Avatar circle, Name on line 1 with NEW badge, Email on line 2 */}
-                    <td className="px-4 py-2.5 text-left align-middle min-w-[220px]">
+                    <td className="px-3.5 py-2.5 text-left align-middle min-w-[190px]">
                       <div className="flex flex-col space-y-0.5">
                         <div className="flex items-center gap-2 min-w-0">
                           <div className={`w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs shrink-0 ${
@@ -778,7 +578,7 @@ export default function EmailInboxClient() {
                             {initial}
                           </div>
                           <span className={`text-xs break-words min-w-0 leading-tight ${isUnread ? 'font-extrabold text-gray-950' : 'font-bold text-gray-900'}`}>
-                            {thread.applicant?.name || 'Anonymous Applicant'}
+                            {thread.applicant?.name || 'Email Sender'}
                           </span>
                           {isUnread && (
                             <span className="px-1.5 py-0.5 rounded text-[9px] font-extrabold bg-emerald-100 text-[#2b7e32] border border-emerald-200 uppercase tracking-wider shrink-0">
@@ -795,8 +595,8 @@ export default function EmailInboxClient() {
                       </div>
                     </td>
 
-                    {/* 2. Subject & Category */}
-                    <td className="px-4 py-2.5 align-middle min-w-[170px] max-w-[240px] truncate" title={thread.subject}>
+                    {/* 2. Subject & Recipient Mailbox */}
+                    <td className="px-3 py-2.5 align-middle min-w-[150px] max-w-[210px] truncate" title={thread.subject}>
                       <div className="flex items-center gap-1.5 min-w-0">
                         <span className={`text-xs truncate leading-tight ${isUnread ? 'font-extrabold text-gray-950' : 'font-bold text-gray-900'}`}>
                           {thread.subject || 'No Subject'}
@@ -806,14 +606,17 @@ export default function EmailInboxClient() {
                             {thread.messageCount}
                           </span>
                         )}
+                        {hasAttachment && (
+                          <Paperclip className="w-3 h-3 text-gray-400 shrink-0" title="Has attachment" />
+                        )}
                       </div>
-                      <div className="text-[11px] text-gray-500 leading-normal truncate">
-                        {thread.category === 'career' ? 'Job Application / CV' : thread.category === 'inquiry' ? 'General Inquiry' : 'Email Communication'}
+                      <div className="text-[11px] text-gray-400 font-mono leading-normal truncate">
+                        to: {thread.mailbox || 'hr@techsolutionor.com'}
                       </div>
                     </td>
 
                     {/* 3. Message Preview (wrapped up to 3 lines, narrower column) */}
-                    <td className="px-4 py-2.5 align-middle w-[220px] max-w-[240px] whitespace-normal">
+                    <td className="px-3 py-2.5 align-middle w-[160px] max-w-[175px] whitespace-normal">
                       <div
                         className="text-gray-600 text-[11px] leading-relaxed break-words line-clamp-3"
                         style={{
@@ -828,8 +631,8 @@ export default function EmailInboxClient() {
                       </div>
                     </td>
 
-                    {/* 4. Status Dropdown (Manageable directly from table matching Career Applications) */}
-                    <td className="px-4 py-2.5 align-middle whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
+                    {/* 4. Status Dropdown (Manageable directly from table) */}
+                    <td className="px-3 py-2.5 text-center align-middle whitespace-nowrap w-[120px]" onClick={(e) => e.stopPropagation()}>
                       {(() => {
                         const rawStatus = thread.status || 'open';
                         const isUpdating = updatingStatusId === thread.threadId;
@@ -866,7 +669,7 @@ export default function EmailInboxClient() {
                               value={currentSelectValue}
                               disabled={isUpdating}
                               onChange={(e) => handleTableStatusChange(thread, e.target.value)}
-                              className={`text-[11px] font-bold py-1 pl-2.5 pr-6 rounded-full border transition-all cursor-pointer outline-none appearance-none shadow-2xs ${statusBorderBg} ${isUpdating ? 'opacity-60 cursor-wait' : ''}`}
+                              className={`text-[11px] font-bold py-1 pl-2.5 pr-5 rounded-full border transition-all cursor-pointer outline-none appearance-none shadow-2xs max-w-[114px] truncate ${statusBorderBg} ${isUpdating ? 'opacity-60 cursor-wait' : ''}`}
                               title="Change email status"
                             >
                               <option value="open" className="bg-white text-emerald-700 font-semibold">Open</option>
@@ -876,7 +679,7 @@ export default function EmailInboxClient() {
                               <option value="rejected" className="bg-white text-red-700 font-semibold">Rejected</option>
                               <option value="closed" className="bg-white text-gray-700 font-semibold">Closed</option>
                             </select>
-                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-1.5">
                               {isUpdating ? (
                                 <Loader2 className="w-3 h-3 animate-spin text-gray-500" />
                               ) : (
@@ -889,53 +692,21 @@ export default function EmailInboxClient() {
                     </td>
 
                     {/* 5. Date & Time */}
-                    <td className="px-4 py-2.5 align-middle text-[11px] text-gray-500 whitespace-nowrap w-36">
+                    <td className="px-3 py-2.5 align-middle text-[11px] text-gray-500 whitespace-nowrap w-28">
                       <div className="font-semibold text-gray-700 leading-tight">{formatDate(thread.lastMessageAt)}</div>
                       <div className="text-gray-400 text-[10px] leading-tight">{formatTime(thread.lastMessageAt)}</div>
                     </td>
 
-                    {/* 6. Actions: View & View CV / No CV stacked matching Career Applications */}
-                    <td className="px-4 py-2.5 text-right align-middle whitespace-nowrap w-24">
-                      <div className="flex flex-col items-end gap-1.5 min-w-[80px]" onClick={(e) => e.stopPropagation()}>
+                    {/* 6. Actions: View */}
+                    <td className="px-3 py-2.5 text-right align-middle whitespace-nowrap w-24">
+                      <div className="flex items-center justify-end" onClick={(e) => e.stopPropagation()}>
                         <button
                           type="button"
                           onClick={() => handleOpenThreadModal(thread.threadId)}
-                          className="w-20 px-2 py-1 bg-[#34953C] hover:bg-[#2b7e32] text-white text-[11px] font-bold rounded-md transition-all cursor-pointer text-center shadow-2xs"
+                          className="px-3.5 py-1.5 bg-[#34953C] hover:bg-[#2b7e32] text-white text-[11px] font-bold rounded-md transition-all cursor-pointer text-center shadow-2xs"
                         >
                           View
                         </button>
-                        {hasAttachment ? (
-                          thread.primaryAttachmentUrl && thread.primaryAttachmentUrl !== '#' ? (
-                            <a
-                              href={thread.primaryAttachmentUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              onClick={(e) => e.stopPropagation()}
-                              className="w-20 inline-flex items-center justify-center gap-1 text-[11px] font-bold text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 px-2 py-1 rounded-md border border-blue-200 transition-all cursor-pointer text-center"
-                              title="Open / Preview applicant's CV in new tab"
-                            >
-                              <FileText className="w-3 h-3 shrink-0" />
-                              <span>View CV</span>
-                            </a>
-                          ) : (
-                            <button
-                              type="button"
-                              onClick={() => handleOpenThreadModal(thread.threadId)}
-                              className="w-20 inline-flex items-center justify-center gap-1 text-[11px] font-bold text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 px-2 py-1 rounded-md border border-blue-200 transition-all cursor-pointer text-center"
-                              title="View conversation and CV attachment"
-                            >
-                              <FileText className="w-3 h-3 shrink-0" />
-                              <span>View CV</span>
-                            </button>
-                          )
-                        ) : (
-                          <span
-                            className="w-20 inline-flex items-center justify-center text-[10px] font-medium text-gray-400 bg-gray-50 px-2 py-1 rounded-md border border-gray-200 text-center cursor-not-allowed select-none"
-                            title="No CV uploaded"
-                          >
-                            No CV
-                          </span>
-                        )}
                       </div>
                     </td>
                   </tr>
@@ -1234,193 +1005,6 @@ export default function EmailInboxClient() {
         </div>
       )}
 
-      {/* MODAL: Compose New Outbound Email */}
-      {showComposeModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" onClick={() => setShowComposeModal(false)}>
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-[620px] overflow-hidden border border-gray-100" onClick={e => e.stopPropagation()}>
-            <div className="bg-[#34953C] px-6 py-4 flex items-center justify-between text-white">
-              <div className="flex items-center gap-2">
-                <Mail className="w-5 h-5" />
-                <h3 className="font-bold text-base">Compose New Outbound Email</h3>
-              </div>
-              <button type="button" onClick={() => setShowComposeModal(false)} className="text-white/80 hover:text-white">
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <form onSubmit={handleSendNewEmail} className="p-6 space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="text-xs font-bold text-gray-700 block mb-1">Recipient Name</label>
-                  <input
-                    value={newEmailName}
-                    onChange={e => setNewEmailName(e.target.value)}
-                    placeholder="e.g. John Smith"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs outline-none focus:border-[#34953C]"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs font-bold text-gray-700 block mb-1">Recipient Email *</label>
-                  <input
-                    type="email"
-                    required
-                    value={newEmailTo}
-                    onChange={e => setNewEmailTo(e.target.value)}
-                    placeholder="candidate@example.com"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs outline-none focus:border-[#34953C]"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="text-xs font-bold text-gray-700 block mb-1">Load Template</label>
-                <select
-                  value={newEmailTemplateId}
-                  onChange={e => {
-                    setNewEmailTemplateId(e.target.value);
-                    const tmpl = templates.find(t => t.id === e.target.value);
-                    if (tmpl) {
-                      setNewEmailSubject(tmpl.subject.replace(/{{candidateName}}/g, newEmailName || 'Candidate').replace(/{{companyName}}/g, 'Tech Solutionor'));
-                      setNewEmailBody(tmpl.bodyHtml.replace(/<[^>]*>/g, '').replace(/{{candidateName}}/g, newEmailName || 'Candidate').replace(/{{companyName}}/g, 'Tech Solutionor'));
-                    }
-                  }}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs outline-none focus:border-[#34953C] bg-white"
-                >
-                  <option value="">-- None (Custom Message) --</option>
-                  {templates.map(t => (
-                    <option key={t.id} value={t.id}>{t.title}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="text-xs font-bold text-gray-700 block mb-1">Subject *</label>
-                <input
-                  required
-                  value={newEmailSubject}
-                  onChange={e => setNewEmailSubject(e.target.value)}
-                  placeholder="Subject line..."
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs font-semibold outline-none focus:border-[#34953C]"
-                />
-              </div>
-
-              <div>
-                <label className="text-xs font-bold text-gray-700 block mb-1">Message Body *</label>
-                <textarea
-                  required
-                  rows={6}
-                  value={newEmailBody}
-                  onChange={e => setNewEmailBody(e.target.value)}
-                  placeholder="Write your message here..."
-                  className="w-full p-3 border border-gray-300 rounded-lg text-xs outline-none focus:border-[#34953C] leading-relaxed resize-none"
-                />
-              </div>
-
-              <div className="flex items-center justify-end gap-2.5 pt-2 border-t border-gray-100">
-                <button
-                  type="button"
-                  onClick={() => setShowComposeModal(false)}
-                  className="px-4 py-2 border border-gray-300 rounded-lg text-xs font-semibold text-gray-700 hover:bg-gray-50"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={sendingNewEmail}
-                  className="px-5 py-2 rounded-lg bg-[#34953C] hover:bg-[#2b7e32] text-white text-xs font-bold flex items-center gap-1.5 shadow-xs disabled:opacity-50"
-                >
-                  {sendingNewEmail ? 'Sending...' : 'Send from hr@techsolutionor.com'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* MODAL: Simulate Inbound Email */}
-      {showSimulateModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" onClick={() => setShowSimulateModal(false)}>
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-[560px] overflow-hidden border border-gray-100" onClick={e => e.stopPropagation()}>
-            <div className="bg-purple-700 px-6 py-4 flex items-center justify-between text-white">
-              <div className="flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-purple-200" />
-                <h3 className="font-bold text-base">Simulate Inbound Candidate Email</h3>
-              </div>
-              <button type="button" onClick={() => setShowSimulateModal(false)} className="text-white/80 hover:text-white">
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <div className="p-6 space-y-3.5">
-              <p className="text-xs text-gray-600">
-                Simulate an applicant sending an email and resume to <strong className="text-gray-900">hr@techsolutionor.com</strong>.
-              </p>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="text-xs font-bold text-gray-700 block mb-1">Applicant Name</label>
-                  <input
-                    value={simSenderName}
-                    onChange={e => setSimSenderName(e.target.value)}
-                    className="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs outline-none focus:border-purple-600"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs font-bold text-gray-700 block mb-1">Applicant Email</label>
-                  <input
-                    value={simSenderEmail}
-                    onChange={e => setSimSenderEmail(e.target.value)}
-                    className="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs outline-none focus:border-purple-600"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="text-xs font-bold text-gray-700 block mb-1">Subject</label>
-                <input
-                  value={simSubject}
-                  onChange={e => setSimSubject(e.target.value)}
-                  className="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs font-semibold outline-none focus:border-purple-600"
-                />
-              </div>
-
-              <div>
-                <label className="text-xs font-bold text-gray-700 block mb-1">Message</label>
-                <textarea
-                  rows={4}
-                  value={simMessage}
-                  onChange={e => setSimMessage(e.target.value)}
-                  className="w-full p-3 border border-gray-300 rounded-lg text-xs outline-none focus:border-purple-600 leading-relaxed resize-none"
-                />
-              </div>
-
-              <div className="p-3 bg-purple-50 rounded-lg border border-purple-100 flex items-center gap-2 text-xs text-purple-900">
-                <Paperclip className="w-4 h-4 text-purple-600 shrink-0" />
-                <span>Simulated Attachment: <strong>{simSenderName.replace(/\s+/g, '_')}_CV.pdf</strong></span>
-              </div>
-
-              <div className="flex items-center justify-end gap-2 pt-2 border-t border-gray-100">
-                <button
-                  type="button"
-                  onClick={() => setShowSimulateModal(false)}
-                  className="px-4 py-2 border border-gray-300 rounded-lg text-xs font-semibold text-gray-700 hover:bg-gray-50"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="button"
-                  onClick={handleSimulateInbound}
-                  disabled={simulating}
-                  className="px-5 py-2 rounded-lg bg-purple-700 hover:bg-purple-800 text-white text-xs font-bold flex items-center gap-1.5 shadow-xs"
-                >
-                  {simulating ? 'Processing...' : 'Simulate Inbound Email'}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* MODAL: Template Library */}
       {showTemplateModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" onClick={() => setShowTemplateModal(false)}>
@@ -1437,7 +1021,7 @@ export default function EmailInboxClient() {
 
             <div className="p-6 overflow-y-auto space-y-4 flex-1">
               <p className="text-xs text-gray-500">
-                Pre-configured recruitment and inquiry response templates with dynamic token replacement (<code className="bg-gray-100 px-1 py-0.5 rounded text-[11px] text-emerald-700">{`{{candidateName}}`}</code>, <code className="bg-gray-100 px-1 py-0.5 rounded text-[11px] text-emerald-700">{`{{position}}`}</code>, <code className="bg-gray-100 px-1 py-0.5 rounded text-[11px] text-emerald-700">{`{{companyName}}`}</code>).
+                Pre-configured email response templates with dynamic token replacement (<code className="bg-gray-100 px-1 py-0.5 rounded text-[11px] text-emerald-700">{`{{candidateName}}`}</code>, <code className="bg-gray-100 px-1 py-0.5 rounded text-[11px] text-emerald-700">{`{{position}}`}</code>, <code className="bg-gray-100 px-1 py-0.5 rounded text-[11px] text-emerald-700">{`{{companyName}}`}</code>).
               </p>
 
               <div className="divide-y divide-gray-200 border border-gray-200 rounded-xl overflow-hidden bg-white">

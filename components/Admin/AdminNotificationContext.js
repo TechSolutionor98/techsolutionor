@@ -167,6 +167,7 @@ export function AdminNotificationProvider({ children }) {
         application: 'jobApplications',
         review: 'customerReviews',
         comment: 'blogComments',
+        email: 'unreadEmails',
       };
       const field = fieldMap[type];
       const updatedCounts = { ...prev };
