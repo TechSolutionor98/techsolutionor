@@ -781,55 +781,7 @@ export default function EmailInboxClient() {
 
             {/* Modal Scrollable Body */}
             <div className="p-5 sm:p-6 space-y-4 overflow-y-auto flex-1 bg-[#f8fafc]">
-              {/* 1. Applicant Profile Bar */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl bg-white border border-gray-200/80 shadow-2xs">
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-10 h-10 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-base shrink-0">
-                    {(viewThread.applicant?.name || 'A').trim().charAt(0).toUpperCase()}
-                  </div>
-                  <div className="min-w-0">
-                    <h3 className="text-sm font-bold text-gray-900 truncate leading-snug">
-                      {viewThread.applicant?.name}
-                    </h3>
-                    <a
-                      href={`mailto:${viewThread.applicant?.email}`}
-                      className="text-xs text-gray-500 font-mono hover:text-[#34953C] hover:underline block truncate"
-                    >
-                      {viewThread.applicant?.email}
-                    </a>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <span className="text-[11px] font-bold text-gray-500">Status:</span>
-                  <select
-                    value={statusUpdate}
-                    onChange={async (e) => {
-                      const newSt = e.target.value;
-                      setStatusUpdate(newSt);
-                      await fetch('/api/emails', {
-                        method: 'PATCH',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ threadId: viewThread.threadId, status: newSt }),
-                      });
-                      setViewThread(prev => ({ ...prev, status: newSt }));
-                      setThreads(prev =>
-                        prev.map(t => (t.threadId === viewThread.threadId ? { ...t, status: newSt } : t))
-                      );
-                    }}
-                    className="border border-gray-300 rounded-lg px-2.5 py-1 text-xs outline-none focus:border-[#34953C] bg-white cursor-pointer font-medium"
-                  >
-                    <option value="open">Open</option>
-                    <option value="under_review">Under Review</option>
-                    <option value="interview_scheduled">Interview</option>
-                    <option value="approved">Approved</option>
-                    <option value="rejected">Rejected</option>
-                    <option value="closed">Closed</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* 2. Chronological Conversation Messages Timeline */}
+              {/* Communication Messages Timeline */}
               <div className="space-y-3">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400 block">
                   Communication History ({threadMessages.length} Messages)
