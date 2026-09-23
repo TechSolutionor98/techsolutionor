@@ -599,7 +599,7 @@ export default function EmailInboxClient() {
               <th className="px-3 py-2.5 text-left font-semibold w-[160px] max-w-[175px]">Message Preview</th>
               <th className="px-3 py-2.5 text-center font-semibold w-[120px]">Status</th>
               <th className="px-3 py-2.5 text-left font-semibold w-28">Date & Time</th>
-              <th className="px-3 py-2.5 text-right font-semibold w-24">Actions</th>
+              <th className="px-3 py-2.5 text-right font-semibold w-32">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100 bg-white">
@@ -756,15 +756,15 @@ export default function EmailInboxClient() {
                       <div className="text-gray-400 text-[10px] leading-tight">{formatTime(thread.lastMessageAt)}</div>
                     </td>
 
-                    {/* 6. Actions: View */}
-                    <td className="px-3 py-2.5 text-right align-middle whitespace-nowrap w-24">
+                    {/* 6. Actions: View & Reply */}
+                    <td className="px-3 py-2.5 text-right align-middle whitespace-nowrap w-32">
                       <div className="flex items-center justify-end" onClick={(e) => e.stopPropagation()}>
                         <button
                           type="button"
                           onClick={() => handleOpenThreadModal(thread.threadId)}
                           className="px-3.5 py-1.5 bg-[#34953C] hover:bg-[#2b7e32] text-white text-[11px] font-bold rounded-md transition-all cursor-pointer text-center shadow-2xs"
                         >
-                          View
+                          View & Reply
                         </button>
                       </div>
                     </td>
