@@ -253,3 +253,25 @@ export const HireUsDevIcon = ({ className = "w-7 h-7" }) => (
     <path d="M20 9L20.8 9.8L22.2 8.2" stroke="#15803D" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
+
+// 15. Lead Generation - High-converting acquisition funnel with target crosshair & conversion magnet
+export const LeadGenIcon = ({ className = "w-7 h-7" }) => (
+  <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+    <defs>
+      <linearGradient id="leadgen-grad" x1="2" y1="2" x2="30" y2="30" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#10B981" />
+        <stop offset="1" stopColor="#047857" />
+      </linearGradient>
+    </defs>
+    {/* Funnel Body */}
+    <path d="M4 6C4 4.89543 4.89543 4 6 4H26C27.1046 4 28 4.89543 28 6V8C28 8.6186 27.7126 9.1994 27.2248 9.5746L19 16V24L13 28V16L4.7752 9.5746C4.2874 9.1994 4 8.6186 4 8V6Z" fill="url(#leadgen-grad)" />
+    {/* Target Circle */}
+    <circle cx="23" cy="22" r="6.5" fill="#0F172A" stroke="#34D399" strokeWidth="1.8" />
+    <circle cx="23" cy="22" r="2.8" fill="#F59E0B" />
+    {/* Crosshairs */}
+    <line x1="23" y1="17.5" x2="23" y2="19.5" stroke="#34D399" strokeWidth="1.5" strokeLinecap="round" />
+    <line x1="23" y1="24.5" x2="23" y2="26.5" stroke="#34D399" strokeWidth="1.5" strokeLinecap="round" />
+    <line x1="18.5" y1="22" x2="20.5" y2="22" stroke="#34D399" strokeWidth="1.5" strokeLinecap="round" />
+    <line x1="25.5" y1="22" x2="27.5" y2="22" stroke="#34D399" strokeWidth="1.5" strokeLinecap="round" />
+  </svg>
+);

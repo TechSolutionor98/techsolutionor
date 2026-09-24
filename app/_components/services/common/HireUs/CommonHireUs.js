@@ -88,6 +88,12 @@ export const servicesHireUsData = {
     line2: "Hire Tech Solutionor's Meta advertising experts today.",
     buttonText: "Hire Us",
   },
+  "lead-generation": {
+    badge: "READY TO SCALE YOUR QUALIFIED PIPELINE?",
+    line1: "Ready to flood your sales calendar with qualified buyers?",
+    line2: "Hire Tech Solutionor to engineer your lead acquisition pipeline.",
+    buttonText: "Hire Us",
+  },
 };
 
 import { getCmsVal } from "@/lib/api-helper";

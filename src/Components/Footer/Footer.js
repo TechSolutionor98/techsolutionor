@@ -44,8 +44,9 @@ const Footer = () => {
             { name: "UI/UX Designing", href: "/services/graphics-ui-ux" },
             { name: "Social Media Marketing", href: "/services/digital-marketing" },
             { name: "Digital Marketing", href: "/services/digital-marketing" },
+            { name: "Lead Generation", href: "/services/lead-generation" },
             { name: "PPC And Amazon Ads", href: "/services/ppc-amazon-ads" },
-            { name: "Search Engine Optimization", href: "/services/seo" },
+            { name: "Search Engine Optimization", href: "/services/search-engine-optimization" },
             { name: "Content Writing", href: "/services/content-writing" }
         ],
         "Industries": [

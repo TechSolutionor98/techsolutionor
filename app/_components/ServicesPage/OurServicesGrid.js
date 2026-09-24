@@ -64,6 +64,12 @@ const services = [
     link: "/services/digital-marketing",
   },
   {
+    icon: Digital,
+    title: "Lead Generation",
+    desc: "Targeted multi-channel B2B & B2C qualified buyer acquisition",
+    link: "/services/lead-generation",
+  },
+  {
     icon: PPC,
     title: "PPC & Amazon",
     desc: "Targeted ads for maximum ROI",

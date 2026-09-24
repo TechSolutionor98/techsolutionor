@@ -320,6 +320,29 @@ export const servicesKeyFeaturesData = {
       },
     ],
   },
+
+  // 15. Lead Generation
+  "lead-generation": {
+    title: "HOW WE DELIVER RESULTS",
+    subtitle: "MEASURABLE LEAD PIPELINES.",
+    features: [
+      {
+        title: "Customized Multi-Channel Pipeline",
+        desc: "Based on your commercial target audience, we engineer a tailored multi-channel acquisition funnel across Search, Social, Email, and WhatsApp.",
+        checks: [true, true, true, true, true],
+      },
+      {
+        title: "Automated BANT Verification & Nurturing",
+        desc: "Automated instant responses, educational case study sequences, and BANT scoring ensure only high-intent buyers reach your sales reps.",
+        checks: [false, false, true, true, false],
+      },
+      {
+        title: "Measurable Sales Impact & High ROI",
+        desc: "Real-time CRM pipeline synchronization, transparent cost-per-lead metrics, and continuous conversion optimization to boost your revenue.",
+        checks: [false, false, true, true, true],
+      },
+    ],
+  },
 };
 
 export default servicesKeyFeaturesData;

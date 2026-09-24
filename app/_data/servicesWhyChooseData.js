@@ -727,6 +727,49 @@ export const servicesWhyChooseData = {
       },
     ],
   },
+
+  // 14. Lead Generation
+  "lead-generation": {
+    subtitle: "Transform unpredictable revenue dry spells into an engineered pipeline of verified, sales-ready decision-makers.",
+    items: [
+      {
+        id: 0,
+        title: "Predictable Sales Forecasting",
+        desc: "Transform revenue growth from unpredictable guesswork into an engineered mathematical formula based on reliable cost-per-lead and conversion metrics.",
+        icon: icons.chartGrowth,
+      },
+      {
+        id: 1,
+        title: "Rigorous BANT Pre-Qualification",
+        desc: "Every prospect is verified against Budget, Authority, Need, and Timeline before being scheduled on your sales calendar, eliminating wasted rep hours.",
+        icon: icons.shieldCheck,
+      },
+      {
+        id: 2,
+        title: "Multi-Channel Pipeline Synergy",
+        desc: "Synchronized funnels combining Google Ads, Meta, LinkedIn ABM, WhatsApp, and cold email for maximum buyer coverage and compounding returns.",
+        icon: icons.network,
+      },
+      {
+        id: 3,
+        title: "40%+ Lower Blended CAC",
+        desc: "High-velocity landing pages, cross-platform retargeting, and automated nurturing dramatically lower overall customer acquisition costs.",
+        icon: icons.target,
+      },
+      {
+        id: 4,
+        title: "Zero Sales Rep Time Wasted",
+        desc: "Your closers stop cold-calling unqualified gatekeepers and spend 100% of their working hours speaking directly to vetted buyers with allocated budgets.",
+        icon: icons.developers,
+      },
+      {
+        id: 5,
+        title: "Local & Global Market Scaling",
+        desc: "Tailored territory strategies spanning local city dominance to 24/7 cross-border international pipeline execution.",
+        icon: icons.rocket,
+      },
+    ],
+  },
 };
 
 export default servicesWhyChooseData;

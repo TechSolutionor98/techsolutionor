@@ -32,6 +32,8 @@ import {
   Clock,
   Award,
   Target,
+  Mail,
+  Bell,
 } from "lucide-react";
 
 export const servicesOfferingsData = {
@@ -689,6 +691,59 @@ export const servicesOfferingsData = {
         title: "Lead Generation & WhatsApp Direct Ads",
         desc: "Frictionless on-platform lead forms and click-to-WhatsApp messaging ads that capture verified contact details and accelerate sales outreach.",
         tags: ["Instant Forms", "Click-to-WhatsApp", "High-Quality Leads"],
+      },
+    ],
+  },
+
+  // 15. LEAD GENERATION
+  "lead-generation": {
+    badge: "FULL-FUNNEL LEAD ACQUISITION",
+    title: "Our Lead Generation",
+    titleHighlight: "Services",
+    subtitle:
+      "From high-intent inbound search to precision outbound sequences, we deploy full-funnel lead acquisition engines tailored for local and global enterprises.",
+    services: [
+      {
+        icon: Mail,
+        title: "Email Marketing & Lead Nurturing",
+        desc: "Cold B2B email prospecting and automated multi-step drip nurturing sequences built on verified enterprise contacts and clean domain infrastructure.",
+        tags: ["B2B Outbound", "Automated Drip", "99.4% Deliverability"],
+      },
+      {
+        icon: MessageSquare,
+        title: "WhatsApp Marketing & Engagement",
+        desc: "Conversational lead funnels powered by official WhatsApp Business Cloud API, automated qualification chatbots, and 1-tap click-to-WhatsApp ad campaigns.",
+        tags: ["98% Open Rate", "Chatbot Qualification", "Instant Routing"],
+      },
+      {
+        icon: Bell,
+        title: "Push Notification Marketing",
+        desc: "High-CTR browser and mobile push campaigns that recapture abandoned visitors, trigger flash announcements, and maintain continuous top-of-mind brand recall.",
+        tags: ["1-Click Opt-in", "Behavioral Triggers", "Re-engagement"],
+      },
+      {
+        icon: Share2,
+        title: "Social Media Lead Generation",
+        desc: "Precision decision-maker prospecting across LinkedIn Sales Navigator, Meta native lead gen forms, and conversion video funnels for verified B2B and B2C audiences.",
+        tags: ["LinkedIn ABM", "Meta Lead Ads", "Executive Targeting"],
+      },
+      {
+        icon: Search,
+        title: "SEO & Search Lead Generation",
+        desc: "Dominating high-commercial-intent keywords on Google. We capture ready-to-buy prospects with local Google Business Profile map pack ranking and authoritative SEO pages.",
+        tags: ["Local Map Pack", "Commercial Keywords", "Organic Inbound"],
+      },
+      {
+        icon: Megaphone,
+        title: "Paid Advertising & Campaigns",
+        desc: "High-ROI Google Search Ads, Performance Max campaigns, and cross-channel remarketing. We target high-intent searchers and deploy negative keyword filters for maximum ROAS.",
+        tags: ["Google Search Ads", "Cross-Platform Retargeting", "High ROAS"],
+      },
+      {
+        icon: Layout,
+        title: "Landing Pages & Lead Capture",
+        desc: "Sub-second loading, mobile-first landing pages engineered for maximum psychological conversion. Featuring interactive value calculators, dynamic headline matching, and minimal form friction.",
+        tags: ["Core Web Vitals", "Interactive Forms", "A/B Testing"],
       },
     ],
   },

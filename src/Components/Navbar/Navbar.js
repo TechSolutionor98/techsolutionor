@@ -50,6 +50,7 @@ import {
     ContentWritingDevIcon,
     CallCenterDevIcon,
     HireUsDevIcon,
+    LeadGenIcon,
 } from './ServiceIcons';
 
 const plusJakarta = Plus_Jakarta_Sans({
@@ -95,6 +96,7 @@ const servicesSubLinks = [
     { icon: GraphicsDevIcon, label: 'Graphics & UI/UX', href: '/services/graphic-design', desc: 'Brand identity & product design' },
     { icon: SocialMediaDevIcon, label: 'Social Media', href: '/services/social-media', desc: 'Audience growth & engagement' },
     { icon: DigitalMarketingDevIcon, label: 'Digital Marketing', href: '/services/digital-marketing', desc: 'Full-funnel marketing strategy' },
+    { icon: LeadGenIcon, label: 'Lead Generation', href: '/services/lead-generation', desc: 'High-converting B2B & B2C leads' },
     { icon: PpcAmazonDevIcon, label: 'PPC & Amazon', href: '/services/ppc-amazon-ads', desc: 'Targeted ads & campaign ROI' },
     { Image: GoogleAds, label: 'Google Ads', href: '/services/google-ads', desc: 'PPC & Search Campaigns' },
     { Image: Meta, label: 'Meta', href: '/services/meta', desc: 'Social Ads & Marketing' },

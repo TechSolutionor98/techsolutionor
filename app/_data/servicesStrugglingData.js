@@ -754,4 +754,61 @@ export const servicesStrugglingData = {
       },
     ],
   },
+
+  // =========================================================================
+  // LEAD GENERATION
+  // =========================================================================
+  "lead-generation": {
+    eyebrow: "PROVEN ACQUISITION STRATEGIES",
+    titleLine1: "Struggling With Low Lead Quality & Empty Calendars?",
+    titleLine2: "Here’s How Our Lead Generation Services Help",
+    subtitle:
+      "We replace unpredictable referral droughts and low-intent inquiries with engineered, predictable multi-channel pipelines that scale your revenue.",
+    cards: [
+      {
+        id: 0,
+        badge: "CHALLENGE 01 // LEAD QUALITY",
+        title: "Low-Intent Leads & Wasted Sales Rep Hours",
+        desc: "Sales reps burn dozens of hours chasing tire-kickers who lack budget or authority. We enforce strict BANT qualification and interactive questionnaires upfront so your team only pitches verified decision-makers.",
+        ctaText: "Filter Unqualified Inquiries →",
+        color: "#FF4646",
+        textColor: "#FF4646",
+        btnTextColor: "#FFFFFF",
+      },
+      {
+        id: 1,
+        badge: "CHALLENGE 02 // ACQUISITION COSTS",
+        title: "Skyrocketing Ad Spend & High Cost Per Lead",
+        descParts: [
+          `Running isolated ads on Google or Meta without automated retargeting inflates ad spend. We engineer synchronized `,
+          { isLink: true, text: "digital marketing campaigns", href: "/services/digital-marketing" },
+          ` with cross-channel remarketing, lowering your customer acquisition cost by up to 42%.`,
+        ],
+        ctaText: "Lower Acquisition Costs →",
+        color: "#417F51",
+        textColor: "#417F51",
+        btnTextColor: "#FFFFFF",
+      },
+      {
+        id: 2,
+        badge: "CHALLENGE 03 // SLOW RESPONSE",
+        title: "Slow Follow-Up Times Causing 70% Lead Drop-Off",
+        desc: "Prospects purchase from the vendor that responds first. Inquiries waiting hours go cold or buy from competitors. Our instant WhatsApp and automated email triggers engage incoming buyers in under 60 seconds.",
+        ctaText: "Automate Instant Follow-Ups →",
+        color: "#FFB904",
+        textColor: "#B47F00",
+        btnTextColor: "#111827",
+      },
+      {
+        id: 3,
+        badge: "CHALLENGE 04 // ERRATIC PIPELINE",
+        title: "Unpredictable Revenue Droughts & Dry Months",
+        desc: "Relying purely on word-of-mouth creates devastating revenue volatility. We build diversified inbound and outbound systems combining organic SEO with paid acquisition to ensure consistent weekly pipeline growth.",
+        ctaText: "Build Predictable Pipeline →",
+        color: "#F78B40",
+        textColor: "#E06E22",
+        btnTextColor: "#FFFFFF",
+      },
+    ],
+  },
 };
