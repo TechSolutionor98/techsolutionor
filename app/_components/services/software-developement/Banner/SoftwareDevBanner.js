@@ -12,7 +12,7 @@ const SoftwareDevBanner = ({ cmsContent }) => {
       cmsPrefix="softwarebanner"
       badge="BESPOKE ENTERPRISE SOFTWARE"
       titleLine1="Custom Software Development"
-      titleLine2="in Dubai & UAE That"
+      titleLine2="Engineered for Scale That"
       titleAccent="Delivers Measurable Results."
       description="From business automation platforms and cloud microservices to SaaS products and enterprise CRM/ERP integrations, we engineer robust software architectures built for scalability, high throughput, and commercial reliability."
       image={SoftwareImg || FallbackImg}

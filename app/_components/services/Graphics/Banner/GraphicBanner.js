@@ -12,7 +12,7 @@ const GraphicBanner = ({ cmsContent }) => {
       cmsPrefix="graphicbanner"
       badge="VISUAL IDENTITY & PRODUCT DESIGN"
       titleLine1="Graphic Design Services"
-      titleLine2="in Dubai & UAE That Transform"
+      titleLine2="& Visual Identity That Transform"
       titleAccent="Ideas Into Iconic Brands."
       description="Human-centered UI/UX prototypes, modern design systems in Figma, corporate brand identities, and high-impact marketing graphics that captivate audiences and establish market leadership."
       image={GraphicImg || FallbackImg}

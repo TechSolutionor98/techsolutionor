@@ -10,13 +10,13 @@ const WebDevBanner = ({ cmsContent }) => {
     <CommonServiceHero
       cmsContent={cmsContent}
       cmsPrefix="webdevbanner"
-      badge="PREMIER WEB ENGINEERING • DUBAI & GLOBAL"
+      badge="PREMIER WEB ENGINEERING • GLOBAL"
       titleLine1="Best Web Development"
-      titleLine2="Company in Dubai, UAE:"
+      titleLine2="Company Built for Scale:"
       titleAccent="Trusted Worldwide."
-      description="Partner with the best web development company in Dubai to build high-performance, scalable websites through expert web design and development services. From startups in Dubai to enterprises across the UAE and worldwide, we create conversion-focused web solutions that boost engagement, strengthen brand authority and maximize ROI."
+      description="Partner with the best web development company to build high-performance, scalable websites through expert web design and development services. From ambitious startups to global enterprises, we create conversion-focused web solutions that boost engagement, strengthen brand authority and maximize ROI."
       image={WebDevImg || FallbackImg}
-      imageAlt="Web Development Company in Dubai"
+      imageAlt="Web Development Company"
       ctaText="Explore Web Solutions"
       ctaHref="#technologies-book-section"
     />

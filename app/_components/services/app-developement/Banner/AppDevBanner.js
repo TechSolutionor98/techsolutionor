@@ -11,9 +11,9 @@ const AppDevBanner = ({ cmsContent }) => {
       cmsPrefix="appdevbanner"
       badge="IOS & ANDROID ENGINEERING"
       titleLine1="Mobile App Development"
-      titleLine2="Company in Dubai & UAE"
+      titleLine2="Company Built for Scale"
       titleAccent="for Startups & Enterprises."
-      description="We provide custom mobile app development services in Dubai, Abu Dhabi and across the UAE, delivering secure, scalable and user-focused iOS, Android and web applications. From idea validation to launch and ongoing support, we build high-performing digital products built to drive business growth."
+      description="We provide custom mobile app development services globally, delivering secure, scalable and user-focused iOS, Android and cross-platform applications. From idea validation to launch and ongoing support, we build high-performing digital products built to drive business growth."
       image={AppImg}
       imageAlt="Mobile App Development Company"
       ctaText="Explore App Services"
