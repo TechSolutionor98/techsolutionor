@@ -136,13 +136,13 @@ export function AdminNotificationProvider({ children }) {
     }
   }, []);
 
-  // Initial load and periodic polling every 10 seconds
+  // Initial load and periodic polling every 30 seconds
   useEffect(() => {
     fetchNotifications();
 
     const interval = setInterval(() => {
       fetchNotifications(true);
-    }, 10000);
+    }, 30000);
 
     // Refresh when tab gains focus
     const handleVisibilityChange = () => {

@@ -18,9 +18,13 @@ env.split('\n').forEach(line => {
 import { syncIncomingEmails } from '../lib/email-imap-service.js';
 
 async function testSync() {
-  console.log('Testing syncIncomingEmails() against Hostinger IMAP...');
-  const result = await syncIncomingEmails({ limit: 10, markSeen: false });
-  console.log('Sync result:', result);
+  console.log('Testing syncIncomingEmails() against Hostinger IMAP (markSeen: true)...');
+  const result = await syncIncomingEmails({ limit: 15, markSeen: true });
+  console.log('Sync result 1:', result);
+
+  console.log('\nRunning second check immediately to verify 0 unseen remaining...');
+  const result2 = await syncIncomingEmails({ limit: 15, markSeen: true });
+  console.log('Sync result 2:', result2);
   process.exit(0);
 }
 

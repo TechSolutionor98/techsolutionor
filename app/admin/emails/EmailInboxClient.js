@@ -96,12 +96,12 @@ export default function EmailInboxClient() {
     };
     window.addEventListener('admin-notifications-refresh', handleNotificationRefresh);
 
-    // Poll every 10 seconds silently while tab is active
+    // Poll every 30 seconds silently while tab is active
     const pollInterval = setInterval(() => {
       if (typeof document !== 'undefined' && document.visibilityState === 'visible') {
         fetchThreads(true);
       }
-    }, 10000);
+    }, 30000);
 
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
@@ -129,9 +129,14 @@ export default function EmailInboxClient() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [threadMessages]);
 
-  async function fetchThreads(isSilent = false) {
+  async function fetchThreads(isSilent = false, forceSync = false) {
     try {
       if (!isSilent) setLoading(true);
+      if (forceSync) {
+        try {
+          await fetch('/api/emails/sync?limit=25');
+        } catch (_) {}
+      }
       const params = new URLSearchParams();
       if (unreadOnly) params.append('filter', 'unread');
       if (query.trim()) params.append('search', query.trim());
@@ -526,7 +531,7 @@ export default function EmailInboxClient() {
           {/* Refresh Table */}
           <button
             type="button"
-            onClick={() => fetchThreads(false)}
+            onClick={() => fetchThreads(false, true)}
             className={`px-3 py-1.5 rounded-lg bg-[#34953C] hover:bg-[#2b7e32] text-white font-semibold text-xs ${loading ? 'opacity-60' : ''} transition-all cursor-pointer flex items-center gap-1`}
             title="Refresh email list"
           >
