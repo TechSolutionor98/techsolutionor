@@ -13,7 +13,7 @@ const paths = [
   '/services/search-engine-optimization',
   '/services/content-writing',
   '/services/call-center',
-  '/services/hire-us'
+  '/hire-us'
 ];
 
 async function verifyH1s() {

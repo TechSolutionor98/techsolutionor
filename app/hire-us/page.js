@@ -1,6 +1,14 @@
 import React from 'react';
-import ServiceHireUsPage from '../services/hire-us/page';
-import { generateCmsMetadata } from '@/lib/cms-fetch';
+import HireUsBanner from '@/app/_components/services/hire-us/Banner/HireUsBanner';
+import CommonWhyChoose from '@/app/_components/services/common/WhyChoose/CommonWhyChoose';
+import CommonKeyFeatures from '@/app/_components/services/common/KeyFeatures/CommonKeyFeatures';
+import CommonStruggling from '@/app/_components/services/common/Struggling/CommonStruggling';
+import CommonServices from '@/app/_components/services/common/Services/CommonServices';
+import CommonHireUs from '@/app/_components/services/common/HireUs/CommonHireUs';
+import TechnologiesBook from '@/app/_components/services/common/TechnologiesBook/TechnologiesBook';
+import HireUsForm from '@/app/_components/services/hire-us/Form/HireUsForm';
+import CommonFAQ from '@/app/_components/services/common/FAQ/CommonFAQ';
+import { generateCmsMetadata, getCmsData } from '@/lib/cms-fetch';
 import CmsJsonLd from '@/components/CmsJsonLd';
 
 export async function generateMetadata() {
@@ -10,11 +18,27 @@ export async function generateMetadata() {
   });
 }
 
-export default function HireUsPage() {
+export default async function HireUsPage() {
+  let cmsContent = null;
+  try {
+    const cmsData = await getCmsData('/hire-us');
+    cmsContent = cmsData?.content || null;
+  } catch (err) {
+    console.error('Failed to load CMS content for Hire Us page:', err);
+  }
+
   return (
-    <>
+    <div>
       <CmsJsonLd path="/hire-us" />
-      <ServiceHireUsPage />
-    </>
+      <HireUsBanner cmsContent={cmsContent} />
+      <CommonWhyChoose serviceKey="hire-us" cmsContent={cmsContent} />
+      <CommonKeyFeatures serviceKey="hire-us" cmsContent={cmsContent} />
+      <CommonStruggling serviceKey="hire-us" cmsContent={cmsContent} />
+      <CommonServices serviceKey="hire-us" cmsContent={cmsContent} />
+      <TechnologiesBook serviceKey="hire-us" bgColor="#FFFFFF" cmsContent={cmsContent} />
+      <CommonHireUs serviceKey="hire-us" cmsContent={cmsContent} />
+      <HireUsForm />
+      <CommonFAQ serviceKey="hire-us" cmsContent={cmsContent} />
+    </div>
   );
 }

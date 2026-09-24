@@ -13,7 +13,7 @@ const routes = [
   '/services/search-engine-optimization',
   '/services/content-writing',
   '/services/call-center',
-  '/services/hire-us',
+  '/hire-us',
   '/technologies',
   '/technologies/laravel',
   '/technologies/react',

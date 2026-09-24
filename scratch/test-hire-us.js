@@ -17,8 +17,8 @@ const { getPageContent, scanRoutes } = require('../lib/cms-service.js');
 const { getDb } = require('../lib/mongodb.js');
 
 async function main() {
-  const filePath = path.join(process.cwd(), 'app/services/hire-us/page.js');
-  console.log('--- Testing parsePageContent for app/services/hire-us/page.js ---');
+  const filePath = path.join(process.cwd(), 'app/hire-us/page.js');
+  console.log('--- Testing parsePageContent for app/hire-us/page.js ---');
   const sections = parsePageContent(filePath);
   console.log('Total sections parsed:', sections.length);
   sections.forEach((s, idx) => {
@@ -32,8 +32,8 @@ async function main() {
 
   const db = await getDb();
   await scanRoutes();
-  const routeDoc = await db.collection('cms_routes').findOne({ path: '/services/hire-us' });
-  console.log('\n--- Route doc in DB for /services/hire-us ---', routeDoc);
+  const routeDoc = await db.collection('cms_routes').findOne({ path: '/hire-us' });
+  console.log('\n--- Route doc in DB for /hire-us ---', routeDoc);
 
   if (routeDoc) {
     const pageData = await getPageContent(routeDoc._id.toString());

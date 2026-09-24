@@ -77,7 +77,13 @@ export async function scanRoutes() {
     const items = fs.readdirSync(dirPath, { withFileTypes: true });
 
     for (const item of items) {
-      if (item.name.startsWith('_') || item.name.startsWith('.') || item.name === 'api' || item.name === 'admin') {
+      if (
+        item.name.startsWith('_') ||
+        item.name.startsWith('.') ||
+        item.name === 'api' ||
+        item.name === 'admin' ||
+        (item.name === 'hire-us' && routePrefix === '/services')
+      ) {
         continue;
       }
 
@@ -206,10 +212,12 @@ export async function getRoutesList() {
     routes = await scanRoutes();
   }
 
-  return routes.map(r => ({
-    ...r,
-    _id: r._id.toString(),
-  }));
+  return routes
+    .filter(r => r.path !== '/services/hire-us')
+    .map(r => ({
+      ...r,
+      _id: r._id.toString(),
+    }));
 }
 
 export async function getSeoList() {
@@ -219,7 +227,7 @@ export async function getSeoList() {
     const routes = await getRoutesList().catch(() => []);
 
     return routes
-      .filter(route => route.path !== '/technologies/react')
+      .filter(route => route.path !== '/technologies/react' && route.path !== '/services/hire-us')
       .map(route => {
         const seo = seoEntries.find(s => s.routeId?.toString() === route._id.toString() || s.path === route.path);
         return {

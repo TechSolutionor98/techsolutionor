@@ -103,7 +103,7 @@ const servicesSubLinks = [
     { icon: SeoDevIcon, label: 'Search Engine Optimization', href: '/services/search-engine-optimization', desc: 'Organic ranking & visibility' },
     { icon: ContentWritingDevIcon, label: 'Content Writing', href: '/services/content-writing', desc: 'SEO copywriting & articles' },
     { icon: CallCenterDevIcon, label: 'Call Center', href: '/services/call-center', desc: '24/7 inbound & support' },
-    { icon: HireUsDevIcon, label: 'Hire Us', href: '/services/hire-us', desc: 'Dedicated developer teams' },
+    { icon: HireUsDevIcon, label: 'Hire Us', href: '/hire-us', desc: 'Dedicated developer teams' },
 ];
 
 // Navlinks data

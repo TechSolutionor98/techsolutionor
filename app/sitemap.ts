@@ -163,7 +163,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           !route.path.includes('[') &&
           !route.path.startsWith('/admin') &&
           !route.path.startsWith('/api') &&
-          route.path !== '/technologies/react'
+          route.path !== '/technologies/react' &&
+          route.path !== '/services/hire-us'
         ) {
           const pagePath = route.path.startsWith('/') ? route.path : `/${route.path}`;
           addSitemapEntry(pagePath, 0.8, 'daily', route.updatedAt ? new Date(route.updatedAt) : new Date());

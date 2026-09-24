@@ -54,6 +54,11 @@ const nextConfig = {
         destination: '/services/meta',
         permanent: true,
       },
+      {
+        source: '/services/hire-us',
+        destination: '/hire-us',
+        permanent: true,
+      },
     ];
   },
 };
