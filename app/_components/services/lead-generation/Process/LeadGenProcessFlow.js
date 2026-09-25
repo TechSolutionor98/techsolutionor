@@ -78,7 +78,7 @@ export default function LeadGenProcessFlow({ cmsContent }) {
   const current = processStages[activeStep];
 
   return (
-    <section className="w-full pt-16 sm:pt-20 md:pt-24 pb-0 bg-white relative overflow-hidden select-none">
+    <section className="w-full py-16 sm:py-20 md:py-24 bg-white relative overflow-hidden select-none border-b border-gray-100">
       
       {/* Section Header */}
       <div className="text-center max-w-3xl mx-auto px-4 sm:px-6 mb-10 sm:mb-12">
@@ -233,22 +233,6 @@ export default function LeadGenProcessFlow({ cmsContent }) {
           </div>
 
         </div>
-      </div>
-
-      {/* Decorative Wavy Border at the bottom (Exact match to green wave at bottom of reference) */}
-      <div className="w-full overflow-hidden leading-none pointer-events-none">
-        <svg 
-          viewBox="0 0 1440 38" 
-          fill="none" 
-          xmlns="http://www.w3.org/2000/svg" 
-          className="w-full h-6 sm:h-9 text-[#1B4E2C] block"
-          preserveAspectRatio="none"
-        >
-          <path 
-            d="M0 19 Q 45 0 90 19 T 180 19 T 270 19 T 360 19 T 450 19 T 540 19 T 630 19 T 720 19 T 810 19 T 900 19 T 990 19 T 1080 19 T 1170 19 T 1260 19 T 1350 19 T 1440 19 V 38 H 0 Z" 
-            fill="currentColor"
-          />
-        </svg>
       </div>
 
     </section>
