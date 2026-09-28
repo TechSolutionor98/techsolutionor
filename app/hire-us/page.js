@@ -6,7 +6,6 @@ import CommonStruggling from '@/app/_components/services/common/Struggling/Commo
 import CommonServices from '@/app/_components/services/common/Services/CommonServices';
 import CommonHireUs from '@/app/_components/services/common/HireUs/CommonHireUs';
 import TechnologiesBook from '@/app/_components/services/common/TechnologiesBook/TechnologiesBook';
-import HireUsForm from '@/app/_components/services/hire-us/Form/HireUsForm';
 import CommonFAQ from '@/app/_components/services/common/FAQ/CommonFAQ';
 import { generateCmsMetadata, getCmsData } from '@/lib/cms-fetch';
 import CmsJsonLd from '@/components/CmsJsonLd';
@@ -37,7 +36,6 @@ export default async function HireUsPage() {
       <CommonServices serviceKey="hire-us" cmsContent={cmsContent} />
       <TechnologiesBook serviceKey="hire-us" bgColor="#FFFFFF" cmsContent={cmsContent} />
       <CommonHireUs serviceKey="hire-us" cmsContent={cmsContent} />
-      <HireUsForm />
       <CommonFAQ serviceKey="hire-us" cmsContent={cmsContent} />
     </div>
   );
