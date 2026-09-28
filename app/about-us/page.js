@@ -9,6 +9,8 @@ import ExperiencePlatforms from '../_components/About/ExperiencePlatforms';
 import { generateCmsMetadata, getCmsData } from '@/lib/cms-fetch';
 import CmsJsonLd from '@/components/CmsJsonLd';
 
+
+
 export async function generateMetadata() {
   return generateCmsMetadata('/about-us', {
     title: 'About Us | Tech Solutionor',
