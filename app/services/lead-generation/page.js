@@ -3,7 +3,7 @@ import LeadGenBanner from '@/app/_components/services/lead-generation/Banner/Lea
 import CommonWhyChoose from '@/app/_components/services/common/WhyChoose/CommonWhyChoose';
 import CommonKeyFeatures from '@/app/_components/services/common/KeyFeatures/CommonKeyFeatures';
 import CommonStruggling from '@/app/_components/services/common/Struggling/CommonStruggling';
-import CommonServices from '@/app/_components/services/common/Services/CommonServices';
+import LeadGenServices from '@/app/_components/services/lead-generation/Services/LeadGenServices';
 import LeadGenProcessFlow from '@/app/_components/services/lead-generation/Process/LeadGenProcessFlow';
 import LocalVsGlobalLeadGen from '@/app/_components/services/lead-generation/MarketScope/LocalVsGlobalLeadGen';
 import LeadQualificationAndNurturing from '@/app/_components/services/lead-generation/Qualification/LeadQualificationAndNurturing';
@@ -59,9 +59,9 @@ export default async function LeadGenerationPage() {
       {/* Reusable 4-card arc-scroll challenge cards (Reusing CommonStruggling) */}
       <CommonStruggling serviceKey="lead-generation" cmsContent={cmsContent} />
 
-      {/* 2. Lead Generation Services (7 Core Offerings reusing CommonServices) */}
+      {/* 2. Lead Generation Services (7 Core Offerings redesigned matching modern card spec) */}
       <div id="lead-services-section">
-        <CommonServices serviceKey="lead-generation" cmsContent={cmsContent} />
+        <LeadGenServices cmsContent={cmsContent} />
       </div>
 
       {/* 3. Lead Generation Process: Attract → Capture → Engage → Nurture → Qualify → Convert */}
