@@ -36,7 +36,7 @@ export default function CommonServices({
   const displayServices = services || data?.services || [];
 
   return (
-    <section className="w-full py-16 sm:py-20 md:py-24 bg-white font-sans relative overflow-hidden select-none">
+    <section className="w-full py-16 sm:py-20 md:py-24 bg-white font-sans relative overflow-hidden">
       {/* Background Architectural Grid Accent */}
       <div className="absolute inset-0 pointer-events-none opacity-[0.03]">
         <div

@@ -4,6 +4,49 @@ html,
 body {
   overflow-x: clip;
   scroll-behavior: smooth;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+/* Ensure text elements are selectable and copyable across the website */
+*,
+*::before,
+*::after {
+  -webkit-user-select: inherit;
+  -moz-user-select: inherit;
+  -ms-user-select: inherit;
+  user-select: inherit;
+}
+
+p, h1, h2, h3, h4, h5, h6, span, a, li, blockquote, label, td, th, code, pre, strong, em, b, i, input, textarea {
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  user-select: text !important;
+}
+
+/* Override select-none on containers so text inside them remains selectable */
+section.select-none,
+div.select-none,
+main.select-none,
+article.select-none,
+header.select-none,
+footer.select-none {
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  user-select: text !important;
+}
+
+/* Keep user-select: none only for SVG icons and images */
+svg,
+svg *,
+img {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
 }
 .shine-btn::before {
   content: "";
