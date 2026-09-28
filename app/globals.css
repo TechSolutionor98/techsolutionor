@@ -10,30 +10,26 @@ body {
   user-select: text;
 }
 
-/* Ensure text elements are selectable and copyable across the website */
+/* Ensure all text and content elements are selectable and copyable across the website */
 *,
 *::before,
 *::after {
-  -webkit-user-select: inherit;
-  -moz-user-select: inherit;
-  -ms-user-select: inherit;
-  user-select: inherit;
-}
-
-p, h1, h2, h3, h4, h5, h6, span, a, li, blockquote, label, td, th, code, pre, strong, em, b, i, input, textarea {
   -webkit-user-select: text !important;
   -moz-user-select: text !important;
   -ms-user-select: text !important;
   user-select: text !important;
 }
 
-/* Override select-none on containers so text inside them remains selectable */
+/* Neutralize the select-none utility class completely */
+.select-none,
 section.select-none,
 div.select-none,
 main.select-none,
 article.select-none,
 header.select-none,
-footer.select-none {
+footer.select-none,
+span.select-none,
+p.select-none {
   -webkit-user-select: text !important;
   -moz-user-select: text !important;
   -ms-user-select: text !important;

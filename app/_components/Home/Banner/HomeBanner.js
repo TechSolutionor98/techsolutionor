@@ -222,7 +222,7 @@ const HomeBanner = ({ content, cmsContent, locations, countries }) => {
 
   return (
     <section 
-      className="relative overflow-hidden w-full flex items-center justify-center py-8 sm:py-12 lg:py-16 select-none"
+      className="relative overflow-hidden w-full flex items-center justify-center py-8 sm:py-12 lg:py-16"
       style={{
         background: "linear-gradient(135deg, #41B349 0%, rgba(65, 179, 73, 0.45) 30%, rgba(255, 231, 168, 0.2) 60%, #FFFFFF 100%)",
       }}

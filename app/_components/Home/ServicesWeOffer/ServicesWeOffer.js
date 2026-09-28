@@ -75,7 +75,7 @@ const ServicesWeOffer = ({ cmsContent }) => {
   const activeService = activeIdx !== null ? cardsData[activeIdx] : null;
 
   return (
-    <section className="relative overflow-hidden bg-[#FFFFFF] py-12 sm:py-16 md:py-24 select-none">
+    <section className="relative overflow-hidden bg-[#FFFFFF] py-12 sm:py-16 md:py-24">
       {/* CSS Rules for Responsive Orbit & Hover Pause */}
       <style jsx>{`
         .services-orbit-container {

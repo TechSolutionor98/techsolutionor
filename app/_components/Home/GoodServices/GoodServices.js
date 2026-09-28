@@ -128,7 +128,7 @@ const GoodServices = ({ cmsContent }) => {
   const isGoalsImgDynamic = typeof goalsCard.icon === 'string' && (goalsCard.icon.startsWith('http') || goalsCard.icon.startsWith('/'));
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-[#FAFCFB] via-[#FFFFFF] to-[#F5F9F6] py-12 sm:py-16 md:py-24 select-none">
+    <section className="relative overflow-hidden bg-gradient-to-b from-[#FAFCFB] via-[#FFFFFF] to-[#F5F9F6] py-12 sm:py-16 md:py-24">
       {/* Background Honeycomb Patterns (Direct Reference to Screenshot Design) */}
       <HoneycombPatternLeft />
       <HoneycombPatternRight />

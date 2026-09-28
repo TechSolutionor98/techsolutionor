@@ -78,7 +78,7 @@ export default function LeadGenProcessFlow({ cmsContent }) {
   const current = processStages[activeStep];
 
   return (
-    <section className="w-full py-16 sm:py-20 md:py-24 bg-white relative overflow-hidden select-none border-b border-gray-100">
+    <section className="w-full py-16 sm:py-20 md:py-24 bg-white relative overflow-hidden border-b border-gray-100">
       
       {/* Section Header */}
       <div className="text-center max-w-3xl mx-auto px-4 sm:px-6 mb-10 sm:mb-12">

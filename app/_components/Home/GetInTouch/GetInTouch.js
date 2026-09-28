@@ -359,7 +359,7 @@ const GetInTouch = ({ cmsContent }) => {
     const illustrationImg = getCmsVal(cmsContent, getInTouchImg, "getintouch");
 
     return (
-        <section id="get-in-touch" className="relative overflow-hidden bg-[#171717] py-12 md:py-16 text-white select-none">
+        <section id="get-in-touch" className="relative overflow-hidden bg-[#171717] py-12 md:py-16 text-white">
             {/* Background Glow Accents */}
             <div className="absolute top-1/2 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] bg-[#41B349]/10 blur-[150px] rounded-full pointer-events-none" />
             <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[#41B349]/5 blur-[120px] rounded-full pointer-events-none" />
@@ -583,7 +583,7 @@ const GetInTouch = ({ cmsContent }) => {
                                             <div className="relative flex items-center">
                                                 {/* Uneditable Country Dial Code Badge */}
                                                 {selectedCountryObj?.code && (
-                                                    <div className="bg-gray-100 border-r border-gray-300 text-gray-900 font-extrabold text-xs sm:text-sm px-3 h-11 flex items-center justify-center rounded-l-xl select-none flex-shrink-0">
+                                                    <div className="bg-gray-100 border-r border-gray-300 text-gray-900 font-extrabold text-xs sm:text-sm px-3 h-11 flex items-center justify-center rounded-l-xl flex-shrink-0">
                                                         {selectedCountryObj.code}
                                                     </div>
                                                 )}

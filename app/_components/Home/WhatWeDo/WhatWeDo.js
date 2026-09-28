@@ -81,41 +81,29 @@ const WhatWeDo = ({ cmsContent }) => {
   const activeTheme = cardThemes[activeIndex % cardThemes.length];
 
   return (
-    <section className="relative overflow-hidden py-12 sm:py-16 md:py-24 select-none bg-[#FFFFFF]">
+    <section className="relative overflow-hidden py-12 sm:py-16 md:py-24 bg-[#FFFFFF]">
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-12 md:mb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+          <div
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#41B349]/10 border border-[#41B349]/20 text-[#41B349] font-extrabold text-xs sm:text-sm uppercase tracking-widest mb-4"
           >
             <span className="w-2 h-2 rounded-full bg-[#41B349] animate-pulse" />
             <span>{sectionTitle}</span>
-          </motion.div>
+          </div>
 
-          <motion.h2
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.1 }}
+          <h2
             className="text-2xl sm:text-3xl md:text-5xl font-black text-[#0D0F12] tracking-tight leading-tight"
             style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
           >
             Empowering Digital Growth & Tech Excellence
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+          </h2>
+          <p
             className="mt-3 text-sm sm:text-base md:text-lg text-[#4A5568] font-medium"
           >
             Tailored digital strategies and cutting-edge engineering designed for scale.
-          </motion.p>
+          </p>
         </div>
 
         {/* Stacked Card Deck Viewport with Responsive Height */}

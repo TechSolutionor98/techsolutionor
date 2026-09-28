@@ -73,7 +73,7 @@ const ChallengeAccepted = ({ content, cmsContent }) => {
   });
 
   return (
-    <section className="py-12 sm:py-18 md:py-28 bg-[#FFFFFF] relative overflow-hidden select-none">
+    <section className="py-12 sm:py-18 md:py-28 bg-[#FFFFFF] relative overflow-hidden">
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}

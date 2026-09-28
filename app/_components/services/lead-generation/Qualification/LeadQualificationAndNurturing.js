@@ -172,7 +172,7 @@ export default function LeadQualificationAndNurturing({ cmsContent }) {
   };
 
   return (
-    <section className="w-full py-16 sm:py-20 md:py-28 bg-white relative overflow-hidden select-none border-b border-stone-200/60">
+    <section className="w-full py-16 sm:py-20 md:py-28 bg-white relative overflow-hidden border-b border-stone-200/60">
       
       {/* Import Caveat cursive font for expressive hand-drawn lettering */}
       <style>{`
@@ -258,7 +258,7 @@ export default function LeadQualificationAndNurturing({ cmsContent }) {
           </div>
 
           {/* MAIN HEADLINE */}
-          <div className="relative z-10 select-none">
+          <div className="relative z-10">
             {/* Badge */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1B4E2C]/10 border border-[#1B4E2C]/20 text-[#1B4E2C] font-extrabold text-xs sm:text-sm uppercase tracking-widest mb-4 shadow-2xs">
               <span className="w-2 h-2 rounded-full bg-[#41B349] animate-pulse" />
@@ -331,7 +331,7 @@ export default function LeadQualificationAndNurturing({ cmsContent }) {
                 return (
                   <div
                     key={card.id}
-                    className="relative min-h-[140px] sm:min-h-[145px] p-5 sm:p-6 flex items-center gap-4 sm:gap-5 transition-transform hover:-translate-y-0.5 duration-200 group select-none"
+                    className="relative min-h-[140px] sm:min-h-[145px] p-5 sm:p-6 flex items-center gap-4 sm:gap-5 transition-transform hover:-translate-y-0.5 duration-200 group"
                   >
                     {/* Hand-Drawn Sketched Frame matching reference screenshot */}
                     <SketchedCardFrame variation={idx} />

@@ -247,7 +247,7 @@ const LogoCard = ({ icon, cardKey, onMouseEnter, onMouseLeave }) => {
         '--card-accent': icon.accentColor,
         '--card-footer-bg': icon.footerBg,
       }}
-      className="logo-card group w-52 min-[380px]:w-56 sm:w-68 md:w-72 h-[200px] min-[380px]:h-[215px] sm:h-[250px] shrink-0 rounded-2xl flex flex-col justify-between cursor-pointer overflow-hidden select-none"
+      className="logo-card group w-52 min-[380px]:w-56 sm:w-68 md:w-72 h-[200px] min-[380px]:h-[215px] sm:h-[250px] shrink-0 rounded-2xl flex flex-col justify-between cursor-pointer overflow-hidden"
     >
       {/* Top: Project / Company Logo Area */}
       <div className="relative w-full h-[125px] min-[380px]:h-[135px] sm:h-[164px] p-3 min-[380px]:p-4 sm:p-5 flex items-center justify-center">
@@ -331,7 +331,7 @@ const Projects = ({ cmsContent }) => {
   const marqueeRow2 = [...row2Logos, ...row2Logos, ...row2Logos];
 
   return (
-    <section className="relative overflow-hidden py-16 md:py-24 bg-[#000000] select-none">
+    <section className="relative overflow-hidden py-16 md:py-24 bg-[#000000]">
       {/* Embedded Styles for smooth infinite marquee with row-level hover pause */}
       <style>{`
         @keyframes marquee-forward {

@@ -131,7 +131,7 @@ export default function CommonWhyChoose({
       <div className="w-full h-14 sm:h-20 md:h-24 pointer-events-none" />
 
       {/* STICKY VIEWPORT WRAPPER (Pinned while progress 0 -> 1) */}
-      <div className="sticky top-0 h-screen w-full flex flex-col justify-center items-center overflow-hidden px-4 sm:px-6 lg:px-8 py-6 sm:py-8 md:py-10 select-none bg-[#FFFFFF]">
+      <div className="sticky top-0 h-screen w-full flex flex-col justify-center items-center overflow-hidden px-4 sm:px-6 lg:px-8 py-6 sm:py-8 md:py-10 bg-[#FFFFFF]">
 
         {/* ================================================================= */}
         {/* CENTERED CONTENT WRAPPER: EQUAL TOP AND BOTTOM BREATHING ROOM      */}

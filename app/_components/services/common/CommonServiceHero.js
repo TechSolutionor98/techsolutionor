@@ -34,7 +34,7 @@ const CommonServiceHero = ({
   const dynamicImage = getCmsVal(cmsContent, defaultImg, cmsPrefix);
 
   return (
-    <section className="relative w-full bg-[#FFFFFF] text-[#0D0F12] overflow-hidden min-h-[500px] sm:min-h-[520px] flex items-center py-14 md:py-20 select-none">
+    <section className="relative w-full bg-[#FFFFFF] text-[#0D0F12] overflow-hidden min-h-[500px] sm:min-h-[520px] flex items-center py-14 md:py-20">
       {/* Background Subtle Geometric Polygons */}
       <div className="absolute top-0 left-0 opacity-40 pointer-events-none">
         <Image

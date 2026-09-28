@@ -327,7 +327,7 @@ const HeroConstellation = () => {
     <canvas
       ref={canvasRef}
       aria-hidden="true"
-      className="absolute inset-0 w-full h-full pointer-events-none z-0 select-none"
+      className="absolute inset-0 w-full h-full pointer-events-none z-0"
     />
   );
 };

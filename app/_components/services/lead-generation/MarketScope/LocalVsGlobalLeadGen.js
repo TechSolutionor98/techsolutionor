@@ -95,7 +95,7 @@ export default function LocalVsGlobalLeadGen({ cmsContent }) {
   const currentFeatures = activeScope === "local" ? localFeatures : globalFeatures;
 
   return (
-    <section className="w-full py-16 sm:py-20 md:py-28 bg-white relative overflow-hidden select-none border-b border-gray-100">
+    <section className="w-full py-16 sm:py-20 md:py-28 bg-white relative overflow-hidden border-b border-gray-100">
       <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* 2-Column Exact Layout Matching Reference Screenshot */}

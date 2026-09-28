@@ -48,7 +48,7 @@ const Newsletter = ({ content, cmsContent }) => {
   const { line1, line2, line3 } = formatNewsletterTitle(title);
 
   return (
-    <section className="w-full bg-[#FFFFFF] py-10 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 select-none">
+    <section className="w-full bg-[#FFFFFF] py-10 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8">
       {/* Main Glassmorphic CTA Card Container */}
       <div className="relative z-10 max-w-6xl mx-auto rounded-3xl bg-[#0D0F12] border border-gray-800 p-6 sm:p-10 md:p-16 flex flex-col md:flex-row items-center justify-between gap-6 sm:gap-10 md:gap-12 relative overflow-hidden">
         

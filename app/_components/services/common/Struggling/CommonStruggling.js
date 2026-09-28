@@ -172,7 +172,7 @@ export default function CommonStruggling({
       {/* =================================================================== */}
       {/* STICKY VIEWPORT CONTAINER: Zero clipping, perfectly balanced        */}
       {/* =================================================================== */}
-      <div className="sticky top-0 h-screen w-full flex flex-col justify-center items-center overflow-hidden px-4 sm:px-6 lg:px-8 select-none bg-[#FFFFFF]">
+      <div className="sticky top-0 h-screen w-full flex flex-col justify-center items-center overflow-hidden px-4 sm:px-6 lg:px-8 bg-[#FFFFFF]">
         {/* Ambient Subtle Arc Line in Background */}
         <div className="absolute left-1/2 top-[56%] -translate-x-1/2 -translate-y-1/2 w-[950px] h-[280px] border-b border-dashed border-gray-200 rounded-[100%] pointer-events-none z-0 hidden md:block" />
 
@@ -222,7 +222,7 @@ export default function CommonStruggling({
                     ...style,
                     width: `${cardWidth}px`,
                   }}
-                  className="absolute bg-white border-2 rounded-[20px] sm:rounded-[22px] p-4 sm:p-5 flex flex-col justify-between transition-all duration-75 ease-out text-left select-none"
+                  className="absolute bg-white border-2 rounded-[20px] sm:rounded-[22px] p-4 sm:p-5 flex flex-col justify-between transition-all duration-75 ease-out text-left"
                 >
                   {/* Top Color Accent Line */}
                   <div

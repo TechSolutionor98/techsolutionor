@@ -74,7 +74,7 @@ const Technology = ({ cmsContent }) => {
   const marqueeCards = [...cardsData, ...cardsData, ...cardsData];
 
   return (
-    <section className="relative overflow-hidden bg-[#FFFFFF] py-12 sm:py-16 md:py-24 select-none">
+    <section className="relative overflow-hidden bg-[#FFFFFF] py-12 sm:py-16 md:py-24">
       <style jsx>{`
         @keyframes marqueeScroll {
           0% {
