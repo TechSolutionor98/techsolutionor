@@ -6,85 +6,101 @@ import { useQuote } from "@/app/_context/QuoteContext";
 import { useLanguage } from "@/app/_context/LanguageContext";
 import { getServiceTechnologies } from "@/app/_data/servicesTechnologiesData";
 
+import { getCmsVal } from "@/lib/api-helper";
+import {
+  FaHtml5,
+  FaCss3Alt,
+  FaJs,
+  FaBootstrap,
+  FaNodeJs,
+  FaPhp,
+  FaJava,
+  FaLaravel,
+  FaShopify,
+  FaPython,
+  FaWordpress,
+} from "react-icons/fa";
+import { SiDotnet } from "react-icons/si";
+
 /**
  * Curated Luxury Editorial Paper Palette for Web Development Book
  * Ultra-clean, luminous porcelain tones (98%+ luminance)
  */
 export const WEB_PAGE_THEMES = [
   {
-    name: "Porcelain Mint",
+    themeName: "Porcelain Mint",
     bgGradient: "linear-gradient(135deg, #FFFFFF 0%, #FAFCFA 45%, #EFF6F1 100%)",
     accent: "#1B4E2C",
     watermarkColor: "rgba(27, 78, 44, 0.035)",
   },
   {
-    name: "Platinum Mist",
+    themeName: "Platinum Mist",
     bgGradient: "linear-gradient(135deg, #FFFFFF 0%, #F9FBFC 45%, #EDF2F5 100%)",
     accent: "#1B4E2C",
     watermarkColor: "rgba(15, 23, 42, 0.035)",
   },
   {
-    name: "Oyster Porcelain",
+    themeName: "Oyster Porcelain",
     bgGradient: "linear-gradient(135deg, #FFFFFF 0%, #FAFBF9 45%, #F3F3EB 100%)",
     accent: "#1B4E2C",
     watermarkColor: "rgba(15, 23, 42, 0.035)",
   },
   {
-    name: "Eucalyptus Dew",
+    themeName: "Eucalyptus Dew",
     bgGradient: "linear-gradient(135deg, #FFFFFF 0%, #FAFCFB 45%, #EEF6F3 100%)",
     accent: "#1B4E2C",
     watermarkColor: "rgba(27, 78, 44, 0.035)",
   },
   {
-    name: "Titanium Pearl",
+    themeName: "Titanium Pearl",
     bgGradient: "linear-gradient(135deg, #FFFFFF 0%, #F9FAFA 45%, #EDF1F3 100%)",
     accent: "#1B4E2C",
     watermarkColor: "rgba(15, 23, 42, 0.035)",
   },
   {
-    name: "Celadon Porcelain",
+    themeName: "Celadon Porcelain",
     bgGradient: "linear-gradient(135deg, #FFFFFF 0%, #FAFCFA 45%, #EEF5F0 100%)",
     accent: "#1B4E2C",
     watermarkColor: "rgba(27, 78, 44, 0.035)",
   },
   {
-    name: "Chalk Vellum",
+    themeName: "Chalk Vellum",
     bgGradient: "linear-gradient(135deg, #FFFFFF 0%, #FAF9F7 45%, #F1EEE6 100%)",
     accent: "#1B4E2C",
     watermarkColor: "rgba(15, 23, 42, 0.035)",
   },
   {
-    name: "Slate Pearl",
+    themeName: "Slate Pearl",
     bgGradient: "linear-gradient(135deg, #FFFFFF 0%, #F8F9FA 45%, #ECEEF2 100%)",
     accent: "#1B4E2C",
     watermarkColor: "rgba(15, 23, 42, 0.035)",
   },
   {
-    name: "Mint Whisper",
+    themeName: "Mint Whisper",
     bgGradient: "linear-gradient(135deg, #FFFFFF 0%, #FAFCFA 45%, #EDF6F0 100%)",
     accent: "#1B4E2C",
     watermarkColor: "rgba(27, 78, 44, 0.035)",
   },
   {
-    name: "Glacial Cloud",
+    themeName: "Glacial Cloud",
     bgGradient: "linear-gradient(135deg, #FFFFFF 0%, #F8FAFB 45%, #EBF1F5 100%)",
     accent: "#1B4E2C",
     watermarkColor: "rgba(15, 23, 42, 0.035)",
   },
   {
-    name: "Sandstone Vellum",
+    themeName: "Sandstone Vellum",
     bgGradient: "linear-gradient(135deg, #FFFFFF 0%, #FAF8F6 45%, #F2ECE5 100%)",
     accent: "#1B4E2C",
     watermarkColor: "rgba(15, 23, 42, 0.035)",
   },
   {
-    name: "Alpine Frost",
+    themeName: "Alpine Frost",
     bgGradient: "linear-gradient(135deg, #FFFFFF 0%, #F7FAFC 45%, #E9F1F6 100%)",
     accent: "#1B4E2C",
     watermarkColor: "rgba(15, 23, 42, 0.035)",
   },
   {
-    name: "Emerald Pearl",
+    themeName: "Emerald Pearl",
     bgGradient: "linear-gradient(135deg, #FFFFFF 0%, #F7FAF8 45%, #E5F3EB 100%)",
     accent: "#1B4E2C",
     watermarkColor: "rgba(27, 78, 44, 0.04)",
@@ -92,33 +108,217 @@ export const WEB_PAGE_THEMES = [
 ];
 
 /**
+ * Standard Web Development Technologies Data
+ * All content and images are fully manageable via the CMS admin panel.
+ */
+export const webDevTechnologiesData = [
+  {
+    key: "html5",
+    title: "HTML5",
+    subtitle: "SEMANTIC STRUCTURE",
+    badge: "CORE WEB FOUNDATION",
+    desc: "The standard markup language used to create and structure web pages, defining content hierarchy and layout. It forms the backbone of web accessibility, SEO optimization, and responsive design.",
+    image: "/services/html5-superhero.png",
+    icon: FaHtml5,
+    iconColor: "#E34F26",
+    tags: ["Semantic HTML", "W3C Validated", "SEO Optimized", "Accessibility"],
+    footerLeft: "TECH SOLUTIONOR • WEB ECOSYSTEM",
+  },
+  {
+    key: "css3",
+    title: "CSS3",
+    subtitle: "MODERN STYLING",
+    badge: "RESPONSIVE PRESENTATION",
+    desc: "Cascading Style Sheets control the visual aesthetics, layout grids, animations, and responsiveness across every device. We leverage modern CSS architecture for fluid, high-performance styling.",
+    image: "/services/css3book.jpg",
+    icon: FaCss3Alt,
+    iconColor: "#1572B6",
+    tags: ["Responsive Design", "Flex & CSS Grid", "Hardware Accelerated"],
+    footerLeft: "TECH SOLUTIONOR • WEB ECOSYSTEM",
+  },
+  {
+    key: "javascript",
+    title: "JAVASCRIPT",
+    subtitle: "DYNAMIC EXECUTION",
+    badge: "CLIENT & RUNTIME LOGIC",
+    desc: "A versatile scripting language powering interactive, client-side browser experiences and complex web application logic with asynchronous data loading and modern DOM management.",
+    image: "/services/javascriptbook.jpg",
+    icon: FaJs,
+    iconColor: "#D97706",
+    tags: ["ESNext Syntax", "Async / Await", "Interactive DOM", "High Performance"],
+    footerLeft: "TECH SOLUTIONOR • WEB ECOSYSTEM",
+  },
+  {
+    key: "bootstrap",
+    title: "BOOTSTRAP",
+    subtitle: "UI FRAMEWORK",
+    badge: "MOBILE-FIRST LAYOUT",
+    desc: "A world-renowned frontend toolkit designed for responsive, mobile-first web engineering. Features standardized layout grids, utility systems, and battle-tested components.",
+    image: "/services/bootstrapbook.png",
+    icon: FaBootstrap,
+    iconColor: "#7952B3",
+    tags: ["Grid System", "Pre-built Components", "Cross-Browser Unified"],
+    footerLeft: "TECH SOLUTIONOR • WEB ECOSYSTEM",
+  },
+  {
+    key: "nodejs",
+    title: "NODE.JS",
+    subtitle: "EVENT-DRIVEN BACKEND",
+    badge: "SERVER RUNTIME ENGINE",
+    desc: "A high-performance JavaScript runtime built on Chrome's V8 engine, powering lightning-fast, non-blocking asynchronous microservices and API gateways for enterprise traffic.",
+    image: "/services/nodejsbook.jpg",
+    icon: FaNodeJs,
+    iconColor: "#16A34A",
+    tags: ["V8 Engine", "Non-Blocking I/O", "Microservices", "REST & WebSocket"],
+    footerLeft: "TECH SOLUTIONOR • WEB ECOSYSTEM",
+  },
+  {
+    key: "php",
+    title: "PHP",
+    subtitle: "SERVER-SIDE SCRIPTING",
+    badge: "DYNAMIC WEB ENGINE",
+    desc: "A robust server-side scripting language powering web backends globally. Delivers rapid execution, mature database integrations, and proven reliability for web applications.",
+    image: "/services/phpbook.png",
+    icon: FaPhp,
+    iconColor: "#4F46E5",
+    tags: ["Server Rendering", "Database Integration", "Broad Compatibility"],
+    footerLeft: "TECH SOLUTIONOR • WEB ECOSYSTEM",
+  },
+  {
+    key: "java",
+    title: "JAVA",
+    subtitle: "ENTERPRISE SYSTEMS",
+    badge: "OBJECT-ORIENTED STACK",
+    desc: "A time-tested, multi-platform language delivering enterprise-grade security, concurrency, and rock-solid architecture for large-scale corporate portals and financial web applications.",
+    image: "/services/javabook.png",
+    icon: FaJava,
+    iconColor: "#EA580C",
+    tags: ["JVM Ecosystem", "High Concurrency", "Robust Security"],
+    footerLeft: "TECH SOLUTIONOR • WEB ECOSYSTEM",
+  },
+  {
+    key: "laravel",
+    title: "LARAVEL",
+    subtitle: "ELEGANT PHP MVC",
+    badge: "RAPID WEB FRAMEWORK",
+    desc: "An expressive PHP framework engineered for developer productivity. Features clean MVC architecture, Eloquent ORM, robust authentication, and intuitive queuing systems.",
+    image: "/services/laravelbook.svg",
+    icon: FaLaravel,
+    iconColor: "#EF4444",
+    tags: ["Eloquent ORM", "Blade Templating", "Clean Architecture"],
+    footerLeft: "TECH SOLUTIONOR • WEB ECOSYSTEM",
+  },
+  {
+    key: "shopify",
+    title: "SHOPIFY",
+    subtitle: "ECOMMERCE PLATFORM",
+    badge: "GLOBAL COMMERCE SYSTEM",
+    desc: "An enterprise commerce platform enabling high-converting online storefronts. Provides seamless inventory management, global payment gateways, and customizable Liquid templates.",
+    image: "/services/shopifybook.jpg",
+    icon: FaShopify,
+    iconColor: "#65A30D",
+    tags: ["Liquid Templating", "Storefront API", "High-Converting Checkout"],
+    footerLeft: "TECH SOLUTIONOR • WEB ECOSYSTEM",
+  },
+  {
+    key: "python",
+    title: "PYTHON",
+    subtitle: "SCALABLE ARCHITECTURE",
+    badge: "AI & ROBUST BACKEND",
+    desc: "A versatile high-level language renowned for code readability and efficiency. Powers modern web services, machine learning integrations, automated data pipelines, and APIs.",
+    image: "/services/pythanbook.png",
+    icon: FaPython,
+    iconColor: "#0284C7",
+    tags: ["Django & FastAPI", "AI & ML Ready", "Clean Codebase"],
+    footerLeft: "TECH SOLUTIONOR • WEB ECOSYSTEM",
+  },
+  {
+    key: "dotnet",
+    title: ".NET",
+    subtitle: "MICROSOFT ENTERPRISE",
+    badge: "HIGH-PERFORMANCE FRAMEWORK",
+    desc: "Microsoft's cross-platform framework for building high-performance, secure web applications. Engineered for enterprise reliability, high request throughput, and cloud deployments.",
+    image: "/services/dotnetbook.jpg",
+    icon: SiDotnet,
+    iconColor: "#6366F1",
+    tags: ["C# / ASP.NET Core", "Cloud Infrastructure", "Enterprise Scale"],
+    footerLeft: "TECH SOLUTIONOR • WEB ECOSYSTEM",
+  },
+  {
+    key: "wordpress",
+    title: "WORDPRESS",
+    subtitle: "CONTENT MANAGEMENT",
+    badge: "CUSTOM CMS PLATFORM",
+    desc: "The world's leading CMS platform. We engineer custom headless architectures, bespoke themes, and tailored plugins that give businesses complete control over digital publishing.",
+    image: "/services/wordpressbook.png",
+    icon: FaWordpress,
+    iconColor: "#0284C7",
+    tags: ["Headless CMS", "Gutenberg Blocks", "Custom Rest APIs"],
+    footerLeft: "TECH SOLUTIONOR • WEB ECOSYSTEM",
+  },
+  {
+    key: "cta",
+    type: "cta",
+    title: "Your project?",
+    subtitle: "NEXT CHAPTER",
+    badge: "LET'S BUILD TOGETHER",
+    desc: "Ready to turn your vision into an exceptional, high-converting digital platform? Partner with Tech Solutionor's premier web engineering team to craft your next digital milestone.",
+    image: "/services/letsgobook.jpg",
+    tags: ["Fast Turnaround", "Enterprise Architecture", "Measurable ROI"],
+    footerLeft: "TECH SOLUTIONOR • DIGITAL ENGINEERING",
+  },
+];
+
+/**
  * Dedicated Web Development Technologies Book Component
+ * Fully dynamic via CMS.
  * Structure:
  * - Left Page: Content / Text for the technology (HTML5, CSS3, JS, etc.)
- * - Right Page: Corresponding Image / Visual for that technology (HTML5 Superhero image, clean, no gradients)
+ * - Right Page: Corresponding Image / Visual for that technology (clean, solid white, no gradients)
  */
 const WebDevelopmentTechnologiesBook = ({
   serviceKey = "web-development",
   lang,
   customData,
   bgColor = "#FFFFFF",
+  cmsContent,
 }) => {
   const { openQuote } = useQuote();
   const { language } = useLanguage();
   const activeLang = lang || language || "en";
 
-  // Content dataset from servicesTechnologiesData
-  const content = customData || getServiceTechnologies(serviceKey, activeLang);
-  const {
-    badge = "WE ARE BEST",
-    title = "Technologies",
-    titleHighlight = "We Use",
-    pages: rawPages = [],
-  } = content;
+  // Section Header Text (Editable via CMS)
+  const defaultBadge = "WE ARE BEST";
+  const defaultTitle = "Technologies";
+  const defaultTitleHighlight = "We Use";
 
-  // Filter out the cover page so that Spread 0 begins directly with HTML5 (pagesData[1])
-  // Each item in techList represents one dual-page spread (Left: Text, Right: Image)
-  const techList = rawPages.slice(1);
+  const badgeText = getCmsVal(cmsContent, defaultBadge, "webdevelopmenttechnologiesbook");
+  const titleText = getCmsVal(cmsContent, defaultTitle, "webdevelopmenttechnologiesbook");
+  const titleHighlightText = getCmsVal(cmsContent, defaultTitleHighlight, "webdevelopmenttechnologiesbook");
+
+  // Dynamic Technology List mapped with CMS values
+  const baseList = customData?.pages?.slice(1) || webDevTechnologiesData;
+  const techList = baseList.map((item) => {
+    const title = getCmsVal(cmsContent, item.title, "webdevelopmenttechnologiesbook");
+    const subtitle = getCmsVal(cmsContent, item.subtitle, "webdevelopmenttechnologiesbook");
+    const badge = getCmsVal(cmsContent, item.badge, "webdevelopmenttechnologiesbook");
+    const desc = getCmsVal(cmsContent, item.desc, "webdevelopmenttechnologiesbook");
+    const image = getCmsVal(cmsContent, item.image, "webdevelopmenttechnologiesbook");
+    const tags = (item.tags || []).map((tag) => getCmsVal(cmsContent, tag, "webdevelopmenttechnologiesbook"));
+    const footerLeft = getCmsVal(cmsContent, item.footerLeft, "webdevelopmenttechnologiesbook");
+
+    return {
+      ...item,
+      title,
+      subtitle,
+      badge,
+      desc,
+      image,
+      tags,
+      footerLeft,
+    };
+  });
+
   const totalSpreads = techList.length; // 13 spreads (12 technologies + 1 CTA)
 
   // 12 turning leaves between Spread 0 Left Base and Spread (totalSpreads - 1) Right Base
@@ -264,13 +464,13 @@ const WebDevelopmentTechnologiesBook = ({
           <div>
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#41B349]/12 border border-[#41B349]/25 text-[#1B4E2C] font-extrabold text-[11px] sm:text-xs uppercase tracking-widest mb-1.5 backdrop-blur-xs">
               <span className="w-2 h-2 rounded-full bg-[#41B349] animate-pulse" />
-              <span>{badge}</span>
+              <span>{badgeText}</span>
             </div>
             <h2
               className="text-2xl sm:text-3xl md:text-[34px] lg:text-[38px] font-black tracking-tight leading-tight text-[#0D0F12]"
               style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
             >
-              {title} <span className="text-[#41B349]">{titleHighlight}</span>
+              {titleText} <span className="text-[#41B349]">{titleHighlightText}</span>
             </h2>
           </div>
         </div>
@@ -756,8 +956,9 @@ const TechVisualPage = ({ tech, isLeft, pageNumber, openQuote }) => {
 
   const normalizedTitle = (tech.title || "").toUpperCase().trim();
   const imageSrc =
+    tech.image ||
     TECH_IMAGE_MAP[normalizedTitle] ||
-    (tech.type === "cta" ? "/services/letsgobook.jpg?v=clean2" : null);
+    (tech.type === "cta" ? "/services/letsgobook.jpg" : null);
   const IconComponent = tech.icon;
 
   return (
