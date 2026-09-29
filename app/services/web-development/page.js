@@ -4,7 +4,7 @@ import WebWhyChoose from '../../_components/services/web-developement/WhyChoose/
 import CommonKeyFeatures from '@/app/_components/services/common/KeyFeatures/CommonKeyFeatures';
 import CommonStruggling from '@/app/_components/services/common/Struggling/CommonStruggling';
 import WebServices from '@/app/_components/services/web-developement/Services/WebServices';
-import TechnologiesBook from '@/app/_components/services/common/TechnologiesBook/TechnologiesBook';
+import WebDevelopmentTechnologiesBook from '@/app/_components/services/web-developement/TechnologiesBook/WebDevelopmentTechnologiesBook';
 import WebHireUs from '../../_components/services/web-developement/HireUs/WebHireUs';
 import WebFAQ from '../../_components/services/web-developement/FAQ/WebFAQ';
 import { generateCmsMetadata, getCmsData } from '@/lib/cms-fetch';
@@ -34,7 +34,7 @@ export default async function WebDevelopmentPage() {
       <CommonKeyFeatures serviceKey="web-development" cmsContent={cmsContent} />
       <CommonStruggling serviceKey="web-development" cmsContent={cmsContent} />
       <WebServices cmsContent={cmsContent} />
-      <TechnologiesBook serviceKey="web-development" bgColor="#FFFFFF" cmsContent={cmsContent} />
+      <WebDevelopmentTechnologiesBook serviceKey="web-development" bgColor="#FFFFFF" cmsContent={cmsContent} />
       <WebHireUs cmsContent={cmsContent} />
       <WebFAQ cmsContent={cmsContent} />
     </div>
