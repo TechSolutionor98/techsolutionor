@@ -32,6 +32,7 @@ const CommonServiceHero = ({
   const dynamicBadge = getCmsVal(cmsContent, badge, cmsPrefix);
   const defaultImg = image?.src || image;
   const dynamicImage = getCmsVal(cmsContent, defaultImg, cmsPrefix);
+  const dynamicCtaText = getCmsVal(cmsContent, ctaText, cmsPrefix);
 
   return (
     <section className="relative w-full bg-[#FFFFFF] text-[#0D0F12] overflow-hidden min-h-[500px] sm:min-h-[520px] flex items-center py-14 md:py-20">
@@ -86,7 +87,7 @@ const CommonServiceHero = ({
                 className="bg-[#36963D] hover:bg-[#2e8234] text-white px-8 py-3.5 rounded-full font-bold text-sm sm:text-base transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2.5"
                 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
               >
-                <span>{ctaText}</span>
+                <span>{dynamicCtaText || ctaText}</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
             ) : ctaHref && ctaHref.startsWith("#") ? (
@@ -95,7 +96,7 @@ const CommonServiceHero = ({
                   className="bg-[#36963D] hover:bg-[#2e8234] text-white px-8 py-3.5 rounded-full font-bold text-sm sm:text-base transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2.5"
                   style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
                 >
-                  <span>{ctaText}</span>
+                  <span>{dynamicCtaText || ctaText}</span>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </button>
               </a>
@@ -105,7 +106,7 @@ const CommonServiceHero = ({
                   className="bg-[#36963D] hover:bg-[#2e8234] text-white px-8 py-3.5 rounded-full font-bold text-sm sm:text-base transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2.5"
                   style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
                 >
-                  <span>{ctaText}</span>
+                  <span>{dynamicCtaText || ctaText}</span>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </button>
               </Link>

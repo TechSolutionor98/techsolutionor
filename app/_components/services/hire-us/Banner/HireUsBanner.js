@@ -17,8 +17,8 @@ const HireUsBanner = ({ cmsContent }) => {
       description="Scale your development capabilities with elite, pre-vetted senior software engineers, full-stack developers, mobile app architects, and dedicated digital product teams on flexible engagement models."
       image={HireImg || FallbackImg}
       imageAlt="Hire Dedicated Developers"
-      ctaText="Hire Developers Now"
-      ctaHref="#hireus-services"
+      ctaText="Hire Us"
+      ctaHref="/hire-us"
     />
   );
 };
