@@ -77,57 +77,47 @@ export default function CommonServices({
         </div>
 
         {/* 6-Card Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 lg:gap-7">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-7 lg:gap-8">
           {displayServices.map((service, idx) => {
             const IconComponent = service.icon;
             return (
               <div
                 key={idx}
                 onClick={openQuote}
-                className="group rounded-[22px] p-6 sm:p-7 flex flex-col justify-between h-full min-h-[330px] bg-white border-2 border-[#41b349] shadow-[0_4px_18px_rgba(0,0,0,0.05)] hover:bg-[#41b349] hover:border-[#41b349] hover:shadow-[0_12px_32px_rgba(65,179,73,0.32)] hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden"
+                className="group relative rounded-[28px] pt-9 pb-10 px-6 sm:px-8 flex flex-col items-center text-center h-full min-h-[350px] bg-white border-t-[3.5px] border-t-[#41B349] border-x-0 border-b-0 shadow-[0_10px_30px_rgba(0,0,0,0.06)] hover:shadow-[0_20px_40px_rgba(65,179,73,0.22)] hover:-translate-y-1.5 transition-all duration-500 cursor-pointer overflow-hidden [isolation:isolate]"
               >
-                {/* Top Row: Icon + Arrow */}
-                <div>
-                  <div className="flex items-center justify-between mb-5">
-                    <div className="w-12 h-12 rounded-xl bg-[#41b349]/10 text-[#1B4E2C] group-hover:bg-white/20 group-hover:text-white flex items-center justify-center transition-colors duration-300">
-                      {IconComponent ? (
-                        <IconComponent className="w-6 h-6" />
-                      ) : (
-                        <ArrowUpRight className="w-6 h-6" />
-                      )}
-                    </div>
-                    <div className="w-8 h-8 rounded-full bg-gray-50 border border-gray-100 group-hover:bg-white group-hover:border-transparent flex items-center justify-center text-gray-400 group-hover:text-[#1B4E2C] transition-all duration-300">
-                      <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300" />
-                    </div>
+                {/* Bottom-to-Top Hover Fill Overlay */}
+                <div 
+                  className="absolute inset-0 bg-gradient-to-t from-[#2E8B35] to-[#41B349] translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out pointer-events-none z-0" 
+                />
+
+                {/* Card Content */}
+                <div className="relative z-10 flex flex-col items-center w-full h-full">
+                  {/* Centered Circular Icon Badge */}
+                  <div className="w-[74px] h-[74px] sm:w-[80px] sm:h-[80px] rounded-full bg-[#41B349] text-white group-hover:bg-white group-hover:text-[#41B349] flex items-center justify-center mb-6 sm:mb-7 shadow-[0_8px_20px_rgba(65,179,73,0.28)] group-hover:shadow-[0_10px_25px_rgba(0,0,0,0.15)] group-hover:scale-105 transition-all duration-500 ease-out">
+                    {IconComponent ? (
+                      <IconComponent className="w-8 h-8 sm:w-9 sm:h-9 transition-colors duration-500" />
+                    ) : (
+                      <ArrowUpRight className="w-8 h-8 sm:w-9 sm:h-9 transition-colors duration-500" />
+                    )}
                   </div>
 
                   {/* Title */}
                   <h3
-                    className="font-bold text-[18px] sm:text-[19px] md:text-[20px] mb-3 leading-snug text-[#0D0F12] group-hover:text-white transition-colors duration-300"
+                    className="font-bold text-[19px] sm:text-[21px] mb-3.5 leading-snug text-[#0D0F12] group-hover:text-white transition-colors duration-400"
                     style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
                   >
                     {service.title}
                   </h3>
 
                   {/* Description */}
-                  <p className="text-[13.5px] sm:text-[14px] leading-relaxed font-normal text-[#475569] group-hover:text-white/95 transition-colors duration-300 mb-5">
+                  <p 
+                    className="text-[14px] sm:text-[14.5px] leading-[1.7] font-normal text-[#475569] group-hover:text-white/95 transition-colors duration-400"
+                    style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                  >
                     {service.desc}
                   </p>
                 </div>
-
-                {/* Bottom Tags */}
-                {service.tags && service.tags.length > 0 && (
-                  <div className="pt-4 border-t border-gray-100 group-hover:border-white/20 transition-colors duration-300 flex flex-wrap gap-1.5">
-                    {service.tags.map((tag, tIdx) => (
-                      <span
-                        key={tIdx}
-                        className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-[#41B349]/10 text-[#1B4E2C] group-hover:bg-white/20 group-hover:text-white transition-colors duration-300"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
               </div>
             );
           })}
