@@ -1,203 +1,288 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import Image from "next/image";
 import { useQuote } from "@/app/_context/QuoteContext";
 import { useLanguage } from "@/app/_context/LanguageContext";
 import { getServiceTechnologies } from "@/app/_data/servicesTechnologiesData";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { getCmsVal } from "@/lib/api-helper";
 
 /**
- * Curated 14-Page Professional & Elegant Editorial Paper Palette
- * Engineered specifically for the TechSolutionor enterprise theme:
- * - Brand Greens: Mint Sage, Mineral Eucalyptus, Celadon Dew, Mint Whisper, Emerald Pearl
- * - Warm Luxury Neutrals: Alabaster Linen, Oyster Cream, Chalk Vellum, Sandstone Vellum
- * - Architectural Silvers: Platinum Silver, Titanium Mist, Slate Pearl, Glacial Cloud, Alpine Frost
- *
- * All pages maintain high luminance (93% - 97.5%) with WCAG AAA contrast against dark headings.
- * Dual-page spreads pair harmoniously (neutral + brand tone), ensuring a polished, unified look.
+ * Editorial paper themes (High luminance 98%+ porcelain tones)
  */
 export const PAGE_THEMES = [
-  // Page 00 - Cover / Engineering Stack (Refined Mint Sage - Brand Green Welcome)
   {
-    name: "Mint Sage",
-    bgGradient: "linear-gradient(145deg, #F6FAF7 0%, #E8F3EC 100%)",
+    themeName: "Porcelain Mint",
     accent: "#1B4E2C",
-    watermarkColor: "rgba(27, 78, 44, 0.045)",
+    watermarkColor: "rgba(27, 78, 44, 0.035)",
   },
-  // Page 01 - HTML5 / Semantic Structure (Warm Alabaster Linen)
   {
-    name: "Alabaster Linen",
-    bgGradient: "linear-gradient(145deg, #FAF8F5 0%, #F1ECE3 100%)",
+    themeName: "Platinum Mist",
     accent: "#1B4E2C",
-    watermarkColor: "rgba(15, 23, 42, 0.04)",
+    watermarkColor: "rgba(15, 23, 42, 0.035)",
   },
-  // Page 02 - CSS3 / Modern Styling (Architectural Platinum Silver)
   {
-    name: "Platinum Silver",
-    bgGradient: "linear-gradient(145deg, #F7F9FA 0%, #E9EFF2 100%)",
+    themeName: "Oyster Porcelain",
     accent: "#1B4E2C",
-    watermarkColor: "rgba(15, 23, 42, 0.04)",
+    watermarkColor: "rgba(15, 23, 42, 0.035)",
   },
-  // Page 03 - JavaScript / Dynamic Logic (Warm Oyster Cream)
   {
-    name: "Oyster Cream",
-    bgGradient: "linear-gradient(145deg, #FAF8F3 0%, #F1EDE2 100%)",
+    themeName: "Eucalyptus Dew",
     accent: "#1B4E2C",
-    watermarkColor: "rgba(15, 23, 42, 0.04)",
+    watermarkColor: "rgba(27, 78, 44, 0.035)",
   },
-  // Page 04 - Frameworks & Architecture (Mineral Eucalyptus Mist)
   {
-    name: "Eucalyptus Mist",
-    bgGradient: "linear-gradient(145deg, #F5FAF8 0%, #E5F2ED 100%)",
+    themeName: "Titanium Pearl",
     accent: "#1B4E2C",
-    watermarkColor: "rgba(27, 78, 44, 0.045)",
+    watermarkColor: "rgba(15, 23, 42, 0.035)",
   },
-  // Page 05 - Backend Engines / Node.js (Cool Titanium Mist)
   {
-    name: "Titanium Mist",
-    bgGradient: "linear-gradient(145deg, #F8F9FA 0%, #EAEEF1 100%)",
+    themeName: "Celadon Porcelain",
     accent: "#1B4E2C",
-    watermarkColor: "rgba(15, 23, 42, 0.04)",
+    watermarkColor: "rgba(27, 78, 44, 0.035)",
   },
-  // Page 06 - Database & Storage (Pale Celadon Dew)
   {
-    name: "Pale Celadon",
-    bgGradient: "linear-gradient(145deg, #F4FAF7 0%, #E4F1E9 100%)",
+    themeName: "Chalk Vellum",
     accent: "#1B4E2C",
-    watermarkColor: "rgba(27, 78, 44, 0.045)",
+    watermarkColor: "rgba(15, 23, 42, 0.035)",
   },
-  // Page 07 - Cloud & Distributed Platforms (Italian Chalk Vellum)
   {
-    name: "Chalk Vellum",
-    bgGradient: "linear-gradient(145deg, #F9F8F5 0%, #ECE7DD 100%)",
+    themeName: "Slate Pearl",
     accent: "#1B4E2C",
-    watermarkColor: "rgba(15, 23, 42, 0.04)",
+    watermarkColor: "rgba(15, 23, 42, 0.035)",
   },
-  // Page 08 - Security & Enterprise Architecture (Pale Slate Pearl)
   {
-    name: "Slate Pearl",
-    bgGradient: "linear-gradient(145deg, #F6F8FA 0%, #E7ECF0 100%)",
+    themeName: "Mint Whisper",
     accent: "#1B4E2C",
-    watermarkColor: "rgba(15, 23, 42, 0.04)",
+    watermarkColor: "rgba(27, 78, 44, 0.035)",
   },
-  // Page 09 - Microservices & APIs (Crisp Mint Whisper)
   {
-    name: "Mint Whisper",
-    bgGradient: "linear-gradient(145deg, #F4FAF6 0%, #E2F2E7 100%)",
+    themeName: "Glacial Cloud",
     accent: "#1B4E2C",
-    watermarkColor: "rgba(27, 78, 44, 0.045)",
+    watermarkColor: "rgba(15, 23, 42, 0.035)",
   },
-  // Page 10 - AI, Intelligent Systems & Logic (Nordic Glacial Cloud)
   {
-    name: "Glacial Cloud",
-    bgGradient: "linear-gradient(145deg, #F7FAFC 0%, #E8EEF3 100%)",
+    themeName: "Sandstone Vellum",
     accent: "#1B4E2C",
-    watermarkColor: "rgba(15, 23, 42, 0.04)",
+    watermarkColor: "rgba(15, 23, 42, 0.035)",
   },
-  // Page 11 - Headless CMS & Content Systems (Sandstone Vellum)
   {
-    name: "Sandstone Vellum",
-    bgGradient: "linear-gradient(145deg, #FAF7F2 0%, #EFE9DC 100%)",
+    themeName: "Alpine Frost",
     accent: "#1B4E2C",
-    watermarkColor: "rgba(15, 23, 42, 0.04)",
+    watermarkColor: "rgba(15, 23, 42, 0.035)",
   },
-  // Page 12 - Performance & Web Vitals (Pale Alpine Frost)
   {
-    name: "Alpine Frost",
-    bgGradient: "linear-gradient(145deg, #F5F9FB 0%, #E5EFF4 100%)",
+    themeName: "Emerald Pearl",
     accent: "#1B4E2C",
-    watermarkColor: "rgba(15, 23, 42, 0.04)",
-  },
-  // Page 13 - Final CTA / Next Chapter (Prestige Emerald Pearl)
-  {
-    name: "Emerald Pearl",
-    bgGradient: "linear-gradient(145deg, #F2FAF5 0%, #DCF0E3 100%)",
-    accent: "#1B4E2C",
-    watermarkColor: "rgba(27, 78, 44, 0.045)",
+    watermarkColor: "rgba(27, 78, 44, 0.04)",
   },
 ];
 
 /**
+ * Universal Fallback Image Matcher
+ * Maps technology titles across all services to corresponding clean images
+ */
+export function resolveTechDefaultImage(title = "") {
+  const t = (title || "").toUpperCase().trim();
+  if (t.includes("PROJECT") || t.includes("?") || t === "CTA" || t.includes("SCALE YOUR") || t.includes("HIRE YOUR") || t.includes("RANK ON")) {
+    return "/services/letsgobook.jpg";
+  }
+  if (t.includes("HTML")) return "/services/html5-superhero.png";
+  if (t.includes("CSS")) return "/services/css3book.jpg";
+  if (t.includes("JAVASCRIPT") || t === "JS") return "/services/javascriptbook.jpg";
+  if (t.includes("BOOTSTRAP")) return "/services/bootstrapbook.png";
+  if (t.includes("NODE")) return "/services/nodejsbook.jpg";
+  if (t.includes("PHP")) return "/services/phpbook.png";
+  if (t.includes("LARAVEL")) return "/services/laravelbook.svg";
+  if (t.includes("SHOPIFY")) return "/services/shopifybook.jpg";
+  if (t.includes("PYTHON") || t.includes("DJANGO")) return "/services/pythanbook.png";
+  if (t.includes(".NET") || t.includes("C#")) return "/services/dotnetbook.jpg";
+  if (t.includes("WORDPRESS") || t.includes("WOOCOMMERCE")) return "/services/wordpressbook.png";
+  if (t.includes("REACT")) return "/services/reactjs.png";
+  if (t.includes("FLUTTER") || t.includes("DART")) return "/services/flutter.png";
+  if (t.includes("SWIFT")) return "/services/swift.png";
+  if (t.includes("KOTLIN") || t.includes("ANDROID")) return "/services/appdev.png";
+  if (t.includes("JAVA")) return "/services/javabook.png";
+  if (t.includes("FIGMA")) return "/services/figma.png";
+  if (t.includes("PHOTOSHOP") || t.includes("ILLUSTRATOR") || t.includes("AFTER EFFECTS") || t.includes("GRAPHIC") || t.includes("CANVA")) {
+    return "/services/graphics.png";
+  }
+  if (t.includes("XD") || t.includes("WIREFRAMING") || t.includes("UI/UX")) return "/services/uxdesign.png";
+  if (t.includes("INDESIGN") || t.includes("DESIGN SYSTEM") || t.includes("TYPOGRAPHY")) return "/services/uidesign.png";
+  if (t.includes("BLENDER") || t.includes("3D")) return "/services/desktop.png";
+  if (t.includes("BRAND")) return "/services/Branding&Identity.png";
+  if (t.includes("MAGENTO")) return "/services/magento.png";
+  if (t.includes("PAYMENT") || t.includes("STRIPE") || t.includes("PAY") || t.includes("COMMERCE") || t.includes("STORE")) {
+    return "/services/ecommerce.png";
+  }
+  if (t.includes("GOOGLE AD") || t.includes("PMAX") || t.includes("PERFORMANCE MAX") || t.includes("SEARCH AD") || t.includes("SHOPPING")) {
+    return "/services/googleads.png";
+  }
+  if (t.includes("META") || t.includes("FACEBOOK")) return "/services/meta.png";
+  if (t.includes("INSTAGRAM") || t.includes("REEL")) return "/services/instaicon.png";
+  if (t.includes("LINKEDIN")) return "/services/linkedinicon.png";
+  if (t.includes("TWITTER") || t.includes("X ")) return "/services/twittericon.png";
+  if (t.includes("THREAD") || t.includes("HASHTAG")) return "/services/threadicon.png";
+  if (t.includes("PPC") || t.includes("AMAZON") || t.includes("ACOS") || t.includes("ROAS") || t.includes("BID")) {
+    return "/services/ppcads.png";
+  }
+  if (t.includes("SEO") || t.includes("SEMRUSH") || t.includes("AHREFS") || t.includes("CRAWL") || t.includes("RANK") || t.includes("BACKLINK")) {
+    return "/services/seo.png";
+  }
+  if (t.includes("CONTENT") || t.includes("WRITING") || t.includes("GRAMMARLY") || t.includes("ARTICLE") || t.includes("HEMINGWAY") || t.includes("EDITORIAL")) {
+    return "/services/content.png";
+  }
+  if (t.includes("CALL") || t.includes("ZENDESK") || t.includes("TWILIO") || t.includes("SUPPORT") || t.includes("VOICE") || t.includes("WHATSAPP")) {
+    return "/services/call.png";
+  }
+  if (t.includes("HIRE") || t.includes("DEVELOPER") || t.includes("ENGINEER") || t.includes("SPECIALIST") || t.includes("TEAM") || t.includes("MANAGER")) {
+    return "/services/hire.png";
+  }
+  if (t.includes("DATABASE") || t.includes("SQL") || t.includes("MONGO") || t.includes("POSTGRES") || t.includes("API") || t.includes("GRAPHQL")) {
+    return "/services/API.png";
+  }
+  if (t.includes("REALTIME") || t.includes("REDIS") || t.includes("FIREBASE") || t.includes("SYNC")) {
+    return "/services/RealTime.png";
+  }
+  if (t.includes("SECURITY") || t.includes("AUTH") || t.includes("PCI") || t.includes("COMPLIANCE") || t.includes("SHIELD") || t.includes("PLAGIARISM")) {
+    return "/services/secrrity.png";
+  }
+  if (t.includes("CI/CD") || t.includes("DEVOPS") || t.includes("DOCKER") || t.includes("KUBERNETES") || t.includes("CLOUD") || t.includes("AWS") || t.includes("GOLANG") || t.includes("C++") || t.includes("SOFTWARE")) {
+    return "/services/software.png";
+  }
+  if (t.includes("ANALYTICS") || t.includes("ATTRIBUTION") || t.includes("TRACKING") || t.includes("LOOKER") || t.includes("METRIC") || t.includes("REPORTING") || t.includes("KPI") || t.includes("MEDIA") || t.includes("SOCIAL")) {
+    return "/services/marketingmedia.png";
+  }
+  if (t.includes("APP") || t.includes("MOBILE")) return "/services/app.png";
+  if (t.includes("DIGITAL") || t.includes("MARKETING") || t.includes("CRM") || t.includes("HUBSPOT") || t.includes("SALESFORCE") || t.includes("LEAD") || t.includes("ENRICHMENT") || t.includes("AUTOMATION")) {
+    return "/services/digital.png";
+  }
+  if (t.includes("WEB") || t.includes("PORTAL") || t.includes("SITE")) return "/services/webdesign.png";
+  return "/services/webapps.png";
+}
+
+/**
  * Reusable Technologies Book Component
- * Used across all Service Pages in the Services dropdown.
- *
- * @param {string} serviceKey - e.g. "web-development", "app-development", "software-development", etc.
- * @param {string} lang - optional language override ("en" or "ar")
- * @param {object} customData - optional custom book dataset override
+ * Used across ALL Service Pages in the site.
+ * 
+ * Features:
+ * - Dual-page spread layout: Left = Content / Text, Right = Visual / Image
+ * - Solid pure white background (#FFFFFF)
+ * - Solid #41B349 bottom bar (NO shadows, NO gradients, NO blur)
+ * - Smooth physics-based 3D turning animation with continuous damped LERP engine
+ * - NO slider arrows
+ * - Dynamic CMS support: editable text and changeable images in Pages & Routes
  */
 const TechnologiesBook = ({
   serviceKey = "web-development",
   lang,
   customData,
   bgColor = "#FFFFFF",
+  cmsContent,
 }) => {
   const { openQuote } = useQuote();
   const { language } = useLanguage();
   const activeLang = lang || language || "en";
 
-  const isLightBg = bgColor.toUpperCase() === "#FFFFFF" || bgColor.toLowerCase() === "white";
-
-  // Resolve dataset for the specific service and language
+  // Resolve service dataset
   const content = customData || getServiceTechnologies(serviceKey, activeLang);
-  const {
-    badge = "WE ARE BEST",
-    title = "Technologies",
-    titleHighlight = "We Use",
-    pages: pagesData = [],
-  } = content;
+  const defaultBadge = content?.badge || "WE ARE BEST";
+  const defaultTitle = content?.title || "Technologies";
+  const defaultTitleHighlight = content?.titleHighlight || "We Use";
 
-  // Build the 6 turning leaves between Permanent Left Base (Page 0) and Permanent Right Base (Page 13)
-  const leaves = [
-    { leafIndex: 0, front: pagesData[1], back: pagesData[2] },
-    { leafIndex: 1, front: pagesData[3], back: pagesData[4] },
-    { leafIndex: 2, front: pagesData[5], back: pagesData[6] },
-    { leafIndex: 3, front: pagesData[7], back: pagesData[8] },
-    { leafIndex: 4, front: pagesData[9], back: pagesData[10] },
-    { leafIndex: 5, front: pagesData[11], back: pagesData[12] },
-  ];
+  // Section Header Text (Editable via CMS)
+  const badgeText = getCmsVal(cmsContent, defaultBadge, "technologiesbook");
+  const titleText = getCmsVal(cmsContent, defaultTitle, "technologiesbook");
+  const titleHighlightText = getCmsVal(cmsContent, defaultTitleHighlight, "technologiesbook");
 
-  const totalSpreads = 7; // Spreads 0 to 6 (14 pages total)
+  // Dynamic Technology List mapped with CMS values
+  // In servicesTechnologiesData, pages[0] is the cover overview, pages.slice(1) gives the 12 tech pages + 1 CTA
+  const baseList = content?.pages && content.pages.length > 1
+    ? content.pages.slice(1)
+    : (content?.pages || []);
+
+  const techList = baseList.map((item) => {
+    const title = getCmsVal(cmsContent, item.title, "technologiesbook");
+    const subtitle = getCmsVal(cmsContent, item.subtitle, "technologiesbook");
+    const badge = getCmsVal(cmsContent, item.badge, "technologiesbook");
+    const desc = getCmsVal(cmsContent, item.desc, "technologiesbook");
+    const defaultImg = item.image || resolveTechDefaultImage(item.title);
+    const image = getCmsVal(cmsContent, defaultImg, "technologiesbook", item.title);
+    const tags = (item.tags || []).map((tag) => getCmsVal(cmsContent, tag, "technologiesbook"));
+    const footerLeft = getCmsVal(cmsContent, item.footerLeft, "technologiesbook");
+
+    return {
+      ...item,
+      title,
+      subtitle,
+      badge,
+      desc,
+      image,
+      tags,
+      footerLeft,
+    };
+  });
+
+  const totalSpreads = Math.max(1, techList.length); // Typically 13 spreads (12 technologies + 1 CTA)
+
+  // Turning leaves between Spread 0 Left Base and Spread (totalSpreads - 1) Right Base
+  const leaves = Array.from({ length: Math.max(0, totalSpreads - 1) }).map((_, leafIdx) => ({
+    leafIndex: leafIdx,
+    // Front face: Right page of Spread leafIdx (Image of techList[leafIdx])
+    frontTech: techList[leafIdx],
+    // Back face: Left page of Spread leafIdx + 1 (Text of techList[leafIdx + 1])
+    backTech: techList[leafIdx + 1],
+  }));
+
   const [activeSpread, setActiveSpread] = useState(0);
   const [continuousProgress, setContinuousProgress] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
+  const [mobileView, setMobileView] = useState("text"); // "text" | "image"
 
   const trackRef = useRef(null);
-  const targetSpreadRef = useRef(0);
+  const currentProgressRef = useRef(0);
+  const targetProgressRef = useRef(0);
   const animFrameRef = useRef(null);
 
-  // Smooth continuous lerp for page-turning animation
-  const animateToTarget = useCallback((targetVal) => {
-    if (animFrameRef.current) {
-      cancelAnimationFrame(animFrameRef.current);
-    }
+  // Smooth continuous damped LERP engine for silky 60fps/120fps page turns
+  useEffect(() => {
+    let active = true;
 
-    const startVal = continuousProgress;
-    const startTime = performance.now();
-    const duration = 500; // ms
+    const tick = () => {
+      if (!active) return;
+      const target = targetProgressRef.current;
+      const current = currentProgressRef.current;
+      const diff = target - current;
 
-    const step = (now) => {
-      const elapsed = now - startTime;
-      const t = Math.min(elapsed / duration, 1);
-      // Ease out cubic
-      const ease = 1 - Math.pow(1 - t, 3);
-      const nextVal = startVal + (targetVal - startVal) * ease;
-      setContinuousProgress(nextVal);
-
-      if (t < 1) {
-        animFrameRef.current = requestAnimationFrame(step);
+      if (Math.abs(diff) > 0.0005) {
+        // Damped interpolation factor: fast response with silky deceleration
+        currentProgressRef.current = current + diff * 0.14;
+        setContinuousProgress(currentProgressRef.current);
+      } else if (current !== target) {
+        currentProgressRef.current = target;
+        setContinuousProgress(target);
       }
+
+      animFrameRef.current = requestAnimationFrame(tick);
     };
 
-    animFrameRef.current = requestAnimationFrame(step);
-  }, [continuousProgress]);
+    animFrameRef.current = requestAnimationFrame(tick);
 
-  // Navigate to specific spread
-  const goToSpread = useCallback((index) => {
-    const clamped = Math.max(0, Math.min(index, totalSpreads - 1));
-    setActiveSpread(clamped);
-    targetSpreadRef.current = clamped;
-    animateToTarget(clamped);
-  }, [animateToTarget, totalSpreads]);
+    return () => {
+      active = false;
+      if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
+    };
+  }, []);
+
+  // Set target spread smoothly
+  const goToSpread = useCallback(
+    (index) => {
+      const clamped = Math.max(0, Math.min(index, totalSpreads - 1));
+      setActiveSpread(clamped);
+      targetProgressRef.current = clamped;
+    },
+    [totalSpreads]
+  );
 
   const handleNext = useCallback(() => {
     if (activeSpread < totalSpreads - 1) {
@@ -228,9 +313,8 @@ const TechnologiesBook = ({
         const mappedProgress = scrollFraction * (totalSpreads - 1);
         const mappedSpread = Math.round(mappedProgress);
 
-        targetSpreadRef.current = mappedSpread;
+        targetProgressRef.current = mappedProgress;
         setActiveSpread(mappedSpread);
-        setContinuousProgress(mappedProgress);
       }
     };
 
@@ -239,9 +323,6 @@ const TechnologiesBook = ({
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      if (animFrameRef.current) {
-        cancelAnimationFrame(animFrameRef.current);
-      }
     };
   }, [totalSpreads]);
 
@@ -260,137 +341,106 @@ const TechnologiesBook = ({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isHovered, handleNext, handlePrev]);
 
+  if (!techList || techList.length === 0) return null;
+
   return (
     <div
       ref={trackRef}
       id={`technologies-book-section-${serviceKey}`}
-      className="relative w-full"
+      className="relative w-full bg-white"
       style={{
-        height: "450vh",
-        backgroundColor: bgColor,
+        height: "550vh",
+        backgroundColor: "#FFFFFF",
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* STICKY BOOK VIEWPORT (Section background #FFFFFF) */}
+      {/* STICKY BOOK VIEWPORT (PURE SOLID WHITE, NO GRADIENTS OR DOT PATTERNS) */}
       <div
-        className="sticky top-0 w-full h-screen flex flex-col justify-center items-center overflow-hidden select-none px-4 sm:px-6 md:px-10 z-10 font-sans"
+        className="sticky top-0 w-full h-screen flex flex-col justify-center items-center overflow-hidden select-none px-4 sm:px-6 md:px-10 z-10 font-sans bg-white"
         style={{
           position: "sticky",
           top: 0,
           height: "100vh",
-          backgroundColor: bgColor,
+          backgroundColor: "#FFFFFF",
         }}
       >
-        {/* SUBTLE MINIMAL ARCHITECTURAL GRID OVERLAY */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div
-            className="absolute inset-0 opacity-[0.04]"
-            style={{
-              backgroundImage: isLightBg
-                ? `linear-gradient(#cbd5e1 1px, transparent 1px), linear-gradient(90deg, #cbd5e1 1px, transparent 1px)`
-                : `linear-gradient(#ffffff 1px, transparent 1px), linear-gradient(90deg, #ffffff 1px, transparent 1px)`,
-              backgroundSize: "40px 40px",
-            }}
-          />
-        </div>
-
-        {/* SECTION HEADER (Matching Exact Typography of Home Page About TechSolutionor) */}
-        <div className="relative z-10 w-full max-w-[980px] flex items-center justify-between mb-2 sm:mb-3">
+        {/* SECTION HEADER */}
+        <div className="relative z-10 w-full max-w-[1020px] mb-3 sm:mb-4 px-1">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#41B349]/15 border border-[#41B349]/30 text-[#41B349] font-extrabold text-[11px] sm:text-xs uppercase tracking-widest mb-1.5">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#41B349]/12 border border-[#41B349]/25 text-[#1B4E2C] font-extrabold text-[11px] sm:text-xs uppercase tracking-widest mb-1.5 backdrop-blur-xs">
               <span className="w-2 h-2 rounded-full bg-[#41B349] animate-pulse" />
-              <span>{badge}</span>
+              <span>{badgeText}</span>
             </div>
             <h2
-              className={`text-2xl sm:text-3xl md:text-[34px] lg:text-[38px] font-black tracking-tight leading-tight ${
-                isLightBg ? "text-[#0D0F12]" : "text-white"
-              }`}
+              className="text-2xl sm:text-3xl md:text-[34px] lg:text-[38px] font-black tracking-tight leading-tight text-[#0D0F12]"
               style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
             >
-              {title} <span className="text-[#41B349]">{titleHighlight}</span>
+              {titleText} <span className="text-[#41B349]">{titleHighlightText}</span>
             </h2>
-          </div>
-
-          {/* CIRCULAR PREV / NEXT CONTROLS */}
-          <div className="flex items-center gap-2 sm:gap-2.5">
-            <button
-              onClick={handlePrev}
-              disabled={activeSpread === 0}
-              className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center border transition-all duration-300 cursor-pointer ${
-                activeSpread === 0
-                  ? isLightBg
-                    ? "border-gray-200 text-gray-300 cursor-not-allowed opacity-40 bg-gray-50"
-                    : "border-white/10 text-white/30 cursor-not-allowed opacity-30 bg-white/5"
-                  : isLightBg
-                  ? "border-gray-200 bg-white text-[#1B4E2C] shadow-sm hover:bg-gray-50 hover:border-gray-300 active:scale-95"
-                  : "border-white/30 bg-white text-[#1B4E2C] hover:bg-white/90 active:scale-95"
-              }`}
-              title="Previous Page"
-            >
-              <ChevronLeft className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
-            </button>
-
-            <button
-              onClick={handleNext}
-              disabled={activeSpread === totalSpreads - 1}
-              className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center border transition-all duration-300 cursor-pointer ${
-                activeSpread === totalSpreads - 1
-                  ? isLightBg
-                    ? "border-gray-200 text-gray-300 cursor-not-allowed opacity-40 bg-gray-50"
-                    : "border-white/10 text-white/30 cursor-not-allowed opacity-30 bg-white/5"
-                  : isLightBg
-                  ? "border-gray-200 bg-white text-[#1B4E2C] shadow-sm hover:bg-gray-50 hover:border-gray-300 active:scale-95"
-                  : "border-white/30 bg-white text-[#1B4E2C] hover:bg-white/90 active:scale-95"
-              }`}
-              title="Next Page"
-            >
-              <ChevronRight className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
-            </button>
           </div>
         </div>
 
-        {/* 3D BOOK CONTAINER (Perspective Projection, Rounded Editorial Pages) */}
+        {/* 3D BOOK WRAPPER WITH EXACT ORIGINAL DIMENSIONS */}
         <div
-          className="relative z-10 w-full max-w-[980px] h-[340px] sm:h-[375px] md:h-[410px] lg:h-[435px] max-h-[58vh]"
+          className="relative z-10 w-full max-w-[1020px] h-[360px] sm:h-[395px] md:h-[430px] lg:h-[455px] max-h-[60vh]"
           style={{
-            perspective: "2400px",
+            perspective: "2600px",
           }}
         >
-          {/* ========================================================= */}
-          {/* DESKTOP / TABLET DUAL-PAGE BOOK (md: and above) */}
-          {/* ========================================================= */}
+          {/* SOLID #41B349 BOTTOM BAR - PURE SOLID COLOR, NO SHADOW, NO BLUR, NO GRADIENT */}
           <div
-            className={`hidden md:flex relative w-full h-full rounded-2xl lg:rounded-3xl bg-white overflow-hidden ${
-              isLightBg ? "border border-gray-200 shadow-2xl shadow-black/8" : "border border-white/20"
-            }`}
+            className="absolute left-2 right-2 -bottom-2 h-4 rounded-b-2xl lg:rounded-b-3xl pointer-events-none z-0"
             style={{
+              backgroundColor: "#41B349",
+            }}
+          />
+
+          {/* DESKTOP / TABLET DUAL-PAGE 3D BOOK (>= md:) */}
+          <div
+            className="hidden md:flex relative z-10 w-full h-full rounded-2xl lg:rounded-3xl bg-white overflow-hidden border border-black/[0.08] cursor-pointer"
+            onClick={(e) => {
+              const rect = e.currentTarget.getBoundingClientRect();
+              const clickX = e.clientX - rect.left;
+              if (clickX < rect.width * 0.45) {
+                handlePrev();
+              } else if (clickX > rect.width * 0.55) {
+                handleNext();
+              }
+            }}
+            style={{
+              backgroundColor: "#FFFFFF",
               transformStyle: "preserve-3d",
             }}
           >
-            {/* 1. PERMANENT LEFT BASE: Spread 0 Left (Cover: We Are Best) */}
+            {/* 1. PERMANENT LEFT BASE: Spread 0 Left (Content / Text of techList[0]) */}
             <div
-              className="w-1/2 h-full relative z-0 border-r border-black/[0.06]"
-              style={{ background: PAGE_THEMES[0].bgGradient }}
+              className="w-1/2 h-full relative z-0 border-r border-black/[0.05] bg-white"
+              style={{ backgroundColor: "#FFFFFF" }}
             >
-              <PageContent page={pagesData[0]} isLeft={true} pageIndex={0} />
+              <TechContentPage
+                tech={techList[0]}
+                isLeft={true}
+                pageNumber={1}
+                openQuote={openQuote}
+              />
             </div>
 
-            {/* 2. PERMANENT RIGHT BASE: Spread 6 Right (Page 13: Your Project? CTA) */}
+            {/* 2. PERMANENT RIGHT BASE: Spread (totalSpreads - 1) Right (Last Visual / CTA) */}
             <div
-              className="w-1/2 h-full relative z-0"
-              style={{ background: PAGE_THEMES[13].bgGradient }}
+              className="w-1/2 h-full relative z-0 bg-white"
+              style={{ backgroundColor: "#FFFFFF" }}
             >
-              <PageContent page={pagesData[13]} isLeft={false} openQuote={openQuote} pageIndex={13} />
+              <TechVisualPage
+                tech={techList[totalSpreads - 1]}
+                isLeft={false}
+                pageNumber={totalSpreads * 2}
+                openQuote={openQuote}
+              />
             </div>
 
-            {/* 3. PHYSICAL 3D TURNING LEAVES STACK (Leaves 0 to 5) */}
-            {leaves.map(({ leafIndex, front, back }) => {
-              const frontIdx = leafIndex * 2 + 1;
-              const backIdx = leafIndex * 2 + 2;
-              const frontTheme = PAGE_THEMES[frontIdx] || PAGE_THEMES[0];
-              const backTheme = PAGE_THEMES[backIdx] || PAGE_THEMES[0];
-
+            {/* 3. PHYSICAL 3D TURNING LEAVES STACK (Leaves 0 to totalSpreads - 2) */}
+            {leaves.map(({ leafIndex, frontTech, backTech }) => {
               const leafProgress = Math.min(
                 Math.max(continuousProgress - leafIndex, 0),
                 1
@@ -400,9 +450,13 @@ const TechnologiesBook = ({
               const isTurnedPastHalf = leafProgress > 0.5;
               const zIndex = isTurnedPastHalf
                 ? 10 + leafIndex
-                : 30 - leafIndex;
+                : 35 - leafIndex;
 
-              const curl = Math.sin(leafProgress * Math.PI) * 1.4;
+              // Gentle aerodynamic paper curl during rotation
+              const curl = Math.sin(leafProgress * Math.PI) * 1.5;
+
+              // Dynamic paper shading overlay for realistic light bounce
+              const shadingOpacity = Math.sin(leafProgress * Math.PI) * 0.14;
 
               return (
                 <div
@@ -416,60 +470,107 @@ const TechnologiesBook = ({
                     willChange: "transform",
                   }}
                 >
-                  {/* FRONT FACE (Faces right when flat at 0deg) */}
+                  {/* FRONT FACE: Right Page of Spread leafIndex (Image of frontTech) */}
                   <div
-                    className="absolute inset-0 w-full h-full rounded-r-2xl lg:rounded-r-3xl overflow-hidden border-r border-black/[0.06]"
+                    className="absolute inset-0 w-full h-full rounded-r-2xl lg:rounded-r-3xl overflow-hidden border-r border-black/[0.05] bg-white"
                     style={{
-                      background: frontTheme.bgGradient,
+                      backgroundColor: "#FFFFFF",
                       backfaceVisibility: "hidden",
                       WebkitBackfaceVisibility: "hidden",
                       transform: "rotateY(0deg)",
                     }}
                   >
-                    <PageContent page={front} isLeft={false} openQuote={openQuote} pageIndex={frontIdx} />
+                    <TechVisualPage
+                      tech={frontTech}
+                      isLeft={false}
+                      pageNumber={(leafIndex + 1) * 2}
+                      openQuote={openQuote}
+                    />
+                    {/* Turning ambient occlusion shadow on front */}
+                    <div
+                      className="absolute inset-0 pointer-events-none transition-opacity duration-75"
+                      style={{
+                        background:
+                          "linear-gradient(to right, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.04) 40%, transparent 100%)",
+                        opacity: shadingOpacity,
+                      }}
+                    />
                   </div>
 
-                  {/* BACK FACE (Faces left when turned flat at -180deg) */}
+                  {/* BACK FACE: Left Page of Spread leafIndex + 1 (Text of backTech) */}
                   <div
-                    className="absolute inset-0 w-full h-full rounded-l-2xl lg:rounded-l-3xl overflow-hidden border-l border-black/[0.06]"
+                    className="absolute inset-0 w-full h-full rounded-l-2xl lg:rounded-l-3xl overflow-hidden border-l border-black/[0.05] bg-white"
                     style={{
-                      background: backTheme.bgGradient,
+                      backgroundColor: "#FFFFFF",
                       backfaceVisibility: "hidden",
                       WebkitBackfaceVisibility: "hidden",
                       transform: "rotateY(180deg)",
                     }}
                   >
-                    <PageContent page={back} isLeft={true} pageIndex={backIdx} />
+                    <TechContentPage
+                      tech={backTech}
+                      isLeft={true}
+                      pageNumber={(leafIndex + 1) * 2 + 1}
+                      openQuote={openQuote}
+                    />
+                    {/* Turning ambient occlusion shadow on back */}
+                    <div
+                      className="absolute inset-0 pointer-events-none transition-opacity duration-75"
+                      style={{
+                        background:
+                          "linear-gradient(to left, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.04) 40%, transparent 100%)",
+                        opacity: shadingOpacity,
+                      }}
+                    />
                   </div>
                 </div>
               );
             })}
 
+            {/* DYNAMIC SHADOW CAST UNDERNEATH CURRENT TURNING LEAF */}
+            {(() => {
+              const activeLeaf = Math.floor(continuousProgress);
+              const fraction = continuousProgress - activeLeaf;
+              const castOpacity = Math.sin(fraction * Math.PI) * 0.18;
+              if (castOpacity <= 0.005) return null;
+
+              return (
+                <div
+                  className="absolute top-0 right-0 w-1/2 h-full pointer-events-none z-5"
+                  style={{
+                    background:
+                      "linear-gradient(to right, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0.03) 40%, transparent 80%)",
+                    opacity: castOpacity,
+                  }}
+                />
+              );
+            })()}
+
             {/* ========================================================= */}
             {/* CENTRAL 3D SKEUOMORPHIC WIRE SPIRAL BINDING               */}
             {/* ========================================================= */}
             <div
-              className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-5 sm:w-6 z-40 pointer-events-none flex flex-col justify-evenly items-center py-1.5"
+              className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-6 sm:w-7 z-40 pointer-events-none flex flex-col justify-evenly items-center py-2"
               style={{
-                transform: "translateZ(1px)",
+                transform: "translateZ(2px)",
               }}
             >
               {/* Central vertical spine binding seam */}
-              <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-[2px] bg-gradient-to-b from-gray-300 via-gray-400 to-gray-300 shadow-[0_0_2px_rgba(0,0,0,0.1)]" />
+              <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-[2px] bg-gradient-to-b from-gray-300 via-gray-400 to-gray-300 shadow-[0_0_2px_rgba(0,0,0,0.12)]" />
 
-              {/* 11 Evenly Spaced Metallic Spring Rings & Punched Holes */}
+              {/* 11 Evenly Spaced Metallic Chrome Spring Rings & Punched Holes */}
               {Array.from({ length: 11 }).map((_, rIdx) => (
-                <div key={rIdx} className="relative flex items-center justify-center w-full h-2.5 sm:h-3">
-                  <div className="absolute left-0.5 sm:left-1 w-[3.5px] sm:w-[4px] h-[6.5px] sm:h-[7.5px] rounded-[1.5px] bg-gray-200 shadow-[inset_0_1px_1.5px_rgba(0,0,0,0.2)]" />
-                  <div className="absolute right-0.5 sm:right-1 w-[3.5px] sm:w-[4px] h-[6.5px] sm:h-[7.5px] rounded-[1.5px] bg-gray-200 shadow-[inset_0_1px_1.5px_rgba(0,0,0,0.2)]" />
+                <div key={rIdx} className="relative flex items-center justify-center w-full h-3">
+                  <div className="absolute left-0.5 sm:left-1 w-[4px] h-[7.5px] rounded-[1.5px] bg-[#dbe1e8] shadow-[inset_0_1.5px_2px_rgba(0,0,0,0.3)]" />
+                  <div className="absolute right-0.5 sm:right-1 w-[4px] h-[7.5px] rounded-[1.5px] bg-[#dbe1e8] shadow-[inset_0_1.5px_2px_rgba(0,0,0,0.3)]" />
                   <div
-                    className="relative z-10 w-[18px] sm:w-[21px] h-[4px] sm:h-[5px] rounded-full transform -rotate-[2deg]"
+                    className="relative z-10 w-[20px] sm:w-[22px] h-[4.5px] sm:h-[5px] rounded-full transform -rotate-[2.5deg]"
                     style={{
                       background:
-                        "linear-gradient(180deg, #ffffff 0%, #cbd5e1 35%, #94a3b8 70%, #475569 100%)",
+                        "linear-gradient(180deg, #FFFFFF 0%, #E2E8F0 25%, #94A3B8 55%, #475569 85%, #1E293B 100%)",
                       boxShadow:
-                        "0 1.5px 3px rgba(0,0,0,0.1), inset 0 1px 1px rgba(255,255,255,0.9)",
-                      border: "0.5px solid rgba(148,163,184,0.3)",
+                        "0 2px 4px rgba(0, 0, 0, 0.16), inset 0 1px 1px rgba(255, 255, 255, 0.95)",
+                      border: "0.5px solid rgba(148, 163, 184, 0.35)",
                     }}
                   />
                 </div>
@@ -478,25 +579,56 @@ const TechnologiesBook = ({
           </div>
 
           {/* ========================================================= */}
-          {/* MOBILE SINGLE-PAGE BOOK (< md:) */}
+          {/* MOBILE SINGLE-PAGE BOOK (< md:)                           */}
+          {/* Switchable between Content and Image                      */}
           {/* ========================================================= */}
           {(() => {
-            const mobilePageIdx = Math.min(activeSpread * 2 + 1, 13);
-            const mobileTheme = PAGE_THEMES[mobilePageIdx] || PAGE_THEMES[0];
+            const currentTech = techList[activeSpread] || techList[0];
             return (
               <div
-                className={`flex md:hidden relative w-full h-full rounded-2xl overflow-hidden ${
-                  isLightBg ? "border border-gray-200 shadow-xl shadow-black/8" : "border border-white/20"
-                }`}
-                style={{ background: mobileTheme.bgGradient }}
+                className="flex md:hidden relative z-10 w-full h-full rounded-2xl overflow-hidden border border-black/[0.08] bg-white"
+                style={{ backgroundColor: "#FFFFFF" }}
               >
+                {/* Mobile View Toggle */}
+                <div className="absolute top-2.5 right-12 z-20 inline-flex items-center p-0.5 rounded-full bg-black/[0.04] border border-black/[0.06]">
+                  <button
+                    onClick={() => setMobileView("text")}
+                    className={`px-2 py-0.5 rounded-full text-[9.5px] font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer ${
+                      mobileView === "text"
+                        ? "bg-white text-[#1B4E2C] shadow-2xs"
+                        : "text-gray-500 hover:text-gray-800"
+                    }`}
+                  >
+                    Content
+                  </button>
+                  <button
+                    onClick={() => setMobileView("image")}
+                    className={`px-2 py-0.5 rounded-full text-[9.5px] font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer ${
+                      mobileView === "image"
+                        ? "bg-white text-[#1B4E2C] shadow-2xs"
+                        : "text-gray-500 hover:text-gray-800"
+                    }`}
+                  >
+                    Image
+                  </button>
+                </div>
+
                 <div className="w-full h-full">
-                  <PageContent
-                    page={pagesData[mobilePageIdx]}
-                    isLeft={false}
-                    openQuote={openQuote}
-                    pageIndex={mobilePageIdx}
-                  />
+                  {mobileView === "text" ? (
+                    <TechContentPage
+                      tech={currentTech}
+                      isLeft={false}
+                      pageNumber={activeSpread * 2 + 1}
+                      openQuote={openQuote}
+                    />
+                  ) : (
+                    <TechVisualPage
+                      tech={currentTech}
+                      isLeft={false}
+                      pageNumber={activeSpread * 2 + 2}
+                      openQuote={openQuote}
+                    />
+                  )}
                 </div>
               </div>
             );
@@ -504,8 +636,10 @@ const TechnologiesBook = ({
         </div>
 
         {/* BOTTOM PROGRESS INDICATORS */}
-        <div className="relative z-10 w-full max-w-[980px] mt-2 sm:mt-2.5 flex items-center justify-between gap-2 text-xs">
-          <div className="w-20 hidden sm:block" />
+        <div className="relative z-10 w-full max-w-[1020px] mt-2.5 sm:mt-3 flex items-center justify-between gap-2 text-xs px-1">
+          <div className="w-32 hidden sm:block text-[11px] text-gray-400 font-medium">
+            Tech Solutionor Stack
+          </div>
 
           {/* Interactive spread indicator dots */}
           <div className="flex items-center gap-1.5 sm:gap-2 mx-auto sm:mx-0">
@@ -515,12 +649,8 @@ const TechnologiesBook = ({
                 onClick={() => goToSpread(idx)}
                 className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
                   activeSpread === idx
-                    ? isLightBg
-                      ? "w-7 bg-[#1B4E2C]"
-                      : "w-7 bg-white"
-                    : isLightBg
-                    ? "w-1.5 bg-gray-300 hover:bg-gray-400"
-                    : "w-1.5 bg-white/30 hover:bg-white/50"
+                    ? "w-7 bg-[#1B4E2C]"
+                    : "w-1.5 bg-gray-300 hover:bg-gray-400"
                 }`}
                 title={`Jump to spread ${idx + 1}`}
               />
@@ -528,12 +658,10 @@ const TechnologiesBook = ({
           </div>
 
           <div
-            className={`text-[11px] sm:text-xs font-bold text-right w-20 tracking-wider ${
-              isLightBg ? "text-[#0D0F12]" : "text-white"
-            }`}
+            className="text-[11px] sm:text-xs font-bold text-right w-32 tracking-wider text-[#0D0F12]"
             style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
           >
-            PAGE {String(activeSpread * 2 + 1).padStart(2, "0")} - {String(Math.min(activeSpread * 2 + 2, 14)).padStart(2, "0")} / 14
+            PAGE {String(activeSpread * 2 + 1).padStart(2, "0")} - {String(activeSpread * 2 + 2).padStart(2, "0")} / {String(totalSpreads * 2).padStart(2, "0")}
           </div>
         </div>
       </div>
@@ -542,49 +670,44 @@ const TechnologiesBook = ({
 };
 
 // =========================================================================
-// SUB-COMPONENT: PAGE CONTENT (Rendered on pages and flipping leaves)
-// Matching typography from Home Page About TechSolutionor
+// SUB-COMPONENT 1: TECH CONTENT PAGE (Rendered on LEFT PAGE of each spread)
+// Contains Category, Title, Description, Capability Tags, and Metadata
 // =========================================================================
-const PageContent = ({ page, isLeft, openQuote, pageIndex }) => {
-  if (!page) return null;
+const TechContentPage = ({ tech, isLeft, pageNumber, openQuote }) => {
+  if (!tech) return null;
 
-  const resolvedIndex = typeof pageIndex === "number"
-    ? pageIndex
-    : parseInt(page.pageNumber || "0", 10) || 0;
-  const pageTheme = PAGE_THEMES[resolvedIndex] || PAGE_THEMES[0];
-
-  const IconComponent = page.icon;
-
-  // Render CTA page (Spread 6 Right: "Your project? Start yours ↘")
-  if (page.type === "cta") {
+  // Handle CTA page
+  if (tech.type === "cta") {
     return (
       <div
-        className="relative w-full h-full p-3.5 sm:p-5 md:p-6 flex flex-col justify-between text-[#0D0F12]"
-        style={{ background: pageTheme.bgGradient }}
+        className={`relative w-full h-full p-4 sm:p-5 md:p-6 lg:p-7 flex flex-col justify-between text-[#0D0F12] overflow-hidden bg-white ${
+          isLeft ? "pr-5 sm:pr-6 md:pr-7" : "pl-5 sm:pl-6 md:pl-7"
+        }`}
+        style={{ backgroundColor: "#FFFFFF" }}
       >
-        {/* Subtle paper curvature gutter along the spine */}
-        <div className="absolute top-0 bottom-0 left-0 w-6 sm:w-8 bg-gradient-to-l from-transparent to-black/[0.04] pointer-events-none z-10" />
+        {isLeft ? (
+          <div className="absolute top-0 bottom-0 right-0 w-6 sm:w-8 bg-gradient-to-r from-transparent to-black/[0.045] pointer-events-none z-10" />
+        ) : (
+          <div className="absolute top-0 bottom-0 left-0 w-6 sm:w-8 bg-gradient-to-l from-transparent to-black/[0.045] pointer-events-none z-10" />
+        )}
 
-        {/* Top Header */}
         <div className="flex items-center justify-between">
           <span className="text-[10.5px] sm:text-[11px] font-bold uppercase tracking-widest text-[#41B349]">
-            {page.subtitle}
+            {tech.subtitle || "// NEXT CHAPTER"}
           </span>
           <span
             className="text-[11px] sm:text-xs font-black text-[#1B4E2C] tracking-widest"
             style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
           >
-            {page.pageNumber}
+            {String(pageNumber).padStart(2, "0")}
           </span>
         </div>
 
-        {/* Center Content */}
         <div className="my-auto flex flex-col items-start max-w-[380px]">
-          {/* Dot badge */}
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#41B349]/10 border border-[#41B349]/20 mb-2">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#41B349]/12 border border-[#41B349]/25 mb-2.5">
             <span className="w-1.5 h-1.5 rounded-full bg-[#41B349] animate-pulse" />
             <span className="text-[10px] font-extrabold text-[#41B349] uppercase tracking-widest">
-              {page.badge || "NEXT CHAPTER"}
+              {tech.badge || "LET'S BUILD TOGETHER"}
             </span>
           </div>
 
@@ -592,17 +715,16 @@ const PageContent = ({ page, isLeft, openQuote, pageIndex }) => {
             className="text-xl sm:text-2xl md:text-[26px] font-black text-[#0D0F12] tracking-tight leading-tight mb-2"
             style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
           >
-            {page.title}
+            {tech.title}
           </h2>
 
           <p className="text-xs sm:text-[12.5px] text-[#334155] font-normal leading-relaxed mb-3 sm:mb-4">
-            {page.desc}
+            {tech.desc}
           </p>
 
-          {/* Start Yours Button */}
           <button
             onClick={openQuote}
-            className="group relative inline-flex items-center gap-2 px-5 sm:px-6 py-2 sm:py-2.5 rounded-full bg-[#1B4E2C] hover:bg-[#153e23] text-white text-xs sm:text-[13px] font-bold tracking-wide transition-all duration-300 cursor-pointer active:scale-95 shadow-xs"
+            className="group relative inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 rounded-full bg-[#1B4E2C] hover:bg-[#153e23] text-white text-xs sm:text-[13px] font-bold tracking-wide transition-all duration-300 cursor-pointer active:scale-95 shadow-sm"
             style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
           >
             <span>Start yours</span>
@@ -612,112 +734,85 @@ const PageContent = ({ page, isLeft, openQuote, pageIndex }) => {
           </button>
         </div>
 
-        {/* Footer */}
         <div className="flex items-center justify-between text-[9.5px] sm:text-[10px] font-bold uppercase tracking-wider text-gray-400 border-t border-black/[0.06] pt-1.5">
-          <span>{page.footerLeft}</span>
+          <span>{tech.footerLeft || "TECH SOLUTIONOR • DIGITAL ENGINEERING"}</span>
           <span
             className="text-[#1B4E2C] font-black"
             style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
           >
-            {page.footerRight}
+            PAGE {String(pageNumber).padStart(2, "0")}
           </span>
         </div>
       </div>
     );
   }
 
-  // Render Standard Page (Tech or Cover)
+  const IconComponent = tech.icon;
+
   return (
     <div
-      className={`relative w-full h-full p-3.5 sm:p-4 md:p-5 lg:p-6 flex flex-col justify-between text-[#0D0F12] overflow-hidden ${
-        isLeft ? "pr-4 sm:pr-5 md:pr-6" : "pl-4 sm:pl-5 md:pl-6"
+      className={`relative w-full h-full p-4 sm:p-5 md:p-6 lg:p-7 flex flex-col justify-between text-[#0D0F12] overflow-hidden bg-white ${
+        isLeft ? "pr-5 sm:pr-6 md:pr-7" : "pl-5 sm:pl-6 md:pl-7"
       }`}
-      style={{ background: pageTheme.bgGradient }}
+      style={{ backgroundColor: "#FFFFFF" }}
     >
-      {/* Subtle paper curvature gutter along the spine */}
+      {/* Spine Crease Shadow */}
       {isLeft ? (
-        <div className="absolute top-0 bottom-0 right-0 w-6 sm:w-8 bg-gradient-to-r from-transparent to-black/[0.04] pointer-events-none z-10" />
+        <div className="absolute top-0 bottom-0 right-0 w-6 sm:w-8 bg-gradient-to-r from-transparent to-black/[0.045] pointer-events-none z-10" />
       ) : (
-        <div className="absolute top-0 bottom-0 left-0 w-6 sm:w-8 bg-gradient-to-l from-transparent to-black/[0.04] pointer-events-none z-10" />
+        <div className="absolute top-0 bottom-0 left-0 w-6 sm:w-8 bg-gradient-to-l from-transparent to-black/[0.045] pointer-events-none z-10" />
       )}
-
-      {/* Background Watermark Text */}
-      <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-black text-4xl sm:text-5xl md:text-6xl tracking-tighter select-none pointer-events-none uppercase"
-        style={{
-          fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif",
-          color: pageTheme.watermarkColor || "rgba(0, 0, 0, 0.04)",
-        }}
-      >
-        {page.watermark}
-      </div>
 
       {/* TOP HEADER ROW */}
       <div className="relative z-10 flex items-center justify-between">
-        {isLeft ? (
-          <>
-            <span
-              className="text-[11px] sm:text-xs font-black text-[#1B4E2C] tracking-wider"
-              style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-            >
-              {page.pageNumber}
-            </span>
-            <span className="text-[9.5px] sm:text-[10px] font-bold tracking-wider text-[#1B4E2C] uppercase bg-[#41B349]/10 px-2 py-0.5 rounded-full border border-[#41B349]/20">
-              {page.badge}
-            </span>
-          </>
-        ) : (
-          <>
-            <span className="text-[9.5px] sm:text-[10px] font-bold tracking-wider text-[#1B4E2C] uppercase bg-[#41B349]/10 px-2 py-0.5 rounded-full border border-[#41B349]/20">
-              {page.badge}
-            </span>
-            <span
-              className="text-[11px] sm:text-xs font-black text-[#1B4E2C] tracking-wider"
-              style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-            >
-              {page.pageNumber}
-            </span>
-          </>
-        )}
+        <span
+          className="text-[11px] sm:text-xs font-black text-[#1B4E2C] tracking-wider"
+          style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+        >
+          {String(pageNumber).padStart(2, "0")}
+        </span>
+        <span className="text-[9.5px] sm:text-[10px] font-bold tracking-wider text-[#1B4E2C] uppercase bg-[#41B349]/12 px-2.5 py-0.5 rounded-full border border-[#41B349]/25">
+          {tech.badge || "CORE FOUNDATION"}
+        </span>
       </div>
 
-      {/* CENTER CONTENT */}
-      <div className="relative z-10 my-auto flex flex-col items-start max-w-[380px]">
-        {/* Subtitle / Category */}
-        <div className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-[#41B349] mb-0.5">
-          {page.subtitle}
+      {/* CENTER CONTENT: STRUCTURED TECHNOLOGY SPECS */}
+      <div className="relative z-10 my-auto flex flex-col items-start max-w-[420px]">
+        {/* Category Subtitle */}
+        <div className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-[#41B349] mb-1">
+          {tech.subtitle}
         </div>
 
-        {/* Main Title & Icon */}
-        <div className="flex items-center gap-2 mb-1 sm:mb-1.5">
+        {/* Title & Icon */}
+        <div className="flex items-center gap-2.5 mb-2 sm:mb-2.5">
           {IconComponent && (
             <div
-              className="p-1.5 rounded-lg bg-white/90 border border-black/[0.06] shadow-2xs flex items-center justify-center shrink-0"
-              style={{ color: page.iconColor }}
+              className="p-1.5 rounded-lg bg-white/95 border border-black/[0.06] shadow-2xs flex items-center justify-center shrink-0"
+              style={{ color: tech.iconColor || "#1B4E2C" }}
             >
               <IconComponent className="w-4 h-4 sm:w-5 sm:h-5 md:w-5.5 md:h-5.5" />
             </div>
           )}
           <h3
-            className="text-base sm:text-lg md:text-xl font-black text-[#0D0F12] tracking-tight uppercase"
+            className="text-xl sm:text-2xl md:text-[26px] font-black text-[#0D0F12] tracking-tight uppercase"
             style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
           >
-            {page.title}
+            {tech.title}
           </h3>
         </div>
 
         {/* Description */}
-        <p className="text-[11px] sm:text-[11.5px] md:text-[12px] text-[#334155] font-normal leading-relaxed mb-2 line-clamp-3 sm:line-clamp-none">
-          {page.desc}
+        <p className="text-[11.5px] sm:text-[12px] md:text-[12.5px] text-[#334155] font-normal leading-relaxed mb-3 sm:mb-3.5">
+          {tech.desc}
         </p>
 
-        {/* Tech tags / Capabilities */}
-        {page.tags && (
-          <div className="flex flex-wrap gap-1">
-            {page.tags.map((tag, tIdx) => (
+        {/* Capability Tags */}
+        {tech.tags && tech.tags.length > 0 && (
+          <div className="flex flex-wrap gap-1.5">
+            {tech.tags.map((tag, tIdx) => (
               <span
                 key={tIdx}
-                className="inline-flex items-center px-2 py-0.5 rounded-full bg-[#41B349]/10 border border-[#41B349]/20 text-[#1B4E2C] text-[10px] font-bold"
+                className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-[#41B349]/12 border border-[#41B349]/25 text-[#1B4E2C] text-[10px] font-bold tracking-wide"
               >
                 {tag}
               </span>
@@ -726,14 +821,119 @@ const PageContent = ({ page, isLeft, openQuote, pageIndex }) => {
         )}
       </div>
 
-      {/* BOTTOM FOOTER METADATA */}
+      {/* BOTTOM FOOTER */}
       <div className="relative z-10 flex items-center justify-between text-[9.5px] sm:text-[10px] font-bold uppercase tracking-wider text-gray-400 border-t border-black/[0.06] pt-1.5">
-        <span>{page.footerLeft}</span>
+        <span>{tech.footerLeft || "TECH SOLUTIONOR • ECOSYSTEM"}</span>
         <span
           className="text-[#1B4E2C] font-black"
           style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
         >
-          {page.footerRight}
+          PAGE {String(pageNumber).padStart(2, "0")}
+        </span>
+      </div>
+    </div>
+  );
+};
+
+// =========================================================================
+// SUB-COMPONENT 2: TECH VISUAL PAGE (Rendered on RIGHT PAGE of each spread)
+// Dedicated full-page visual showcase on a solid pure white background
+// with clean centering and NO gradient effects or checkered patterns.
+// =========================================================================
+const TechVisualPage = ({ tech, isLeft, pageNumber, openQuote }) => {
+  if (!tech) return null;
+
+  const normalizedTitle = (tech.title || "").toUpperCase().trim();
+  const imageSrc =
+    tech.image ||
+    resolveTechDefaultImage(tech.title) ||
+    (tech.type === "cta" ? "/services/letsgobook.jpg" : null);
+  const IconComponent = tech.icon;
+
+  return (
+    <div
+      className={`relative w-full h-full p-4 sm:p-5 md:p-6 lg:p-7 flex flex-col justify-between text-[#0D0F12] overflow-hidden bg-white ${
+        isLeft ? "pr-5 sm:pr-6 md:pr-7" : "pl-5 sm:pl-6 md:pl-7"
+      }`}
+      style={{ backgroundColor: "#FFFFFF" }}
+    >
+      {/* Spine Crease Shadow */}
+      {isLeft ? (
+        <div className="absolute top-0 bottom-0 right-0 w-6 sm:w-8 bg-gradient-to-r from-transparent to-black/[0.045] pointer-events-none z-10" />
+      ) : (
+        <div className="absolute top-0 bottom-0 left-0 w-6 sm:w-8 bg-gradient-to-l from-transparent to-black/[0.045] pointer-events-none z-10" />
+      )}
+
+      {/* TOP HEADER ROW */}
+      <div className="relative z-10 flex items-center justify-between">
+        <span className="text-[9.5px] sm:text-[10px] font-bold tracking-wider text-[#1B4E2C] uppercase bg-[#41B349]/12 px-2.5 py-0.5 rounded-full border border-[#41B349]/25">
+          {tech.badge || "TECHNOLOGY SHOWCASE"}
+        </span>
+        <span
+          className="text-[11px] sm:text-xs font-black text-[#1B4E2C] tracking-wider"
+          style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+        >
+          {String(pageNumber).padStart(2, "0")}
+        </span>
+      </div>
+
+      {/* CENTER VISUAL HERO (CLEAN & CENTERED WITH SOLID WHITE BACKGROUND) */}
+      <div className="relative z-10 my-auto w-full flex-1 flex flex-col items-center justify-center py-2 sm:py-3 bg-white">
+        {imageSrc ? (
+          <div
+            className="relative flex items-center justify-center w-full h-[185px] sm:h-[215px] md:h-[245px] lg:h-[270px] bg-white"
+            style={{ backgroundColor: "#FFFFFF" }}
+          >
+            <Image
+              src={imageSrc}
+              alt={`${tech.title} Technology Visual`}
+              width={360}
+              height={320}
+              priority={pageNumber <= 2}
+              unoptimized={true}
+              className="w-auto h-full max-h-[180px] sm:max-h-[210px] md:max-h-[240px] lg:max-h-[265px] object-contain select-none transition-transform duration-500 hover:scale-105"
+            />
+          </div>
+        ) : IconComponent ? (
+          <div className="relative flex items-center justify-center w-full h-[185px] sm:h-[215px] md:h-[245px] lg:h-[270px] bg-white">
+            <div
+              className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-2xl bg-white border border-black/[0.08] shadow-sm flex items-center justify-center transition-transform duration-500 hover:scale-105"
+              style={{ color: tech.iconColor || "#1B4E2C" }}
+            >
+              <IconComponent className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20" />
+            </div>
+          </div>
+        ) : (
+          <div className="relative flex items-center justify-center w-full h-[185px] sm:h-[215px] md:h-[245px] lg:h-[270px] bg-white">
+            <div className="w-24 h-24 rounded-2xl bg-white border border-black/[0.08] shadow-sm flex items-center justify-center text-4xl">
+              🚀
+            </div>
+          </div>
+        )}
+
+        {/* Clean, Simple Caption Label */}
+        <div className="mt-2 text-center">
+          <span
+            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/[0.03] border border-black/[0.06] text-[#0D0F12] text-[11px] sm:text-xs font-black tracking-widest uppercase"
+            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+          >
+            <span>{tech.title}</span>
+            <span className="w-1 h-1 rounded-full bg-[#41B349]" />
+            <span className="text-[#41B349] font-bold text-[10px] tracking-wider">
+              {tech.subtitle}
+            </span>
+          </span>
+        </div>
+      </div>
+
+      {/* BOTTOM FOOTER */}
+      <div className="relative z-10 flex items-center justify-between text-[9.5px] sm:text-[10px] font-bold uppercase tracking-wider text-gray-400 border-t border-black/[0.06] pt-1.5">
+        <span>{tech.footerLeft || "TECH SOLUTIONOR • ECOSYSTEM"}</span>
+        <span
+          className="text-[#1B4E2C] font-black"
+          style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+        >
+          PAGE {String(pageNumber).padStart(2, "0")}
         </span>
       </div>
     </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import ContentEditorClient from './ContentEditorClient';
+import ContentEditorClient from '@/components/Admin/ContentEditorClient';
 import { getApiBase } from '@/lib/api-helper';
 import { getPageContent } from '@/lib/cms-service';
 
@@ -21,10 +21,12 @@ export default async function PageEditPage({ params }) {
 
   try {
     const result = await getPageContent(routeId);
-    contentData = result.content;
-    routeData = result.route;
-    templates = result.templates;
-    isNew = result.isNew;
+    if (result) {
+      contentData = result.content ? JSON.parse(JSON.stringify(result.content)) : null;
+      routeData = result.route ? JSON.parse(JSON.stringify(result.route)) : null;
+      templates = result.templates || [];
+      isNew = !!result.isNew;
+    }
   } catch (err) {
     console.error('Failed to fetch content data', err);
   }
