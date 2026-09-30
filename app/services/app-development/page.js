@@ -6,6 +6,7 @@ import CommonKeyFeatures from "@/app/_components/services/common/KeyFeatures/Com
 import CommonStruggling from "@/app/_components/services/common/Struggling/CommonStruggling";
 import CommonServices from "@/app/_components/services/common/Services/CommonServices";
 import AppProcess from "../../_components/services/app-developement/Process/AppProcess";
+import AppSecurityQA from "../../_components/services/app-developement/SecurityQA/AppSecurityQA";
 import CommonHireUs from "@/app/_components/services/common/HireUs/CommonHireUs";
 import AppFAQ from "../../_components/services/app-developement/FAQ/AppFAQ";
 import { generateCmsMetadata, getCmsData } from "@/lib/cms-fetch";
@@ -37,6 +38,7 @@ export default async function AppDevelopmentPage() {
       <CommonServices serviceKey="app-development" cmsContent={cmsContent} />
       <AppProcess cmsContent={cmsContent} />
       <TechnologiesBook serviceKey="app-development" bgColor="#FFFFFF" cmsContent={cmsContent} />
+      <AppSecurityQA cmsContent={cmsContent} />
       <CommonHireUs serviceKey="app-development" cmsContent={cmsContent} />
       <AppFAQ cmsContent={cmsContent} />
     </div>
