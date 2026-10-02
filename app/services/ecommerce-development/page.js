@@ -5,6 +5,7 @@ import CommonWhyChoose from '@/app/_components/services/common/WhyChoose/CommonW
 import CommonKeyFeatures from '@/app/_components/services/common/KeyFeatures/CommonKeyFeatures';
 import CommonStruggling from '@/app/_components/services/common/Struggling/CommonStruggling';
 import CommonServices from '@/app/_components/services/common/Services/CommonServices';
+import EcommerceProcess from '@/app/_components/services/eCommerce-developement/Process/EcommerceProcess';
 import CommonHireUs from '@/app/_components/services/common/HireUs/CommonHireUs';
 import EcommerceFAQ from '@/app/_components/services/eCommerce-developement/FAQ/EcommerceFAQ';
 import { generateCmsMetadata, getCmsData } from '@/lib/cms-fetch';
@@ -34,6 +35,7 @@ export default async function EcommerceDevelopmentPage() {
       <CommonKeyFeatures serviceKey="ecommerce-development" cmsContent={cmsContent} />
       <CommonStruggling serviceKey="ecommerce-development" cmsContent={cmsContent} />
       <CommonServices serviceKey="ecommerce-development" cmsContent={cmsContent} />
+      <EcommerceProcess cmsContent={cmsContent} />
       <TechnologiesBook serviceKey="ecommerce-development" bgColor="#FFFFFF" cmsContent={cmsContent} />
       <CommonHireUs serviceKey="ecommerce-development" cmsContent={cmsContent} />
       <EcommerceFAQ cmsContent={cmsContent} />

@@ -1,7 +1,29 @@
 import type { Metadata } from "next";
+import { Plus_Jakarta_Sans, Montserrat, Roboto } from "next/font/google";
 import "./globals.css";
 import UserLayoutWrapper from "@/components/UserLayoutWrapper";
 import { getDb } from "@/lib/mongodb";
+
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-plus-jakarta",
+  display: "swap",
+});
+
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-montserrat",
+  display: "swap",
+});
+
+const roboto = Roboto({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  variable: "--font-roboto",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Tech Solutioner | Technical Services & Engineering",
@@ -57,7 +79,7 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      className="h-full antialiased scroll-smooth"
+      className={`${plusJakarta.variable} ${montserrat.variable} ${roboto.variable} h-full antialiased scroll-smooth`}
       data-scroll-behavior="smooth"
       suppressHydrationWarning
     >
@@ -69,7 +91,7 @@ export default async function RootLayout({
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@500;600;700;800;900&family=Outfit:wght@700;800;900&family=Plus+Jakarta+Sans:wght@700;800;900&family=Roboto:wght@500;700&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700;800;900&family=Outfit:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
 
         {/* 1. Google Analytics (GA4) */}
         {gaId && (

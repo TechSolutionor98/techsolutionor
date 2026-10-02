@@ -5,7 +5,6 @@ import Image from 'next/image'
 import { FaChevronDown, FaBars, FaTimes } from "react-icons/fa";
 import { usePathname } from 'next/navigation'
 import Link from 'next/link';
-import { Montserrat, Roboto, Plus_Jakarta_Sans } from 'next/font/google';
 import { useQuote } from '@/app/_context/QuoteContext';
 import Laraval from '@/src/Components/Images/laraval.png'
 import Javascript from '@/src/Components/Images/js.png'
@@ -52,20 +51,6 @@ import {
     HireUsDevIcon,
     LeadGenIcon,
 } from './ServiceIcons';
-
-const plusJakarta = Plus_Jakarta_Sans({
-    subsets: ['latin'],
-    weight: ['500', '600', '700', '800'],
-});
-
-const montserrat = Montserrat({
-    subsets: ['latin'],
-    weight: ['500', '600', '700'],
-});
-const roboto = Roboto({
-    subsets: ['latin'],
-    weight: ['500', '700'],
-});
 
 // Tech sublinks
 const techSubLinks = [
@@ -190,7 +175,7 @@ const Navbar = () => {
     return (
         <>
             {/* Desktop & Mobile Top Navbar */}
-            <nav className='sticky top-0 z-50 bg-[#181918] w-full border-b border-white/[0.08] shadow-[0_4px_24px_rgba(0,0,0,0.35)]'>
+            <nav className='sticky top-0 z-50 bg-[#181918] w-full border-b border-white/[0.08] shadow-[0_4px_24px_rgba(0,0,0,0.35)] font-jakarta'>
                 <div className='w-full max-w-7xl mx-auto px-6 sm:px-8 md:px-10 lg:px-14 xl:px-16 2xl:px-20 h-[72px] lg:h-[84px] flex items-center justify-between'>
                     {/* Left Zone: Brand Logo (Left-aligned within flex-1) */}
                     <div className="flex-1 flex items-center justify-start min-w-0">
@@ -221,7 +206,7 @@ const Navbar = () => {
                                         <>
                                             <Link
                                                 href={link.href}
-                                                className={`${plusJakarta.className} whitespace-nowrap cursor-pointer text-[13px] xl:text-[14px] 2xl:text-[14.5px] font-semibold tracking-wide text-white/90 px-2 xl:px-2.5 2xl:px-3 py-1.5 xl:py-2 flex items-center gap-1.5 transition-colors duration-200 hover:text-[#41B349] ${
+                                                className={`font-jakarta whitespace-nowrap cursor-pointer text-[13px] xl:text-[14px] 2xl:text-[14.5px] font-semibold tracking-wide text-white/90 px-2 xl:px-2.5 2xl:px-3 py-1.5 xl:py-2 flex items-center gap-1.5 transition-colors duration-200 hover:text-[#41B349] ${
                                                     isActive(link) ? 'text-[#41B349] font-bold' : ''
                                                 }`}
                                             >
@@ -283,7 +268,7 @@ const Navbar = () => {
                                                                     <Image src={sub.Image} alt={sub.label} width={28} height={28} className="object-contain dropdown-icon-bounce" />
                                                                 </div>
                                                                 <div className="flex flex-col min-w-0 relative z-10">
-                                                                    <span className={`${plusJakarta.className} text-[13.5px] font-bold text-gray-900 group-hover/item:text-white transition-colors duration-200 truncate`}>
+                                                                    <span className="font-jakarta text-[13.5px] font-bold text-gray-900 group-hover/item:text-white transition-colors duration-200 truncate">
                                                                         {sub.label}
                                                                     </span>
                                                                     <span className="text-[11px] text-gray-500 group-hover/item:text-white/90 transition-colors duration-200 truncate">
@@ -302,7 +287,7 @@ const Navbar = () => {
                                             <Link
                                                 href={link.href || '/services'}
                                                 onClick={() => setDropdownIndex(null)}
-                                                className={`${plusJakarta.className} whitespace-nowrap cursor-pointer text-[13px] xl:text-[14px] 2xl:text-[14.5px] font-semibold tracking-wide text-white/90 px-2 xl:px-2.5 2xl:px-3 py-1.5 xl:py-2 flex items-center gap-1.5 transition-colors duration-200 hover:text-[#41B349] ${
+                                                className={`font-jakarta whitespace-nowrap cursor-pointer text-[13px] xl:text-[14px] 2xl:text-[14.5px] font-semibold tracking-wide text-white/90 px-2 xl:px-2.5 2xl:px-3 py-1.5 xl:py-2 flex items-center gap-1.5 transition-colors duration-200 hover:text-[#41B349] ${
                                                     isActive(link) ? 'text-[#41B349] font-bold' : ''
                                                 }`}
                                             >
@@ -368,7 +353,7 @@ const Navbar = () => {
                                                                     )}
                                                                 </div>
                                                                 <div className="flex flex-col min-w-0 relative z-10">
-                                                                    <span className={`${plusJakarta.className} text-[13.5px] font-bold text-gray-900 group-hover/item:text-white transition-colors duration-200 truncate`}>
+                                                                    <span className="font-jakarta text-[13.5px] font-bold text-gray-900 group-hover/item:text-white transition-colors duration-200 truncate">
                                                                         {sub.label}
                                                                     </span>
                                                                     <span className="text-[11px] text-gray-500 group-hover/item:text-white/90 transition-colors duration-200 truncate">
@@ -385,7 +370,7 @@ const Navbar = () => {
                                         <>
                                             <Link
                                                 href={link.href}
-                                                className={`${plusJakarta.className} whitespace-nowrap cursor-pointer text-[13px] xl:text-[14px] 2xl:text-[14.5px] font-semibold tracking-wide text-white/90 px-2 xl:px-2.5 2xl:px-3 py-1.5 xl:py-2 flex items-center gap-1.5 transition-colors duration-200 hover:text-[#41B349] ${
+                                                className={`font-jakarta whitespace-nowrap cursor-pointer text-[13px] xl:text-[14px] 2xl:text-[14.5px] font-semibold tracking-wide text-white/90 px-2 xl:px-2.5 2xl:px-3 py-1.5 xl:py-2 flex items-center gap-1.5 transition-colors duration-200 hover:text-[#41B349] ${
                                                     isActive(link) ? 'text-[#41B349] font-bold' : ''
                                                 }`}
                                             >
@@ -406,7 +391,7 @@ const Navbar = () => {
                                                         key={sub.label}
                                                         href={sub.href}
                                                         onClick={() => setDropdownIndex(null)}
-                                                        className={`${plusJakarta.className} block px-4 py-2.5 text-[14px] font-medium text-white/90 transition-colors duration-200 hover:text-[#41B349] hover:bg-white/5 ${
+                                                        className={`font-jakarta block px-4 py-2.5 text-[14px] font-medium text-white/90 transition-colors duration-200 hover:text-[#41B349] hover:bg-white/5 ${
                                                             pathname === sub.href ? 'text-[#41B349] font-bold' : ''
                                                         }`}
                                                     >
@@ -418,7 +403,7 @@ const Navbar = () => {
                                     ) : (
                                         <Link
                                             href={link.href}
-                                            className={`${plusJakarta.className} whitespace-nowrap text-[13px] xl:text-[14px] 2xl:text-[14.5px] font-semibold tracking-wide text-white/90 px-2 xl:px-2.5 2xl:px-3 py-1.5 xl:py-2 transition-colors duration-200 hover:text-[#41B349] ${
+                                            className={`font-jakarta whitespace-nowrap text-[13px] xl:text-[14px] 2xl:text-[14.5px] font-semibold tracking-wide text-white/90 px-2 xl:px-2.5 2xl:px-3 py-1.5 xl:py-2 transition-colors duration-200 hover:text-[#41B349] ${
                                                 isActive(link) ? 'text-[#41B349] font-bold' : ''
                                             }`}
                                         >
@@ -436,14 +421,14 @@ const Navbar = () => {
                         <div className="hidden lg:flex items-center gap-2.5 xl:gap-3.5 flex-shrink-0">
                             <Link href="/pos-development" className="inline-block flex-shrink-0">
                                 <button
-                                    className={`${roboto.className} whitespace-nowrap bg-[#41B349] text-white text-[13px] xl:text-[14px] font-medium px-3.5 xl:px-4.5 h-[36px] xl:h-[40px] rounded-full hover:bg-white hover:text-black transition ease-in-out duration-200 cursor-pointer flex-shrink-0 shadow-sm active:scale-95`}
+                                    className="font-roboto whitespace-nowrap bg-[#41B349] text-white text-[13px] xl:text-[14px] font-medium px-3.5 xl:px-4.5 h-[36px] xl:h-[40px] rounded-full hover:bg-white hover:text-black transition ease-in-out duration-200 cursor-pointer flex-shrink-0 shadow-sm active:scale-95"
                                 >
                                     Get POS
                                 </button>
                             </Link>
                             <button
                                 onClick={openQuote}
-                                className={`${roboto.className} whitespace-nowrap bg-[#41B349] text-white text-[13px] xl:text-[14px] font-medium px-4 xl:px-5 h-[36px] xl:h-[40px] rounded-full hover:bg-white hover:text-black transition ease-in-out duration-200 cursor-pointer flex-shrink-0 shadow-sm active:scale-95`}
+                                className="font-roboto whitespace-nowrap bg-[#41B349] text-white text-[13px] xl:text-[14px] font-medium px-4 xl:px-5 h-[36px] xl:h-[40px] rounded-full hover:bg-white hover:text-black transition ease-in-out duration-200 cursor-pointer flex-shrink-0 shadow-sm active:scale-95"
                             >
                                 Book Now
                             </button>
@@ -507,7 +492,7 @@ const Navbar = () => {
                                 ) : (
                                     <Link
                                         href={link.href}
-                                        className={`${montserrat.className} block text-white text-lg font-medium py-3 px-2 rounded-lg hover:bg-[#41B349]/20 hover:text-[#41B349] transition-colors duration-200`}
+                                        className="font-montserrat block text-white text-lg font-medium py-3 px-2 rounded-lg hover:bg-[#41B349]/20 hover:text-[#41B349] transition-colors duration-200"
                                         onClick={() => setMobileOpen(false)}
                                     >
                                         {link.label}
@@ -524,7 +509,7 @@ const Navbar = () => {
                                 setMobileOpen(false);
                                 if (openQuote) openQuote();
                             }}
-                            className={`${roboto.className} bg-[#41B349] text-white text-[16px] font-semibold w-full h-[46px] rounded-full hover:bg-white hover:text-black transition ease-in-out duration-200 cursor-pointer shadow-lg`}
+                            className="font-roboto bg-[#41B349] text-white text-[16px] font-semibold w-full h-[46px] rounded-full hover:bg-white hover:text-black transition ease-in-out duration-200 cursor-pointer shadow-lg"
                         >
                             Book Now
                         </button>
@@ -545,12 +530,12 @@ function MobileDropdown({ label, parentHref, subLinks = [], setMobileOpen }) {
                     <Link
                         href={parentHref}
                         onClick={() => setMobileOpen(false)}
-                        className={`${montserrat.className} flex-1 text-white text-lg font-medium py-2.5 px-2 rounded-lg hover:text-[#41B349] transition-colors duration-200 cursor-pointer`}
+                        className="font-montserrat flex-1 text-white text-lg font-medium py-2.5 px-2 rounded-lg hover:text-[#41B349] transition-colors duration-200 cursor-pointer"
                     >
                         {label}
                     </Link>
                 ) : (
-                    <span className={`${montserrat.className} flex-1 text-white text-lg font-medium py-2.5 px-2`}>
+                    <span className="font-montserrat flex-1 text-white text-lg font-medium py-2.5 px-2">
                         {label}
                     </span>
                 )}
@@ -585,7 +570,7 @@ function MobileDropdown({ label, parentHref, subLinks = [], setMobileOpen }) {
                                 </div>
                             )}
                             <div className="flex flex-col min-w-0">
-                                <span className={`${plusJakarta.className} text-[13.5px] font-bold text-white group-hover:text-white leading-tight truncate`}>
+                                <span className="font-jakarta text-[13.5px] font-bold text-white group-hover:text-white leading-tight truncate">
                                     {sub.label}
                                 </span>
                                 {sub.desc && (

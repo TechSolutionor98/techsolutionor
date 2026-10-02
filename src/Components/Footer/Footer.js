@@ -2,7 +2,6 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Plus_Jakarta_Sans } from 'next/font/google';
 import { 
     FaYoutube, 
     FaLinkedinIn, 
@@ -11,12 +10,6 @@ import {
 } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { SiGooglecalendar } from "react-icons/si";
-
-const plusJakarta = Plus_Jakarta_Sans({
-    subsets: ['latin'],
-    weight: ['400', '500', '600', '700', '800'],
-    display: 'swap'
-});
 
 const Footer = () => {
     const footerLinks = {
@@ -66,7 +59,7 @@ const Footer = () => {
     };
 
     return (
-        <footer className={`${plusJakarta.className} w-full bg-[#171717] text-white relative overflow-hidden`}>
+        <footer className="font-jakarta w-full bg-[#171717] text-white relative overflow-hidden">
             {/* Background Glow Accents (Matching Get In Touch section) */}
             <div className="absolute top-1/2 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] bg-[#41B349]/10 blur-[150px] rounded-full pointer-events-none" />
             <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[#41B349]/5 blur-[120px] rounded-full pointer-events-none" />

@@ -4,12 +4,6 @@ import Image from 'next/image'
 import Benefit1 from '../../../../../components/Images/hireuscard1.jpg'
 import Benefit2 from '../../../../../components/Images/hireuscard2.jpg'
 import Benefit3 from '../../../../../components/Images/hireuscard3.jpg'
-import { Poppins } from 'next/font/google'
-
-const poppins = Poppins({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'],
-})
 
 const KeyBenefits = () => {
     const benefits = [
@@ -52,7 +46,7 @@ const KeyBenefits = () => {
                                 className="object-contain"
                             />
                         </div>
-                        <h3 className={`{poppins.className} text-[25px] font-[600] text-black mb-6 tracking-wide leading-7 flex items-center`}>
+                        <h3 className="text-[25px] font-[600] text-black mb-6 tracking-wide leading-7 flex items-center">
                             {benefit.title}
                         </h3>
                         <p className="text-[#666] text-[15px] max-w-[300px] leading-relaxed">
