@@ -35,7 +35,7 @@ export default async function WebDevelopmentPage() {
       <CommonKeyFeatures serviceKey="web-development" cmsContent={cmsContent} />
       <CommonStruggling serviceKey="web-development" cmsContent={cmsContent} />
       <WebServices cmsContent={cmsContent} />
-      <WebProcess cmsContent={cmsContent} />
+      <WebProcess cmsContent={cmsContent} /> 
       <WebDevelopmentTechnologiesBook serviceKey="web-development" bgColor="#FFFFFF" cmsContent={cmsContent} />
       <WebHireUs cmsContent={cmsContent} />
       <WebFAQ cmsContent={cmsContent} />

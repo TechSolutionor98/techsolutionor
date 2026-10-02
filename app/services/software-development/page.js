@@ -5,6 +5,7 @@ import CommonWhyChoose from '@/app/_components/services/common/WhyChoose/CommonW
 import CommonKeyFeatures from '@/app/_components/services/common/KeyFeatures/CommonKeyFeatures';
 import CommonStruggling from '@/app/_components/services/common/Struggling/CommonStruggling';
 import CommonServices from '@/app/_components/services/common/Services/CommonServices';
+import SoftwareProcess from '@/app/_components/services/software-developement/Process/SoftwareProcess';
 import CommonHireUs from '@/app/_components/services/common/HireUs/CommonHireUs';
 import SoftwareFAQ from '@/app/_components/services/software-developement/FAQ/SoftwareFAQ';
 import { generateCmsMetadata, getCmsData } from '@/lib/cms-fetch';
@@ -34,6 +35,7 @@ export default async function SoftwareDevelopmentPage() {
       <CommonKeyFeatures serviceKey="software-development" cmsContent={cmsContent} />
       <CommonStruggling serviceKey="software-development" cmsContent={cmsContent} />
       <CommonServices serviceKey="software-development" cmsContent={cmsContent} />
+      <SoftwareProcess cmsContent={cmsContent} />
       <TechnologiesBook serviceKey="software-development" bgColor="#FFFFFF" cmsContent={cmsContent} />
       <CommonHireUs serviceKey="software-development" cmsContent={cmsContent} />
       <SoftwareFAQ cmsContent={cmsContent} />
