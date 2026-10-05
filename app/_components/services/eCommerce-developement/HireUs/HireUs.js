@@ -2,6 +2,7 @@
 import React from "react";
 import { FaArrowRight } from "react-icons/fa";
 import { useQuote } from "@/app/_context/QuoteContext";
+import { SectionHeading, SectionBadge, ButtonText } from "@/components/Typography";
 
 const HireUs = ({
   badge = "READY TO SCALE YOUR BUSINESS?",
@@ -32,32 +33,30 @@ const HireUs = ({
         {/* Left Column: Heading & Pill Badge */}
         <div className="max-w-2xl text-center md:text-left z-10">
           {badge && (
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#41B349]/15 border border-[#41B349]/30 text-[#41B349] font-black text-xs uppercase tracking-widest mb-4">
-              <span className="w-2 h-2 rounded-full bg-[#41B349] animate-pulse" />
-              <span>{badge}</span>
+            <div className="mb-4">
+              <SectionBadge variant="dark">
+                {badge}
+              </SectionBadge>
             </div>
           )}
 
-          <h2
-            className="text-3xl sm:text-4xl md:text-5xl font-black text-white leading-tight tracking-tight"
-            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-          >
+          <SectionHeading as="h2" size="section" theme="light" className="text-left leading-tight">
             <span>{displayLine1}</span>
             {displayLine2 && (
               <span className="text-[#41B349] block mt-1.5">
                 {displayLine2}
               </span>
             )}
-          </h2>
+          </SectionHeading>
         </div>
 
         {/* Right Column: CTA Button */}
         <div className="shrink-0 z-10">
           <button
             onClick={openQuote}
-            className="inline-flex items-center gap-4 bg-[#41B349] hover:bg-[#36963d] text-[#FCFCFC] text-base sm:text-lg font-extrabold px-8 sm:px-10 py-4 sm:py-5 rounded-full hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer border-2 border-white/60 group"
+            className="inline-flex items-center gap-4 bg-[#41B349] hover:bg-[#36963d] text-[#FCFCFC] text-sm sm:text-base font-semibold px-8 sm:px-10 py-3.5 sm:py-4 rounded-full hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer border-2 border-white/60 group"
           >
-            <span>{buttonText}</span>
+            <ButtonText className="text-sm sm:text-base text-[#FCFCFC]">{buttonText}</ButtonText>
             <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white text-[#0D0F12] flex items-center justify-center shadow-md group-hover:translate-x-1 transition-transform duration-300">
               <FaArrowRight size={14} className="text-[#0D0F12]" />
             </div>

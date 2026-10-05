@@ -3,6 +3,13 @@
 import React from "react";
 import { ArrowDown } from "lucide-react";
 import { getCmsVal } from "@/lib/api-helper";
+import {
+  SectionBadge,
+  SectionHeading,
+  HighlightWord,
+  SectionParagraph,
+  ButtonText
+} from "@/components/Typography";
 
 const BlogHero = ({ cmsContent }) => {
   const scrollToArticles = () => {
@@ -21,6 +28,17 @@ const BlogHero = ({ cmsContent }) => {
   );
   const buttonText = getCmsVal(cmsContent, "Explore Our Insights", "bloghero");
 
+  const renderHeading = () => {
+    if (headingText === "Technology, Innovation & Modern IT Insights") {
+      return (
+        <>
+          Technology, Innovation & <HighlightWord>Modern IT Insights</HighlightWord>
+        </>
+      );
+    }
+    return headingText;
+  };
+
   return (
     <section className="relative w-full bg-white overflow-hidden py-16 md:py-24 select-none">
       {/* Ambient Emerald Glow for Light Theme */}
@@ -29,31 +47,29 @@ const BlogHero = ({ cmsContent }) => {
 
       <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         {/* Micro-Badge */}
-        <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-[#41B349]/10 border border-[#41B349]/30 text-[#41B349] font-extrabold text-xs uppercase tracking-widest mb-6 backdrop-blur-sm">
-          <span className="w-2 h-2 rounded-full bg-[#41B349] animate-pulse" />
-          <span>{badgeText}</span>
+        <div className="mb-6">
+          <SectionBadge variant="light">
+            {badgeText}
+          </SectionBadge>
         </div>
 
         {/* Primary Heading */}
-        <h1 
-          className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight leading-[1.15] max-w-4xl mx-auto text-[#111827]"
-          style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-        >
-          {headingText}
-        </h1>
+        <SectionHeading as="h1" size="hero" theme="dark" className="max-w-4xl mx-auto">
+          {renderHeading()}
+        </SectionHeading>
 
         {/* Description */}
-        <p className="mt-6 text-[#4B5563] text-base sm:text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-normal">
+        <SectionParagraph size="lg" theme="slate" className="mt-6 max-w-3xl mx-auto">
           {descriptionText}
-        </p>
+        </SectionParagraph>
 
         {/* Action Button */}
         <div className="mt-8 flex items-center justify-center gap-4">
           <button
             onClick={scrollToArticles}
-            className="group inline-flex items-center gap-2.5 bg-[#41B349] hover:bg-[#369c3d] text-white font-extrabold px-8 py-4 rounded-full text-sm sm:text-base transition-all duration-300 shadow-lg shadow-[#41B349]/25 hover:scale-[1.02] active:scale-95 cursor-pointer"
+            className="group inline-flex items-center gap-2.5 bg-[#41B349] hover:bg-[#369c3d] text-white px-8 py-3.5 sm:py-4 rounded-full text-sm sm:text-base transition-all duration-300 shadow-lg shadow-[#41B349]/25 hover:scale-[1.02] active:scale-95 cursor-pointer"
           >
-            <span>{buttonText}</span>
+            <ButtonText className="text-sm sm:text-base">{buttonText}</ButtonText>
             <ArrowDown className="w-4 h-4 group-hover:translate-y-0.5 transition-transform duration-300" />
           </button>
         </div>

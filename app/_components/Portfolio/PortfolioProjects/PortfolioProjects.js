@@ -17,6 +17,15 @@ import {
   CheckCircle2
 } from 'lucide-react';
 import { portfolioProjects } from './portfolioData';
+import {
+  SectionBadge,
+  SectionHeading,
+  HighlightWord,
+  SectionParagraph,
+  CardHeading,
+  CardParagraph,
+  ButtonText,
+} from '@/components/Typography';
 
 const PortfolioProjects = () => {
   const [activeModalProject, setActiveModalProject] = useState(null);
@@ -75,13 +84,10 @@ const PortfolioProjects = () => {
                       <div className="lg:col-span-2 flex flex-col items-center justify-center text-center relative py-4">
                         <div className="w-0.5 flex-1 bg-gradient-to-b from-transparent via-[#41B349]/30 to-[#41B349] mb-3 min-h-[30px]" />
                         <div className="relative group-hover:scale-110 transition-transform duration-300 shrink-0">
-                          <span
-                            className="text-6xl xl:text-7xl font-black tracking-tighter text-[#41B349] select-none block drop-shadow-sm leading-none"
-                            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-                          >
+                          <span className="text-6xl xl:text-7xl font-display font-black tracking-tight text-[#41B349] select-none block drop-shadow-sm leading-none">
                             {numberFormatted}
                           </span>
-                          <span className="block text-[10px] font-bold tracking-widest text-[#41B349] uppercase mt-1">
+                          <span className="block font-jakarta text-[11px] font-semibold tracking-wider text-[#2C9434] uppercase mt-1.5">
                             Case Study
                           </span>
                         </div>
@@ -111,13 +117,10 @@ const PortfolioProjects = () => {
                       <div className="lg:col-span-2 flex flex-col items-center justify-center text-center relative py-4">
                         <div className="w-0.5 flex-1 bg-gradient-to-b from-transparent via-[#41B349]/30 to-[#41B349] mb-3 min-h-[30px]" />
                         <div className="relative group-hover:scale-110 transition-transform duration-300 shrink-0">
-                          <span
-                            className="text-6xl xl:text-7xl font-black tracking-tighter text-[#41B349] select-none block drop-shadow-sm leading-none"
-                            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-                          >
+                          <span className="text-6xl xl:text-7xl font-display font-black tracking-tight text-[#41B349] select-none block drop-shadow-sm leading-none">
                             {numberFormatted}
                           </span>
-                          <span className="block text-[10px] font-bold tracking-widest text-[#41B349] uppercase mt-1">
+                          <span className="block font-jakarta text-[11px] font-semibold tracking-wider text-[#2C9434] uppercase mt-1.5">
                             Case Study
                           </span>
                         </div>
@@ -136,10 +139,10 @@ const PortfolioProjects = () => {
                 <div className="block lg:hidden space-y-6">
                   {/* Top Badge with Large Center Number */}
                   <div className="flex items-center gap-3 border-b border-gray-200/60 pb-3">
-                    <span className="text-4xl sm:text-5xl font-black text-[#41B349] tracking-tight">
+                    <span className="text-4xl sm:text-5xl font-display font-black text-[#41B349] tracking-tight">
                       {numberFormatted}
                     </span>
-                    <div className="text-[11px] font-bold tracking-widest text-[#41B349] uppercase">
+                    <div className="font-jakarta text-xs font-semibold tracking-wider text-[#2C9434] uppercase">
                       Case Study #{numberFormatted}
                     </div>
                   </div>
@@ -204,12 +207,12 @@ const ProjectImageComponent = ({ project }) => {
           />
         ) : (
           /* High-End Enterprise Card for projects without full screenshot */
-          <div className="w-full h-full p-6 sm:p-8 flex flex-col justify-between bg-gradient-to-br from-[#FBFDFC] via-white to-[#F0FDF4] relative overflow-hidden">
+          <div className="w-full h-full p-6 sm:p-8 flex flex-col justify-between bg-gradient-to-br from-[#FBFDFC] via-white to-[#F0FDF4] relative overflow-hidden font-jakarta">
             {/* Ambient emerald tint */}
             <div className="absolute top-0 right-0 w-44 h-44 bg-[#41B349]/10 rounded-full blur-2xl pointer-events-none" />
 
             <div className="flex items-center justify-between relative z-10">
-              <span className="px-3 py-1 rounded-full bg-[#41B349]/10 border border-[#41B349]/20 text-[#41B349] text-xs font-bold tracking-wider uppercase">
+              <span className="px-3 py-1 rounded-full bg-[#41B349]/10 border border-[#41B349]/20 text-[#2C9434] text-xs font-semibold tracking-wider uppercase">
                 {project.categoryLabel}
               </span>
               <span className="inline-flex items-center gap-1 text-xs text-gray-400 font-medium">
@@ -231,10 +234,10 @@ const ProjectImageComponent = ({ project }) => {
                 </div>
               ) : (
                 <div className="space-y-1">
-                  <div className="text-2xl sm:text-3xl font-black text-[#111827] tracking-tight">
+                  <CardHeading as="div" size="md" theme="dark" className="text-2xl sm:text-3xl">
                     {project.name}
-                  </div>
-                  <div className="text-xs text-[#41B349] font-bold tracking-wide uppercase">
+                  </CardHeading>
+                  <div className="text-xs text-[#2C9434] font-semibold tracking-wide uppercase">
                     TechSolutionor Verified Project
                   </div>
                 </div>
@@ -245,7 +248,7 @@ const ProjectImageComponent = ({ project }) => {
               {project.highlights?.map((hl, hIdx) => (
                 <span
                   key={hIdx}
-                  className="px-2.5 py-0.5 rounded-full bg-white border border-gray-200 text-[10px] font-semibold text-gray-600 shadow-sm"
+                  className="px-2.5 py-0.5 rounded-full bg-white border border-gray-200 text-[10px] font-semibold text-gray-600 shadow-sm tracking-[-0.01em]"
                 >
                   {hl}
                 </span>
@@ -256,12 +259,12 @@ const ProjectImageComponent = ({ project }) => {
       </div>
 
       {/* Footer verified badge */}
-      <div className="px-4 py-2 bg-white border-t border-gray-100 flex items-center justify-between text-xs text-gray-500 shrink-0">
-        <span className="flex items-center gap-1.5 font-medium">
+      <div className="px-4 py-2.5 bg-white border-t border-gray-100 flex items-center justify-between text-xs text-gray-500 shrink-0 font-jakarta">
+        <span className="flex items-center gap-1.5 font-medium text-gray-600">
           <CheckCircle2 className="w-3.5 h-3.5 text-[#41B349]" />
           Production Verified
         </span>
-        <span className="font-semibold text-[#41B349]">
+        <span className="font-semibold text-[#2C9434]">
           Dubai &amp; Global Delivery
         </span>
       </div>
@@ -278,11 +281,13 @@ const ProjectContentComponent = ({ project, onOpenModal }) => {
   return (
     <div className="flex flex-col justify-center h-full min-h-[390px] lg:min-h-[420px] text-left py-4 px-2 sm:px-6 lg:px-8">
       <div>
-        <h3 className="text-2xl sm:text-3xl lg:text-4xl font-black text-[#111827] tracking-tight leading-tight mb-4">
+        <CardHeading as="h3" size="lg" theme="dark" className="text-2xl sm:text-3xl lg:text-4xl mb-4">
           {project.name}
-        </h3>
-        <p
-          className="text-sm sm:text-base text-[#4B5563] leading-relaxed line-clamp-[7]"
+        </CardHeading>
+        <CardParagraph
+          size="md"
+          theme="slate"
+          className="line-clamp-[7]"
           style={{
             display: '-webkit-box',
             WebkitLineClamp: 7,
@@ -292,15 +297,15 @@ const ProjectContentComponent = ({ project, onOpenModal }) => {
           }}
         >
           {project.description}
-        </p>
+        </CardParagraph>
       </div>
 
       <div className="pt-6">
         <button
           onClick={onOpenModal}
-          className="group inline-flex items-center gap-2.5 px-6 py-3 rounded-full bg-[#41B349] hover:bg-[#389e40] text-white font-bold text-xs sm:text-sm tracking-wide shadow-md shadow-[#41B349]/20 hover:shadow-[#41B349]/35 transition-all duration-300 active:scale-95 cursor-pointer"
+          className="group inline-flex items-center gap-2.5 px-6 py-3 rounded-full bg-[#41B349] hover:bg-[#389e40] text-white shadow-md shadow-[#41B349]/20 hover:shadow-[#41B349]/35 transition-all duration-300 active:scale-95 cursor-pointer"
         >
-          <span>More Details</span>
+          <ButtonText className="text-xs sm:text-sm">More Details</ButtonText>
           <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
         </button>
       </div>
@@ -326,16 +331,16 @@ const ProjectDetailModal = ({ project, onClose }) => {
     >
       {/* Modal Container */}
       <div
-        className="relative w-full max-w-4xl max-h-[90vh] bg-white rounded-3xl shadow-2xl border border-gray-100 flex flex-col overflow-hidden text-left animate-in zoom-in-95 duration-200"
+        className="relative w-full max-w-4xl max-h-[90vh] bg-white rounded-3xl shadow-2xl border border-gray-100 flex flex-col overflow-hidden text-left animate-in zoom-in-95 duration-200 font-jakarta"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Top Sticky Header */}
         <div className="flex items-center justify-between px-6 sm:px-8 py-5 border-b border-gray-100 bg-[#FBFDFC] shrink-0">
           <div className="flex items-center gap-3">
-            <span className="px-3.5 py-1 rounded-full bg-[#41B349]/10 border border-[#41B349]/30 text-[#41B349] text-xs font-black tracking-widest uppercase">
+            <SectionBadge variant="light">
               CASE STUDY #{String(project.id).padStart(2, '0')}
-            </span>
-            <span className="text-xs text-gray-500 font-medium hidden sm:inline-block">
+            </SectionBadge>
+            <span className="font-jakarta text-xs text-gray-500 font-medium hidden sm:inline-block">
               {project.categoryLabel} • {project.location}
             </span>
           </div>
@@ -354,10 +359,10 @@ const ProjectDetailModal = ({ project, onClose }) => {
           {/* Title & Brand Logo */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-[#111827] tracking-tight">
+              <SectionHeading as="h2" size="sm" theme="dark" className="text-2xl sm:text-3xl md:text-4xl">
                 {project.name}
-              </h2>
-              <div className="text-xs text-[#41B349] font-bold uppercase tracking-wider mt-1">
+              </SectionHeading>
+              <div className="font-jakarta text-xs text-[#2C9434] font-semibold uppercase tracking-wider mt-1">
                 {project.categoryLabel}
               </div>
             </div>
@@ -377,14 +382,14 @@ const ProjectDetailModal = ({ project, onClose }) => {
 
           {/* Services Delivered */}
           <div>
-            <div className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-2.5">
+            <div className="font-jakarta text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2.5">
               Services
             </div>
             <div className="flex flex-wrap gap-2">
               {project.services.map((service, idx) => (
                 <span
                   key={idx}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-50 border border-gray-200 text-xs font-semibold text-[#1F2937]"
+                  className="font-jakarta inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-50 border border-gray-200 text-xs font-semibold text-[#1F2937] tracking-[-0.01em]"
                 >
                   <Check className="w-3.5 h-3.5 text-[#41B349]" />
                   {service}
@@ -395,34 +400,34 @@ const ProjectDetailModal = ({ project, onClose }) => {
 
           {/* Full Project Description */}
           <div>
-            <div className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">
+            <div className="font-jakarta text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">
               Project Description
             </div>
-            <p className="text-sm sm:text-base text-[#4B5563] leading-relaxed font-normal">
+            <SectionParagraph size="md" theme="slate">
               {project.description}
-            </p>
+            </SectionParagraph>
           </div>
 
           {/* The Challenge & The Solution Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* The Challenge */}
             <div className="rounded-2xl bg-[#FFFBEB] border border-[#FDE68A] p-5">
-              <div className="flex items-center gap-1.5 text-[#B45309] text-xs font-bold uppercase tracking-wider mb-2">
+              <div className="font-jakarta flex items-center gap-1.5 text-[#B45309] text-xs font-semibold uppercase tracking-wider mb-2">
                 <AlertTriangle className="w-4 h-4 text-[#D97706] shrink-0" />
                 <span>The Challenge</span>
               </div>
-              <p className="text-xs sm:text-sm text-[#78350F] leading-relaxed font-medium">
+              <p className="font-jakarta text-xs sm:text-sm text-[#78350F] leading-relaxed font-normal tracking-[-0.01em]">
                 {project.challenge}
               </p>
             </div>
 
             {/* The Solution */}
             <div className="rounded-2xl bg-[#F0FDF4] border border-[#BBF7D0] p-5">
-              <div className="flex items-center gap-1.5 text-[#15803D] text-xs font-bold uppercase tracking-wider mb-2">
+              <div className="font-jakarta flex items-center gap-1.5 text-[#15803D] text-xs font-semibold uppercase tracking-wider mb-2">
                 <Lightbulb className="w-4 h-4 text-[#41B349] shrink-0" />
                 <span>The Solution</span>
               </div>
-              <p className="text-xs sm:text-sm text-[#14532D] leading-relaxed font-medium">
+              <p className="font-jakarta text-xs sm:text-sm text-[#14532D] leading-relaxed font-normal tracking-[-0.01em]">
                 {project.solution}
               </p>
             </div>
@@ -430,7 +435,7 @@ const ProjectDetailModal = ({ project, onClose }) => {
 
           {/* Tech Stack */}
           <div>
-            <div className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-2.5 flex items-center gap-1.5">
+            <div className="font-jakarta text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2.5 flex items-center gap-1.5">
               <Cpu className="w-3.5 h-3.5 text-[#41B349]" />
               <span>Tech Stack</span>
             </div>
@@ -438,7 +443,7 @@ const ProjectDetailModal = ({ project, onClose }) => {
               {project.techStack.map((tech, idx) => (
                 <span
                   key={idx}
-                  className="px-3 py-1 rounded-md bg-[#41B349]/10 border border-[#41B349]/20 text-xs font-bold text-[#41B349]"
+                  className="font-jakarta px-3 py-1 rounded-md bg-[#41B349]/10 border border-[#41B349]/20 text-xs font-semibold text-[#2C9434] tracking-[-0.01em]"
                 >
                   {tech}
                 </span>
@@ -447,8 +452,8 @@ const ProjectDetailModal = ({ project, onClose }) => {
           </div>
 
           {/* Results & Features */}
-          <div className="rounded-2xl bg-gray-50 border border-gray-200/90 p-5 space-y-3">
-            <div className="text-xs font-bold uppercase tracking-wider text-[#41B349] flex items-center gap-1.5">
+          <div className="rounded-2xl bg-gray-50 border border-gray-200/90 p-5 space-y-3 font-jakarta">
+            <div className="font-jakarta text-xs font-semibold uppercase tracking-wider text-[#2C9434] flex items-center gap-1.5">
               <TrendingUp className="w-4 h-4 text-[#41B349]" />
               <span>Results &amp; Features</span>
             </div>
@@ -456,33 +461,33 @@ const ProjectDetailModal = ({ project, onClose }) => {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {/* Performance */}
               <div className="bg-white border border-gray-200 rounded-xl p-3 shadow-xs">
-                <div className="flex items-center gap-1.5 text-gray-500 text-[11px] font-bold uppercase">
+                <div className="font-jakarta flex items-center gap-1.5 text-gray-500 text-[11px] font-semibold uppercase tracking-wider">
                   <Zap className="w-3.5 h-3.5 text-[#41B349]" />
                   <span>Performance</span>
                 </div>
-                <div className="text-xs sm:text-sm font-black text-[#41B349] mt-1">
+                <div className="text-xs sm:text-sm font-display font-black text-[#2C9434] mt-1">
                   {project.metrics.performance}
                 </div>
               </div>
 
               {/* Features */}
               <div className="bg-white border border-gray-200 rounded-xl p-3 shadow-xs">
-                <div className="flex items-center gap-1.5 text-gray-500 text-[11px] font-bold uppercase">
+                <div className="font-jakarta flex items-center gap-1.5 text-gray-500 text-[11px] font-semibold uppercase tracking-wider">
                   <ShoppingCart className="w-3.5 h-3.5 text-[#111827]" />
                   <span>Features</span>
                 </div>
-                <div className="text-xs sm:text-sm font-black text-[#111827] mt-1">
+                <div className="text-xs sm:text-sm font-display font-black text-[#111827] mt-1">
                   {project.metrics.features}
                 </div>
               </div>
 
               {/* Sales */}
               <div className="bg-white border border-gray-200 rounded-xl p-3 shadow-xs">
-                <div className="flex items-center gap-1.5 text-gray-500 text-[11px] font-bold uppercase">
+                <div className="font-jakarta flex items-center gap-1.5 text-gray-500 text-[11px] font-semibold uppercase tracking-wider">
                   <TrendingUp className="w-3.5 h-3.5 text-[#41B349]" />
                   <span>Sales</span>
                 </div>
-                <div className="text-xs sm:text-sm font-black text-[#41B349] mt-1">
+                <div className="text-xs sm:text-sm font-display font-black text-[#2C9434] mt-1">
                   {project.metrics.sales}
                 </div>
               </div>
@@ -495,17 +500,17 @@ const ProjectDetailModal = ({ project, onClose }) => {
           <Link
             href={`/contact-us?subject=Inquiry regarding project similar to ${encodeURIComponent(project.name)}`}
             onClick={onClose}
-            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#41B349] hover:bg-[#389e40] text-white font-bold text-xs sm:text-sm shadow-md shadow-[#41B349]/20 transition-all duration-300"
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#41B349] hover:bg-[#389e40] text-white shadow-md shadow-[#41B349]/20 transition-all duration-300"
           >
-            <span>Discuss Similar Project</span>
+            <ButtonText className="text-xs sm:text-sm">Discuss Similar Project</ButtonText>
             <ArrowRight className="w-4 h-4" />
           </Link>
 
           <button
             onClick={onClose}
-            className="px-5 py-2.5 rounded-full bg-white hover:bg-gray-100 border border-gray-200 text-xs sm:text-sm font-bold text-gray-700 cursor-pointer transition-colors"
+            className="px-5 py-2.5 rounded-full bg-white hover:bg-gray-100 border border-gray-200 text-gray-700 cursor-pointer transition-colors"
           >
-            Close
+            <ButtonText className="text-xs sm:text-sm">Close</ButtonText>
           </button>
         </div>
       </div>

@@ -2,6 +2,7 @@
 
 import React from "react";
 import { FaCodeBranch, FaUsers, FaSmileBeam, FaGlobeAmericas } from "react-icons/fa";
+import { CardHeading, CardParagraph } from "@/components/Typography";
 
 const stats = [
     {
@@ -46,17 +47,17 @@ const AboutStats = () => {
                             <div className="w-12 h-12 rounded-xl bg-[#41B349]/15 border border-[#41B349]/25 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
                                 {item.icon}
                             </div>
-                            <div className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight mb-1">
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-gray-400">
+                            <div className="text-3xl sm:text-4xl md:text-5xl font-display font-black text-white tracking-tight leading-none mb-2">
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-gray-300">
                                     {item.number}
                                 </span>
                             </div>
-                            <h3 className="text-base font-bold text-[#41B349] mb-2 tracking-wide">
+                            <CardHeading as="h3" size="sm" theme="green" className="text-base sm:text-lg mb-2">
                                 {item.title}
-                            </h3>
-                            <p className="text-xs sm:text-sm text-gray-400 leading-relaxed font-normal">
+                            </CardHeading>
+                            <CardParagraph size="sm" theme="light">
                                 {item.desc}
-                            </p>
+                            </CardParagraph>
                         </div>
                     ))}
                 </div>

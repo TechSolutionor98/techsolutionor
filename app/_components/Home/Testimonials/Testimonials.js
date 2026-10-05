@@ -4,6 +4,15 @@ import React, { useState, useEffect, useRef } from 'react'
 import { FaThumbsUp, FaHeart, FaSmile } from 'react-icons/fa'
 import { motion, AnimatePresence } from 'framer-motion'
 import { getCmsVal } from '@/lib/api-helper'
+import {
+  SectionBadge,
+  SectionHeading,
+  HighlightWord,
+  SectionParagraph,
+  CardHeading,
+  CardParagraph,
+  ButtonText,
+} from '@/components/Typography'
 
 export const defaultTestimonials = {
   titlePrefix: 'Customer',
@@ -291,17 +300,16 @@ const Testimonials = ({ content, cmsContent, initialReviews = [] }) => {
                 <div className="flex-1 min-w-0">
                   <div className="inline">
                     <span 
-                      className="font-bold text-[#2B6DAA] text-xs sm:text-base mr-1.5 sm:mr-2 hover:underline cursor-pointer inline-block"
-                      style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+                      className="font-jakarta font-bold text-[#2B6DAA] text-xs sm:text-base mr-1.5 sm:mr-2 hover:underline cursor-pointer inline-block"
                     >
                       {item.name}
                     </span>
-                    <span className="text-[#1C1E21] text-xs sm:text-sm leading-relaxed font-normal inline">
+                    <span className="font-jakarta text-[#1C1E21] text-xs sm:text-sm leading-relaxed font-normal inline">
                       {item.review}
                     </span>
                   </div>
 
-                  <div className="flex items-center justify-between mt-2.5 sm:mt-3 pt-2 border-t border-gray-100 text-xs font-semibold text-[#65676B]">
+                  <div className="font-jakarta flex items-center justify-between mt-2.5 sm:mt-3 pt-2 border-t border-gray-100 text-xs font-semibold text-[#65676B]">
                     <div className="flex items-center gap-2 sm:gap-3">
                       <button type="button" className={`hover:underline cursor-pointer ${rx.color}`}>{rx.action}</button>
                       <span>·</span>
@@ -332,12 +340,14 @@ const Testimonials = ({ content, cmsContent, initialReviews = [] }) => {
         {/* Header Speech Bubble Banner */}
         <div className="flex justify-center mb-10 sm:mb-16">
           <div className="relative bg-[#FDE047]/90 border border-[#FACC15] rounded-3xl px-5 sm:px-12 py-3.5 sm:py-5 text-center shadow-sm max-w-3xl">
-            <h2 
-              className="text-lg sm:text-2xl md:text-4xl font-black text-[#1C1E21] tracking-tight leading-tight"
-              style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+            <SectionHeading 
+              as="h2" 
+              size="md" 
+              theme="dark"
+              className="text-lg sm:text-2xl md:text-4xl text-[#1C1E21]"
             >
-              <span>{sectionTitlePrefix}</span> <span>{sectionTitleHighlight}</span>: Real Feedback From Our Clients
-            </h2>
+              <span>{sectionTitlePrefix}</span> <HighlightWord className="text-[#15803d]">{sectionTitleHighlight}</HighlightWord>: Real Feedback From Our Clients
+            </SectionHeading>
 
             {/* Pointer Arrow */}
             <div className="absolute -bottom-3 left-8 sm:left-16 w-0 h-0 border-l-[10px] sm:border-l-[12px] border-l-transparent border-r-[10px] sm:border-r-[12px] border-r-transparent border-t-[12px] sm:border-t-[14px] border-t-[#FDE047]/90" />

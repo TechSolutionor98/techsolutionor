@@ -18,7 +18,7 @@ const HireUsBanner = ({ cmsContent }) => {
       image={HireImg || FallbackImg}
       imageAlt="Hire Dedicated Developers"
       ctaText="Hire Us"
-      ctaHref="/hire-us"
+      ctaHref="/hire-resources"
     />
   );
 };

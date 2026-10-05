@@ -5,6 +5,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { useQuote } from "@/app/_context/QuoteContext";
 import { Search, Sparkles, ArrowRight, ChevronDown, ChevronUp } from "lucide-react";
+import {
+  SectionBadge,
+  SectionHeading,
+  HighlightWord,
+  SectionParagraph,
+  CardHeading,
+  CardParagraph,
+  ButtonText,
+} from "@/components/Typography";
 
 // Service Icons from components/Images/
 import Web from "@/components/Images/servicesicon1.png";
@@ -249,28 +258,29 @@ const ServicesOverview = () => {
 
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-14 sm:mb-18">
-          <div 
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#36963D]/10 border border-[#36963D]/30 text-[#36963D] font-mono text-xs uppercase tracking-widest font-bold mb-4 shadow-2xs"
-            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-          >
-            <span className="w-2 h-2 rounded-full bg-[#36963D] animate-pulse" />
-            <span>FULL DIGITAL PORTFOLIO</span>
+          <div className="mb-4">
+            <SectionBadge variant="light">
+              FULL DIGITAL PORTFOLIO
+            </SectionBadge>
           </div>
 
-          <h2
-            className="text-3xl sm:text-4xl md:text-5xl font-black text-[#0D0F12] tracking-tight leading-tight mb-4"
-            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+          <SectionHeading
+            as="h2"
+            size="section"
+            theme="dark"
+            className="mb-4"
           >
             Tailored Services For <br className="hidden sm:inline" />
-            <span className="text-[#36963D]">Measurable Growth</span>
-          </h2>
+            <HighlightWord>Measurable Growth</HighlightWord>
+          </SectionHeading>
 
-          <p
-            className="text-[#475569] text-base sm:text-lg leading-relaxed font-normal max-w-2xl mx-auto"
-            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+          <SectionParagraph
+            size="lg"
+            theme="slate"
+            className="max-w-2xl mx-auto"
           >
             From custom architectures to performance growth campaigns, discover our comprehensive range of commercial IT and digital marketing services.
-          </p>
+          </SectionParagraph>
         </div>
 
         {/* Category Tabs & Filter Navigation */}
@@ -286,13 +296,15 @@ const ServicesOverview = () => {
                     setActiveCategory(cat);
                     setExpandedAll(true);
                   }}
-                  className={`px-4 sm:px-5 py-2 rounded-full text-xs sm:text-[13px] font-bold transition-all duration-200 cursor-pointer ${
+                  className={`px-4 sm:px-5 py-2 rounded-full transition-all duration-200 cursor-pointer flex items-center justify-center ${
                     isActive
                       ? "bg-[#36963D] text-white border-2 border-[#0D0F12] retro-shadow-pill"
                       : "bg-[#FFFFFF] text-[#0D0F12] hover:bg-[#36963D]/10 border-2 border-[#0D0F12]/30"
                   }`}
                 >
-                  {cat}
+                  <ButtonText className={`text-xs sm:text-[13px] tracking-[-0.01em] ${isActive ? "text-white" : "text-[#0D0F12]"}`}>
+                    {cat}
+                  </ButtonText>
                 </button>
               );
             })}
@@ -309,7 +321,7 @@ const ServicesOverview = () => {
                 setSearchQuery(e.target.value);
                 setExpandedAll(true);
               }}
-              className="w-full pl-11 pr-4 py-2 bg-[#FFFFFF] rounded-full border-2 border-[#0D0F12] text-xs sm:text-sm text-[#0D0F12] placeholder-[#0D0F12]/50 focus:outline-none focus:border-[#36963D] transition-all shadow-xs"
+              className="font-jakarta w-full pl-11 pr-4 py-2 bg-[#FFFFFF] rounded-full border-2 border-[#0D0F12] text-xs sm:text-sm text-[#0D0F12] placeholder-[#0D0F12]/60 focus:outline-none focus:border-[#36963D] transition-all shadow-xs"
             />
           </div>
         </div>
@@ -317,7 +329,7 @@ const ServicesOverview = () => {
         {/* 3-Column Services Grid (Matching Technologies section layout) */}
         {displayedServices.length === 0 ? (
           <div className="text-center py-16 bg-[#FFFFFF] rounded-3xl border-2 border-[#0D0F12] p-8">
-            <p className="text-[#0D0F12] text-base font-medium mb-4">
+            <p className="font-jakarta text-[#0D0F12] text-base font-medium mb-4">
               No services found matching &quot;{searchQuery}&quot;.
             </p>
             <button
@@ -325,9 +337,9 @@ const ServicesOverview = () => {
                 setActiveCategory("All");
                 setSearchQuery("");
               }}
-              className="px-6 py-2.5 rounded-full bg-[#36963D] text-white text-xs font-bold border-2 border-[#0D0F12] retro-shadow-pill cursor-pointer"
+              className="px-6 py-2.5 rounded-full bg-[#36963D] text-white border-2 border-[#0D0F12] retro-shadow-pill cursor-pointer"
             >
-              Reset Filters
+              <ButtonText className="text-xs uppercase tracking-wider text-white">Reset Filters</ButtonText>
             </button>
           </div>
         ) : (
@@ -368,17 +380,23 @@ const ServicesOverview = () => {
                     </div>
 
                     {/* 3. Bold Service Name in Dark #0D0F12 */}
-                    <h3
-                      className="text-2xl sm:text-[28px] font-black text-[#0D0F12] group-hover:text-[#36963D] transition-colors duration-200 tracking-tight mb-3"
-                      style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+                    <CardHeading
+                      as="h3"
+                      size="sm"
+                      theme="dark"
+                      className="text-2xl sm:text-[28px] font-bold group-hover:text-[#36963D] transition-colors duration-200 tracking-tight mb-3"
                     >
                       {service.name}
-                    </h3>
+                    </CardHeading>
 
                     {/* 4. Engaging Description Copy in Dark #0D0F12/75 */}
-                    <p className="text-sm sm:text-[14.5px] text-[#0D0F12]/75 leading-relaxed max-w-[310px] mx-auto mb-6 font-normal">
+                    <CardParagraph
+                      size="sm"
+                      theme="slate"
+                      className="text-sm sm:text-[14.5px] text-[#0D0F12]/80 leading-relaxed max-w-[315px] mx-auto mb-6"
+                    >
                       {service.desc}
-                    </p>
+                    </CardParagraph>
                   </div>
 
                   {/* 5. Chunky Brand Green Pill Button (#36963D) */}
@@ -386,19 +404,21 @@ const ServicesOverview = () => {
                     {service.href ? (
                       <Link href={service.href} className="w-full sm:w-auto">
                         <button
-                          className="retro-shadow-pill w-full sm:w-auto min-w-[200px] bg-[#36963D] hover:bg-[#2e8234] text-white font-black text-xs sm:text-[13px] uppercase tracking-wider py-3.5 px-7 rounded-full border-2 border-[#0D0F12] transition-all duration-200 cursor-pointer active:scale-95"
-                          style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                          className="retro-shadow-pill w-full sm:w-auto min-w-[200px] bg-[#36963D] hover:bg-[#2e8234] text-white py-3.5 px-7 rounded-full border-2 border-[#0D0F12] transition-all duration-200 cursor-pointer active:scale-95 flex items-center justify-center"
                         >
-                          {service.buttonText}
+                          <ButtonText className="text-xs sm:text-[13px] uppercase tracking-wider text-white">
+                            {service.buttonText}
+                          </ButtonText>
                         </button>
                       </Link>
                     ) : (
                       <button
                         onClick={openQuote}
-                        className="retro-shadow-pill w-full sm:w-auto min-w-[200px] bg-[#36963D] hover:bg-[#2e8234] text-white font-black text-xs sm:text-[13px] uppercase tracking-wider py-3.5 px-7 rounded-full border-2 border-[#0D0F12] transition-all duration-200 cursor-pointer active:scale-95"
-                        style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                        className="retro-shadow-pill w-full sm:w-auto min-w-[200px] bg-[#36963D] hover:bg-[#2e8234] text-white py-3.5 px-7 rounded-full border-2 border-[#0D0F12] transition-all duration-200 cursor-pointer active:scale-95 flex items-center justify-center"
                       >
-                        {service.buttonText}
+                        <ButtonText className="text-xs sm:text-[13px] uppercase tracking-wider text-white">
+                          {service.buttonText}
+                        </ButtonText>
                       </button>
                     )}
                   </div>
@@ -413,17 +433,17 @@ const ServicesOverview = () => {
           <div className="flex justify-center mt-16 sm:mt-20">
             <button
               onClick={() => setExpandedAll(!expandedAll)}
-              className="retro-shadow-pill inline-flex items-center gap-3 bg-[#0D0F12] hover:bg-[#36963D] text-white font-black text-sm uppercase tracking-wider px-8 py-4 rounded-full border-2 border-[#0D0F12] transition-all duration-200 cursor-pointer"
+              className="retro-shadow-pill inline-flex items-center gap-3 bg-[#0D0F12] hover:bg-[#36963D] text-white px-8 py-4 rounded-full border-2 border-[#0D0F12] transition-all duration-200 cursor-pointer"
             >
-              <span>
+              <ButtonText className="text-sm uppercase tracking-wider text-white">
                 {expandedAll
                   ? "Show Less Services"
                   : `Explore All ${servicesData.length} Core Services`}
-              </span>
+              </ButtonText>
               {expandedAll ? (
-                <ChevronUp className="w-4 h-4" />
+                <ChevronUp className="w-4 h-4 text-white" />
               ) : (
-                <ChevronDown className="w-4 h-4" />
+                <ChevronDown className="w-4 h-4 text-white" />
               )}
             </button>
           </div>

@@ -8,6 +8,13 @@ import TechBg from "@/components/Images/technologybannerbg.svg";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { useQuote } from "@/app/_context/QuoteContext";
 import { getCmsVal } from "@/lib/api-helper";
+import {
+  SectionBadge,
+  SectionHeading,
+  HighlightWord,
+  SectionParagraph,
+  ButtonText,
+} from "@/components/Typography";
 
 const ServicesHero = ({ cmsContent }) => {
   const { openQuote } = useQuote();
@@ -48,49 +55,55 @@ const ServicesHero = ({ cmsContent }) => {
         {/* Left Content */}
         <div className="w-full md:w-1/2 text-left">
           {/* Eyebrow Pill Badge */}
-          <div 
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#36963D]/10 border border-[#36963D]/30 text-[#36963D] font-mono text-xs uppercase tracking-widest font-bold mb-6 shadow-2xs"
-            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-          >
-            <span className="w-2 h-2 rounded-full bg-[#36963D] animate-pulse" />
-            <span>{badge}</span>
+          <div className="mb-6">
+            <SectionBadge variant="light">
+              {badge}
+            </SectionBadge>
           </div>
 
           {/* Main Headline */}
-          <h1 
-            className="text-3xl sm:text-4xl md:text-[44px] lg:text-[50px] font-black leading-[1.12] tracking-tight text-[#0D0F12] mb-6"
-            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+          <SectionHeading 
+            as="h1" 
+            size="hero" 
+            theme="dark" 
+            className="text-3xl sm:text-4xl md:text-[44px] lg:text-[50px] leading-[1.12] mb-6"
           >
-            {title}
-          </h1>
+            {title.includes("Global Scale") ? (
+              <>
+                Enterprise IT &amp; Digital Services Crafted For{" "}
+                <HighlightWord>Global Scale</HighlightWord>
+              </>
+            ) : (
+              title
+            )}
+          </SectionHeading>
 
           {/* Subtitle */}
-          <p 
-            className="text-[#475569] text-base md:text-lg max-w-[490px] mb-8 leading-relaxed font-normal"
-            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+          <SectionParagraph 
+            size="lg" 
+            theme="slate" 
+            className="max-w-[490px] mb-8"
           >
             {subtitle}
-          </p>
+          </SectionParagraph>
 
           {/* Action Buttons */}
           <div className="flex flex-wrap items-center gap-4">
             <Link href="#Services" className="inline-block group">
               <button 
-                className="bg-[#36963D] hover:bg-[#2e8234] text-white px-8 py-3.5 rounded-full font-bold text-sm sm:text-base transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2.5"
-                style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                className="bg-[#36963D] hover:bg-[#2e8234] text-white px-8 py-3.5 sm:py-4 rounded-full transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2.5"
               >
-                <span>{cta1Text}</span>
+                <ButtonText className="text-sm sm:text-base text-white">{cta1Text}</ButtonText>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
             </Link>
 
             <button 
               onClick={openQuote}
-              className="bg-transparent hover:bg-[#36963D]/10 text-[#0D0F12] hover:text-[#36963D] border-2 border-[#0D0F12]/30 hover:border-[#36963D] px-7 py-3.5 rounded-full font-bold text-sm sm:text-base transition-all duration-300 cursor-pointer flex items-center gap-2"
-              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+              className="bg-transparent hover:bg-[#36963D]/10 text-[#0D0F12] hover:text-[#36963D] border-2 border-[#0D0F12]/30 hover:border-[#36963D] px-7 py-3.5 sm:py-4 rounded-full transition-all duration-300 cursor-pointer flex items-center gap-2"
             >
               <Sparkles className="w-4 h-4 text-[#36963D]" />
-              <span>{cta2Text}</span>
+              <ButtonText className="text-sm sm:text-base text-[#0D0F12] hover:text-[#36963D]">{cta2Text}</ButtonText>
             </button>
           </div>
         </div>

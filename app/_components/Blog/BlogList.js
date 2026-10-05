@@ -3,6 +3,7 @@ import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import BlogCard, { resolveImageUrl } from './BlogCard';
 import BlogSidebar, { BlogSearchForm } from './BlogSidebar';
+import { CardHeading, CardParagraph, ButtonText, SectionBadge } from '@/components/Typography';
 
 const BlogList = ({ posts = [], categories = [], recentPosts = [] }) => {
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -46,7 +47,7 @@ const BlogList = ({ posts = [], categories = [], recentPosts = [] }) => {
             {/* Left: Featured Image */}
             <div className="w-full lg:w-1/2">
               <Link href={`/blog/${latestPost.slug}`} className="block group">
-                <div className="relative w-full aspect-square sm:aspect-[4/3] lg:aspect-square max-h-[460px] rounded-2xl overflow-hidden bg-gray-100 shadow-sm">
+                <div className="relative w-full aspect-square sm:aspect-[4/3] lg:aspect-square max-h-[460px] rounded-2xl overflow-hidden bg-gray-100 shadow-sm border border-gray-150">
                   <img
                     src={resolveImageUrl(latestPost.coverImage || latestPost.image)}
                     alt={latestPost.title}
@@ -58,23 +59,28 @@ const BlogList = ({ posts = [], categories = [], recentPosts = [] }) => {
 
             {/* Right: Content */}
             <div className="w-full lg:w-1/2 flex flex-col justify-center">
-              <h2 className="text-2xl sm:text-3xl lg:text-[34px] font-bold text-[#41b349] leading-tight mb-4 group-hover:text-black transition-colors">
+              <div className="mb-3">
+                <SectionBadge variant="light">Featured Article</SectionBadge>
+              </div>
+
+              <CardHeading as="h2" size="lg" theme="dark" className="text-2xl sm:text-3xl lg:text-[36px] leading-tight mb-4 group-hover:text-[#41B349] transition-colors">
                 <Link href={`/blog/${latestPost.slug}`}>
                   {latestPost.title}
                 </Link>
-              </h2>
+              </CardHeading>
 
-              <p className="text-gray-600 text-[15px] sm:text-[16px] leading-relaxed mb-6 line-clamp-4">
+              <CardParagraph size="lg" theme="slate" className="mb-6 line-clamp-4 leading-relaxed">
                 {latestPost.excerpt ||
                   (latestPost.content
                     ? latestPost.content.replace(/<[^>]+>/g, '').slice(0, 220) + '...'
                     : '')}
-              </p>
+              </CardParagraph>
 
               <div>
                 <Link href={`/blog/${latestPost.slug}`}>
-                  <button className="bg-[#41b349] hover:bg-black text-white px-6 py-2.5 rounded text-sm font-semibold transition-all duration-200 cursor-pointer shadow-xs">
-                    Explore More
+                  <button className="bg-[#41B349] hover:bg-[#369c3d] text-white px-7 py-3 rounded-full inline-flex items-center gap-2 transition-all duration-200 cursor-pointer shadow-md shadow-[#41B349]/25 hover:scale-[1.02]">
+                    <ButtonText className="text-xs sm:text-sm">Read Article</ButtonText>
+                    <span className="text-xs">→</span>
                   </button>
                 </Link>
               </div>
@@ -90,21 +96,21 @@ const BlogList = ({ posts = [], categories = [], recentPosts = [] }) => {
           <div className="w-full lg:w-2/3">
             {gridPosts.length === 0 ? (
               <div className="text-center py-16 px-6 bg-gray-50 rounded-2xl border border-gray-150">
-                <p className="text-gray-700 font-bold text-lg mb-2">No articles found</p>
-                <p className="text-gray-400 text-sm mb-4">
+                <CardHeading as="h3" size="sm" theme="dark" className="mb-2">No articles found</CardHeading>
+                <CardParagraph size="sm" theme="slate" className="mb-5 text-gray-500">
                   {isFiltering
                     ? 'Try clearing your search query or selecting another category.'
                     : 'Check back soon for more published articles!'}
-                </p>
+                </CardParagraph>
                 {isFiltering && (
                   <button
                     onClick={() => {
                       setSearchQuery('');
                       setSelectedCategory('all');
                     }}
-                    className="px-5 py-2 bg-[#41b349] hover:bg-black text-white rounded-full text-xs font-semibold transition-colors cursor-pointer"
+                    className="px-6 py-2.5 bg-[#41B349] hover:bg-[#369c3d] text-white rounded-full transition-colors cursor-pointer shadow-xs"
                   >
-                    Reset Filters
+                    <ButtonText className="text-xs">Reset Filters</ButtonText>
                   </button>
                 )}
               </div>

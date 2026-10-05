@@ -5,6 +5,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { useQuote } from "@/app/_context/QuoteContext";
 import { Search, Sparkles, ArrowRight, ChevronDown, ChevronUp } from "lucide-react";
+import {
+  CardHeading,
+  CardParagraph,
+  ButtonText,
+} from "@/components/Typography";
 
 // Icons from Simple Icons & FontAwesome for Next.js, Node.js, TypeScript, Java
 import { SiNextdotjs, SiNodedotjs, SiTypescript } from "react-icons/si";
@@ -371,13 +376,15 @@ export default function AgencyOverview() {
                     setActiveCategory(cat);
                     setExpandedAll(true);
                   }}
-                  className={`px-4 sm:px-5 py-2 rounded-full text-xs sm:text-[13px] font-bold transition-all duration-200 cursor-pointer ${
+                  className={`px-4 sm:px-5 py-2 rounded-full transition-all duration-200 cursor-pointer flex items-center justify-center ${
                     isActive
                       ? "bg-[#36963D] text-white border-2 border-[#0D0F12] retro-shadow-pill"
                       : "bg-[#FFFFFF] text-[#0D0F12] hover:bg-[#36963D]/10 border-2 border-[#0D0F12]/30"
                   }`}
                 >
-                  {cat}
+                  <ButtonText className={`text-xs sm:text-[13px] tracking-[-0.01em] ${isActive ? "text-white" : "text-[#0D0F12]"}`}>
+                    {cat}
+                  </ButtonText>
                 </button>
               );
             })}
@@ -394,7 +401,7 @@ export default function AgencyOverview() {
                 setSearchQuery(e.target.value);
                 setExpandedAll(true);
               }}
-              className="w-full pl-11 pr-4 py-2 bg-[#FFFFFF] rounded-full border-2 border-[#0D0F12] text-xs sm:text-sm text-[#0D0F12] placeholder-[#0D0F12]/50 focus:outline-none focus:border-[#36963D] transition-all shadow-xs"
+              className="font-jakarta w-full pl-11 pr-4 py-2 bg-[#FFFFFF] rounded-full border-2 border-[#0D0F12] text-xs sm:text-sm text-[#0D0F12] placeholder-[#0D0F12]/60 focus:outline-none focus:border-[#36963D] transition-all shadow-xs"
             />
           </div>
         </div>
@@ -402,7 +409,7 @@ export default function AgencyOverview() {
         {/* 3-Column Technology Grid (Following the Reference Screenshot Layout) */}
         {displayedTech.length === 0 ? (
           <div className="text-center py-16 bg-[#FFFFFF] rounded-3xl border-2 border-[#0D0F12] p-8">
-            <p className="text-[#0D0F12] text-base font-medium mb-4">
+            <p className="font-jakarta text-[#0D0F12] text-sm sm:text-base font-medium mb-4">
               No technologies found matching &quot;{searchQuery}&quot;.
             </p>
             <button
@@ -410,9 +417,9 @@ export default function AgencyOverview() {
                 setActiveCategory("All");
                 setSearchQuery("");
               }}
-              className="px-6 py-2.5 rounded-full bg-[#36963D] text-white text-xs font-bold border-2 border-[#0D0F12] retro-shadow-pill cursor-pointer"
+              className="px-6 py-2.5 rounded-full bg-[#36963D] text-white border-2 border-[#0D0F12] retro-shadow-pill cursor-pointer"
             >
-              Reset Filters
+              <ButtonText className="text-xs uppercase tracking-wider text-white">Reset Filters</ButtonText>
             </button>
           </div>
         ) : (
@@ -460,17 +467,23 @@ export default function AgencyOverview() {
                     </div>
 
                     {/* 3. Bold Technology Name in Dark #0D0F12 */}
-                    <h3
-                      className="text-2xl sm:text-[28px] font-black text-[#0D0F12] group-hover:text-[#36963D] transition-colors duration-200 tracking-tight mb-3"
-                      style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+                    <CardHeading
+                      as="h3"
+                      size="sm"
+                      theme="dark"
+                      className="text-2xl sm:text-[28px] font-bold group-hover:text-[#36963D] transition-colors duration-200 tracking-tight mb-3"
                     >
                       {tech.name}
-                    </h3>
+                    </CardHeading>
 
                     {/* 4. Engaging Description Copy in Dark #0D0F12/75 */}
-                    <p className="text-sm sm:text-[14.5px] text-[#0D0F12]/75 leading-relaxed max-w-[310px] mx-auto mb-6 font-normal">
+                    <CardParagraph
+                      size="sm"
+                      theme="slate"
+                      className="text-sm sm:text-[14.5px] text-[#0D0F12]/80 leading-relaxed max-w-[315px] mx-auto mb-6"
+                    >
                       {tech.desc}
-                    </p>
+                    </CardParagraph>
                   </div>
 
                   {/* 5. Chunky Brand Green Pill Button (#36963D) */}
@@ -478,19 +491,21 @@ export default function AgencyOverview() {
                     {tech.href ? (
                       <Link href={tech.href} className="w-full sm:w-auto">
                         <button
-                          className="retro-shadow-pill w-full sm:w-auto min-w-[200px] bg-[#36963D] hover:bg-[#2e8234] text-white font-black text-xs sm:text-[13px] uppercase tracking-wider py-3.5 px-7 rounded-full border-2 border-[#0D0F12] transition-all duration-200 cursor-pointer active:scale-95"
-                          style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                          className="retro-shadow-pill w-full sm:w-auto min-w-[200px] bg-[#36963D] hover:bg-[#2e8234] text-white py-3.5 px-7 rounded-full border-2 border-[#0D0F12] transition-all duration-200 cursor-pointer active:scale-95 flex items-center justify-center"
                         >
-                          {tech.buttonText}
+                          <ButtonText className="text-xs sm:text-[13px] uppercase tracking-wider text-white">
+                            {tech.buttonText}
+                          </ButtonText>
                         </button>
                       </Link>
                     ) : (
                       <button
                         onClick={openQuote}
-                        className="retro-shadow-pill w-full sm:w-auto min-w-[200px] bg-[#36963D] hover:bg-[#2e8234] text-white font-black text-xs sm:text-[13px] uppercase tracking-wider py-3.5 px-7 rounded-full border-2 border-[#0D0F12] transition-all duration-200 cursor-pointer active:scale-95"
-                        style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                        className="retro-shadow-pill w-full sm:w-auto min-w-[200px] bg-[#36963D] hover:bg-[#2e8234] text-white py-3.5 px-7 rounded-full border-2 border-[#0D0F12] transition-all duration-200 cursor-pointer active:scale-95 flex items-center justify-center"
                       >
-                        {tech.buttonText}
+                        <ButtonText className="text-xs sm:text-[13px] uppercase tracking-wider text-white">
+                          {tech.buttonText}
+                        </ButtonText>
                       </button>
                     )}
                   </div>
@@ -505,15 +520,15 @@ export default function AgencyOverview() {
           <div className="flex justify-center mt-16 sm:mt-20">
             <button
               onClick={() => setExpandedAll(!expandedAll)}
-              className="retro-shadow-pill inline-flex items-center gap-3 bg-[#0D0F12] hover:bg-[#36963D] text-white font-black text-sm uppercase tracking-wider px-8 py-4 rounded-full border-2 border-[#0D0F12] transition-all duration-200 cursor-pointer"
+              className="retro-shadow-pill inline-flex items-center gap-3 bg-[#0D0F12] hover:bg-[#36963D] text-white px-8 py-4 rounded-full border-2 border-[#0D0F12] transition-all duration-200 cursor-pointer"
             >
-              <span>
+              <ButtonText className="text-sm uppercase tracking-wider text-white">
                 {expandedAll ? "Show Less Technologies" : `Explore All ${technologiesData.length} Technologies`}
-              </span>
+              </ButtonText>
               {expandedAll ? (
-                <ChevronUp className="w-4 h-4" />
+                <ChevronUp className="w-4 h-4 text-white" />
               ) : (
-                <ChevronDown className="w-4 h-4" />
+                <ChevronDown className="w-4 h-4 text-white" />
               )}
             </button>
           </div>

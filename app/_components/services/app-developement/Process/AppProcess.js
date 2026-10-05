@@ -6,6 +6,15 @@ import { ArrowUpRight, CheckCircle2, Sparkles, Clock, ArrowRight } from "lucide-
 import { motion, AnimatePresence } from "framer-motion";
 import { useQuote } from "@/app/_context/QuoteContext";
 import { getCmsVal } from "@/lib/api-helper";
+import {
+  SectionBadge,
+  SectionHeading,
+  HighlightWord,
+  SectionParagraph,
+  CardHeading,
+  CardParagraph,
+  ButtonText,
+} from "@/components/Typography";
 
 // Complete 7-Stage Mobile App Development Process Data
 const appProcessData = [
@@ -181,17 +190,20 @@ export default function AppProcess({ cmsContent }) {
         {/* SECTION HEADER: Clean Pill Badge & Title                                 */}
         {/* ========================================================================= */}
         <div className="text-center max-w-3xl mx-auto mb-4 sm:mb-5">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#41B349]/10 border border-[#41B349]/30 text-[#41B349] font-extrabold text-xs sm:text-sm uppercase tracking-widest mb-1.5 shadow-2xs">
-            <span className="w-2 h-2 rounded-full bg-[#41B349] animate-pulse" />
-            <span>{badge}</span>
+          <div className="mb-2">
+            <SectionBadge variant="light">
+              {badge}
+            </SectionBadge>
           </div>
 
-          <h2
-            className="text-2xl sm:text-3xl md:text-[32px] lg:text-[36px] font-black text-[#0D0F12] tracking-tight leading-tight"
-            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+          <SectionHeading
+            as="h2"
+            size="section"
+            theme="dark"
+            className="text-center"
           >
-            {title} <span className="text-[#41B349]">{highlight}</span>
-          </h2>
+            {title} <HighlightWord>{highlight}</HighlightWord>
+          </SectionHeading>
         </div>
 
         {/* ========================================================================= */}
@@ -201,38 +213,35 @@ export default function AppProcess({ cmsContent }) {
           <button
             type="button"
             onClick={openQuote}
-            className="group relative inline-flex items-center gap-2.5 px-5 sm:px-6 py-1.5 rounded-full bg-[#41B349] hover:bg-[#389e3f] border border-[#41B349] hover:border-[#389e3f] text-white font-bold text-xs sm:text-xs tracking-wide transition-all duration-300 shadow-[0_4px_22px_rgba(65,179,73,0.3)] hover:shadow-[0_6px_28px_rgba(65,179,73,0.45)] hover:scale-[1.02] cursor-pointer"
-            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+            className="group relative inline-flex items-center gap-2.5 px-5 sm:px-6 py-2 rounded-full bg-[#41B349] hover:bg-[#389e3f] border border-[#41B349] hover:border-[#389e3f] text-white transition-all duration-300 shadow-[0_4px_22px_rgba(65,179,73,0.3)] hover:shadow-[0_6px_28px_rgba(65,179,73,0.45)] hover:scale-[1.02] cursor-pointer"
           >
-            <span className="relative z-10">Talk To A Mobile Specialist</span>
+            <ButtonText className="text-xs sm:text-xs tracking-wide text-white">Talk To A Mobile Specialist</ButtonText>
             <div className="relative z-10 w-5 h-5 rounded-full bg-[#0D0F12] text-white flex items-center justify-center shadow-xs group-hover:scale-110 transition-all">
               <ArrowUpRight size={13} className="stroke-[2.5]" />
             </div>
           </button>
 
           {/* Interactive Phase Toggle Tabs */}
-          <div className="flex items-center gap-1.5 mt-2 p-1 rounded-full bg-[#FFFFFF] border border-[#0D0F12]/15 shadow-xs select-none">
+          <div className="flex items-center gap-1.5 mt-2.5 p-1 rounded-full bg-[#FFFFFF] border border-[#0D0F12]/15 shadow-xs select-none">
             <button
               type="button"
               onClick={() => setActivePhase(0)}
-              className={`px-3 py-1 rounded-full text-[11px] sm:text-xs font-bold transition-all duration-300 cursor-pointer ${
+              className={`px-3.5 py-1 rounded-full text-[11px] sm:text-xs font-jakarta font-semibold tracking-[-0.01em] transition-all duration-300 cursor-pointer ${
                 activePhase === 0
                   ? "bg-[#41B349] text-white shadow-[0_0_10px_rgba(65,179,73,0.35)]"
                   : "text-[#0D0F12]/70 hover:text-[#0D0F12]"
               }`}
-              style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
             >
               Steps 01–04: Scoping &amp; Build
             </button>
             <button
               type="button"
               onClick={() => setActivePhase(1)}
-              className={`px-3 py-1 rounded-full text-[11px] sm:text-xs font-bold transition-all duration-300 cursor-pointer ${
+              className={`px-3.5 py-1 rounded-full text-[11px] sm:text-xs font-jakarta font-semibold tracking-[-0.01em] transition-all duration-300 cursor-pointer ${
                 activePhase === 1
                   ? "bg-[#41B349] text-white shadow-[0_0_10px_rgba(65,179,73,0.35)]"
                   : "text-[#0D0F12]/70 hover:text-[#0D0F12]"
               }`}
-              style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
             >
               Steps 05–07: QA, Launch &amp; Scale
             </button>
@@ -318,27 +327,30 @@ export default function AppProcess({ cmsContent }) {
                       <div className="absolute top-0 left-5 right-5 h-[2.5px] bg-[#41B349] opacity-100" />
 
                       {/* Card Title */}
-                      <h3
-                        className="text-[15px] sm:text-[16.5px] font-black text-[#41B349] tracking-tight leading-snug mb-1.5"
-                        style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+                      <CardHeading
+                        as="h3"
+                        size="sm"
+                        theme="green"
+                        className="text-[#41B349] mb-1.5"
                       >
                         {card.title}
-                      </h3>
+                      </CardHeading>
 
                       {/* Card Description */}
-                      <p
-                        className="text-[11.5px] sm:text-[12px] text-[#0D0F12]/75 leading-relaxed font-normal mb-2.5"
-                        style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                      <CardParagraph
+                        size="xs"
+                        theme="slate"
+                        className="mb-2.5 leading-relaxed"
                       >
                         {card.desc}
-                      </p>
+                      </CardParagraph>
 
                       {/* Deliverables Tags */}
                       <div className="pt-2 border-t border-[#0D0F12]/10 flex flex-wrap gap-1">
                         {card.deliverables.map((del, dIdx) => (
                           <span
                             key={dIdx}
-                            className="text-[9.5px] sm:text-[10px] font-semibold px-1.5 py-0.5 rounded bg-[#41B349]/8 hover:bg-[#41B349]/15 border border-[#41B349]/20 text-[#0D0F12]/85 transition-colors"
+                            className="font-jakarta text-[9.5px] sm:text-[10px] font-semibold px-1.5 py-0.5 rounded bg-[#41B349]/8 hover:bg-[#41B349]/15 border border-[#41B349]/20 text-[#0D0F12]/85 transition-colors"
                           >
                             {del}
                           </span>
@@ -404,27 +416,30 @@ export default function AppProcess({ cmsContent }) {
                       <div className="absolute top-0 left-5 right-5 h-[2.5px] bg-[#41B349] opacity-100" />
 
                       {/* Card Title */}
-                      <h3
-                        className="text-[15px] sm:text-[16.5px] font-black text-[#41B349] tracking-tight leading-snug mb-1.5"
-                        style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+                      <CardHeading
+                        as="h3"
+                        size="sm"
+                        theme="green"
+                        className="text-[#41B349] mb-1.5"
                       >
                         {card.title}
-                      </h3>
+                      </CardHeading>
 
                       {/* Card Description */}
-                      <p
-                        className="text-[11.5px] sm:text-[12px] text-[#0D0F12]/75 leading-relaxed font-normal mb-2.5"
-                        style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                      <CardParagraph
+                        size="xs"
+                        theme="slate"
+                        className="mb-2.5 leading-relaxed"
                       >
                         {card.desc}
-                      </p>
+                      </CardParagraph>
 
                       {/* Deliverables Tags */}
                       <div className="pt-2 border-t border-[#0D0F12]/10 flex flex-wrap gap-1">
                         {card.deliverables.map((del, dIdx) => (
                           <span
                             key={dIdx}
-                            className="text-[9.5px] sm:text-[10px] font-semibold px-1.5 py-0.5 rounded bg-[#41B349]/8 hover:bg-[#41B349]/15 border border-[#41B349]/20 text-[#0D0F12]/85 transition-colors"
+                            className="font-jakarta text-[9.5px] sm:text-[10px] font-semibold px-1.5 py-0.5 rounded bg-[#41B349]/8 hover:bg-[#41B349]/15 border border-[#41B349]/20 text-[#0D0F12]/85 transition-colors"
                           >
                             {del}
                           </span>

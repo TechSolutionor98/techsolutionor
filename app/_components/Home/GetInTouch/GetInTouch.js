@@ -7,6 +7,13 @@ import { FaChevronDown, FaCheckCircle, FaSpinner, FaPaperPlane, FaChevronLeft, F
 import { getCmsVal } from "@/lib/api-helper";
 import getInTouchImg from '@/components/Images/getintouch.png';
 import { COUNTRY_DIAL_CODES, findCountry, sanitizePhoneDigits, validatePhoneNumber } from "@/lib/country-phone";
+import {
+    SectionHeading,
+    HighlightWord,
+    SectionParagraph,
+    CardHeading,
+    ButtonText
+} from "@/components/Typography";
 
 const SERVICES = [
     "Web Development",
@@ -369,17 +376,19 @@ const GetInTouch = ({ cmsContent }) => {
                     
                     {/* Left Column: Heading, Subtitle & Illustration */}
                     <div className="lg:col-span-5 flex flex-col items-start justify-center text-left">
-                        <h2 
-                            className="text-3xl sm:text-4xl md:text-5xl font-black text-white uppercase tracking-tight leading-tight mb-2 sm:mb-3"
-                            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+                        <SectionHeading 
+                            as="h2" 
+                            size="section" 
+                            theme="light" 
+                            className="mb-2 sm:mb-3"
                         >
                             <span>{headingPrefix} </span>
-                            <span className="text-[#41B349]">{headingHighlight}</span>
-                        </h2>
+                            <HighlightWord>{headingHighlight}</HighlightWord>
+                        </SectionHeading>
 
-                        <p className="text-gray-300 text-sm sm:text-base leading-relaxed max-w-md font-medium">
+                        <SectionParagraph size="lg" theme="light" className="max-w-md">
                             {sectionSubtitle}
-                        </p>
+                        </SectionParagraph>
 
                         <div className="mt-5 sm:mt-6 w-full max-w-[240px] sm:max-w-[280px]">
                             {typeof illustrationImg === 'string' && (illustrationImg.startsWith('http') || illustrationImg.startsWith('/')) ? (
@@ -401,11 +410,11 @@ const GetInTouch = ({ cmsContent }) => {
 
                     {/* Right Column: Calendar & Booking Card */}
                     <div className="lg:col-span-7 flex justify-center lg:justify-end w-full">
-                        <div className="relative w-full max-w-[460px] bg-[#171717] rounded-3xl p-6 sm:p-7 border-2 border-white shadow-[0_25px_60px_rgba(0,0,0,0.8)]">
+                        <div className="relative w-full max-w-[460px] bg-[#171717] rounded-3xl p-6 sm:p-7 border-2 border-white shadow-[0_25px_60px_rgba(0,0,0,0.8)] font-jakarta">
                             
                             {/* Status Banner */}
                             {status.message && (
-                                <div className={`mb-4 p-3.5 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-2.5 ${
+                                <div className={`mb-4 p-3.5 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-2.5 font-jakarta ${
                                     status.type === 'success' 
                                         ? 'bg-green-950/90 border border-green-500/50 text-green-300' 
                                         : 'bg-red-950/90 border border-red-500/50 text-red-300'
@@ -430,10 +439,10 @@ const GetInTouch = ({ cmsContent }) => {
                                 >
                                     {/* Month Navigation */}
                                     <div className="flex items-center justify-between mb-2">
-                                        <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight flex items-center gap-2">
+                                        <CardHeading as="h3" size="md" theme="light" className="flex items-center gap-2">
                                             <span>{MONTH_NAMES[month]}</span>
-                                            <span className="text-gray-400 font-normal">{year}</span>
-                                        </h3>
+                                            <span className="text-gray-400 font-normal font-jakarta text-lg sm:text-xl">{year}</span>
+                                        </CardHeading>
                                         <div className="flex items-center gap-2">
                                             <button 
                                                 type="button" 
@@ -510,9 +519,9 @@ const GetInTouch = ({ cmsContent }) => {
                                             <button
                                                 type="button"
                                                 onClick={() => goToStep2()}
-                                                className="bg-[#41B349] hover:bg-[#369c3d] text-white px-7 py-3 rounded-full font-extrabold text-xs sm:text-sm flex items-center gap-2 transition-all shadow-lg shadow-[#41B349]/30 hover:scale-[1.02] cursor-pointer"
+                                                className="bg-[#41B349] hover:bg-[#369c3d] text-white px-7 py-3 rounded-full flex items-center gap-2 transition-all shadow-lg shadow-[#41B349]/30 hover:scale-[1.02] cursor-pointer"
                                             >
-                                                <span>Next</span>
+                                                <ButtonText className="text-xs sm:text-sm">Next</ButtonText>
                                                 <FaArrowRight size={12} />
                                             </button>
                                         </div>
@@ -530,16 +539,16 @@ const GetInTouch = ({ cmsContent }) => {
                                     className="space-y-4"
                                 >
                                     <div className="mb-2">
-                                        <h3 className="text-xl font-black text-white tracking-tight">
+                                        <CardHeading as="h3" size="md" theme="light">
                                             Enter Your Details
-                                        </h3>
-                                        <p className="text-gray-400 text-xs sm:text-sm mt-0.5">
-                                            Selected Date: <span className="text-[#FFC700] font-bold">{formattedSelectedDateString}</span>
+                                        </CardHeading>
+                                        <p className="font-jakarta text-gray-400 text-xs sm:text-sm mt-0.5 tracking-[-0.01em]">
+                                            Selected Date: <span className="text-[#FFC700] font-semibold">{formattedSelectedDateString}</span>
                                         </p>
                                     </div>
 
                                     <div>
-                                        <label className="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1">
+                                        <label className="font-jakarta block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-1">
                                             Full Name <span className="text-[#41B349]">*</span>
                                         </label>
                                         <input
@@ -549,13 +558,13 @@ const GetInTouch = ({ cmsContent }) => {
                                             onChange={handleChange}
                                             placeholder="Enter your full name"
                                             required
-                                            className="w-full h-11 bg-white rounded-xl px-4 text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs"
+                                            className="font-jakarta w-full h-11 bg-white rounded-xl px-4 text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs"
                                         />
                                     </div>
 
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                                         <div>
-                                            <label className="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1">
+                                            <label className="font-jakarta block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-1">
                                                 Country <span className="text-[#41B349]">*</span>
                                             </label>
                                             <div className="relative">
@@ -563,7 +572,7 @@ const GetInTouch = ({ cmsContent }) => {
                                                     name="country"
                                                     value={formData.country}
                                                     onChange={handleCountryChange}
-                                                    className="w-full h-11 bg-white rounded-xl px-4 pr-10 text-gray-800 text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs cursor-pointer"
+                                                    className="font-jakarta w-full h-11 bg-white rounded-xl px-4 pr-10 text-gray-800 text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs cursor-pointer"
                                                 >
                                                     <option value="">Select your Country</option>
                                                     {COUNTRY_DIAL_CODES.map((c) => (
@@ -577,13 +586,13 @@ const GetInTouch = ({ cmsContent }) => {
                                         </div>
 
                                         <div>
-                                            <label className="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1">
+                                            <label className="font-jakarta block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-1">
                                                 Phone Number <span className="text-[#41B349]">*</span>
                                             </label>
                                             <div className="relative flex items-center">
                                                 {/* Uneditable Country Dial Code Badge */}
                                                 {selectedCountryObj?.code && (
-                                                    <div className="bg-gray-100 border-r border-gray-300 text-gray-900 font-extrabold text-xs sm:text-sm px-3 h-11 flex items-center justify-center rounded-l-xl flex-shrink-0">
+                                                    <div className="font-jakarta bg-gray-100 border-r border-gray-300 text-gray-900 font-bold text-xs sm:text-sm px-3 h-11 flex items-center justify-center rounded-l-xl flex-shrink-0">
                                                         {selectedCountryObj.code}
                                                     </div>
                                                 )}
@@ -602,7 +611,7 @@ const GetInTouch = ({ cmsContent }) => {
                                                                 : `Enter ${selectedCountryObj?.minDigits === selectedCountryObj?.maxDigits ? `${selectedCountryObj?.maxDigits} digits` : 'phone number'}`
                                                     }
                                                     required
-                                                    className={`w-full h-11 text-sm transition shadow-xs ${
+                                                    className={`font-jakarta w-full h-11 text-sm transition shadow-xs ${
                                                         selectedCountryObj?.code ? 'rounded-r-xl px-3' : 'rounded-xl px-4'
                                                     } ${
                                                         !formData.country 
@@ -615,7 +624,7 @@ const GetInTouch = ({ cmsContent }) => {
                                     </div>
 
                                     <div>
-                                        <label className="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1">
+                                        <label className="font-jakarta block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-1">
                                             Email Address <span className="text-[#41B349]">*</span>
                                         </label>
                                         <input
@@ -625,7 +634,7 @@ const GetInTouch = ({ cmsContent }) => {
                                             onChange={handleChange}
                                             placeholder="name@company.com"
                                             required
-                                            className="w-full h-11 bg-white rounded-xl px-4 text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs"
+                                            className="font-jakarta w-full h-11 bg-white rounded-xl px-4 text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs"
                                         />
                                     </div>
 
@@ -634,25 +643,25 @@ const GetInTouch = ({ cmsContent }) => {
                                         <button
                                             type="button"
                                             onClick={() => setStep(1)}
-                                            className="px-5 py-2.5 rounded-full bg-white/10 hover:bg-white/15 text-white font-bold text-xs sm:text-sm flex items-center gap-2 transition cursor-pointer"
+                                            className="px-5 py-2.5 rounded-full bg-white/10 hover:bg-white/15 text-white flex items-center gap-2 transition cursor-pointer"
                                         >
                                             <FaArrowLeft size={11} />
-                                            <span>Back</span>
+                                            <ButtonText className="text-xs sm:text-sm">Back</ButtonText>
                                         </button>
                                         <button
                                             type="button"
                                             onClick={() => handleSendOtp(false)}
                                             disabled={sendingOtp}
-                                            className="bg-[#41B349] hover:bg-[#369c3d] text-white px-7 py-2.5 rounded-full font-extrabold text-xs sm:text-sm flex items-center gap-2 transition shadow-lg shadow-[#41B349]/30 disabled:opacity-60 cursor-pointer"
+                                            className="bg-[#41B349] hover:bg-[#369c3d] text-white px-7 py-2.5 rounded-full flex items-center gap-2 transition shadow-lg shadow-[#41B349]/30 disabled:opacity-60 cursor-pointer"
                                         >
                                             {sendingOtp ? (
                                                 <>
                                                     <FaSpinner className="animate-spin" />
-                                                    <span>Sending Code...</span>
+                                                    <ButtonText className="text-xs sm:text-sm">Sending Code...</ButtonText>
                                                 </>
                                             ) : (
                                                 <>
-                                                    <span>Next</span>
+                                                    <ButtonText className="text-xs sm:text-sm">Next</ButtonText>
                                                     <FaArrowRight size={12} />
                                                 </>
                                             )}
@@ -668,20 +677,20 @@ const GetInTouch = ({ cmsContent }) => {
                                     animate={{ opacity: 1, x: 0 }}
                                     exit={{ opacity: 0, x: -10 }}
                                     transition={{ duration: 0.2 }}
-                                    className="space-y-4 text-center"
+                                    className="space-y-4 text-center font-jakarta"
                                 >
                                     <div className="flex flex-col items-center justify-center pt-2">
                                         <div className="w-14 h-14 rounded-2xl bg-[#41B349]/15 border border-[#41B349]/30 flex items-center justify-center text-[#41B349] mb-3">
                                             <FaEnvelopeOpenText size={26} />
                                         </div>
-                                        <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+                                        <CardHeading as="h3" size="md" theme="light">
                                             Verify Your Email
-                                        </h3>
-                                        <p className="text-gray-300 text-xs sm:text-sm mt-1 max-w-xs leading-relaxed">
+                                        </CardHeading>
+                                        <p className="text-gray-300 text-xs sm:text-sm mt-1 max-w-xs leading-relaxed tracking-[-0.01em]">
                                             We sent a 6-digit verification code to:
                                         </p>
                                         <div className="flex items-center justify-center gap-2 mt-1 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-full">
-                                            <span className="text-[#FFC700] font-bold text-xs sm:text-sm">{formData.email}</span>
+                                            <span className="text-[#FFC700] font-semibold text-xs sm:text-sm">{formData.email}</span>
                                             <button 
                                                 type="button"
                                                 onClick={() => setStep(2)}
@@ -705,7 +714,7 @@ const GetInTouch = ({ cmsContent }) => {
                                                 if (status.message) setStatus({ type: '', message: '' });
                                             }}
                                             placeholder="• • • • • •"
-                                            className="w-full max-w-[260px] mx-auto h-12 bg-white rounded-2xl text-center text-gray-900 text-xl font-extrabold tracking-[0.4em] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#41B349] shadow-md"
+                                            className="w-full max-w-[260px] mx-auto h-12 bg-white rounded-2xl text-center text-gray-900 text-xl font-bold tracking-[0.4em] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#41B349] shadow-md"
                                         />
                                     </div>
 
@@ -731,25 +740,25 @@ const GetInTouch = ({ cmsContent }) => {
                                         <button
                                             type="button"
                                             onClick={() => setStep(2)}
-                                            className="px-5 py-2.5 rounded-full bg-white/10 hover:bg-white/15 text-white font-bold text-xs sm:text-sm flex items-center gap-2 transition cursor-pointer"
+                                            className="px-5 py-2.5 rounded-full bg-white/10 hover:bg-white/15 text-white flex items-center gap-2 transition cursor-pointer"
                                         >
                                             <FaArrowLeft size={11} />
-                                            <span>Back</span>
+                                            <ButtonText className="text-xs sm:text-sm">Back</ButtonText>
                                         </button>
                                         <button
                                             type="button"
                                             onClick={handleVerifyOtp}
                                             disabled={verifyingOtp || otpCode.length !== 6}
-                                            className="bg-[#41B349] hover:bg-[#369c3d] text-white px-7 py-2.5 rounded-full font-extrabold text-xs sm:text-sm flex items-center gap-2 transition shadow-lg shadow-[#41B349]/30 disabled:opacity-50 cursor-pointer"
+                                            className="bg-[#41B349] hover:bg-[#369c3d] text-white px-7 py-2.5 rounded-full flex items-center gap-2 transition shadow-lg shadow-[#41B349]/30 disabled:opacity-50 cursor-pointer"
                                         >
                                             {verifyingOtp ? (
                                                 <>
                                                     <FaSpinner className="animate-spin" />
-                                                    <span>Verifying...</span>
+                                                    <ButtonText className="text-xs sm:text-sm">Verifying...</ButtonText>
                                                 </>
                                             ) : (
                                                 <>
-                                                    <span>Verify & Proceed</span>
+                                                    <ButtonText className="text-xs sm:text-sm">Verify & Proceed</ButtonText>
                                                     <FaArrowRight size={12} />
                                                 </>
                                             )}
@@ -768,17 +777,17 @@ const GetInTouch = ({ cmsContent }) => {
                                     className="space-y-4"
                                 >
                                     <div className="mb-2">
-                                        <h3 className="text-xl font-black text-white tracking-tight">
+                                        <CardHeading as="h3" size="md" theme="light">
                                             Project Details
-                                        </h3>
-                                        <p className="text-gray-400 text-xs sm:text-sm mt-0.5">
+                                        </CardHeading>
+                                        <p className="font-jakarta text-gray-400 text-xs sm:text-sm mt-0.5 tracking-[-0.01em]">
                                             Almost done! Provide your service & budget preferences.
                                         </p>
                                     </div>
 
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                                         <div>
-                                            <label className="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1">
+                                            <label className="font-jakarta block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-1">
                                                 Service Required <span className="text-[#41B349]">*</span>
                                             </label>
                                             <div className="relative">
@@ -786,7 +795,7 @@ const GetInTouch = ({ cmsContent }) => {
                                                     name="service"
                                                     value={formData.service}
                                                     onChange={handleChange}
-                                                    className="w-full h-11 bg-white rounded-xl px-4 pr-10 text-gray-800 text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs cursor-pointer"
+                                                    className="font-jakarta w-full h-11 bg-white rounded-xl px-4 pr-10 text-gray-800 text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs cursor-pointer"
                                                 >
                                                     <option value="">Select Service</option>
                                                     {SERVICES.map((s) => (
@@ -800,7 +809,7 @@ const GetInTouch = ({ cmsContent }) => {
                                         </div>
 
                                         <div>
-                                            <label className="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1">
+                                            <label className="font-jakarta block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-1">
                                                 Estimated Budget <span className="text-[#41B349]">*</span>
                                             </label>
                                             <div className="relative">
@@ -808,7 +817,7 @@ const GetInTouch = ({ cmsContent }) => {
                                                     name="budget"
                                                     value={formData.budget}
                                                     onChange={handleChange}
-                                                    className="w-full h-11 bg-white rounded-xl px-4 pr-10 text-gray-800 text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs cursor-pointer"
+                                                    className="font-jakarta w-full h-11 bg-white rounded-xl px-4 pr-10 text-gray-800 text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs cursor-pointer"
                                                 >
                                                     <option value="">Select Budget</option>
                                                     {BUDGETS.map((b) => (
@@ -823,7 +832,7 @@ const GetInTouch = ({ cmsContent }) => {
                                     </div>
 
                                     <div>
-                                        <label className="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1">
+                                        <label className="font-jakarta block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-1">
                                             Message / Additional Notes
                                         </label>
                                         <textarea
@@ -832,7 +841,7 @@ const GetInTouch = ({ cmsContent }) => {
                                             onChange={handleChange}
                                             placeholder="Tell us about your project requirements..."
                                             rows={3}
-                                            className="w-full bg-white rounded-xl p-3.5 text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs resize-none"
+                                            className="font-jakarta w-full bg-white rounded-xl p-3.5 text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs resize-none"
                                         ></textarea>
                                     </div>
 
@@ -841,25 +850,25 @@ const GetInTouch = ({ cmsContent }) => {
                                         <button
                                             type="button"
                                             onClick={() => setStep(3)}
-                                            className="px-5 py-2.5 rounded-full bg-white/10 hover:bg-white/15 text-white font-bold text-xs sm:text-sm flex items-center gap-2 transition cursor-pointer"
+                                            className="px-5 py-2.5 rounded-full bg-white/10 hover:bg-white/15 text-white flex items-center gap-2 transition cursor-pointer"
                                         >
                                             <FaArrowLeft size={11} />
-                                            <span>Back</span>
+                                            <ButtonText className="text-xs sm:text-sm">Back</ButtonText>
                                         </button>
                                         <button
                                             type="button"
                                             onClick={handleSubmit}
                                             disabled={loading}
-                                            className="bg-[#41B349] hover:bg-[#369c3d] text-white px-8 py-3 rounded-full font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-lg shadow-[#41B349]/30 disabled:opacity-60 cursor-pointer"
+                                            className="bg-[#41B349] hover:bg-[#369c3d] text-white px-8 py-3 rounded-full flex items-center justify-center gap-2 transition-all shadow-lg shadow-[#41B349]/30 disabled:opacity-60 cursor-pointer"
                                         >
                                             {loading ? (
                                                 <>
                                                     <FaSpinner className="animate-spin" />
-                                                    <span>Submitting...</span>
+                                                    <ButtonText className="text-xs sm:text-sm">Submitting...</ButtonText>
                                                 </>
                                             ) : (
                                                 <>
-                                                    <span>Submit Booking</span>
+                                                    <ButtonText className="text-xs sm:text-sm">Submit Booking</ButtonText>
                                                     <FaPaperPlane size={12} />
                                                 </>
                                             )}

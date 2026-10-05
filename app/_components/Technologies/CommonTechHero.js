@@ -7,6 +7,13 @@ import TechBg from "@/components/Images/technologybannerbg.svg";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { useQuote } from "@/app/_context/QuoteContext";
 import { getCmsVal } from "@/lib/api-helper";
+import {
+  SectionBadge,
+  SectionHeading,
+  HighlightWord,
+  SectionParagraph,
+  ButtonText,
+} from "@/components/Typography";
 
 const CommonTechHero = ({
   cmsContent,
@@ -52,50 +59,49 @@ const CommonTechHero = ({
         {/* Left Content */}
         <div className="w-full md:w-1/2 text-left">
           {/* Eyebrow Pill Badge */}
-          <div 
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#36963D]/10 border border-[#36963D]/30 text-[#36963D] font-mono text-xs uppercase tracking-widest font-bold mb-6 shadow-2xs"
-            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-          >
-            <span className="w-2 h-2 rounded-full bg-[#36963D] animate-pulse" />
-            <span>{dynamicBadge}</span>
+          <div className="mb-6">
+            <SectionBadge variant="light">
+              {dynamicBadge}
+            </SectionBadge>
           </div>
 
-          {/* Main Headline matching Technologies page */}
-          <h1 
-            className="text-3xl sm:text-4xl md:text-[44px] lg:text-[50px] font-black leading-[1.12] tracking-tight text-[#0D0F12] mb-6"
-            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+          {/* Main Headline matching Technologies & Homepage Hero */}
+          <SectionHeading 
+            as="h1" 
+            size="hero" 
+            theme="dark" 
+            className="text-3xl sm:text-4xl md:text-[44px] lg:text-[50px] leading-[1.12] mb-6"
           >
             {dynamicLine1} {dynamicLine2 && <><br />{dynamicLine2}</>} <br />
-            <span className="text-[#36963D]">{dynamicLine3}</span>
-          </h1>
+            <HighlightWord>{dynamicLine3}</HighlightWord>
+          </SectionHeading>
 
           {/* Subtitle */}
-          <p 
-            className="text-[#475569] text-base md:text-lg max-w-[490px] mb-8 leading-relaxed font-normal"
-            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+          <SectionParagraph 
+            size="lg" 
+            theme="slate" 
+            className="max-w-[490px] mb-8"
           >
             {dynamicDesc}
-          </p>
+          </SectionParagraph>
 
           {/* CTA Buttons */}
           <div className="flex flex-wrap items-center gap-4">
             {ctaHref && ctaHref.startsWith("#") ? (
               <a href={ctaHref} className="inline-block group">
                 <button 
-                  className="bg-[#36963D] hover:bg-[#2e8234] text-white px-8 py-3.5 rounded-full font-bold text-sm sm:text-base transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2.5"
-                  style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                  className="bg-[#36963D] hover:bg-[#2e8234] text-white px-8 py-3.5 sm:py-4 rounded-full transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2.5"
                 >
-                  <span>{ctaText}</span>
+                  <ButtonText className="text-sm sm:text-base text-white">{ctaText}</ButtonText>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </button>
               </a>
             ) : (
               <Link href={ctaHref || "#overview"} className="inline-block group">
                 <button 
-                  className="bg-[#36963D] hover:bg-[#2e8234] text-white px-8 py-3.5 rounded-full font-bold text-sm sm:text-base transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2.5"
-                  style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                  className="bg-[#36963D] hover:bg-[#2e8234] text-white px-8 py-3.5 sm:py-4 rounded-full transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2.5"
                 >
-                  <span>{ctaText}</span>
+                  <ButtonText className="text-sm sm:text-base text-white">{ctaText}</ButtonText>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </button>
               </Link>
@@ -103,11 +109,10 @@ const CommonTechHero = ({
 
             <button 
               onClick={openQuote}
-              className="bg-transparent hover:bg-[#36963D]/10 text-[#0D0F12] hover:text-[#36963D] border-2 border-[#0D0F12]/30 hover:border-[#36963D] px-7 py-3.5 rounded-full font-bold text-sm sm:text-base transition-all duration-300 cursor-pointer flex items-center gap-2"
-              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+              className="bg-transparent hover:bg-[#36963D]/10 text-[#0D0F12] hover:text-[#36963D] border-2 border-[#0D0F12]/30 hover:border-[#36963D] px-7 py-3.5 sm:py-4 rounded-full transition-all duration-300 cursor-pointer flex items-center gap-2"
             >
               <Sparkles className="w-4 h-4 text-[#36963D]" />
-              <span>Get Free Quote</span>
+              <ButtonText className="text-sm sm:text-base text-[#0D0F12] hover:text-[#36963D]">Get Free Quote</ButtonText>
             </button>
           </div>
         </div>
@@ -119,15 +124,15 @@ const CommonTechHero = ({
             <div className="absolute inset-4 rounded-full bg-[#FFFFFF] pointer-events-none" />
             <div className="absolute inset-0 flex items-center justify-center p-6">
               {dynamicImage && (typeof dynamicImage === 'string' && (dynamicImage.startsWith('http') || dynamicImage.startsWith('/')) ? (
-                <img 
-                  src={dynamicImage} 
-                  alt={imageAlt} 
+                <img
+                  src={dynamicImage}
+                  alt={imageAlt}
                   className="w-full h-full object-contain filter drop-shadow-md transition-transform duration-300 hover:scale-105"
                 />
               ) : (
-                <Image 
-                  src={dynamicImage || image} 
-                  alt={imageAlt} 
+                <Image
+                  src={dynamicImage || image}
+                  alt={imageAlt}
                   width={340}
                   height={340}
                   priority

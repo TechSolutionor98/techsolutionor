@@ -6,6 +6,15 @@ import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useQuote } from "@/app/_context/QuoteContext";
 import { getCmsVal } from "@/lib/api-helper";
+import {
+  SectionBadge,
+  SectionHeading,
+  HighlightWord,
+  SectionParagraph,
+  CardHeading,
+  CardParagraph,
+  ButtonText,
+} from "@/components/Typography";
 
 // 5-Star Arched Crown Component matching the Lead Generation section styling
 function StarArc({ color = "#41B349" }) {
@@ -278,17 +287,20 @@ export default function WebProcess({ cmsContent }) {
         
         {/* Section Header: Pill Badge & Heading */}
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1B4E2C]/10 border border-[#1B4E2C]/20 text-[#1B4E2C] font-extrabold text-xs sm:text-sm uppercase tracking-widest mb-3 shadow-2xs">
-            <span className="w-2 h-2 rounded-full bg-[#41B349] animate-pulse" />
-            <span>{badge}</span>
+          <div className="mb-3">
+            <SectionBadge variant="light">
+              {badge}
+            </SectionBadge>
           </div>
 
-          <h2
-            className="text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-black text-[#0D0F12] tracking-tight leading-tight"
-            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+          <SectionHeading
+            as="h2"
+            size="section"
+            theme="dark"
+            className="text-center"
           >
-            {title} <span className="text-[#41B349]">{highlight}</span>
-          </h2>
+            {title} <HighlightWord>{highlight}</HighlightWord>
+          </SectionHeading>
         </div>
 
         {/* 2-Column Exact Layout Matching the Lead Generation Market Scope Section */}
@@ -363,10 +375,10 @@ export default function WebProcess({ cmsContent }) {
                     </svg>
 
                     <div className="mt-2 text-center">
-                      <span className="block text-[11px] sm:text-xs font-black uppercase tracking-tight text-[#0D0F12]">
+                      <span className="block text-[11px] sm:text-xs font-display uppercase tracking-tight text-[#0D0F12]">
                         Discovery
                       </span>
-                      <span className="block text-[9px] sm:text-[10px] text-gray-600 font-semibold tracking-wide">
+                      <span className="block text-[9px] sm:text-[10px] font-jakarta text-gray-600 font-semibold tracking-wide">
                         Architecture
                       </span>
                     </div>
@@ -417,10 +429,10 @@ export default function WebProcess({ cmsContent }) {
                     </svg>
 
                     <div className="mt-2 text-center">
-                      <span className="block text-[11px] sm:text-xs font-black uppercase tracking-tight text-[#0D0F12]">
+                      <span className="block text-[11px] sm:text-xs font-display uppercase tracking-tight text-[#0D0F12]">
                         QA &amp; Audit
                       </span>
-                      <span className="block text-[9px] sm:text-[10px] text-gray-600 font-semibold tracking-wide">
+                      <span className="block text-[9px] sm:text-[10px] font-jakarta text-gray-600 font-semibold tracking-wide">
                         Security &amp; Speed
                       </span>
                     </div>
@@ -429,7 +441,7 @@ export default function WebProcess({ cmsContent }) {
                 </div>
 
                 {/* Subtitle Caption */}
-                <div className="text-[11px] sm:text-xs text-gray-500 italic text-center mt-2.5 font-serif select-none">
+                <div className="text-[11px] sm:text-xs text-gray-500 italic text-center mt-2.5 font-jakarta select-none">
                   by Web Solutions Architect
                 </div>
               </div>
@@ -496,10 +508,10 @@ export default function WebProcess({ cmsContent }) {
                     </svg>
 
                     <div className="mt-2 text-center">
-                      <span className="block text-[11px] sm:text-xs font-black uppercase tracking-tight text-[#0D0F12]">
+                      <span className="block text-[11px] sm:text-xs font-display uppercase tracking-tight text-[#0D0F12]">
                         UI/UX Design
                       </span>
-                      <span className="block text-[9px] sm:text-[10px] text-gray-600 font-semibold tracking-wide">
+                      <span className="block text-[9px] sm:text-[10px] font-jakarta text-gray-600 font-semibold tracking-wide">
                         Figma Prototype
                       </span>
                     </div>
@@ -544,10 +556,10 @@ export default function WebProcess({ cmsContent }) {
                     </svg>
 
                     <div className="mt-2 text-center">
-                      <span className="block text-[11px] sm:text-xs font-black uppercase tracking-tight text-white">
+                      <span className="block text-[11px] sm:text-xs font-display uppercase tracking-tight text-white">
                         Deployment
                       </span>
-                      <span className="block text-[9px] sm:text-[10px] text-white/90 font-semibold tracking-wide">
+                      <span className="block text-[9px] sm:text-[10px] font-jakarta text-white/90 font-semibold tracking-wide">
                         Zero Downtime
                       </span>
                     </div>
@@ -556,7 +568,7 @@ export default function WebProcess({ cmsContent }) {
                 </div>
 
                 {/* Subtitle Caption */}
-                <div className="text-[11px] sm:text-xs text-gray-500 italic text-center mt-2.5 font-serif select-none">
+                <div className="text-[11px] sm:text-xs text-gray-500 italic text-center mt-2.5 font-jakarta select-none">
                   by UI/UX Creative Lead
                 </div>
               </div>
@@ -615,10 +627,10 @@ export default function WebProcess({ cmsContent }) {
                     </svg>
 
                     <div className="mt-2 text-center">
-                      <span className="block text-[11px] sm:text-xs font-black uppercase tracking-tight text-white">
+                      <span className="block text-[11px] sm:text-xs font-display uppercase tracking-tight text-white">
                         Engineering
                       </span>
-                      <span className="block text-[9px] sm:text-[10px] text-white/90 font-semibold tracking-wide">
+                      <span className="block text-[9px] sm:text-[10px] font-jakarta text-white/90 font-semibold tracking-wide">
                         Agile Sprints
                       </span>
                     </div>
@@ -650,10 +662,10 @@ export default function WebProcess({ cmsContent }) {
                     </div>
 
                     <div className="mt-2 text-center">
-                      <span className="block text-[11px] sm:text-xs font-black uppercase tracking-tight text-white">
+                      <span className="block text-[11px] sm:text-xs font-display uppercase tracking-tight text-white">
                         Maintenance
                       </span>
-                      <span className="block text-[9px] sm:text-[10px] text-gray-400 font-semibold tracking-wide">
+                      <span className="block text-[9px] sm:text-[10px] font-jakarta text-gray-400 font-semibold tracking-wide">
                         Continuous SLA
                       </span>
                     </div>
@@ -662,7 +674,7 @@ export default function WebProcess({ cmsContent }) {
                 </div>
 
                 {/* Subtitle Caption */}
-                <div className="text-[11px] sm:text-xs text-gray-500 italic text-center mt-2.5 font-serif select-none">
+                <div className="text-[11px] sm:text-xs text-gray-500 italic text-center mt-2.5 font-jakarta select-none">
                   by Principal Engineer Lead
                 </div>
               </div>
@@ -685,31 +697,33 @@ export default function WebProcess({ cmsContent }) {
                 transition={{ duration: 0.2, ease: "easeOut" }}
               >
                 {/* Main Headline (Styled with Web Dev Green Theme #1B4E2C) */}
-                <h3
-                  className="text-2xl sm:text-3xl lg:text-[34px] xl:text-[38px] font-black text-[#1B4E2C] tracking-tight leading-[1.14]"
-                  style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+                <CardHeading
+                  as="h3"
+                  size="lg"
+                  className="text-2xl sm:text-3xl lg:text-[34px] xl:text-[38px] font-display uppercase tracking-tight text-[#1B4E2C] leading-[1.14]"
                 >
                   {currentStep.headline}
-                </h3>
+                </CardHeading>
 
                 {/* Signature Underline Bar matching the reference Lead Generation section */}
                 <div className="w-12 h-1 bg-[#41B349] rounded-full my-3.5 sm:my-4" />
 
                 {/* Description Paragraph */}
-                <p
-                  className="text-[#475569] text-xs sm:text-[13.5px] leading-relaxed mb-4 sm:mb-4.5 font-normal"
-                  style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                <SectionParagraph
+                  size="sm"
+                  theme="slate"
+                  className="text-xs sm:text-[13.5px] leading-relaxed mb-4 sm:mb-4.5 font-normal"
                 >
                   {currentStep.description}
-                </p>
+                </SectionParagraph>
 
                 {/* Tactical Deliverable Pillars */}
                 <div className="space-y-2 mb-5 sm:mb-6">
                   {currentStep.features.map((feat, idx) => (
-                    <div key={idx} className="flex items-start gap-2.5 text-xs sm:text-[13px] text-gray-700">
+                    <div key={idx} className="flex items-start gap-2.5 font-jakarta text-xs sm:text-[13px] text-gray-700">
                       <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#41B349] shrink-0 mt-0.5" />
                       <span className="leading-snug">
-                        <strong className="text-gray-900 font-bold">{feat.title}: </strong>
+                        <strong className="text-gray-900 font-semibold">{feat.title}: </strong>
                         <span className="text-[#475569]">{feat.desc}</span>
                       </span>
                     </div>
@@ -720,10 +734,9 @@ export default function WebProcess({ cmsContent }) {
                 <button
                   type="button"
                   onClick={openQuote}
-                  className="inline-flex items-center gap-2 font-bold text-xs sm:text-sm text-[#0D0F12] hover:text-[#41B349] transition-colors cursor-pointer group"
-                  style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+                  className="inline-flex items-center gap-2 text-xs sm:text-sm text-[#0D0F12] hover:text-[#41B349] transition-colors cursor-pointer group"
                 >
-                  <span>{currentStep.ctaText}</span>
+                  <ButtonText className="text-xs sm:text-sm font-semibold">{currentStep.ctaText}</ButtonText>
                   <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#41B349] group-hover:translate-x-1.5 transition-transform" />
                 </button>
               </motion.div>

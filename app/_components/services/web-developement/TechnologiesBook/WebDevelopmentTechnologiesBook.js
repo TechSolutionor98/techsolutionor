@@ -21,6 +21,15 @@ import {
   FaWordpress,
 } from "react-icons/fa";
 import { SiDotnet } from "react-icons/si";
+import {
+  SectionBadge,
+  SectionHeading,
+  HighlightWord,
+  SectionParagraph,
+  CardHeading,
+  CardParagraph,
+  ButtonText,
+} from "@/components/Typography";
 
 /**
  * Curated Luxury Editorial Paper Palette for Web Development Book
@@ -384,41 +393,16 @@ const WebDevelopmentTechnologiesBook = ({
   );
 
   const handleNext = useCallback(() => {
-    const nextSpread = Math.min(Math.floor(targetProgressRef.current) + 1, totalSpreads - 1);
+    const current = Math.round(targetProgressRef.current);
+    const nextSpread = current >= totalSpreads - 1 ? 0 : current + 1;
     goToSpread(nextSpread);
   }, [goToSpread, totalSpreads]);
 
   const handlePrev = useCallback(() => {
-    const prevSpread = Math.max(Math.ceil(targetProgressRef.current) - 1, 0);
+    const current = Math.round(targetProgressRef.current);
+    const prevSpread = current <= 0 ? totalSpreads - 1 : current - 1;
     goToSpread(prevSpread);
-  }, [goToSpread]);
-
-  // Viewport scroll pinning & scroll-driven page flipping with smooth damping
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!trackRef.current) return;
-      const rect = trackRef.current.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
-      const totalScrollableDistance = rect.height - viewportHeight;
-
-      if (totalScrollableDistance <= 0) return;
-
-      const scrolledPastTop = -rect.top;
-
-      if (scrolledPastTop >= 0 && scrolledPastTop <= totalScrollableDistance) {
-        const scrollFraction = scrolledPastTop / totalScrollableDistance;
-        const mappedProgress = scrollFraction * (totalSpreads - 1);
-        targetProgressRef.current = mappedProgress;
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [totalSpreads]);
+  }, [goToSpread, totalSpreads]);
 
   // Keyboard navigation when section is hovered
   useEffect(() => {
@@ -441,37 +425,83 @@ const WebDevelopmentTechnologiesBook = ({
     <div
       ref={trackRef}
       id={`technologies-book-section-${serviceKey}`}
-      className="relative w-full bg-white"
+      className="relative w-full bg-white py-14 sm:py-20 md:py-24 select-none overflow-hidden"
       style={{
-        height: "550vh",
         backgroundColor: "#FFFFFF",
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* STICKY BOOK VIEWPORT (PURE SOLID WHITE, NO GRADIENTS OR DOT PATTERNS) */}
+      {/* BOOK VIEWPORT (PURE SOLID WHITE, NORMAL FLOW, NO STICKY / PINNING) */}
       <div
-        className="sticky top-0 w-full h-screen flex flex-col justify-center items-center overflow-hidden select-none px-4 sm:px-6 md:px-10 z-10 font-sans bg-white"
+        className="w-full flex flex-col justify-center items-center overflow-hidden select-none px-4 sm:px-6 md:px-10 z-10 font-sans bg-white"
         style={{
-          position: "sticky",
-          top: 0,
-          height: "100vh",
           backgroundColor: "#FFFFFF",
         }}
       >
-        {/* SECTION HEADER */}
-        <div className="relative z-10 w-full max-w-[1020px] mb-3 sm:mb-4 px-1">
+        {/* SECTION HEADER & TOP-RIGHT NAVIGATION ARROWS */}
+        <div className="relative z-10 w-full max-w-[1020px] mb-3 sm:mb-4 px-1 flex items-end justify-between gap-4">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#41B349]/12 border border-[#41B349]/25 text-[#1B4E2C] font-extrabold text-[11px] sm:text-xs uppercase tracking-widest mb-1.5 backdrop-blur-xs">
-              <span className="w-2 h-2 rounded-full bg-[#41B349] animate-pulse" />
-              <span>{badgeText}</span>
+            <div className="mb-2">
+              <SectionBadge variant="light">
+                {badgeText}
+              </SectionBadge>
             </div>
-            <h2
-              className="text-2xl sm:text-3xl md:text-[34px] lg:text-[38px] font-black tracking-tight leading-tight text-[#0D0F12]"
-              style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+            <SectionHeading
+              as="h2"
+              size="section"
+              theme="dark"
+              className="text-2xl sm:text-3xl md:text-[34px] lg:text-[38px] leading-tight"
             >
-              {titleText} <span className="text-[#41B349]">{titleHighlightText}</span>
-            </h2>
+              {titleText} <HighlightWord>{titleHighlightText}</HighlightWord>
+            </SectionHeading>
+          </div>
+
+          {/* TOP-RIGHT NAVIGATION ARROWS */}
+          <div className="flex items-center gap-2 sm:gap-2.5 mb-1 shrink-0">
+            {/* Back arrow (←): Go to previous page - Clean porcelain neutral styling */}
+            <button
+              type="button"
+              onClick={handlePrev}
+              title="Previous Page (Back)"
+              aria-label="Previous Page (Back)"
+              className="group inline-flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-full bg-white hover:bg-gray-50 text-gray-600 hover:text-[#0D0F12] border border-gray-200/90 hover:border-gray-300 transition-all duration-200 shadow-2xs hover:scale-105 active:scale-95 cursor-pointer"
+            >
+              <svg
+                className="w-4 h-4 transition-transform duration-200 group-hover:-translate-x-0.5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <line x1="19" y1="12" x2="5" y2="12" />
+                <polyline points="12 19 5 12 12 5" />
+              </svg>
+            </button>
+
+            {/* Next arrow (→): Go to next page - Primary brand green visual indication */}
+            <button
+              type="button"
+              onClick={handleNext}
+              title="Next Page (Forward)"
+              aria-label="Next Page (Forward)"
+              className="group inline-flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-full bg-[#1B4E2C] hover:bg-[#153e23] text-white border border-[#1B4E2C] hover:border-[#153e23] transition-all duration-200 shadow-xs shadow-[#1B4E2C]/25 hover:scale-105 active:scale-95 cursor-pointer"
+            >
+              <svg
+                className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </button>
           </div>
         </div>
 
@@ -750,10 +780,7 @@ const WebDevelopmentTechnologiesBook = ({
             ))}
           </div>
 
-          <div
-            className="text-[11px] sm:text-xs font-bold text-right w-32 tracking-wider text-[#0D0F12]"
-            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-          >
+          <div className="text-[11px] sm:text-xs font-jakarta font-bold text-right w-32 tracking-wider text-[#0D0F12]">
             PAGE {String(activeSpread * 2 + 1).padStart(2, "0")} - {String(activeSpread * 2 + 2).padStart(2, "0")} / {String(totalSpreads * 2).padStart(2, "0")}
           </div>
         </div>
@@ -785,13 +812,10 @@ const TechContentPage = ({ tech, isLeft, pageNumber, openQuote }) => {
         )}
 
         <div className="flex items-center justify-between">
-          <span className="text-[10.5px] sm:text-[11px] font-bold uppercase tracking-widest text-[#41B349]">
+          <span className="font-jakarta text-[10.5px] sm:text-[11px] font-bold uppercase tracking-widest text-[#41B349]">
             {tech.subtitle}
           </span>
-          <span
-            className="text-[11px] sm:text-xs font-black text-[#1B4E2C] tracking-widest"
-            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-          >
+          <span className="font-jakarta text-[11px] sm:text-xs font-black text-[#1B4E2C] tracking-widest">
             {String(pageNumber).padStart(2, "0")}
           </span>
         </div>
@@ -799,40 +823,40 @@ const TechContentPage = ({ tech, isLeft, pageNumber, openQuote }) => {
         <div className="my-auto flex flex-col items-start max-w-[380px]">
           <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#41B349]/12 border border-[#41B349]/25 mb-2.5">
             <span className="w-1.5 h-1.5 rounded-full bg-[#41B349] animate-pulse" />
-            <span className="text-[10px] font-extrabold text-[#41B349] uppercase tracking-widest">
+            <span className="font-jakarta text-[10px] font-extrabold text-[#41B349] uppercase tracking-widest">
               {tech.badge || "NEXT CHAPTER"}
             </span>
           </div>
 
-          <h2
-            className="text-xl sm:text-2xl md:text-[26px] font-black text-[#0D0F12] tracking-tight leading-tight mb-2"
-            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+          <CardHeading
+            as="h2"
+            size="sm"
+            className="text-xl sm:text-2xl md:text-[26px] font-display uppercase tracking-tight text-[#0D0F12] leading-tight mb-2"
           >
             {tech.title}
-          </h2>
+          </CardHeading>
 
-          <p className="text-xs sm:text-[12.5px] text-[#334155] font-normal leading-relaxed mb-3 sm:mb-4">
+          <CardParagraph
+            size="xs"
+            className="text-[#334155] leading-relaxed mb-3 sm:mb-4"
+          >
             {tech.desc}
-          </p>
+          </CardParagraph>
 
           <button
             onClick={openQuote}
-            className="group relative inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 rounded-full bg-[#1B4E2C] hover:bg-[#153e23] text-white text-xs sm:text-[13px] font-bold tracking-wide transition-all duration-300 cursor-pointer active:scale-95 shadow-sm"
-            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+            className="group relative inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 rounded-full bg-[#1B4E2C] hover:bg-[#153e23] text-white transition-all duration-300 cursor-pointer active:scale-95 shadow-sm"
           >
-            <span>Start yours</span>
+            <ButtonText className="text-xs sm:text-[13px] text-white">Start yours</ButtonText>
             <span className="text-sm group-hover:translate-x-1 group-hover:translate-y-0.5 transition-transform duration-300">
               ↘
             </span>
           </button>
         </div>
 
-        <div className="flex items-center justify-between text-[9.5px] sm:text-[10px] font-bold uppercase tracking-wider text-gray-400 border-t border-black/[0.06] pt-1.5">
+        <div className="flex items-center justify-between font-jakarta text-[9.5px] sm:text-[10px] font-bold uppercase tracking-wider text-gray-400 border-t border-black/[0.06] pt-1.5">
           <span>{tech.footerLeft || "TECH SOLUTIONOR • WEB ECOSYSTEM"}</span>
-          <span
-            className="text-[#1B4E2C] font-black"
-            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-          >
+          <span className="text-[#1B4E2C] font-black">
             PAGE {String(pageNumber).padStart(2, "0")}
           </span>
         </div>
@@ -858,13 +882,10 @@ const TechContentPage = ({ tech, isLeft, pageNumber, openQuote }) => {
 
       {/* TOP HEADER ROW */}
       <div className="relative z-10 flex items-center justify-between">
-        <span
-          className="text-[11px] sm:text-xs font-black text-[#1B4E2C] tracking-wider"
-          style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-        >
+        <span className="font-jakarta text-[11px] sm:text-xs font-black text-[#1B4E2C] tracking-wider">
           {String(pageNumber).padStart(2, "0")}
         </span>
-        <span className="text-[9.5px] sm:text-[10px] font-bold tracking-wider text-[#1B4E2C] uppercase bg-[#41B349]/12 px-2.5 py-0.5 rounded-full border border-[#41B349]/25">
+        <span className="font-jakarta text-[9.5px] sm:text-[10px] font-bold tracking-wider text-[#1B4E2C] uppercase bg-[#41B349]/12 px-2.5 py-0.5 rounded-full border border-[#41B349]/25">
           {tech.badge}
         </span>
       </div>
@@ -872,7 +893,7 @@ const TechContentPage = ({ tech, isLeft, pageNumber, openQuote }) => {
       {/* CENTER CONTENT: STRUCTURED TECHNOLOGY SPECS */}
       <div className="relative z-10 my-auto flex flex-col items-start max-w-[420px]">
         {/* Category Subtitle */}
-        <div className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-[#41B349] mb-1">
+        <div className="font-jakarta text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-[#41B349] mb-1">
           {tech.subtitle}
         </div>
 
@@ -886,18 +907,22 @@ const TechContentPage = ({ tech, isLeft, pageNumber, openQuote }) => {
               <IconComponent className="w-4 h-4 sm:w-5 sm:h-5 md:w-5.5 md:h-5.5" />
             </div>
           )}
-          <h3
-            className="text-xl sm:text-2xl md:text-[26px] font-black text-[#0D0F12] tracking-tight uppercase"
-            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+          <CardHeading
+            as="h3"
+            size="sm"
+            className="text-xl sm:text-2xl md:text-[26px] font-display uppercase tracking-tight text-[#0D0F12]"
           >
             {tech.title}
-          </h3>
+          </CardHeading>
         </div>
 
         {/* Description */}
-        <p className="text-[11.5px] sm:text-[12px] md:text-[12.5px] text-[#334155] font-normal leading-relaxed mb-3 sm:mb-3.5">
+        <CardParagraph
+          size="xs"
+          className="text-[11.5px] sm:text-[12px] md:text-[12.5px] text-[#334155] leading-relaxed mb-3 sm:mb-3.5"
+        >
           {tech.desc}
-        </p>
+        </CardParagraph>
 
         {/* Capability Tags */}
         {tech.tags && (
@@ -905,7 +930,7 @@ const TechContentPage = ({ tech, isLeft, pageNumber, openQuote }) => {
             {tech.tags.map((tag, tIdx) => (
               <span
                 key={tIdx}
-                className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-[#41B349]/12 border border-[#41B349]/25 text-[#1B4E2C] text-[10px] font-bold tracking-wide"
+                className="font-jakarta inline-flex items-center px-2.5 py-0.5 rounded-full bg-[#41B349]/12 border border-[#41B349]/25 text-[#1B4E2C] text-[10px] font-bold tracking-wide"
               >
                 {tag}
               </span>
@@ -915,12 +940,9 @@ const TechContentPage = ({ tech, isLeft, pageNumber, openQuote }) => {
       </div>
 
       {/* BOTTOM FOOTER */}
-      <div className="relative z-10 flex items-center justify-between text-[9.5px] sm:text-[10px] font-bold uppercase tracking-wider text-gray-400 border-t border-black/[0.06] pt-1.5">
+      <div className="relative z-10 flex items-center justify-between font-jakarta text-[9.5px] sm:text-[10px] font-bold uppercase tracking-wider text-gray-400 border-t border-black/[0.06] pt-1.5">
         <span>{tech.footerLeft || "TECH SOLUTIONOR • WEB ECOSYSTEM"}</span>
-        <span
-          className="text-[#1B4E2C] font-black"
-          style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-        >
+        <span className="text-[#1B4E2C] font-black">
           PAGE {String(pageNumber).padStart(2, "0")}
         </span>
       </div>
@@ -977,13 +999,10 @@ const TechVisualPage = ({ tech, isLeft, pageNumber, openQuote }) => {
 
       {/* TOP HEADER ROW */}
       <div className="relative z-10 flex items-center justify-between">
-        <span className="text-[9.5px] sm:text-[10px] font-bold tracking-wider text-[#1B4E2C] uppercase bg-[#41B349]/12 px-2.5 py-0.5 rounded-full border border-[#41B349]/25">
+        <span className="font-jakarta text-[9.5px] sm:text-[10px] font-bold tracking-wider text-[#1B4E2C] uppercase bg-[#41B349]/12 px-2.5 py-0.5 rounded-full border border-[#41B349]/25">
           {tech.badge || "CORE WEB FOUNDATION"}
         </span>
-        <span
-          className="text-[11px] sm:text-xs font-black text-[#1B4E2C] tracking-wider"
-          style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-        >
+        <span className="font-jakarta text-[11px] sm:text-xs font-black text-[#1B4E2C] tracking-wider">
           {String(pageNumber).padStart(2, "0")}
         </span>
       </div>
@@ -1024,13 +1043,10 @@ const TechVisualPage = ({ tech, isLeft, pageNumber, openQuote }) => {
 
         {/* Clean, Simple Caption Label */}
         <div className="mt-2 text-center">
-          <span
-            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/[0.03] border border-black/[0.06] text-[#0D0F12] text-[11px] sm:text-xs font-black tracking-widest uppercase"
-            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-          >
-            <span>{tech.title}</span>
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/[0.03] border border-black/[0.06] text-[#0D0F12]">
+            <span className="font-display uppercase tracking-tight text-[11px] sm:text-xs">{tech.title}</span>
             <span className="w-1 h-1 rounded-full bg-[#41B349]" />
-            <span className="text-[#41B349] font-bold text-[10px] tracking-wider">
+            <span className="text-[#41B349] font-jakarta font-bold text-[10px] tracking-wider">
               {tech.subtitle}
             </span>
           </span>
@@ -1038,12 +1054,9 @@ const TechVisualPage = ({ tech, isLeft, pageNumber, openQuote }) => {
       </div>
 
       {/* BOTTOM FOOTER */}
-      <div className="relative z-10 flex items-center justify-between text-[9.5px] sm:text-[10px] font-bold uppercase tracking-wider text-gray-400 border-t border-black/[0.06] pt-1.5">
+      <div className="relative z-10 flex items-center justify-between font-jakarta text-[9.5px] sm:text-[10px] font-bold uppercase tracking-wider text-gray-400 border-t border-black/[0.06] pt-1.5">
         <span>{tech.footerLeft || "TECH SOLUTIONOR • WEB ECOSYSTEM"}</span>
-        <span
-          className="text-[#1B4E2C] font-black"
-          style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-        >
+        <span className="text-[#1B4E2C] font-black">
           PAGE {String(pageNumber).padStart(2, "0")}
         </span>
       </div>

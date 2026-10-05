@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { SectionHeading } from "@/components/Typography";
 
 // Props: faqs = array of {question, answer}, title = string
 const Faq = ({ faqs = [], title }) => {
@@ -53,7 +54,7 @@ const Faq = ({ faqs = [], title }) => {
           }`}
           aria-expanded={isOpen}
         >
-          <span className="text-[13px] sm:text-[14px] md:text-[14.5px] font-medium sm:font-semibold text-[#1b4e2c] pr-3 leading-snug">
+          <span className="font-jakarta text-sm sm:text-[14.5px] md:text-[15px] font-semibold text-[#111827] pr-3 leading-snug">
             {faq.question}
           </span>
           <span
@@ -73,7 +74,7 @@ const Faq = ({ faqs = [], title }) => {
               : "max-h-0 opacity-0 py-0 px-5 sm:px-6 pointer-events-none"
           }`}
         >
-          <p className="text-[13px] sm:text-[13.5px] md:text-[14px] text-[#2d4736] leading-relaxed font-normal">
+          <p className="font-jakarta text-sm sm:text-[14px] md:text-[14.5px] text-[#4A5568] leading-relaxed font-normal">
             {faq.answer}
           </p>
         </div>
@@ -85,12 +86,14 @@ const Faq = ({ faqs = [], title }) => {
     <section className="py-14 sm:py-20 md:py-24 bg-white select-none">
       <div className="max-w-[900px] mx-auto px-4 sm:px-6">
         {/* Centered Two-Line Header */}
-        <h2
-          className="text-3xl sm:text-4xl md:text-5xl font-black text-center tracking-tight text-[#164326] leading-[1.1] mb-10 sm:mb-14"
-          style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+        <SectionHeading
+          as="h2"
+          size="section"
+          theme="dark"
+          className="text-center mb-10 sm:mb-14"
         >
           {formatTitle()}
-        </h2>
+        </SectionHeading>
 
         {/* 2-Column FAQ Grid (Left & Right Columns) */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4 md:gap-5 items-start">

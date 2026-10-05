@@ -17,6 +17,15 @@ import {
   FaPenNib,
 } from "react-icons/fa6";
 import { getCmsVal } from "@/lib/api-helper";
+import {
+  SectionBadge,
+  SectionHeading,
+  HighlightWord,
+  SectionParagraph,
+  CardHeading,
+  CardParagraph,
+  ButtonText,
+} from "@/components/Typography";
 
 export const defaultServicesWeOffer = {
   titleTop: "Services",
@@ -148,21 +157,17 @@ const ServicesWeOffer = ({ cmsContent }) => {
       {/* Header Section */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#41B349]/10 border border-[#41B349]/20 text-[#41B349] font-extrabold text-xs uppercase tracking-widest mb-3">
-            <span className="w-2 h-2 rounded-full bg-[#41B349] animate-pulse" />
-            <span>EXPERT IT & DIGITAL SOLUTIONS</span>
-          </div>
+          <SectionBadge variant="light" className="mb-3">
+            EXPERT IT & DIGITAL SOLUTIONS
+          </SectionBadge>
 
-          <h2 
-            className="text-2xl sm:text-3xl md:text-5xl font-black text-[#0D0F12] tracking-tight leading-tight"
-            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-          >
-            {titleTop} <span className="text-[#41B349]">{titleBottom}</span>
-          </h2>
+          <SectionHeading as="h2" size="section" theme="dark">
+            {titleTop} <HighlightWord>{titleBottom}</HighlightWord>
+          </SectionHeading>
 
-          <p className="mt-3 sm:mt-4 text-[#4A5568] text-sm sm:text-base md:text-lg leading-relaxed font-medium">
+          <SectionParagraph size="md" className="mt-3 sm:mt-4">
             {description}
-          </p>
+          </SectionParagraph>
         </div>
       </div>
 
@@ -241,10 +246,9 @@ const ServicesWeOffer = ({ cmsContent }) => {
 
                     {/* Node Title Label with Clear Margin */}
                     <span 
-                      className={`mt-1 sm:mt-3 text-[9px] min-[380px]:text-[10px] sm:text-xs font-bold text-center max-w-[62px] min-[380px]:max-w-[72px] min-[480px]:max-w-[88px] sm:max-w-[115px] leading-tight transition-colors duration-300 ${
-                        isActive ? "text-[#41B349] font-black scale-105" : "text-[#0D0F12] group-hover:text-[#41B349]"
+                      className={`mt-1 sm:mt-3 text-[9px] min-[380px]:text-[10px] sm:text-xs font-display uppercase tracking-tight text-center max-w-[62px] min-[380px]:max-w-[72px] min-[480px]:max-w-[88px] sm:max-w-[115px] leading-tight transition-colors duration-300 ${
+                        isActive ? "text-[#41B349] scale-105" : "text-[#0D0F12] group-hover:text-[#41B349]"
                       }`}
-                      style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
                     >
                       {item.title}
                     </span>
@@ -281,16 +285,17 @@ const ServicesWeOffer = ({ cmsContent }) => {
                     )}
                   </div>
 
-                  <h3 
-                    className="text-[11px] min-[380px]:text-xs sm:text-lg font-black text-white leading-tight px-1 sm:px-2 mb-1 sm:mb-2.5 line-clamp-1 sm:line-clamp-none"
-                    style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+                  <CardHeading 
+                    as="h3" 
+                    theme="light"
+                    className="text-[11px] min-[380px]:text-xs sm:text-lg leading-tight px-1 sm:px-2 mb-1 sm:mb-2.5 line-clamp-1 sm:line-clamp-none text-center"
                   >
                     {activeService.title}
-                  </h3>
+                  </CardHeading>
 
                   <Link href={activeService.link}>
-                    <button className="inline-flex items-center gap-1.5 sm:gap-2 bg-[#41B349] text-[#FCFCFC] text-[9px] min-[380px]:text-[10px] sm:text-sm font-bold px-2.5 min-[380px]:px-3.5 sm:px-5 py-1 sm:py-2 rounded-full shadow-[0_5px_15px_rgba(65,179,73,0.4)] hover:scale-105 active:scale-95 transition-all duration-300 border border-white/60 cursor-pointer">
-                      <span>View Details</span>
+                    <button className="inline-flex items-center gap-1.5 sm:gap-2 bg-[#41B349] text-[#FCFCFC] px-2.5 min-[380px]:px-3.5 sm:px-5 py-1 sm:py-2 rounded-full shadow-[0_5px_15px_rgba(65,179,73,0.4)] hover:scale-105 active:scale-95 transition-all duration-300 border border-white/60 cursor-pointer">
+                      <ButtonText className="text-[9px] min-[380px]:text-[10px] sm:text-sm">View Details</ButtonText>
                       <FaArrowRight size={9} className="sm:text-xs" />
                     </button>
                   </Link>
@@ -309,20 +314,24 @@ const ServicesWeOffer = ({ cmsContent }) => {
                     <FaBriefcase size={18} className="hidden sm:block" />
                   </div>
 
-                  <h3 
-                    className="text-[11px] min-[380px]:text-xs sm:text-xl font-black text-white tracking-wide uppercase mb-0.5 sm:mb-1"
-                    style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+                  <CardHeading 
+                    as="h3" 
+                    theme="light"
+                    className="text-[11px] min-[380px]:text-xs sm:text-xl tracking-wider uppercase mb-0.5 sm:mb-1 text-center"
                   >
                     OUR SERVICES
-                  </h3>
+                  </CardHeading>
 
-                  <p className="text-[9px] min-[380px]:text-[10px] sm:text-sm text-[#94A3B8] font-medium mb-1 min-[380px]:mb-1.5 sm:mb-3">
+                  <CardParagraph 
+                    theme="light"
+                    className="text-[9px] min-[380px]:text-[10px] sm:text-sm mb-1 min-[380px]:mb-1.5 sm:mb-3"
+                  >
                     Explore our offerings
-                  </p>
+                  </CardParagraph>
 
                   <Link href="/services">
-                    <button className="inline-flex items-center gap-1.5 sm:gap-2 bg-white/10 hover:bg-[#41B349] text-white text-[9px] min-[380px]:text-[10px] sm:text-sm font-bold px-2.5 min-[380px]:px-3.5 sm:px-5 py-1 sm:py-2 rounded-full transition-all duration-300 border border-white/20 hover:border-[#41B349] cursor-pointer">
-                      <span>
+                    <button className="inline-flex items-center gap-1.5 sm:gap-2 bg-white/10 hover:bg-[#41B349] text-white px-2.5 min-[380px]:px-3.5 sm:px-5 py-1 sm:py-2 rounded-full transition-all duration-300 border border-white/20 hover:border-[#41B349] cursor-pointer">
+                      <ButtonText className="text-[9px] min-[380px]:text-[10px] sm:text-sm">
                         {(() => {
                           const text = exploreButtonText || "Explore More";
                           const parts = text.split(" ");
@@ -336,7 +345,7 @@ const ServicesWeOffer = ({ cmsContent }) => {
                           }
                           return text;
                         })()}
-                      </span>
+                      </ButtonText>
                       <FaArrowRight size={9} className="sm:text-xs" />
                     </button>
                   </Link>

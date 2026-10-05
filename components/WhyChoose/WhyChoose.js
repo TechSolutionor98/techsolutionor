@@ -1,6 +1,7 @@
 "use client";
 import React from 'react';
 import Image from 'next/image';
+import { SectionHeading, SectionParagraph } from '@/components/Typography';
 
 const HandDrawnOval = () => (
   <svg
@@ -63,16 +64,18 @@ const WhyChoose = ({
     <section className="w-full bg-white py-16 sm:py-20 md:py-24 select-none">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Centered Heading with Hand-Drawn Circled Accent Word */}
-        <h2
-          className="text-3xl sm:text-4xl md:text-5xl font-black text-center tracking-tight text-[#111827] mb-10 sm:mb-14 leading-tight"
-          style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+        <SectionHeading
+          as="h2"
+          size="section"
+          theme="dark"
+          className="text-center mb-10 sm:mb-14"
         >
-          <span className="relative inline-block px-4 py-1 text-[#41B349] mr-2 font-black">
+          <span className="relative inline-block px-4 py-1 text-[#41B349] mr-2 font-display">
             {highlightText}
             <HandDrawnOval />
           </span>
-          {titleRest}
-        </h2>
+          <span>{titleRest}</span>
+        </SectionHeading>
 
         {/* Main Card Container with green border & generous rounded corners */}
         <div className="bg-white rounded-[28px] sm:rounded-[36px] md:rounded-[40px] border-2 border-[#41B349] p-6 sm:p-10 md:p-12 shadow-[0_4px_24px_rgba(0,0,0,0.03)] grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
@@ -82,27 +85,29 @@ const WhyChoose = ({
               children
             ) : paragraphs && Array.isArray(paragraphs) ? (
               paragraphs.map((p, idx) => (
-                <p
+                <SectionParagraph
                   key={idx}
-                  className="text-[15px] sm:text-base md:text-[16.5px] text-[#2d3748] leading-relaxed font-normal"
+                  size="lg"
+                  theme="slate"
+                  className="leading-relaxed md:leading-[1.75]"
                 >
                   {p}
-                </p>
+                </SectionParagraph>
               ))
             ) : (
               <>
                 {paragraph && (
-                  <p className="text-[15px] sm:text-base md:text-[16.5px] text-[#2d3748] leading-relaxed font-normal">
+                  <SectionParagraph size="lg" theme="slate" className="leading-relaxed md:leading-[1.75]">
                     {leadText ? (
                       <>
-                        <strong className="font-bold text-[#111827]">{leadText}</strong>
+                        <strong className="font-bold text-[#0D0F12]">{leadText}</strong>
                         {typeof leadText === 'string' && (leadText.endsWith('.') || leadText.endsWith('!') || leadText.endsWith('?')) ? ' ' : ' — '}
                         {paragraph}
                       </>
                     ) : (
                       paragraph
                     )}
-                  </p>
+                  </SectionParagraph>
                 )}
               </>
             )}
@@ -110,7 +115,7 @@ const WhyChoose = ({
             {bullets && Array.isArray(bullets) && bullets.length > 0 && (
               <ul className="space-y-2.5 sm:space-y-3 pt-2">
                 {bullets.map((item, idx) => (
-                  <li key={idx} className="flex items-start gap-3 text-[14.5px] sm:text-[15.5px] text-[#2d3748] leading-relaxed">
+                  <li key={idx} className="font-jakarta flex items-start gap-3 text-[14.5px] sm:text-[15.5px] text-[#4A5568] leading-relaxed tracking-[-0.01em]">
                     <span className="shrink-0 mt-1 w-4 h-4 rounded-full bg-[#41B349]/15 text-[#41B349] flex items-center justify-center font-bold">
                       <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />

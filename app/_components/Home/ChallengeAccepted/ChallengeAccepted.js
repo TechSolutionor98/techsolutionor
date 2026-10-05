@@ -5,6 +5,15 @@ import Image from "next/image";
 import { FaLongArrowAltRight, FaCheckCircle } from "react-icons/fa";
 import Eclipse from '../../../../components/Images/eclipse.png';
 import { getCmsVal } from "@/lib/api-helper";
+import {
+  SectionBadge,
+  SectionHeading,
+  HighlightWord,
+  SectionParagraph,
+  CardHeading,
+  CardParagraph,
+  ButtonText,
+} from "@/components/Typography";
 
 export const defaultChallengeAccepted = {
   title: "CHALLENGE ACCEPTED",
@@ -78,21 +87,17 @@ const ChallengeAccepted = ({ content, cmsContent }) => {
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#41B349]/10 border border-[#41B349]/20 text-[#41B349] font-extrabold text-xs uppercase tracking-widest mb-3">
-            <span className="w-2 h-2 rounded-full bg-[#41B349] animate-pulse" />
-            <span>BUSINESS SOLUTIONS</span>
-          </div>
+          <SectionBadge variant="light" className="mb-3">
+            BUSINESS SOLUTIONS
+          </SectionBadge>
 
-          <h2 
-            className="text-2xl sm:text-3xl md:text-5xl font-black text-[#0D0F12] tracking-tight leading-tight"
-            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-          >
-            {titleBlack} <span className="text-[#41B349]">{titleGreen}</span>
-          </h2>
+          <SectionHeading as="h2" size="section" theme="dark">
+            {titleBlack} <HighlightWord>{titleGreen}</HighlightWord>
+          </SectionHeading>
 
-          <p className="mt-3 sm:mt-4 text-[#4A5568] text-xs min-[360px]:text-sm sm:text-base md:text-lg leading-relaxed font-medium">
+          <SectionParagraph size="md" className="mt-3 sm:mt-4">
             {subtitle}
-          </p>
+          </SectionParagraph>
         </div>
 
         {/* Dark Glassmorphic Feature Showcase Container */}
@@ -114,25 +119,30 @@ const ChallengeAccepted = ({ content, cmsContent }) => {
                 <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#41B349] to-[#6BE874] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
                 <div>
-                  <span className="inline-block px-3 py-1 rounded-full bg-[#41B349]/10 border border-[#41B349]/20 text-[#41B349] text-xs font-bold uppercase tracking-wider mb-4">
+                  <SectionBadge variant="dark" pulse={false} className="text-[11px] mb-4">
                     PROBLEM 0{i + 1}
-                  </span>
+                  </SectionBadge>
 
-                  <h3 
-                    className="text-lg sm:text-xl md:text-2xl font-black text-white leading-snug tracking-tight mb-3 sm:mb-4 group-hover:text-[#6BE874] transition-colors duration-200"
-                    style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+                  <CardHeading 
+                    as="h3" 
+                    theme="light"
+                    className="text-lg sm:text-xl md:text-2xl leading-snug tracking-tight mb-3 sm:mb-4 group-hover:text-[#6BE874] transition-colors duration-200"
                   >
                     {item.title}
-                  </h3>
+                  </CardHeading>
 
-                  <p className="text-gray-300 text-xs sm:text-sm leading-relaxed font-medium mb-5 sm:mb-6">
+                  <CardParagraph 
+                    theme="light"
+                    size="sm"
+                    className="text-gray-300 text-xs sm:text-sm leading-relaxed mb-5 sm:mb-6"
+                  >
                     {item.desc}
-                  </p>
+                  </CardParagraph>
 
                   {/* Bullet Checklist */}
                   <ul className="space-y-2 sm:space-y-2.5 mb-5 sm:mb-6">
                     {(Array.isArray(item.list) ? item.list : []).map((listItem, index) => (
-                      <li key={index} className="flex items-start gap-2.5 text-xs sm:text-sm font-semibold text-gray-200">
+                      <li key={index} className="font-jakarta flex items-start gap-2.5 text-xs sm:text-sm font-semibold text-gray-200">
                         <FaCheckCircle className="text-[#41B349] text-sm sm:text-base shrink-0 mt-0.5" />
                         <span>{listItem}</span>
                       </li>
@@ -145,9 +155,9 @@ const ChallengeAccepted = ({ content, cmsContent }) => {
                   className="pt-4 border-t border-gray-800/80 flex items-center justify-between cursor-pointer group/link"
                   onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
                 >
-                  <span className="text-xs font-extrabold text-[#41B349] uppercase tracking-wider group-hover/link:text-white transition-colors duration-200">
+                  <ButtonText className="text-xs uppercase tracking-wider text-[#41B349] group-hover/link:text-white transition-colors duration-200">
                     {exploreText}
-                  </span>
+                  </ButtonText>
                   <div className="w-8 h-8 rounded-full bg-[#181B20] border border-gray-800 flex items-center justify-center text-[#41B349] group-hover/link:bg-[#41B349] group-hover/link:text-white transition-all duration-300">
                     <FaLongArrowAltRight size={13} className="transition-transform group-hover/link:translate-x-0.5" />
                   </div>

@@ -6,6 +6,15 @@ import Link from "next/link";
 import { FaCheckCircle, FaArrowRight, FaBolt } from "react-icons/fa";
 import { useQuote } from "@/app/_context/QuoteContext";
 import InnovationImage from "../../../components/Images/aboutbg1.webp";
+import {
+    SectionBadge,
+    SectionHeading,
+    HighlightWord,
+    SectionParagraph,
+    CardHeading,
+    CardParagraph,
+    ButtonText
+} from "@/components/Typography";
 
 const cultureHighlights = [
     "Rigorous Automated CI/CD & Code Quality Audits",
@@ -26,31 +35,28 @@ const WatchUsLive = () => {
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
                     {/* Left: Culture Copy */}
                     <div className="lg:col-span-6 space-y-6 text-left">
-                        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#41B349]/15 border border-[#41B349]/30 text-[#41B349] font-extrabold text-xs uppercase tracking-widest">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#41B349]" />
-                            <span>INNOVATION & ENGINEERING CULTURE</span>
-                        </div>
+                        <SectionBadge variant="dark">
+                            INNOVATION & ENGINEERING CULTURE
+                        </SectionBadge>
 
-                        <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight leading-[1.2]">
+                        <SectionHeading as="h2" size="section" theme="light">
                             A Dynamic Hub Where{" "}
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#41B349] via-[#65D46D] to-[#41B349]">
-                                Visionary Ideas
-                            </span>{" "}
+                            <HighlightWord>Visionary Ideas</HighlightWord>{" "}
                             Thrive
-                        </h2>
+                        </SectionHeading>
 
-                        <p className="text-gray-300 text-base sm:text-lg leading-relaxed font-normal">
+                        <SectionParagraph size="lg" theme="light">
                             At TechSolutionor, our greatest asset is our collective intellect. We pair the strategic oversight of seasoned software architects with the energetic ingenuity of top engineering talent to solve challenges others deem impossible.
-                        </p>
+                        </SectionParagraph>
 
-                        <p className="text-gray-400 text-sm sm:text-base leading-relaxed font-normal">
+                        <SectionParagraph size="md" theme="light" className="text-gray-400">
                             We discard slow, bloated agency bureaucracy in favor of tight, agile squads focused squarely on your commercial milestones. Every sprint is deliberate, every milestone measurable.
-                        </p>
+                        </SectionParagraph>
 
                         {/* Checklist */}
                         <div className="space-y-3 pt-2">
                             {cultureHighlights.map((item, idx) => (
-                                <div key={idx} className="flex items-center gap-3 text-sm sm:text-base font-semibold text-gray-200">
+                                <div key={idx} className="flex items-center gap-3 font-jakarta text-sm sm:text-base font-semibold text-gray-200 tracking-[-0.01em]">
                                     <div className="w-6 h-6 rounded-full bg-[#41B349]/20 flex items-center justify-center shrink-0">
                                         <FaCheckCircle className="text-[#41B349] text-xs" />
                                     </div>
@@ -63,16 +69,16 @@ const WatchUsLive = () => {
                         <div className="pt-4 flex flex-wrap items-center gap-4">
                             <button
                                 onClick={openQuote}
-                                className="inline-flex items-center gap-2.5 bg-[#41B349] hover:bg-[#369c3d] text-white font-extrabold px-8 py-4 rounded-full text-sm sm:text-base transition-all duration-300 shadow-lg shadow-[#41B349]/25 hover:scale-[1.02] cursor-pointer"
+                                className="inline-flex items-center gap-2.5 bg-[#41B349] hover:bg-[#369c3d] text-white px-8 py-4 rounded-full transition-all duration-300 shadow-lg shadow-[#41B349]/25 hover:scale-[1.02] cursor-pointer"
                             >
-                                <span>Collaborate With Us</span>
+                                <ButtonText className="text-sm sm:text-base">Collaborate With Us</ButtonText>
                                 <FaArrowRight size={12} />
                             </button>
                             <Link
                                 href="/contact-us"
-                                className="inline-flex items-center gap-2 text-gray-300 hover:text-white px-5 py-4 rounded-full font-bold text-sm transition-colors duration-200"
+                                className="inline-flex items-center gap-2 text-gray-300 hover:text-white px-5 py-4 rounded-full transition-colors duration-200"
                             >
-                                <span>Schedule a Call →</span>
+                                <ButtonText className="text-sm">Schedule a Call →</ButtonText>
                             </Link>
                         </div>
                     </div>
@@ -96,13 +102,13 @@ const WatchUsLive = () => {
                                         <div className="w-8 h-8 rounded-lg bg-[#41B349]/20 flex items-center justify-center text-[#41B349]">
                                             <FaBolt size={14} />
                                         </div>
-                                        <div className="text-sm font-black text-white uppercase tracking-wider">
+                                        <CardHeading as="h4" size="sm" theme="light" className="text-sm">
                                             High-Velocity Engineering
-                                        </div>
+                                        </CardHeading>
                                     </div>
-                                    <p className="text-xs text-gray-300 font-normal leading-relaxed">
+                                    <CardParagraph size="xs" theme="light" className="text-gray-300">
                                         Continuous integration and continuous deployment pipelines engineered for speed, safety, and scale.
-                                    </p>
+                                    </CardParagraph>
                                 </div>
                             </div>
                         </div>

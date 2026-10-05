@@ -12,6 +12,62 @@
   font-family: var(--font-roboto), 'Roboto', sans-serif;
 }
 
+.font-display {
+  font-family: 'Anton', 'Montserrat', 'Outfit', sans-serif;
+  letter-spacing: -0.02em;
+}
+
+/* Homepage & Global Typography System Utilities (matching Hero section) */
+.typo-hero-heading {
+  font-family: 'Anton', 'Montserrat', 'Outfit', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 1.02;
+}
+
+.typo-section-heading {
+  font-family: 'Anton', 'Montserrat', 'Outfit', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+.typo-card-heading {
+  font-family: 'Anton', 'Montserrat', 'Outfit', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+}
+
+.typo-paragraph {
+  font-family: var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif;
+  letter-spacing: -0.01em;
+  line-height: 1.65;
+}
+
+.typo-button {
+  font-family: var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.typo-badge {
+  font-family: 'Anton', 'Montserrat', 'Outfit', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Universal scrollbar hiding utilities */
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+.no-scrollbar {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
 html,
 body {
   overflow-x: clip;

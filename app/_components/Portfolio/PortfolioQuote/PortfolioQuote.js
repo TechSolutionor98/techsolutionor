@@ -2,6 +2,12 @@
 
 import React from 'react';
 import { Quote, Layers, ArrowDown } from 'lucide-react';
+import {
+  SectionBadge,
+  SectionHeading,
+  SectionParagraph,
+  ButtonText,
+} from '@/components/Typography';
 
 const PortfolioQuote = () => {
   const scrollToProjects = () => {
@@ -26,13 +32,13 @@ const PortfolioQuote = () => {
 
           <div className="pt-4 text-center">
             {/* Supporting Content (Exact User Text) */}
-            <p className="text-lg sm:text-xl md:text-2xl text-[#1F2937] leading-relaxed sm:leading-loose font-normal italic max-w-4xl mx-auto">
+            <p className="font-jakarta text-lg sm:text-xl md:text-2xl text-[#1F2937] leading-relaxed sm:leading-loose font-normal italic max-w-4xl mx-auto">
               “With a team of skilled developers, designers, and technology experts, we are dedicated to delivering high-quality, client-focused solutions. Our commitment to innovation, excellence, and customer satisfaction ensures that every project we undertake exceeds expectations and achieves real results.”
             </p>
 
             <div className="mt-6 flex items-center justify-center gap-3">
               <div className="h-[1px] w-12 bg-gradient-to-r from-transparent to-[#41B349]" />
-              <span className="text-xs sm:text-sm font-bold tracking-widest text-[#41B349] uppercase">
+              <span className="font-jakarta text-xs sm:text-sm font-semibold tracking-wider text-[#2C9434] uppercase">
                 TechSolutionor Engineering Standard
               </span>
               <div className="h-[1px] w-12 bg-gradient-to-l from-transparent to-[#41B349]" />
@@ -42,26 +48,27 @@ const PortfolioQuote = () => {
 
         {/* Section Heading & Anchor Transition */}
         <div className="mt-16 sm:mt-20 text-center space-y-4">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#41B349]/10 border border-[#41B349]/30 text-[#41B349] text-xs font-extrabold tracking-widest uppercase">
-            <Layers className="w-3.5 h-3.5 text-[#41B349]" />
-            <span>Featured Case Studies</span>
+          <div className="flex justify-center">
+            <SectionBadge variant="light" icon={<Layers className="w-3.5 h-3.5" />}>
+              Featured Case Studies
+            </SectionBadge>
           </div>
 
           {/* Section Heading (Exact User Text) */}
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-[#111827]">
+          <SectionHeading as="h2" size="section" theme="dark">
             Explore Our Work
-          </h2>
+          </SectionHeading>
 
-          <p className="text-sm sm:text-base text-[#4B5563] max-w-xl mx-auto font-normal">
+          <SectionParagraph size="lg" theme="slate" className="max-w-xl mx-auto">
             Explore our verified digital case studies across e-commerce, cloud POS, mobile apps, real estate portals, and digital growth platforms.
-          </p>
+          </SectionParagraph>
 
           <div className="pt-2">
             <button
               onClick={scrollToProjects}
-              className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full bg-[#41B349] hover:bg-[#389e40] text-white font-bold text-sm tracking-wide shadow-lg shadow-[#41B349]/25 hover:shadow-[#41B349]/40 transition-all duration-300 cursor-pointer active:scale-95"
+              className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full bg-[#41B349] hover:bg-[#389e40] text-white shadow-lg shadow-[#41B349]/25 hover:shadow-[#41B349]/40 transition-all duration-300 cursor-pointer active:scale-95"
             >
-              <span>View Case Studies</span>
+              <ButtonText className="text-sm">View Case Studies</ButtonText>
               <ArrowDown className="w-4 h-4 animate-bounce" />
             </button>
           </div>

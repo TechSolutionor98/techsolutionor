@@ -5,6 +5,15 @@ import Image from "next/image";
 import StandOutImage from "@/components/Images/what-makes-us-stand-out.png";
 import { CheckCircle2, ArrowRight, ShieldCheck, Zap, Globe, Trophy } from "lucide-react";
 import { useQuote } from "@/app/_context/QuoteContext";
+import {
+  SectionBadge,
+  SectionHeading,
+  HighlightWord,
+  SectionParagraph,
+  CardHeading,
+  CardParagraph,
+  ButtonText,
+} from "@/components/Typography";
 
 const strengths = [
   {
@@ -51,12 +60,10 @@ const WhatMakesUsStandOut = () => {
           {/* LEFT COLUMN: TEXT & VALUE PROPOSITION */}
           <div className="w-full lg:w-1/2 flex flex-col items-start">
             {/* Eyebrow Pill */}
-            <div 
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#36963D]/10 border border-[#36963D]/30 text-[#36963D] font-mono text-xs uppercase tracking-widest font-bold mb-4 shadow-2xs"
-              style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-            >
-              <span className="w-2 h-2 rounded-full bg-[#36963D] animate-pulse" />
-              <span>WHY PARTNER WITH US</span>
+            <div className="mb-4">
+              <SectionBadge variant="light">
+                WHY PARTNER WITH US
+              </SectionBadge>
             </div>
 
             {/* Cursive Subtitle */}
@@ -65,21 +72,24 @@ const WhatMakesUsStandOut = () => {
             </div>
 
             {/* Headline */}
-            <h2 
-              className="text-3xl sm:text-4xl md:text-[44px] font-black leading-[1.15] text-[#0D0F12] tracking-tight mb-5"
-              style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+            <SectionHeading
+              as="h2"
+              size="section"
+              theme="dark"
+              className="text-3xl sm:text-4xl md:text-[44px] leading-[1.15] mb-5"
             >
               What Makes Us Stand Out <br />
-              <span className="text-[#36963D]">in Dubai & Beyond</span>
-            </h2>
+              <HighlightWord>in Dubai &amp; Beyond</HighlightWord>
+            </SectionHeading>
 
             {/* Paragraph */}
-            <p 
-              className="text-[#475569] text-sm sm:text-base leading-relaxed font-normal mb-8 max-w-[540px]"
-              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+            <SectionParagraph
+              size="md"
+              theme="slate"
+              className="mb-8 max-w-[540px]"
             >
               Tech Solutionor combines global engineering standards, deep domain acumen, and tailored execution to deliver commercial products that yield real impact. We bring the right mix of architectural strategy, modern frameworks, and relentless support to every engagement.
-            </p>
+            </SectionParagraph>
 
             {/* 4 Key Strengths Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full mb-8">
@@ -94,16 +104,18 @@ const WhatMakesUsStandOut = () => {
                       <div className="w-8 h-8 rounded-xl bg-[#36963D]/10 text-[#36963D] flex items-center justify-center font-bold">
                         <Icon className="w-4 h-4" />
                       </div>
-                      <h4 
-                        className="font-black text-[#0D0F12] text-sm tracking-tight"
-                        style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+                      <CardHeading
+                        as="h4"
+                        size="sm"
+                        theme="dark"
+                        className="text-sm font-bold tracking-tight"
                       >
                         {item.title}
-                      </h4>
+                      </CardHeading>
                     </div>
-                    <p className="text-xs text-[#475569] leading-relaxed font-normal">
+                    <CardParagraph size="xs" theme="slate" className="text-xs leading-relaxed">
                       {item.desc}
-                    </p>
+                    </CardParagraph>
                   </div>
                 );
               })}
@@ -112,10 +124,9 @@ const WhatMakesUsStandOut = () => {
             {/* CTA Button */}
             <button
               onClick={openQuote}
-              className="retro-shadow-pill inline-flex items-center gap-2.5 bg-[#36963D] hover:bg-[#2e8234] text-white font-black text-xs sm:text-sm uppercase tracking-wider py-3.5 px-8 rounded-full border-2 border-[#0D0F12] transition-all duration-200 cursor-pointer active:scale-95"
-              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+              className="retro-shadow-pill inline-flex items-center gap-2.5 bg-[#36963D] hover:bg-[#2e8234] text-white py-3.5 px-8 rounded-full border-2 border-[#0D0F12] transition-all duration-200 cursor-pointer active:scale-95 flex items-center justify-center"
             >
-              <span>Work With Us Today</span>
+              <ButtonText className="text-xs sm:text-sm uppercase tracking-wider text-white">Work With Us Today</ButtonText>
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
@@ -142,13 +153,10 @@ const WhatMakesUsStandOut = () => {
                   ✓
                 </div>
                 <div>
-                  <div 
-                    className="font-black text-[#0D0F12] text-sm"
-                    style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-                  >
+                  <div className="font-jakarta font-bold text-[#0D0F12] text-sm">
                     99.4% Client Retention
                   </div>
-                  <div className="text-xs text-[#475569]">Across UAE & International Markets</div>
+                  <div className="font-jakarta text-xs text-[#475569]">Across UAE &amp; International Markets</div>
                 </div>
               </div>
 

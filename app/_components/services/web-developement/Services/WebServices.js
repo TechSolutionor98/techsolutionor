@@ -11,6 +11,14 @@ import {
   ShieldCheck,
   ArrowUpRight,
 } from "lucide-react";
+import {
+  SectionBadge,
+  SectionHeading,
+  HighlightWord,
+  SectionParagraph,
+  CardHeading,
+  CardParagraph,
+} from "@/components/Typography";
 
 const servicesData = [
   {
@@ -70,24 +78,28 @@ const WebServices = () => {
       <div className="max-w-[1180px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1B4E2C]/10 border border-[#1B4E2C]/20 text-[#1B4E2C] font-extrabold text-xs sm:text-sm uppercase tracking-widest mb-3 shadow-2xs">
-            <span className="w-2 h-2 rounded-full bg-[#41B349] animate-pulse" />
-            <span>FULL-CYCLE WEB ENGINEERING</span>
+          <div className="mb-3">
+            <SectionBadge variant="light">
+              FULL-CYCLE WEB ENGINEERING
+            </SectionBadge>
           </div>
 
-          <h2
-            className="text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-black text-[#0D0F12] tracking-tight leading-tight"
-            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+          <SectionHeading
+            as="h2"
+            size="section"
+            theme="dark"
+            className="text-center"
           >
-            Our Web Development <span className="text-[#41B349]">Services</span>
-          </h2>
+            Our Web Development <HighlightWord>Services</HighlightWord>
+          </SectionHeading>
 
-          <p
-            className="text-sm sm:text-base text-[#475569] mt-3 font-normal leading-relaxed max-w-2xl mx-auto"
-            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+          <SectionParagraph
+            size="md"
+            theme="slate"
+            className="mt-3 max-w-2xl mx-auto text-center"
           >
             From high-performance custom web applications to scalable corporate platforms, we build secure, conversion-driven digital systems tailored for enterprises in Dubai and globally.
-          </p>
+          </SectionParagraph>
         </div>
 
         {/* 6-Card Services Grid */}
@@ -115,20 +127,21 @@ const WebServices = () => {
                   </div>
 
                   {/* Title */}
-                  <h3
-                    className="font-bold text-[19px] sm:text-[21px] mb-3.5 leading-snug text-[#0D0F12] group-hover:text-white transition-colors duration-400"
-                    style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+                  <CardHeading
+                    as="h3"
+                    size="md"
+                    className="text-[19px] sm:text-[21px] mb-3.5 leading-snug text-[#0D0F12] group-hover:text-white transition-colors duration-400 font-display uppercase tracking-tight"
                   >
                     {service.title}
-                  </h3>
+                  </CardHeading>
 
                   {/* Description */}
-                  <p 
-                    className="text-[14px] sm:text-[14.5px] leading-[1.7] font-normal text-[#475569] group-hover:text-white/95 transition-colors duration-400"
-                    style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                  <CardParagraph
+                    size="md"
+                    className="text-[14px] sm:text-[14.5px] leading-[1.7] text-[#475569] group-hover:text-white/95 transition-colors duration-400 font-jakarta font-normal"
                   >
                     {service.desc}
-                  </p>
+                  </CardParagraph>
                 </div>
               </div>
             );

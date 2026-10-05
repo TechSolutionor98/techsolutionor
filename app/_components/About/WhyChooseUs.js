@@ -7,6 +7,15 @@ import Icon2 from "../../../components/Images/abouticon5.png";
 import Icon3 from "../../../components/Images/abouticon6.png";
 import Icon4 from "../../../components/Images/abouticon7.png";
 import { getCmsVal } from "@/lib/api-helper";
+import {
+    SectionBadge,
+    SectionHeading,
+    HighlightWord,
+    SectionParagraph,
+    CardHeading,
+    CardParagraph,
+    ButtonText
+} from "@/components/Typography";
 
 const defaultFeatures = [
     {
@@ -68,25 +77,26 @@ const WhyChooseUs = ({ cmsContent }) => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header */}
                 <div className="text-center max-w-3xl mx-auto mb-16">
-                    <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#41B349]/15 border border-[#41B349]/30 text-[#41B349] font-extrabold text-xs uppercase tracking-widest mb-4">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#41B349]" />
-                        <span>{badge}</span>
+                    <div className="flex justify-center mb-4">
+                        <SectionBadge variant="light">
+                            {badge}
+                        </SectionBadge>
                     </div>
 
-                    <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-gray-900 tracking-tight leading-tight">
+                    <SectionHeading as="h2" size="section" theme="dark">
                         {heading.includes("Engineering Partner") ? (
                             <>
                                 Why Ambitious Brands Choose Us as Their{" "}
-                                <span className="text-[#41B349]">Engineering Partner</span>
+                                <HighlightWord>Engineering Partner</HighlightWord>
                             </>
                         ) : (
                             heading
                         )}
-                    </h2>
+                    </SectionHeading>
 
-                    <p className="mt-4 text-gray-600 text-base sm:text-lg leading-relaxed font-normal">
+                    <SectionParagraph size="lg" theme="slate" className="mt-4 max-w-2xl mx-auto">
                         {subtitle}
-                    </p>
+                    </SectionParagraph>
                 </div>
 
                 {/* 4 Cards Grid */}
@@ -107,27 +117,28 @@ const WhyChooseUs = ({ cmsContent }) => {
                                             className="object-contain group-hover:scale-110 transition-transform duration-300"
                                         />
                                     </div>
-                                    <span className="text-xs font-black text-gray-400 group-hover:text-[#41B349] transition-colors">
+                                    <span className="font-display font-black text-sm text-gray-400 group-hover:text-[#41B349] transition-colors">
                                         {item.step}
                                     </span>
                                 </div>
 
-                                <div className="text-xs font-extrabold uppercase tracking-wider text-[#41B349] mb-1">
+                                <div className="font-jakarta font-semibold uppercase tracking-wider text-xs text-[#2C9434] mb-1.5">
                                     {item.subtitle}
                                 </div>
 
-                                <h3 className="text-lg sm:text-xl font-black text-gray-900 tracking-tight mb-3">
+                                <CardHeading as="h3" size="sm" theme="dark" className="mb-2.5">
                                     {item.title}
-                                </h3>
+                                </CardHeading>
 
-                                <p className="text-gray-600 text-sm leading-relaxed font-normal">
+                                <CardParagraph size="sm" theme="slate">
                                     {item.description}
-                                </p>
+                                </CardParagraph>
                             </div>
 
-                            <div className="mt-6 pt-4 border-t border-gray-100 flex items-center gap-1.5 text-xs font-bold text-gray-400 group-hover:text-[#41B349] transition-colors">
-                                <span>Learn More</span>
-                                <span>→</span>
+                            <div className="mt-6 pt-4 border-t border-gray-100 flex items-center gap-1.5">
+                                <ButtonText className="text-xs font-semibold text-gray-400 group-hover:text-[#41B349] transition-colors">
+                                    Learn More →
+                                </ButtonText>
                             </div>
                         </div>
                     ))}

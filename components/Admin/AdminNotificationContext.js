@@ -5,6 +5,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback, use
 const AdminNotificationContext = createContext({
   unreadCounts: {
     contactMessages: 0,
+    hireUs: 0,
     jobApplications: 0,
     customerReviews: 0,
     blogComments: 0,
@@ -64,6 +65,7 @@ function playNotificationChime() {
 export function AdminNotificationProvider({ children }) {
   const [unreadCounts, setUnreadCounts] = useState({
     contactMessages: 0,
+    hireUs: 0,
     jobApplications: 0,
     customerReviews: 0,
     blogComments: 0,
@@ -102,6 +104,7 @@ export function AdminNotificationProvider({ children }) {
 
       const newCounts = {
         contactMessages: Number(data.counts?.contactMessages) || 0,
+        hireUs: Number(data.counts?.hireUs) || 0,
         jobApplications: Number(data.counts?.jobApplications) || 0,
         customerReviews: Number(data.counts?.customerReviews) || 0,
         blogComments: Number(data.counts?.blogComments) || 0,

@@ -8,6 +8,14 @@ import { ArrowRight, Sparkles } from "lucide-react";
 import { useQuote } from "@/app/_context/QuoteContext";
 import { getCmsVal } from "@/lib/api-helper";
 
+import {
+  SectionBadge,
+  SectionHeading,
+  HighlightWord,
+  SectionParagraph,
+  ButtonText,
+} from "@/components/Typography";
+
 const CommonServiceHero = ({
   cmsContent,
   cmsPrefix = "servicebanner",
@@ -35,7 +43,7 @@ const CommonServiceHero = ({
   const dynamicCtaText = getCmsVal(cmsContent, ctaText, cmsPrefix);
 
   return (
-    <section className="relative w-full bg-[#FFFFFF] text-[#0D0F12] overflow-hidden min-h-[500px] sm:min-h-[520px] flex items-center py-14 md:py-20">
+    <section className="relative w-full bg-[#FFFFFF] text-[#0D0F12] overflow-hidden min-h-[500px] sm:min-h-[520px] flex items-center py-14 md:py-20 select-none">
       {/* Background Subtle Geometric Polygons */}
       <div className="absolute top-0 left-0 opacity-40 pointer-events-none">
         <Image
@@ -54,59 +62,57 @@ const CommonServiceHero = ({
         {/* Left Content */}
         <div className="w-full md:w-1/2 text-left">
           {/* Eyebrow Pill Badge */}
-          <div 
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#36963D]/10 border border-[#36963D]/30 text-[#36963D] font-mono text-xs uppercase tracking-widest font-bold mb-6 shadow-2xs"
-            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-          >
-            <span className="w-2 h-2 rounded-full bg-[#36963D] animate-pulse" />
-            <span>{dynamicBadge}</span>
+          <div className="mb-6">
+            <SectionBadge variant="light">
+              {dynamicBadge}
+            </SectionBadge>
           </div>
 
-          {/* Main Headline matching Services & Technologies page */}
-          <h1 
-            className="text-3xl sm:text-4xl md:text-[44px] lg:text-[50px] font-black leading-[1.12] tracking-tight text-[#0D0F12] mb-6"
-            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+          {/* Main Headline matching Homepage Typography */}
+          <SectionHeading 
+            as="h1" 
+            size="hero" 
+            theme="dark" 
+            className="text-3xl sm:text-4xl md:text-[44px] lg:text-[50px] leading-[1.12] mb-6"
           >
             {dynamicLine1} {dynamicLine2 && <><br />{dynamicLine2}</>} <br />
-            <span className="text-[#36963D]">{dynamicLine3}</span>
-          </h1>
+            <HighlightWord>{dynamicLine3}</HighlightWord>
+          </SectionHeading>
 
           {/* Subtitle */}
-          <p 
-            className="text-[#475569] text-base md:text-lg max-w-[490px] mb-8 leading-relaxed font-normal"
-            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+          <SectionParagraph 
+            size="lg" 
+            theme="slate" 
+            className="max-w-[490px] mb-8"
           >
             {dynamicDesc}
-          </p>
+          </SectionParagraph>
 
           {/* CTA Buttons */}
           <div className="flex flex-wrap items-center gap-4">
             {onCtaClick ? (
               <button 
                 onClick={onCtaClick}
-                className="bg-[#36963D] hover:bg-[#2e8234] text-white px-8 py-3.5 rounded-full font-bold text-sm sm:text-base transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2.5"
-                style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                className="bg-[#36963D] hover:bg-[#2e8234] text-white px-8 py-3.5 sm:py-4 rounded-full transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2.5"
               >
-                <span>{dynamicCtaText || ctaText}</span>
+                <ButtonText className="text-sm sm:text-base text-white">{dynamicCtaText || ctaText}</ButtonText>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
             ) : ctaHref && ctaHref.startsWith("#") ? (
               <a href={ctaHref} className="inline-block group">
                 <button 
-                  className="bg-[#36963D] hover:bg-[#2e8234] text-white px-8 py-3.5 rounded-full font-bold text-sm sm:text-base transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2.5"
-                  style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                  className="bg-[#36963D] hover:bg-[#2e8234] text-white px-8 py-3.5 sm:py-4 rounded-full transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2.5"
                 >
-                  <span>{dynamicCtaText || ctaText}</span>
+                  <ButtonText className="text-sm sm:text-base text-white">{dynamicCtaText || ctaText}</ButtonText>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </button>
               </a>
             ) : (
               <Link href={ctaHref || "#overview"} className="inline-block group">
                 <button 
-                  className="bg-[#36963D] hover:bg-[#2e8234] text-white px-8 py-3.5 rounded-full font-bold text-sm sm:text-base transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2.5"
-                  style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                  className="bg-[#36963D] hover:bg-[#2e8234] text-white px-8 py-3.5 sm:py-4 rounded-full transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2.5"
                 >
-                  <span>{dynamicCtaText || ctaText}</span>
+                  <ButtonText className="text-sm sm:text-base text-white">{dynamicCtaText || ctaText}</ButtonText>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </button>
               </Link>
@@ -114,11 +120,10 @@ const CommonServiceHero = ({
 
             <button 
               onClick={openQuote}
-              className="bg-transparent hover:bg-[#36963D]/10 text-[#0D0F12] hover:text-[#36963D] border-2 border-[#0D0F12]/30 hover:border-[#36963D] px-7 py-3.5 rounded-full font-bold text-sm sm:text-base transition-all duration-300 cursor-pointer flex items-center gap-2"
-              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+              className="bg-transparent hover:bg-[#36963D]/10 text-[#0D0F12] hover:text-[#36963D] border-2 border-[#0D0F12]/30 hover:border-[#36963D] px-7 py-3.5 sm:py-4 rounded-full transition-all duration-300 cursor-pointer flex items-center gap-2"
             >
               <Sparkles className="w-4 h-4 text-[#36963D]" />
-              <span>Get Free Quote</span>
+              <ButtonText className="text-sm sm:text-base text-[#0D0F12] hover:text-[#36963D]">Get Free Quote</ButtonText>
             </button>
           </div>
         </div>

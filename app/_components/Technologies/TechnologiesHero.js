@@ -7,6 +7,13 @@ import BannerPic from "@/components/Images/technologybanner.png";
 import TechBg from "@/components/Images/technologybannerbg.svg";
 import { ArrowRight } from "lucide-react";
 import { getCmsVal } from "@/lib/api-helper";
+import {
+  SectionBadge,
+  SectionHeading,
+  HighlightWord,
+  SectionParagraph,
+  ButtonText,
+} from "@/components/Typography";
 
 const TechnologiesHero = ({ cmsContent }) => {
   const badge = getCmsVal(cmsContent, "TECHNOLOGY SERVICES", "techhero");
@@ -44,37 +51,44 @@ const TechnologiesHero = ({ cmsContent }) => {
         {/* Left Content */}
         <div className="w-full md:w-1/2 text-left">
           {/* Eyebrow Pill Badge */}
-          <div 
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#36963D]/10 border border-[#36963D]/30 text-[#36963D] font-mono text-xs uppercase tracking-widest font-bold mb-6 shadow-2xs"
-            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-          >
-            <span className="w-2 h-2 rounded-full bg-[#36963D] animate-pulse" />
-            <span>{badge}</span>
+          <div className="mb-6">
+            <SectionBadge variant="light">
+              {badge}
+            </SectionBadge>
           </div>
 
           {/* Main Headline */}
-          <h1 
-            className="text-3xl sm:text-4xl md:text-[44px] lg:text-[50px] font-black leading-[1.12] tracking-tight text-[#0D0F12] mb-6"
-            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+          <SectionHeading 
+            as="h1" 
+            size="hero" 
+            theme="dark" 
+            className="text-3xl sm:text-4xl md:text-[44px] lg:text-[50px] leading-[1.12] mb-6"
           >
-            {title}
-          </h1>
+            {title.includes("Digital Solution") ? (
+              <>
+                Modern Technologies Powering Our{" "}
+                <HighlightWord>Digital Solution</HighlightWord>
+              </>
+            ) : (
+              title
+            )}
+          </SectionHeading>
 
           {/* Subtitle */}
-          <p 
-            className="text-[#475569] text-base md:text-lg max-w-[480px] mb-8 leading-relaxed font-normal"
-            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+          <SectionParagraph 
+            size="lg" 
+            theme="slate" 
+            className="max-w-[480px] mb-8"
           >
             {subtitle}
-          </p>
+          </SectionParagraph>
 
           {/* CTA Button */}
           <Link href="#Technologies" className="inline-block group">
             <button 
-              className="bg-[#36963D] hover:bg-[#2e8234] text-white px-8 py-3.5 rounded-full font-bold text-sm sm:text-base transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2.5"
-              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+              className="bg-[#36963D] hover:bg-[#2e8234] text-white px-8 py-3.5 sm:py-4 rounded-full transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2.5"
             >
-              <span>{buttonText}</span>
+              <ButtonText className="text-sm sm:text-base text-white">{buttonText}</ButtonText>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
           </Link>

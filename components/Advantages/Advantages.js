@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { SectionHeading, SectionParagraph, CardHeading, CardParagraph } from "@/components/Typography";
 
 // Sparkle Star 4-point SVG path generator
 const SparkleStar = ({ cx, cy, r, className = "" }) => (
@@ -274,18 +275,23 @@ const Advantages = ({
     <section className="py-16 sm:py-20 md:py-24 bg-white select-none">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         {/* Main Heading */}
-        <h2
-          className="text-3xl sm:text-4xl md:text-5xl font-black text-center tracking-tight text-[#164326] uppercase leading-[1.1]"
-          style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+        <SectionHeading
+          as="h2"
+          size="section"
+          className="text-center text-[#164326]"
         >
           {title}
-        </h2>
+        </SectionHeading>
 
         {/* Subtitle */}
         {subtitle && (
-          <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-[#4B5563] text-center max-w-xl mx-auto leading-relaxed font-normal">
+          <SectionParagraph
+            size="lg"
+            theme="slate"
+            className="mt-3 sm:mt-4 text-center max-w-2xl mx-auto"
+          >
             {subtitle}
-          </p>
+          </SectionParagraph>
         )}
 
         {/* 3-Column Illustrated Stack */}
@@ -299,15 +305,24 @@ const Advantages = ({
                 <GraphicComponent />
 
                 {/* Advantage Title */}
-                <h3 className="mt-6 sm:mt-8 text-base sm:text-lg font-black text-[#111827] uppercase tracking-wide">
+                <CardHeading
+                  as="h3"
+                  size="md"
+                  theme="dark"
+                  className="mt-6 sm:mt-7 text-lg sm:text-xl font-display uppercase tracking-tight text-[#0D0F12] leading-snug"
+                >
                   {item.title}
-                </h3>
+                </CardHeading>
 
                 {/* Advantage Description */}
                 {item.desc && (
-                  <p className="mt-2 text-xs sm:text-sm text-[#4B5563] leading-relaxed max-w-[280px] mx-auto font-normal">
+                  <CardParagraph
+                    size="sm"
+                    theme="slate"
+                    className="mt-3 text-xs sm:text-sm text-[#4A5568] leading-relaxed max-w-[340px] mx-auto font-jakarta"
+                  >
                     {item.desc}
-                  </p>
+                  </CardParagraph>
                 )}
               </div>
             );

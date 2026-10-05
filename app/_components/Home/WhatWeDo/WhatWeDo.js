@@ -4,6 +4,8 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { getCmsVal } from "@/lib/api-helper";
 
+import { SectionBadge, SectionHeading, HighlightWord, SectionParagraph, CardHeading, CardParagraph } from "@/components/Typography";
+
 export const defaultWhatWeDo = {
   sectionTitle: "WHAT WE DO",
   cards: [
@@ -86,24 +88,19 @@ const WhatWeDo = ({ cmsContent }) => {
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-12 md:mb-16">
-          <div
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#41B349]/10 border border-[#41B349]/20 text-[#41B349] font-extrabold text-xs sm:text-sm uppercase tracking-widest mb-4"
-          >
-            <span className="w-2 h-2 rounded-full bg-[#41B349] animate-pulse" />
-            <span>{sectionTitle}</span>
+          <div className="mb-4">
+            <SectionBadge variant="light">
+              {sectionTitle}
+            </SectionBadge>
           </div>
 
-          <h2
-            className="text-2xl sm:text-3xl md:text-5xl font-black text-[#0D0F12] tracking-tight leading-tight"
-            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-          >
-            Empowering Digital Growth & Tech Excellence
-          </h2>
-          <p
-            className="mt-3 text-sm sm:text-base md:text-lg text-[#4A5568] font-medium"
-          >
+          <SectionHeading size="section" theme="dark">
+            Empowering Digital <HighlightWord>Growth</HighlightWord> & Tech Excellence
+          </SectionHeading>
+          
+          <SectionParagraph size="lg" theme="slate" className="mt-3 max-w-2xl mx-auto">
             Tailored digital strategies and cutting-edge engineering designed for scale.
-          </p>
+          </SectionParagraph>
         </div>
 
         {/* Stacked Card Deck Viewport with Responsive Height */}
@@ -149,17 +146,18 @@ const WhatWeDo = ({ cmsContent }) => {
 
                 <div className="flex flex-col justify-center h-full">
                   {/* Card Title */}
-                  <h3
-                    className={`text-xl min-[390px]:text-2xl sm:text-3xl md:text-4xl font-black tracking-tight ${theme.titleColor}`}
-                    style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+                  <CardHeading
+                    size="lg"
+                    theme="inherit"
+                    className={`${theme.titleColor} mb-1`}
                   >
                     {item.title}
-                  </h3>
+                  </CardHeading>
 
                   {/* Card Description (Main Center Data) */}
-                  <p className="mt-2.5 sm:mt-3.5 text-[#4A5568] text-xs min-[390px]:text-sm sm:text-base md:text-lg leading-relaxed font-normal">
+                  <CardParagraph size="md" theme="slate" className="mt-2.5 sm:mt-3.5">
                     {item.description}
-                  </p>
+                  </CardParagraph>
                 </div>
               </motion.div>
             );

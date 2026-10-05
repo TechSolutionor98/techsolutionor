@@ -6,6 +6,15 @@ import Link from "next/link";
 import { FaLayerGroup, FaShieldAlt, FaRocket, FaHeadset, FaArrowRight } from "react-icons/fa";
 import AboutImage from "../../../components/Images/about-img.jpg";
 import { getCmsVal } from "@/lib/api-helper";
+import {
+    SectionBadge,
+    SectionHeading,
+    HighlightWord,
+    SectionParagraph,
+    CardHeading,
+    CardParagraph,
+    ButtonText
+} from "@/components/Typography";
 
 const defaultKeyPillars = [
     {
@@ -83,29 +92,28 @@ const WhoWeAre = ({ cmsContent }) => {
 
                     {/* Right: Content Section */}
                     <div className="lg:col-span-6 space-y-6 text-left">
-                        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#41B349]/15 border border-[#41B349]/30 text-[#41B349] font-extrabold text-xs uppercase tracking-widest">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#41B349]" />
-                            <span>{badge}</span>
-                        </div>
+                        <SectionBadge variant="light">
+                            {badge}
+                        </SectionBadge>
 
-                        <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#111827] tracking-tight leading-[1.2]">
+                        <SectionHeading as="h2" size="section" theme="dark">
                             {heading.includes("Precision & Passion") ? (
                                 <>
                                     Architecting Next-Gen Software with{" "}
-                                    <span className="text-[#41B349]">Precision & Passion</span>
+                                    <HighlightWord>Precision & Passion</HighlightWord>
                                 </>
                             ) : (
                                 heading
                             )}
-                        </h2>
+                        </SectionHeading>
 
-                        <p className="text-gray-600 text-base sm:text-lg leading-relaxed font-normal">
+                        <SectionParagraph size="lg" theme="slate">
                             {p1}
-                        </p>
+                        </SectionParagraph>
 
-                        <p className="text-gray-600 text-sm sm:text-base leading-relaxed font-normal">
+                        <SectionParagraph size="md" theme="slate">
                             {p2}
-                        </p>
+                        </SectionParagraph>
 
                         {/* Feature Pillars Grid */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
@@ -117,8 +125,12 @@ const WhoWeAre = ({ cmsContent }) => {
                                     <div className="w-9 h-9 rounded-xl bg-white shadow-xs border border-gray-100 flex items-center justify-center mb-3">
                                         {pillar.icon}
                                     </div>
-                                    <h4 className="text-sm font-extrabold text-gray-900 mb-1">{pillar.title}</h4>
-                                    <p className="text-xs text-gray-500 leading-normal">{pillar.desc}</p>
+                                    <CardHeading as="h4" size="sm" theme="dark" className="text-sm sm:text-base mb-1">
+                                        {pillar.title}
+                                    </CardHeading>
+                                    <CardParagraph size="xs" theme="slate">
+                                        {pillar.desc}
+                                    </CardParagraph>
                                 </div>
                             ))}
                         </div>
@@ -127,16 +139,16 @@ const WhoWeAre = ({ cmsContent }) => {
                         <div className="pt-4 flex flex-wrap items-center gap-4">
                             <Link
                                 href="/services"
-                                className="inline-flex items-center gap-2.5 bg-[#111827] hover:bg-[#41B349] text-white px-7 py-3.5 rounded-full font-bold text-sm tracking-wide transition-all duration-300 shadow-md hover:shadow-xl hover:scale-[1.02]"
+                                className="inline-flex items-center gap-2.5 bg-[#111827] hover:bg-[#41B349] text-white px-7 py-3.5 rounded-full transition-all duration-300 shadow-md hover:shadow-xl hover:scale-[1.02]"
                             >
-                                <span>Explore Our Services</span>
+                                <ButtonText className="text-sm">Explore Our Services</ButtonText>
                                 <FaArrowRight size={12} />
                             </Link>
                             <Link
                                 href="/contact-us"
-                                className="inline-flex items-center gap-2 text-gray-700 hover:text-[#41B349] px-5 py-3 rounded-full font-bold text-sm transition-colors duration-200"
+                                className="inline-flex items-center gap-2 text-gray-700 hover:text-[#41B349] px-5 py-3 rounded-full transition-colors duration-200"
                             >
-                                <span>Get in Touch with Us →</span>
+                                <ButtonText className="text-sm">Get in Touch with Us →</ButtonText>
                             </Link>
                         </div>
                     </div>

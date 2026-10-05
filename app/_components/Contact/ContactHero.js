@@ -2,8 +2,18 @@
 
 import React from 'react';
 import { getCmsVal } from '@/lib/api-helper';
+import { useQuote } from '@/app/_context/QuoteContext';
+import {
+  SectionBadge,
+  SectionHeading,
+  HighlightWord,
+  SectionParagraph,
+  ButtonText
+} from "@/components/Typography";
+import { ArrowDown, MessageSquare } from "lucide-react";
 
 const ContactHero = ({ cmsContent }) => {
+    const { openQuote } = useQuote();
     const badge = getCmsVal(cmsContent, "GET IN TOUCH WITH OUR TEAM", "contacthero");
     const heading = getCmsVal(cmsContent, "Let's Build Something Extraordinary Together", "contacthero");
     const description = getCmsVal(
@@ -11,6 +21,13 @@ const ContactHero = ({ cmsContent }) => {
         "Have a project in mind, an engineering challenge, or looking to scale your digital presence? Reach out to our technology advisors and solution architects in Dubai for a free, transparent consultation.",
         "contacthero"
     );
+
+    const scrollToForm = () => {
+        const el = document.getElementById("contact-form");
+        if (el) {
+            el.scrollIntoView({ behavior: "smooth" });
+        }
+    };
 
     return (
         <section className="relative w-full bg-white overflow-hidden py-16 md:py-24 select-none">
@@ -20,31 +37,46 @@ const ContactHero = ({ cmsContent }) => {
 
             <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                 {/* Micro-Badge */}
-                <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-[#41B349]/10 border border-[#41B349]/30 text-[#41B349] font-extrabold text-xs uppercase tracking-widest mb-6 backdrop-blur-sm">
-                    <span className="w-2 h-2 rounded-full bg-[#41B349] animate-pulse" />
-                    <span>{badge}</span>
+                <div className="mb-6">
+                    <SectionBadge variant="light">
+                        {badge}
+                    </SectionBadge>
                 </div>
 
                 {/* Primary Heading */}
-                <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight leading-[1.15] max-w-4xl mx-auto">
+                <SectionHeading as="h1" size="hero" theme="dark" className="max-w-4xl mx-auto">
                     {heading.includes("Extraordinary Together") ? (
                         <>
-                            <span className="text-[#111827] block">
-                                Let&apos;s Build Something
-                            </span>
-                            <span className="text-[#41B349] block mt-1 sm:mt-2">
-                                Extraordinary Together
-                            </span>
+                            Let&apos;s Build Something{" "}
+                            <HighlightWord>Extraordinary Together</HighlightWord>
                         </>
                     ) : (
-                        <span className="text-[#111827] block">{heading}</span>
+                        heading
                     )}
-                </h1>
+                </SectionHeading>
 
                 {/* Description */}
-                <p className="mt-6 text-[#4B5563] text-base sm:text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-normal">
+                <SectionParagraph size="lg" theme="slate" className="mt-6 max-w-3xl mx-auto">
                     {description}
-                </p>
+                </SectionParagraph>
+
+                {/* Hero CTAs */}
+                <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+                    <button
+                        onClick={openQuote}
+                        className="inline-flex items-center gap-2.5 bg-[#41B349] hover:bg-[#369c3d] text-white px-8 py-3.5 sm:py-4 rounded-full text-sm sm:text-base transition-all duration-300 shadow-lg shadow-[#41B349]/25 hover:scale-[1.02] active:scale-95 cursor-pointer"
+                    >
+                        <MessageSquare className="w-4 h-4" />
+                        <ButtonText className="text-sm sm:text-base">Request a Free Quote</ButtonText>
+                    </button>
+                    <button
+                        onClick={scrollToForm}
+                        className="inline-flex items-center gap-2 bg-transparent hover:bg-gray-50 text-[#111827] border border-gray-300 hover:border-gray-400 px-8 py-3.5 sm:py-4 rounded-full text-sm sm:text-base transition-all duration-300 hover:scale-[1.02] active:scale-95 cursor-pointer"
+                    >
+                        <ButtonText className="text-sm sm:text-base">Send a Message</ButtonText>
+                        <ArrowDown className="w-4 h-4" />
+                    </button>
+                </div>
             </div>
         </section>
     );

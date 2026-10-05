@@ -10,6 +10,7 @@ import Value from '../../../../components/Images/value.png';
 import Mission from '../../../../components/Images/mission.png';
 import Goal from '../../../../components/Images/goal.png';
 import { getCmsVal } from "@/lib/api-helper";
+import { SectionBadge, SectionHeading, HighlightWord, SectionParagraph, CardHeading, CardParagraph, ButtonText } from "@/components/Typography";
 
 // Honeycomb Left SVG Accent (matching design reference screenshot)
 const HoneycombPatternLeft = () => (
@@ -146,15 +147,16 @@ const GoodServices = ({ cmsContent }) => {
           transition={{ duration: 0.6 }}
           className="text-center max-w-4xl mx-auto mb-10 sm:mb-14"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#41B349]/10 border border-[#41B349]/20 text-[#41B349] font-extrabold text-xs sm:text-sm uppercase tracking-widest mb-4">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#41B349] animate-pulse" />
-            <span>ABOUT TECHSOLUTIONOR</span>
+          <div className="mb-4">
+            <SectionBadge variant="light">
+              ABOUT TECHSOLUTIONOR
+            </SectionBadge>
           </div>
 
-          <h2 className="text-2xl sm:text-3xl md:text-5xl lg:text-5xl font-black text-[#0D0F12] tracking-tight leading-tight" style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}>
+          <SectionHeading size="section" theme="dark">
             {headingLine1}{" "}
-            <span className="text-[#41B349] block sm:inline mt-1 sm:mt-0">{headingLine2}</span>
-          </h2>
+            <HighlightWord className="block sm:inline mt-1 sm:mt-0">{headingLine2}</HighlightWord>
+          </SectionHeading>
         </motion.div>
 
         {/* Dual Showcase Cards */}
@@ -173,30 +175,27 @@ const GoodServices = ({ cmsContent }) => {
               <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-[#41B349]/10 to-transparent rounded-bl-full pointer-events-none" />
               
               <div>
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="w-8 h-8 rounded-xl bg-[#41B349]/10 text-[#41B349] flex items-center justify-center font-bold text-sm">
+                <div className="flex items-center gap-2.5 sm:gap-3 mb-4 sm:mb-5">
+                  <span className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#41B349]/10 text-[#41B349] flex items-center justify-center text-base sm:text-lg flex-shrink-0 shadow-xs">
                     <FaRocket />
                   </span>
-                  <span className="text-xs font-bold uppercase tracking-widest text-[#41B349]">
+                  <CardHeading 
+                    as="h3" 
+                    size="sm" 
+                    theme="green" 
+                    className="tracking-wide"
+                  >
                     EXPERT IT ADVISORY
-                  </span>
+                  </CardHeading>
                 </div>
                 
-                <p className="text-[#334155] text-sm sm:text-base md:text-lg leading-relaxed font-medium">
+                <CardParagraph 
+                  size="xl" 
+                  theme="slate" 
+                  className="max-w-xl"
+                >
                   {paragraph1}
-                </p>
-              </div>
-
-              <div className="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-gray-100 flex flex-wrap gap-2 sm:gap-2.5">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#41B349]/10 text-[#41B349] text-xs font-bold">
-                  <FaCheckCircle className="text-xs" /> IT Advisory
-                </span>
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#41B349]/10 text-[#41B349] text-xs font-bold">
-                  <FaCheckCircle className="text-xs" /> Web Development
-                </span>
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#41B349]/10 text-[#41B349] text-xs font-bold">
-                  <FaCheckCircle className="text-xs" /> Digital Solutions
-                </span>
+                </CardParagraph>
               </div>
             </motion.div>
 
@@ -211,32 +210,27 @@ const GoodServices = ({ cmsContent }) => {
               <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-[#41B349]/10 to-transparent rounded-bl-full pointer-events-none" />
 
               <div>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-2">
-                    <span className="w-8 h-8 rounded-xl bg-[#41B349]/10 text-[#41B349] flex items-center justify-center font-bold text-sm">
-                      <FaAward />
-                    </span>
-                    <span className="text-xs font-bold uppercase tracking-widest text-[#41B349]">
-                      LONG-TERM PARTNERSHIPS
-                    </span>
-                  </div>
+                <div className="flex items-center gap-2.5 sm:gap-3 mb-4 sm:mb-5">
+                  <span className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#41B349]/10 text-[#41B349] flex items-center justify-center text-base sm:text-lg flex-shrink-0 shadow-xs">
+                    <FaAward />
+                  </span>
+                  <CardHeading 
+                    as="h3" 
+                    size="sm" 
+                    theme="green" 
+                    className="tracking-wide"
+                  >
+                    LONG-TERM PARTNERSHIPS
+                  </CardHeading>
                 </div>
 
-                <p className="text-[#334155] text-sm sm:text-base md:text-lg leading-relaxed font-medium">
+                <CardParagraph 
+                  size="xl" 
+                  theme="slate" 
+                  className="max-w-xl"
+                >
                   {paragraph2}
-                </p>
-              </div>
-
-              <div className="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-gray-100 flex flex-wrap gap-2 sm:gap-2.5">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#41B349]/10 text-[#41B349] text-xs font-bold">
-                  <FaCheckCircle className="text-xs" /> Long-Term Partnership
-                </span>
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#41B349]/10 text-[#41B349] text-xs font-bold">
-                  <FaCheckCircle className="text-xs" /> Custom Solutions
-                </span>
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#41B349]/10 text-[#41B349] text-xs font-bold">
-                  <FaCheckCircle className="text-xs" /> Global Strategy
-                </span>
+                </CardParagraph>
               </div>
             </motion.div>
 
@@ -253,16 +247,21 @@ const GoodServices = ({ cmsContent }) => {
           
           {/* Section Sub-Header */}
           <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#41B349]/10 border border-[#41B349]/20 text-[#41B349] font-extrabold text-xs uppercase tracking-widest mb-3">
-              <FaShieldAlt className="text-[#41B349]" />
-              <span>CORE ARCHITECTURE</span>
+            <div className="mb-3 flex justify-center">
+              <SectionBadge 
+                variant="light"
+                icon={<FaShieldAlt className="w-3.5 h-3.5 text-[#2C9434]" />}
+                pulse={false}
+              >
+                CORE ARCHITECTURE
+              </SectionBadge>
             </div>
-            <h3 className="text-2xl sm:text-3xl md:text-5xl font-black text-[#0D0F12] tracking-tight leading-tight" style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}>
-              Our Values, Mission & Goals
-            </h3>
-            <p className="mt-3 text-[#4A5568] text-sm sm:text-base md:text-lg font-medium">
+            <SectionHeading size="section" theme="dark" as="h3">
+              Our Values, <HighlightWord>Mission</HighlightWord> & Goals
+            </SectionHeading>
+            <SectionParagraph size="lg" theme="slate" className="mt-3 max-w-2xl mx-auto">
               The foundational principles driving our technical delivery, client partnerships, and digital innovation.
-            </p>
+            </SectionParagraph>
           </div>
 
           {/* 3-Column Ultra-Premium Bento Grid Showcase */}
@@ -280,8 +279,8 @@ const GoodServices = ({ cmsContent }) => {
               <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-transparent via-[#41B349] to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-300" />
               
               <div>
-                {/* Header Icon Viewport & Badge */}
-                <div className="flex items-center justify-between mb-6">
+                {/* Header Icon Viewport */}
+                <div className="flex items-center mb-6">
                   <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-[#181B24] to-[#11131A] border border-gray-800 flex items-center justify-center group-hover:border-[#41B349]/60 shadow-md transition-colors duration-300">
                     {isValuesImgDynamic ? (
                       <img src={valuesCard.icon} alt="Values" width={28} height={28} className="w-6 h-6 sm:w-7 sm:h-7 object-contain brightness-0 invert group-hover:scale-110 transition-transform duration-300" />
@@ -289,22 +288,21 @@ const GoodServices = ({ cmsContent }) => {
                       <Image src={valuesCard.icon} alt="Values" width={28} height={28} className="w-6 h-6 sm:w-7 sm:h-7 object-contain brightness-0 invert group-hover:scale-110 transition-transform duration-300" />
                     )}
                   </div>
-                  <span className="px-3 py-1 sm:px-3.5 sm:py-1 rounded-full bg-[#41B349]/15 border border-[#41B349]/30 text-[#41B349] font-black text-xs uppercase tracking-wider">
-                    01 • FOUNDATION
-                  </span>
                 </div>
 
                 {/* Title */}
-                <h4 
-                  className="text-xl sm:text-2xl md:text-3xl font-black text-white group-hover:text-[#41B349] transition-colors duration-200 mb-3" 
-                  style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+                <CardHeading 
+                  size="lg"
+                  theme="light"
+                  as="h4"
+                  className="group-hover:text-[#41B349] transition-colors duration-200 mb-3" 
                 >
                   {valuesCard.title}
-                </h4>
+                </CardHeading>
 
-                <p className="text-[#94A3B8] text-xs sm:text-sm leading-relaxed font-normal mb-6">
+                <CardParagraph size="sm" theme="light" className="mb-6">
                   Guiding principles driving every client engagement, technical architecture, and digital partnership.
-                </p>
+                </CardParagraph>
               </div>
 
               {/* Value Items List Chips */}
@@ -312,10 +310,10 @@ const GoodServices = ({ cmsContent }) => {
                 {valuesCard.list.map((item, idx) => (
                   <div
                     key={idx}
-                    className="flex items-center gap-3 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-[#161922] border border-gray-800/90 text-white font-bold text-xs sm:text-sm group-hover:border-[#41B349]/40 hover:bg-[#41B349] hover:text-white transition-all duration-200"
+                    className="flex items-center gap-3 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-[#161922] border border-gray-800/90 text-white group-hover:border-[#41B349]/40 hover:bg-[#41B349] hover:text-white transition-all duration-200"
                   >
                     <FaCheckCircle className="text-[#41B349] group-hover:text-white shrink-0 transition-colors duration-200" size={14} />
-                    <span>{item}</span>
+                    <ButtonText className="text-xs sm:text-sm font-semibold">{item}</ButtonText>
                   </div>
                 ))}
               </div>
@@ -333,8 +331,8 @@ const GoodServices = ({ cmsContent }) => {
               <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-transparent via-[#41B349] to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-300" />
               
               <div>
-                {/* Header Icon Viewport & Badge */}
-                <div className="flex items-center justify-between mb-6">
+                {/* Header Icon Viewport */}
+                <div className="flex items-center mb-6">
                   <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-[#181B24] to-[#11131A] border border-gray-800 flex items-center justify-center group-hover:border-[#41B349]/60 shadow-md transition-colors duration-300">
                     {isMissionImgDynamic ? (
                       <img src={missionCard.icon} alt="Mission" width={28} height={28} className="w-6 h-6 sm:w-7 sm:h-7 object-contain brightness-0 invert group-hover:scale-110 transition-transform duration-300" />
@@ -342,22 +340,21 @@ const GoodServices = ({ cmsContent }) => {
                       <Image src={missionCard.icon} alt="Mission" width={28} height={28} className="w-6 h-6 sm:w-7 sm:h-7 object-contain brightness-0 invert group-hover:scale-110 transition-transform duration-300" />
                     )}
                   </div>
-                  <span className="px-3 py-1 sm:px-3.5 sm:py-1 rounded-full bg-[#41B349]/15 border border-[#41B349]/30 text-[#41B349] font-black text-xs uppercase tracking-wider">
-                    02 • PURPOSE
-                  </span>
                 </div>
 
                 {/* Title */}
-                <h4 
-                  className="text-xl sm:text-2xl md:text-3xl font-black text-white group-hover:text-[#41B349] transition-colors duration-200 mb-3" 
-                  style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+                <CardHeading 
+                  size="lg"
+                  theme="light"
+                  as="h4"
+                  className="group-hover:text-[#41B349] transition-colors duration-200 mb-3" 
                 >
                   {missionCard.title}
-                </h4>
+                </CardHeading>
 
-                <p className="text-[#94A3B8] text-xs sm:text-sm leading-relaxed font-normal mb-6">
+                <CardParagraph size="sm" theme="light" className="mb-6">
                   Dedicated commitment to operational excellence, client growth, 24/7 support, and IT advisory.
-                </p>
+                </CardParagraph>
               </div>
 
               {/* Mission Items List Chips */}
@@ -365,10 +362,10 @@ const GoodServices = ({ cmsContent }) => {
                 {missionCard.list.map((item, idx) => (
                   <div
                     key={idx}
-                    className="flex items-center gap-3 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-[#161922] border border-gray-800/90 text-white font-bold text-xs sm:text-sm group-hover:border-[#41B349]/40 hover:bg-[#41B349] hover:text-[#FFFFFF] transition-all duration-200"
+                    className="flex items-center gap-3 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-[#161922] border border-gray-800/90 text-white group-hover:border-[#41B349]/40 hover:bg-[#41B349] hover:text-white transition-all duration-200"
                   >
                     <FaCheckCircle className="text-[#41B349] group-hover:text-white shrink-0 transition-colors duration-200" size={14} />
-                    <span>{item}</span>
+                    <ButtonText className="text-xs sm:text-sm font-semibold">{item}</ButtonText>
                   </div>
                 ))}
               </div>
@@ -386,8 +383,8 @@ const GoodServices = ({ cmsContent }) => {
               <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-transparent via-[#41B349] to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-300" />
               
               <div>
-                {/* Header Icon Viewport & Badge */}
-                <div className="flex items-center justify-between mb-6">
+                {/* Header Icon Viewport */}
+                <div className="flex items-center mb-6">
                   <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-[#181B24] to-[#11131A] border border-gray-800 flex items-center justify-center group-hover:border-[#41B349]/60 shadow-md transition-colors duration-300">
                     {isGoalsImgDynamic ? (
                       <img src={goalsCard.icon} alt="Goals" width={28} height={28} className="w-6 h-6 sm:w-7 sm:h-7 object-contain brightness-0 invert group-hover:scale-110 transition-transform duration-300" />
@@ -395,22 +392,21 @@ const GoodServices = ({ cmsContent }) => {
                       <Image src={goalsCard.icon} alt="Goals" width={28} height={28} className="w-6 h-6 sm:w-7 sm:h-7 object-contain brightness-0 invert group-hover:scale-110 transition-transform duration-300" />
                     )}
                   </div>
-                  <span className="px-3 py-1 sm:px-3.5 sm:py-1 rounded-full bg-[#41B349]/15 border border-[#41B349]/30 text-[#41B349] font-black text-xs uppercase tracking-wider">
-                    03 • STRATEGY
-                  </span>
                 </div>
 
                 {/* Title */}
-                <h4 
-                  className="text-xl sm:text-2xl md:text-3xl font-black text-white group-hover:text-[#41B349] transition-colors duration-200 mb-3" 
-                  style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+                <CardHeading 
+                  size="lg"
+                  theme="light"
+                  as="h4"
+                  className="group-hover:text-[#41B349] transition-colors duration-200 mb-3" 
                 >
                   {goalsCard.title}
-                </h4>
+                </CardHeading>
 
-                <p className="text-[#94A3B8] text-xs sm:text-sm leading-relaxed font-normal mb-6">
+                <CardParagraph size="sm" theme="light" className="mb-6">
                   Delivering rapid response times, transparent cooperation, and efficiency across all projects.
-                </p>
+                </CardParagraph>
               </div>
 
               {/* Goals Items List Chips */}
@@ -418,10 +414,10 @@ const GoodServices = ({ cmsContent }) => {
                 {goalsCard.list.map((item, idx) => (
                   <div
                     key={idx}
-                    className="flex items-center gap-3 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-[#161922] border border-gray-800/90 text-white font-bold text-xs sm:text-sm group-hover:border-[#41B349]/40 hover:bg-[#41B349] hover:text-white transition-all duration-200"
+                    className="flex items-center gap-3 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-[#161922] border border-gray-800/90 text-white group-hover:border-[#41B349]/40 hover:bg-[#41B349] hover:text-white transition-all duration-200"
                   >
                     <FaCheckCircle className="text-[#41B349] group-hover:text-white shrink-0 transition-colors duration-200" size={14} />
-                    <span>{item}</span>
+                    <ButtonText className="text-xs sm:text-sm font-semibold">{item}</ButtonText>
                   </div>
                 ))}
               </div>

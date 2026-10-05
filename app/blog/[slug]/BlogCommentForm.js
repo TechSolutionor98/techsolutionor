@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { FaCheckCircle, FaExclamationCircle, FaLock, FaEnvelope, FaRedo } from 'react-icons/fa';
+import { CardHeading, ButtonText } from '@/components/Typography';
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -170,7 +171,7 @@ export default function BlogCommentForm({ blogId }) {
           <div className="w-12 h-12 rounded-full bg-green-100 text-[#41b349] mx-auto flex items-center justify-center text-2xl">
             <FaCheckCircle />
           </div>
-          <div>
+          <div className="text-center font-jakarta">
             <h4 className="text-lg font-bold text-green-900">Comment Submitted!</h4>
             <p className="text-sm text-green-700 mt-1.5 leading-relaxed max-w-md mx-auto">
               Thank you! Your email <strong className="font-semibold">{authorEmail}</strong> has been successfully verified. Your comment has been submitted and will appear once approved by our moderation team.
@@ -183,16 +184,16 @@ export default function BlogCommentForm({ blogId }) {
               setComment('');
               setOtp('');
             }}
-            className="px-5 py-2 bg-[#41b349] hover:bg-black text-white text-xs font-semibold rounded-full transition-colors cursor-pointer"
+            className="px-6 py-2.5 bg-[#41B349] hover:bg-[#369c3d] text-white rounded-full transition-colors cursor-pointer shadow-xs"
           >
-            Post Another Comment
+            <ButtonText className="text-xs font-semibold">Post Another Comment</ButtonText>
           </button>
         </div>
       )}
 
       {/* Error Alert */}
       {error && step !== 'success' && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl text-xs sm:text-sm flex items-start gap-2.5">
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl text-xs sm:text-sm flex items-start gap-2.5 font-jakarta">
           <FaExclamationCircle className="text-red-500 shrink-0 mt-0.5" />
           <span>{error}</span>
         </div>
@@ -200,10 +201,10 @@ export default function BlogCommentForm({ blogId }) {
 
       {/* Step 1: Initial Comment Input Form */}
       {step === 'input' && (
-        <form onSubmit={handleSendOtp} className="space-y-4">
+        <form onSubmit={handleSendOtp} className="space-y-4 font-jakarta">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-gray-700 mb-1.5">
                 Your Name <span className="text-red-500">*</span>
               </label>
               <input
@@ -212,12 +213,12 @@ export default function BlogCommentForm({ blogId }) {
                 value={authorName}
                 onChange={(e) => setAuthorName(e.target.value)}
                 placeholder="e.g. Alex Johnson"
-                className="w-full bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-800 outline-none focus:border-[#41b349] focus:ring-1 focus:ring-[#41b349] transition-all"
+                className="w-full bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-800 outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-gray-700 mb-1.5">
                 Email Address <span className="text-red-500">*</span>
               </label>
               <input
@@ -226,13 +227,13 @@ export default function BlogCommentForm({ blogId }) {
                 value={authorEmail}
                 onChange={(e) => setAuthorEmail(e.target.value)}
                 placeholder="alex@example.com"
-                className="w-full bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-800 outline-none focus:border-[#41b349] focus:ring-1 focus:ring-[#41b349] transition-all"
+                className="w-full bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-800 outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-gray-700 mb-1.5">
               Comment <span className="text-red-500">*</span>
             </label>
             <textarea
@@ -241,21 +242,21 @@ export default function BlogCommentForm({ blogId }) {
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               placeholder="Share your thoughts, questions, or insights..."
-              className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 outline-none focus:border-[#41b349] focus:ring-1 focus:ring-[#41b349] transition-all resize-y"
+              className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all resize-y"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="px-6 py-2.5 bg-[#41b349] hover:bg-black text-white font-semibold text-sm rounded-full transition-all duration-200 shadow-sm cursor-pointer disabled:opacity-50 inline-flex items-center gap-2"
+            className="px-7 py-3 bg-[#41B349] hover:bg-[#369c3d] text-white rounded-full transition-all duration-200 shadow-md shadow-[#41B349]/25 hover:scale-[1.02] cursor-pointer disabled:opacity-50 inline-flex items-center gap-2"
           >
             {loading ? (
-              <span>Sending Code...</span>
+              <ButtonText className="text-xs sm:text-sm">Sending Code...</ButtonText>
             ) : (
               <>
                 <FaEnvelope size={13} />
-                <span>Post Comment</span>
+                <ButtonText className="text-xs sm:text-sm">Post Comment</ButtonText>
               </>
             )}
           </button>
@@ -264,13 +265,15 @@ export default function BlogCommentForm({ blogId }) {
 
       {/* Step 2: OTP Verification Step */}
       {step === 'otp' && (
-        <form onSubmit={handleVerifyAndSubmit} className="space-y-5 bg-white p-6 rounded-xl border border-gray-200">
+        <form onSubmit={handleVerifyAndSubmit} className="space-y-5 bg-white p-6 rounded-xl border border-gray-200 font-jakarta">
           <div className="flex items-start justify-between gap-4 flex-wrap">
             <div>
               <span className="inline-flex items-center gap-1.5 text-xs font-bold text-[#41b349] bg-[#41b349]/10 px-3 py-1 rounded-full mb-2">
                 <FaLock size={10} /> Email Verification Required
               </span>
-              <h4 className="text-base font-bold text-gray-900">Enter Verification Code</h4>
+              <CardHeading as="h4" size="sm" theme="dark" className="text-base font-bold">
+                Enter Verification Code
+              </CardHeading>
               <p className="text-xs text-gray-600 mt-1">
                 We sent a 6-digit code to <strong className="text-gray-800">{authorEmail}</strong>
               </p>
@@ -281,14 +284,14 @@ export default function BlogCommentForm({ blogId }) {
                 setStep('input');
                 setError('');
               }}
-              className="text-xs text-[#41b349] hover:underline font-semibold cursor-pointer"
+              className="text-xs text-[#41B349] hover:underline font-semibold cursor-pointer"
             >
-              Change Email
+              <ButtonText className="text-xs">Change Email</ButtonText>
             </button>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-gray-700 mb-1.5">
               6-Digit Code <span className="text-red-500">*</span>
             </label>
             <input
@@ -299,7 +302,7 @@ export default function BlogCommentForm({ blogId }) {
               value={otp}
               onChange={(e) => setOtp(e.target.value.replace(/[^0-9]/g, ''))}
               placeholder="123456"
-              className="w-full max-w-[200px] bg-gray-50 border border-gray-300 rounded-xl px-4 py-2.5 text-center text-lg font-mono tracking-widest text-gray-900 outline-none focus:border-[#41b349] focus:bg-white transition-all"
+              className="w-full max-w-[200px] bg-gray-50 border border-gray-300 rounded-xl px-4 py-2.5 text-center text-lg font-mono tracking-widest text-gray-900 outline-none focus:border-[#41B349] focus:bg-white transition-all"
             />
           </div>
 
@@ -307,19 +310,21 @@ export default function BlogCommentForm({ blogId }) {
             <button
               type="submit"
               disabled={loading || otp.length !== 6}
-              className="px-6 py-2.5 bg-[#41b349] hover:bg-black text-white font-semibold text-sm rounded-full transition-all duration-200 shadow-sm cursor-pointer disabled:opacity-50"
+              className="px-7 py-3 bg-[#41B349] hover:bg-[#369c3d] text-white rounded-full transition-all duration-200 shadow-md shadow-[#41B349]/25 hover:scale-[1.02] cursor-pointer disabled:opacity-50"
             >
-              {loading ? 'Verifying...' : 'Verify & Submit Comment'}
+              <ButtonText className="text-xs sm:text-sm">
+                {loading ? 'Verifying...' : 'Verify & Submit Comment'}
+              </ButtonText>
             </button>
 
             <button
               type="button"
               disabled={resendCooldown > 0 || loading}
               onClick={handleResendOtp}
-              className="text-xs font-medium text-gray-500 hover:text-[#41b349] transition-colors cursor-pointer disabled:opacity-50 inline-flex items-center gap-1.5 px-3 py-2"
+              className="text-xs font-medium text-gray-500 hover:text-[#41B349] transition-colors cursor-pointer disabled:opacity-50 inline-flex items-center gap-1.5 px-3 py-2"
             >
               <FaRedo size={11} />
-              {resendCooldown > 0 ? `Resend code in ${resendCooldown}s` : 'Resend Code'}
+              <span>{resendCooldown > 0 ? `Resend code in ${resendCooldown}s` : 'Resend Code'}</span>
             </button>
           </div>
         </form>

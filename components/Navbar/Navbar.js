@@ -51,6 +51,7 @@ import {
     HireUsDevIcon,
     LeadGenIcon,
 } from './ServiceIcons';
+import { ButtonText } from "@/components/Typography";
 
 // Tech sublinks
 const techSubLinks = [
@@ -206,7 +207,7 @@ const Navbar = () => {
                                         <>
                                             <Link
                                                 href={link.href}
-                                                className={`font-jakarta whitespace-nowrap cursor-pointer text-[13px] xl:text-[14px] 2xl:text-[14.5px] font-semibold tracking-wide text-white/90 px-2 xl:px-2.5 2xl:px-3 py-1.5 xl:py-2 flex items-center gap-1.5 transition-colors duration-200 hover:text-[#41B349] ${
+                                                className={`font-jakarta whitespace-nowrap cursor-pointer text-[13.5px] xl:text-[14.5px] 2xl:text-[15px] font-semibold tracking-[-0.01em] text-white/90 px-2.5 xl:px-3 2xl:px-3.5 py-1.5 xl:py-2 flex items-center gap-1.5 transition-colors duration-200 hover:text-[#41B349] ${
                                                     isActive(link) ? 'text-[#41B349] font-bold' : ''
                                                 }`}
                                             >
@@ -268,10 +269,10 @@ const Navbar = () => {
                                                                     <Image src={sub.Image} alt={sub.label} width={28} height={28} className="object-contain dropdown-icon-bounce" />
                                                                 </div>
                                                                 <div className="flex flex-col min-w-0 relative z-10">
-                                                                    <span className="font-jakarta text-[13.5px] font-bold text-gray-900 group-hover/item:text-white transition-colors duration-200 truncate">
+                                                                    <span className="font-jakarta text-[13.5px] xl:text-[14px] font-semibold tracking-[-0.01em] text-gray-900 group-hover/item:text-white transition-colors duration-200 truncate">
                                                                         {sub.label}
                                                                     </span>
-                                                                    <span className="text-[11px] text-gray-500 group-hover/item:text-white/90 transition-colors duration-200 truncate">
+                                                                    <span className="font-jakarta text-[11.5px] text-gray-500 group-hover/item:text-white/85 tracking-[-0.005em] transition-colors duration-200 truncate leading-snug">
                                                                         {sub.desc}
                                                                     </span>
                                                                 </div>
@@ -287,7 +288,7 @@ const Navbar = () => {
                                             <Link
                                                 href={link.href || '/services'}
                                                 onClick={() => setDropdownIndex(null)}
-                                                className={`font-jakarta whitespace-nowrap cursor-pointer text-[13px] xl:text-[14px] 2xl:text-[14.5px] font-semibold tracking-wide text-white/90 px-2 xl:px-2.5 2xl:px-3 py-1.5 xl:py-2 flex items-center gap-1.5 transition-colors duration-200 hover:text-[#41B349] ${
+                                                className={`font-jakarta whitespace-nowrap cursor-pointer text-[13.5px] xl:text-[14.5px] 2xl:text-[15px] font-semibold tracking-[-0.01em] text-white/90 px-2.5 xl:px-3 2xl:px-3.5 py-1.5 xl:py-2 flex items-center gap-1.5 transition-colors duration-200 hover:text-[#41B349] ${
                                                     isActive(link) ? 'text-[#41B349] font-bold' : ''
                                                 }`}
                                             >
@@ -353,10 +354,10 @@ const Navbar = () => {
                                                                     )}
                                                                 </div>
                                                                 <div className="flex flex-col min-w-0 relative z-10">
-                                                                    <span className="font-jakarta text-[13.5px] font-bold text-gray-900 group-hover/item:text-white transition-colors duration-200 truncate">
+                                                                    <span className="font-jakarta text-[13.5px] xl:text-[14px] font-semibold tracking-[-0.01em] text-gray-900 group-hover/item:text-white transition-colors duration-200 truncate">
                                                                         {sub.label}
                                                                     </span>
-                                                                    <span className="text-[11px] text-gray-500 group-hover/item:text-white/90 transition-colors duration-200 truncate">
+                                                                    <span className="font-jakarta text-[11.5px] text-gray-500 group-hover/item:text-white/85 tracking-[-0.005em] transition-colors duration-200 truncate leading-snug">
                                                                         {sub.desc}
                                                                     </span>
                                                                 </div>
@@ -370,7 +371,7 @@ const Navbar = () => {
                                         <>
                                             <Link
                                                 href={link.href}
-                                                className={`font-jakarta whitespace-nowrap cursor-pointer text-[13px] xl:text-[14px] 2xl:text-[14.5px] font-semibold tracking-wide text-white/90 px-2 xl:px-2.5 2xl:px-3 py-1.5 xl:py-2 flex items-center gap-1.5 transition-colors duration-200 hover:text-[#41B349] ${
+                                                className={`font-jakarta whitespace-nowrap cursor-pointer text-[13.5px] xl:text-[14.5px] 2xl:text-[15px] font-semibold tracking-[-0.01em] text-white/90 px-2.5 xl:px-3 2xl:px-3.5 py-1.5 xl:py-2 flex items-center gap-1.5 transition-colors duration-200 hover:text-[#41B349] ${
                                                     isActive(link) ? 'text-[#41B349] font-bold' : ''
                                                 }`}
                                             >
@@ -403,7 +404,7 @@ const Navbar = () => {
                                     ) : (
                                         <Link
                                             href={link.href}
-                                            className={`font-jakarta whitespace-nowrap text-[13px] xl:text-[14px] 2xl:text-[14.5px] font-semibold tracking-wide text-white/90 px-2 xl:px-2.5 2xl:px-3 py-1.5 xl:py-2 transition-colors duration-200 hover:text-[#41B349] ${
+                                            className={`font-jakarta whitespace-nowrap text-[13.5px] xl:text-[14.5px] 2xl:text-[15px] font-semibold tracking-[-0.01em] text-white/90 px-2.5 xl:px-3 2xl:px-3.5 py-1.5 xl:py-2 transition-colors duration-200 hover:text-[#41B349] ${
                                                 isActive(link) ? 'text-[#41B349] font-bold' : ''
                                             }`}
                                         >
@@ -418,19 +419,19 @@ const Navbar = () => {
                     {/* Right Zone: Action Buttons (Desktop) or Hamburger (Mobile/Tablet) */}
                     <div className="flex-1 flex items-center justify-end min-w-0">
                         {/* Desktop action buttons */}
-                        <div className="hidden lg:flex items-center gap-2.5 xl:gap-3.5 flex-shrink-0">
+                        <div className="hidden lg:flex items-center gap-2.5 xl:gap-3 flex-shrink-0">
                             <Link href="/pos-development" className="inline-block flex-shrink-0">
                                 <button
-                                    className="font-roboto whitespace-nowrap bg-[#41B349] text-white text-[13px] xl:text-[14px] font-medium px-3.5 xl:px-4.5 h-[36px] xl:h-[40px] rounded-full hover:bg-white hover:text-black transition ease-in-out duration-200 cursor-pointer flex-shrink-0 shadow-sm active:scale-95"
+                                    className="font-jakarta whitespace-nowrap bg-[#41B349] text-white text-[13px] xl:text-[13.5px] font-semibold tracking-[-0.01em] px-4 xl:px-5 h-[38px] xl:h-[40px] rounded-full hover:bg-white hover:text-black transition-all duration-200 cursor-pointer flex-shrink-0 shadow-sm active:scale-95"
                                 >
-                                    Get POS
+                                    <ButtonText className="text-[13px] xl:text-[13.5px]">Get POS</ButtonText>
                                 </button>
                             </Link>
                             <button
                                 onClick={openQuote}
-                                className="font-roboto whitespace-nowrap bg-[#41B349] text-white text-[13px] xl:text-[14px] font-medium px-4 xl:px-5 h-[36px] xl:h-[40px] rounded-full hover:bg-white hover:text-black transition ease-in-out duration-200 cursor-pointer flex-shrink-0 shadow-sm active:scale-95"
+                                className="font-jakarta whitespace-nowrap bg-[#41B349] text-white text-[13px] xl:text-[13.5px] font-semibold tracking-[-0.01em] px-4.5 xl:px-5.5 h-[38px] xl:h-[40px] rounded-full hover:bg-white hover:text-black transition-all duration-200 cursor-pointer flex-shrink-0 shadow-sm active:scale-95"
                             >
-                                Book Now
+                                <ButtonText className="text-[13px] xl:text-[13.5px]">Book Now</ButtonText>
                             </button>
                         </div>
 
@@ -492,7 +493,7 @@ const Navbar = () => {
                                 ) : (
                                     <Link
                                         href={link.href}
-                                        className="font-montserrat block text-white text-lg font-medium py-3 px-2 rounded-lg hover:bg-[#41B349]/20 hover:text-[#41B349] transition-colors duration-200"
+                                        className="font-jakarta block text-white text-[16.5px] font-semibold tracking-[-0.01em] py-3 px-2 rounded-lg hover:bg-[#41B349]/20 hover:text-[#41B349] transition-colors duration-200"
                                         onClick={() => setMobileOpen(false)}
                                     >
                                         {link.label}
@@ -509,9 +510,9 @@ const Navbar = () => {
                                 setMobileOpen(false);
                                 if (openQuote) openQuote();
                             }}
-                            className="font-roboto bg-[#41B349] text-white text-[16px] font-semibold w-full h-[46px] rounded-full hover:bg-white hover:text-black transition ease-in-out duration-200 cursor-pointer shadow-lg"
+                            className="font-jakarta bg-[#41B349] text-white text-[15.5px] font-semibold tracking-[-0.01em] w-full h-[46px] rounded-full hover:bg-white hover:text-black transition-all duration-200 cursor-pointer shadow-lg active:scale-95"
                         >
-                            Book Now
+                            <ButtonText className="text-[15.5px]">Book Now</ButtonText>
                         </button>
                     </div>
                 </div>
@@ -530,12 +531,12 @@ function MobileDropdown({ label, parentHref, subLinks = [], setMobileOpen }) {
                     <Link
                         href={parentHref}
                         onClick={() => setMobileOpen(false)}
-                        className="font-montserrat flex-1 text-white text-lg font-medium py-2.5 px-2 rounded-lg hover:text-[#41B349] transition-colors duration-200 cursor-pointer"
+                        className="font-jakarta flex-1 text-white text-[16.5px] font-semibold tracking-[-0.01em] py-2.5 px-2 rounded-lg hover:text-[#41B349] transition-colors duration-200 cursor-pointer"
                     >
                         {label}
                     </Link>
                 ) : (
-                    <span className="font-montserrat flex-1 text-white text-lg font-medium py-2.5 px-2">
+                    <span className="font-jakarta flex-1 text-white text-[16.5px] font-semibold tracking-[-0.01em] py-2.5 px-2">
                         {label}
                     </span>
                 )}
@@ -570,11 +571,11 @@ function MobileDropdown({ label, parentHref, subLinks = [], setMobileOpen }) {
                                 </div>
                             )}
                             <div className="flex flex-col min-w-0">
-                                <span className="font-jakarta text-[13.5px] font-bold text-white group-hover:text-white leading-tight truncate">
+                                <span className="font-jakarta text-[13.5px] font-semibold text-white group-hover:text-white leading-tight tracking-[-0.01em] truncate">
                                     {sub.label}
                                 </span>
                                 {sub.desc && (
-                                    <span className="text-[11px] text-gray-400 group-hover:text-white/80 transition-colors truncate">
+                                    <span className="font-jakarta text-[11.5px] text-gray-400 group-hover:text-white/80 transition-colors tracking-[-0.005em] truncate">
                                         {sub.desc}
                                     </span>
                                 )}

@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FaTimes, FaChevronDown, FaCheckCircle, FaSpinner, FaChevronLeft, FaChevronRight, FaArrowRight, FaArrowLeft, FaPaperPlane, FaEnvelopeOpenText, FaEdit } from 'react-icons/fa';
 import { useQuote } from '../_context/QuoteContext';
 import { COUNTRY_DIAL_CODES, findCountry, sanitizePhoneDigits, validatePhoneNumber } from "@/lib/country-phone";
+import { CardHeading, ButtonText } from "@/components/Typography";
 
 const SERVICES = [
     "Web Development",
@@ -408,14 +409,14 @@ const GetQuoteForm = () => {
                             
                             {/* Header */}
                             <div className="mb-3">
-                                <h2 className="text-white text-xl sm:text-2xl font-extrabold tracking-wide leading-tight">
+                                <CardHeading as="h2" size="md" theme="light" className="text-xl sm:text-2xl">
                                     Get Appointments
-                                </h2>
+                                </CardHeading>
                             </div>
 
                             {/* Status Banner */}
                             {status.message && (
-                                <div className={`mb-4 p-3 rounded-xl text-xs font-medium flex items-center gap-2.5 ${
+                                <div className={`mb-4 p-3 rounded-xl font-jakarta text-xs sm:text-sm font-medium flex items-center gap-2.5 ${
                                     status.type === 'success' 
                                         ? 'bg-green-950/80 border border-green-500/50 text-green-300' 
                                         : 'bg-red-950/80 border border-red-500/50 text-red-300'
@@ -439,10 +440,10 @@ const GetQuoteForm = () => {
                                 >
                                     {/* Month Navigation */}
                                     <div className="flex items-center justify-between mb-1">
-                                        <h3 className="text-base sm:text-lg font-black text-white tracking-tight flex items-center gap-2">
+                                        <CardHeading as="h3" size="sm" theme="light" className="text-base sm:text-lg flex items-center gap-2">
                                             <span>{MONTH_NAMES[month]}</span>
                                             <span className="text-[#FFC700] font-normal">{year}</span>
-                                        </h3>
+                                        </CardHeading>
                                         <div className="flex items-center gap-1">
                                             <button 
                                                 type="button" 
@@ -467,7 +468,7 @@ const GetQuoteForm = () => {
                                     </div>
 
                                     {/* Days Header */}
-                                    <div className="grid grid-cols-7 gap-1 text-center text-[10px] font-black text-gray-400 uppercase tracking-wider pb-1 border-b border-white/10">
+                                    <div className="grid grid-cols-7 gap-1 text-center font-jakarta text-[10px] font-bold text-gray-400 uppercase tracking-widest pb-1 border-b border-white/10">
                                         {DAY_NAMES_SHORT.map(d => (
                                             <div key={d} className="py-0.5">{d}</div>
                                         ))}
@@ -494,9 +495,9 @@ const GetQuoteForm = () => {
                                                     type="button"
                                                     disabled={isPast}
                                                     onClick={() => !isPast && setSelectedDay(dayNum)}
-                                                    className={`h-8 sm:h-9 rounded-lg text-xs font-bold flex flex-col items-center justify-center relative transition-all ${
+                                                    className={`h-8 sm:h-9 rounded-lg font-jakarta text-xs font-semibold flex flex-col items-center justify-center relative transition-all ${
                                                         isPast
-                                                            ? 'text-white cursor-not-allowed bg-transparent border border-transparent'
+                                                            ? 'text-white/40 cursor-not-allowed bg-transparent border border-transparent'
                                                             : isSelected 
                                                                 ? 'bg-white text-black font-extrabold shadow-md scale-105 z-10 cursor-pointer border border-white' 
                                                                 : isToday
@@ -519,9 +520,9 @@ const GetQuoteForm = () => {
                                             <button
                                                 type="button"
                                                 onClick={() => goToStep2()}
-                                                className="bg-[#41B349] hover:bg-[#369c3d] text-white px-6 py-2.5 rounded-full font-bold text-xs sm:text-sm flex items-center gap-2 transition shadow-md shadow-[#41B349]/30 cursor-pointer"
+                                                className="bg-[#41B349] hover:bg-[#369c3d] text-white px-6 py-2.5 rounded-full flex items-center gap-2 transition shadow-md shadow-[#41B349]/30 hover:scale-[1.02] cursor-pointer"
                                             >
-                                                <span>Next</span>
+                                                <ButtonText className="text-xs sm:text-sm">Next</ButtonText>
                                                 <FaArrowRight size={11} />
                                             </button>
                                         </div>
@@ -538,86 +539,102 @@ const GetQuoteForm = () => {
                                     className="space-y-3.5"
                                 >
                                     <div className="mb-2">
-                                        <h3 className="text-lg font-bold text-white tracking-tight">
+                                        <CardHeading as="h3" size="md" theme="light">
                                             Personal Details
-                                        </h3>
-                                        <p className="text-gray-400 text-xs mt-0.5">
-                                            Selected Date: <span className="text-[#FFC700] font-bold">{formattedSelectedDateString}</span>
+                                        </CardHeading>
+                                        <p className="font-jakarta text-gray-400 text-xs sm:text-sm mt-0.5 tracking-[-0.01em]">
+                                            Selected Date: <span className="text-[#FFC700] font-semibold">{formattedSelectedDateString}</span>
                                         </p>
                                     </div>
 
                                     <div>
+                                        <label className="font-jakarta block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-1">
+                                            Full Name <span className="text-[#41B349]">*</span>
+                                        </label>
                                         <input
                                             type="text"
                                             name="name"
                                             value={formData.name}
                                             onChange={handleChange}
-                                            placeholder="Full Name *"
+                                            placeholder="Enter your full name"
                                             required
-                                            className="w-full h-10 bg-white rounded-md px-3.5 text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs"
+                                            className="font-jakarta w-full h-10 bg-white rounded-md px-3.5 text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs"
                                         />
                                     </div>
 
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                        <div className="relative">
-                                            <select
-                                                name="country"
-                                                value={formData.country}
-                                                onChange={handleCountryChange}
-                                                className="w-full h-10 bg-white rounded-md px-3.5 pr-10 text-gray-700 text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs cursor-pointer"
-                                            >
-                                                <option value="">Select your Country *</option>
-                                                {COUNTRY_DIAL_CODES.map((c) => (
-                                                    <option key={c.name} value={c.name}>{c.name}</option>
-                                                ))}
-                                            </select>
-                                            <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
-                                                <FaChevronDown size={11} />
+                                        <div>
+                                            <label className="font-jakarta block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-1">
+                                                Country <span className="text-[#41B349]">*</span>
+                                            </label>
+                                            <div className="relative">
+                                                <select
+                                                    name="country"
+                                                    value={formData.country}
+                                                    onChange={handleCountryChange}
+                                                    className="font-jakarta w-full h-10 bg-white rounded-md px-3.5 pr-10 text-gray-700 text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs cursor-pointer"
+                                                >
+                                                    <option value="">Select your Country *</option>
+                                                    {COUNTRY_DIAL_CODES.map((c) => (
+                                                        <option key={c.name} value={c.name}>{c.name}</option>
+                                                    ))}
+                                                </select>
+                                                <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+                                                    <FaChevronDown size={11} />
+                                                </div>
                                             </div>
                                         </div>
 
-                                        <div className="relative flex items-center">
-                                            {/* Uneditable Country Dial Code Badge */}
-                                            {selectedCountryObj?.code && (
-                                                <div className="bg-gray-100 border-r border-gray-300 text-gray-900 font-extrabold text-xs px-2.5 h-10 flex items-center justify-center rounded-l-md select-none flex-shrink-0">
-                                                    {selectedCountryObj.code}
-                                                </div>
-                                            )}
-                                            <input
-                                                type="tel"
-                                                name="phoneDigits"
-                                                value={phoneDigits}
-                                                onChange={handlePhoneChange}
-                                                disabled={!formData.country}
-                                                maxLength={selectedCountryObj?.maxDigits || 15}
-                                                placeholder={
-                                                    !formData.country 
-                                                        ? "Select country *" 
-                                                        : selectedCountryObj?.sample
-                                                            ? `e.g. ${selectedCountryObj.sample}`
-                                                            : `Enter ${selectedCountryObj?.minDigits === selectedCountryObj?.maxDigits ? `${selectedCountryObj?.maxDigits} digits *` : 'phone number *'}`
-                                                }
-                                                required
-                                                className={`w-full h-10 text-sm transition shadow-xs ${
-                                                    selectedCountryObj?.code ? 'rounded-r-md px-2.5' : 'rounded-md px-3.5'
-                                                } ${
-                                                    !formData.country 
-                                                        ? 'bg-gray-200/80 text-gray-500 cursor-not-allowed opacity-70 placeholder-gray-500' 
-                                                        : 'bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#41B349]'
-                                                }`}
-                                            />
+                                        <div>
+                                            <label className="font-jakarta block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-1">
+                                                Phone Number <span className="text-[#41B349]">*</span>
+                                            </label>
+                                            <div className="relative flex items-center">
+                                                {/* Uneditable Country Dial Code Badge */}
+                                                {selectedCountryObj?.code && (
+                                                    <div className="font-jakarta bg-gray-100 border-r border-gray-300 text-gray-900 font-bold text-xs px-2.5 h-10 flex items-center justify-center rounded-l-md select-none flex-shrink-0">
+                                                        {selectedCountryObj.code}
+                                                    </div>
+                                                )}
+                                                <input
+                                                    type="tel"
+                                                    name="phoneDigits"
+                                                    value={phoneDigits}
+                                                    onChange={handlePhoneChange}
+                                                    disabled={!formData.country}
+                                                    maxLength={selectedCountryObj?.maxDigits || 15}
+                                                    placeholder={
+                                                        !formData.country 
+                                                            ? "Select country *" 
+                                                            : selectedCountryObj?.sample
+                                                                ? `e.g. ${selectedCountryObj.sample}`
+                                                                : `Enter ${selectedCountryObj?.minDigits === selectedCountryObj?.maxDigits ? `${selectedCountryObj?.maxDigits} digits *` : 'phone number *'}`
+                                                    }
+                                                    required
+                                                    className={`font-jakarta w-full h-10 text-sm transition shadow-xs ${
+                                                        selectedCountryObj?.code ? 'rounded-r-md px-2.5' : 'rounded-md px-3.5'
+                                                    } ${
+                                                        !formData.country 
+                                                            ? 'bg-gray-200/80 text-gray-500 cursor-not-allowed opacity-70 placeholder-gray-500' 
+                                                            : 'bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#41B349]'
+                                                    }`}
+                                                />
+                                            </div>
                                         </div>
                                     </div>
 
                                     <div>
+                                        <label className="font-jakarta block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-1">
+                                            Email Address <span className="text-[#41B349]">*</span>
+                                        </label>
                                         <input
                                             type="email"
                                             name="email"
                                             value={formData.email || ''}
                                             onChange={handleChange}
-                                            placeholder="Email Address *"
+                                            placeholder="name@company.com"
                                             required
-                                            className="w-full h-10 bg-white rounded-md px-3.5 text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs"
+                                            className="font-jakarta w-full h-10 bg-white rounded-md px-3.5 text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs"
                                         />
                                     </div>
 
@@ -626,25 +643,25 @@ const GetQuoteForm = () => {
                                         <button
                                             type="button"
                                             onClick={() => setStep(1)}
-                                            className="px-4 py-2 rounded-full bg-white/10 hover:bg-white/15 text-white font-bold text-xs flex items-center gap-1.5 transition cursor-pointer"
+                                            className="px-4 py-2 rounded-full bg-white/10 hover:bg-white/15 text-white flex items-center gap-1.5 transition cursor-pointer"
                                         >
                                             <FaArrowLeft size={11} />
-                                            <span>Back</span>
+                                            <ButtonText className="text-xs">Back</ButtonText>
                                         </button>
                                         <button
                                             type="button"
                                             onClick={() => handleSendOtp(false)}
                                             disabled={sendingOtp}
-                                            className="bg-[#41B349] hover:bg-[#369c3d] text-white px-6 py-2.5 rounded-full font-bold text-xs sm:text-sm flex items-center gap-2 transition shadow-md shadow-[#41B349]/30 disabled:opacity-60 cursor-pointer"
+                                            className="bg-[#41B349] hover:bg-[#369c3d] text-white px-6 py-2.5 rounded-full flex items-center gap-2 transition shadow-md shadow-[#41B349]/30 disabled:opacity-60 cursor-pointer"
                                         >
                                             {sendingOtp ? (
                                                 <>
                                                     <FaSpinner className="animate-spin" />
-                                                    <span>Sending Code...</span>
+                                                    <ButtonText className="text-xs sm:text-sm">Sending Code...</ButtonText>
                                                 </>
                                             ) : (
                                                 <>
-                                                    <span>Next</span>
+                                                    <ButtonText className="text-xs sm:text-sm">Next</ButtonText>
                                                     <FaArrowRight size={11} />
                                                 </>
                                             )}
@@ -659,20 +676,20 @@ const GetQuoteForm = () => {
                                     initial={{ opacity: 0, x: 10 }}
                                     animate={{ opacity: 1, x: 0 }}
                                     exit={{ opacity: 0, x: -10 }}
-                                    className="space-y-3.5 text-center"
+                                    className="space-y-3.5 text-center font-jakarta"
                                 >
                                     <div className="flex flex-col items-center justify-center pt-1">
                                         <div className="w-12 h-12 rounded-xl bg-[#41B349]/15 border border-[#41B349]/30 flex items-center justify-center text-[#41B349] mb-2">
                                             <FaEnvelopeOpenText size={22} />
                                         </div>
-                                        <h3 className="text-lg font-bold text-white tracking-tight">
+                                        <CardHeading as="h3" size="md" theme="light">
                                             Verify Your Email
-                                        </h3>
-                                        <p className="text-gray-300 text-xs mt-0.5 max-w-xs leading-relaxed">
+                                        </CardHeading>
+                                        <p className="font-jakarta text-gray-300 text-xs sm:text-sm mt-0.5 max-w-xs leading-relaxed tracking-[-0.01em]">
                                             We sent a 6-digit verification code to:
                                         </p>
-                                        <div className="flex items-center justify-center gap-1.5 mt-1 bg-white/5 border border-white/10 px-3 py-1 rounded-full">
-                                            <span className="text-[#FFC700] font-bold text-xs">{formData.email}</span>
+                                        <div className="font-jakarta flex items-center justify-center gap-1.5 mt-1 bg-white/5 border border-white/10 px-3 py-1 rounded-full">
+                                            <span className="text-[#FFC700] font-semibold text-xs sm:text-sm">{formData.email}</span>
                                             <button 
                                                 type="button"
                                                 onClick={() => setStep(2)}
@@ -696,12 +713,12 @@ const GetQuoteForm = () => {
                                                 if (status.message) setStatus({ type: '', message: '' });
                                             }}
                                             placeholder="• • • • • •"
-                                            className="w-full max-w-[240px] mx-auto h-11 bg-white rounded-xl text-center text-gray-900 text-lg font-extrabold tracking-[0.35em] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#41B349] shadow-xs"
+                                            className="font-jakarta w-full max-w-[240px] mx-auto h-11 bg-white rounded-xl text-center text-gray-900 text-lg font-bold tracking-[0.35em] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#41B349] shadow-xs"
                                         />
                                     </div>
 
                                     {/* Resend Timer */}
-                                    <div className="text-[11px] text-gray-400">
+                                    <div className="font-jakarta text-xs text-gray-400">
                                         Didn't receive the code?{' '}
                                         {resendCooldown > 0 ? (
                                             <span className="text-gray-500 font-semibold">Resend code in {resendCooldown}s</span>
@@ -722,25 +739,25 @@ const GetQuoteForm = () => {
                                         <button
                                             type="button"
                                             onClick={() => setStep(2)}
-                                            className="px-4 py-2 rounded-full bg-white/10 hover:bg-white/15 text-white font-bold text-xs flex items-center gap-1.5 transition cursor-pointer"
+                                            className="px-4 py-2 rounded-full bg-white/10 hover:bg-white/15 text-white flex items-center gap-1.5 transition cursor-pointer"
                                         >
                                             <FaArrowLeft size={11} />
-                                            <span>Back</span>
+                                            <ButtonText className="text-xs">Back</ButtonText>
                                         </button>
                                         <button
                                             type="button"
                                             onClick={handleVerifyOtp}
                                             disabled={verifyingOtp || otpCode.length !== 6}
-                                            className="bg-[#41B349] hover:bg-[#369c3d] text-white px-6 py-2.5 rounded-full font-bold text-xs sm:text-sm flex items-center gap-2 transition shadow-md shadow-[#41B349]/30 disabled:opacity-50 cursor-pointer"
+                                            className="bg-[#41B349] hover:bg-[#369c3d] text-white px-6 py-2.5 rounded-full flex items-center gap-2 transition shadow-md shadow-[#41B349]/30 disabled:opacity-50 cursor-pointer"
                                         >
                                             {verifyingOtp ? (
                                                 <>
                                                     <FaSpinner className="animate-spin" />
-                                                    <span>Verifying...</span>
+                                                    <ButtonText className="text-xs sm:text-sm">Verifying...</ButtonText>
                                                 </>
                                             ) : (
                                                 <>
-                                                    <span>Verify & Proceed</span>
+                                                    <ButtonText className="text-xs sm:text-sm">Verify & Proceed</ButtonText>
                                                     <FaArrowRight size={11} />
                                                 </>
                                             )}
@@ -758,58 +775,71 @@ const GetQuoteForm = () => {
                                     className="space-y-3.5"
                                 >
                                     <div className="mb-2">
-                                        <h3 className="text-lg font-bold text-white tracking-tight">
+                                        <CardHeading as="h3" size="md" theme="light">
                                             Remaining Details
-                                        </h3>
-                                        <p className="text-gray-400 text-xs mt-0.5">
+                                        </CardHeading>
+                                        <p className="font-jakarta text-gray-400 text-xs sm:text-sm mt-0.5 tracking-[-0.01em]">
                                             Select service & budget to complete your quote request.
                                         </p>
                                     </div>
 
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                        <div className="relative">
-                                            <select
-                                                name="service"
-                                                value={formData.service}
-                                                onChange={handleChange}
-                                                className="w-full h-10 bg-white rounded-md px-3.5 pr-10 text-gray-700 text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs cursor-pointer"
-                                            >
-                                                <option value="">Select Service *</option>
-                                                {SERVICES.map((s) => (
-                                                    <option key={s} value={s}>{s}</option>
-                                                ))}
-                                            </select>
-                                            <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
-                                                <FaChevronDown size={11} />
+                                        <div>
+                                            <label className="font-jakarta block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-1">
+                                                Service Required <span className="text-[#41B349]">*</span>
+                                            </label>
+                                            <div className="relative">
+                                                <select
+                                                    name="service"
+                                                    value={formData.service}
+                                                    onChange={handleChange}
+                                                    className="font-jakarta w-full h-10 bg-white rounded-md px-3.5 pr-10 text-gray-700 text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs cursor-pointer"
+                                                >
+                                                    <option value="">Select Service *</option>
+                                                    {SERVICES.map((s) => (
+                                                        <option key={s} value={s}>{s}</option>
+                                                    ))}
+                                                </select>
+                                                <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+                                                    <FaChevronDown size={11} />
+                                                </div>
                                             </div>
                                         </div>
 
-                                        <div className="relative">
-                                            <select
-                                                name="budget"
-                                                value={formData.budget}
-                                                onChange={handleChange}
-                                                className="w-full h-10 bg-white rounded-md px-3.5 pr-10 text-gray-700 text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs cursor-pointer"
-                                            >
-                                                <option value="">Select Budget *</option>
-                                                {BUDGETS.map((b) => (
-                                                    <option key={b} value={b}>{b}</option>
-                                                ))}
-                                            </select>
-                                            <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
-                                                <FaChevronDown size={11} />
+                                        <div>
+                                            <label className="font-jakarta block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-1">
+                                                Budget Range <span className="text-[#41B349]">*</span>
+                                            </label>
+                                            <div className="relative">
+                                                <select
+                                                    name="budget"
+                                                    value={formData.budget}
+                                                    onChange={handleChange}
+                                                    className="font-jakarta w-full h-10 bg-white rounded-md px-3.5 pr-10 text-gray-700 text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs cursor-pointer"
+                                                >
+                                                    <option value="">Select Budget *</option>
+                                                    {BUDGETS.map((b) => (
+                                                        <option key={b} value={b}>{b}</option>
+                                                    ))}
+                                                </select>
+                                                <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+                                                    <FaChevronDown size={11} />
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div>
+                                        <label className="font-jakarta block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-1">
+                                            Project Details
+                                        </label>
                                         <textarea
                                             name="message"
                                             value={formData.message}
                                             onChange={handleChange}
                                             placeholder="Describe your project here..."
                                             rows={3}
-                                            className="w-full bg-white rounded-md p-3 text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs resize-none"
+                                            className="font-jakarta w-full bg-white rounded-md p-3 text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#41B349] transition shadow-xs resize-none"
                                         ></textarea>
                                     </div>
 
@@ -817,25 +847,25 @@ const GetQuoteForm = () => {
                                         <button
                                             type="button"
                                             onClick={() => setStep(3)}
-                                            className="px-4 py-2 rounded-full bg-white/10 hover:bg-white/15 text-white font-bold text-xs flex items-center gap-1.5 transition cursor-pointer"
+                                            className="px-4 py-2 rounded-full bg-white/10 hover:bg-white/15 text-white flex items-center gap-1.5 transition cursor-pointer"
                                         >
                                             <FaArrowLeft size={11} />
-                                            <span>Back</span>
+                                            <ButtonText className="text-xs">Back</ButtonText>
                                         </button>
                                         <button
                                             type="button"
                                             onClick={handleSubmit}
                                             disabled={loading}
-                                            className="bg-[#41B349] hover:bg-[#369c3d] text-white px-7 py-2.5 rounded-full font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition shadow-md shadow-[#41B349]/30 disabled:opacity-60 cursor-pointer"
+                                            className="bg-[#41B349] hover:bg-[#369c3d] text-white px-7 py-2.5 rounded-full flex items-center justify-center gap-2 transition shadow-md shadow-[#41B349]/30 disabled:opacity-60 cursor-pointer"
                                         >
                                             {loading ? (
                                                 <>
                                                     <FaSpinner className="animate-spin" />
-                                                    <span>Sending...</span>
+                                                    <ButtonText className="text-xs sm:text-sm">Sending...</ButtonText>
                                                 </>
                                             ) : (
                                                 <>
-                                                    <span>Submit Request</span>
+                                                    <ButtonText className="text-xs sm:text-sm">Submit Request</ButtonText>
                                                     <FaPaperPlane size={12} />
                                                 </>
                                             )}

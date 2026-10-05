@@ -10,6 +10,7 @@ import {
 } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { SiGooglecalendar } from "react-icons/si";
+import { CardHeading } from "@/components/Typography";
 
 const Footer = () => {
     const footerLinks = {
@@ -72,12 +73,14 @@ const Footer = () => {
                         <div key={section} className="flex flex-col">
                             {/* Heading / Title */}
                             <div className="flex items-center mb-4 sm:mb-5">
-                                <h3 
-                                    className="text-base sm:text-[17px] font-extrabold text-[#41B349] uppercase tracking-wider"
-                                    style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+                                <CardHeading 
+                                    as="h3"
+                                    size="sm"
+                                    theme="inherit"
+                                    className="font-jakarta font-bold uppercase tracking-wider text-sm sm:text-[15px] md:text-base text-[#41B349] leading-tight"
                                 >
                                     {section}
-                                </h3>
+                                </CardHeading>
                             </div>
 
                             {/* Links List */}
@@ -91,13 +94,13 @@ const Footer = () => {
                                         <li key={index} className="flex items-center">
                                             <Link 
                                                 href={href} 
-                                                className="group relative inline-flex items-center gap-2 text-xs sm:text-[13px] text-gray-300 hover:text-white transition-colors duration-200 py-0.5"
+                                                className="group relative inline-flex items-center gap-2 font-jakarta font-normal sm:font-medium tracking-[-0.01em] text-xs sm:text-[13px] text-gray-300 hover:text-white transition-colors duration-200 py-0.5 leading-snug"
                                             >
                                                 {/* Dot / Icon next to link */}
                                                 <span className="w-1.5 h-1.5 rounded-full bg-[#41B349] opacity-70 group-hover:opacity-100 group-hover:scale-125 group-hover:shadow-[0_0_6px_rgba(65,179,73,0.9)] transition-all duration-200 flex-shrink-0" />
                                                 
                                                 {/* Label with smooth animated bottom border/underline */}
-                                                <span className="relative inline-block leading-snug">
+                                                <span className="relative inline-block">
                                                     {label}
                                                     <span className="absolute left-0 -bottom-0.5 w-0 h-[1.5px] bg-[#41B349] transition-all duration-300 ease-out group-hover:w-full" />
                                                 </span>
@@ -111,10 +114,10 @@ const Footer = () => {
                 </div>
 
                 {/* ================= BOTTOM BAR WITH CENTERED SOCIAL ICONS ================= */}
-                <div className="border-t border-white/10 mt-12 pt-6 flex flex-col md:flex-row items-center justify-between text-xs text-gray-400 gap-4 text-center md:text-left">
+                <div className="border-t border-white/10 mt-12 pt-6 flex flex-col md:flex-row items-center justify-between font-jakarta text-xs sm:text-[13px] text-gray-400 gap-4 text-center md:text-left tracking-[-0.01em]">
                     {/* Left: Copyright */}
-                    <div>
-                        © {new Date().getFullYear()} <span className="text-white font-semibold">TECH SOLUTIONOR</span>. All rights reserved.
+                    <div className="font-normal">
+                        © {new Date().getFullYear()} <span className="text-white font-semibold tracking-normal">TECH SOLUTIONOR</span>. All rights reserved.
                     </div>
 
                     {/* Center: Social Media Icons */}
@@ -177,7 +180,7 @@ const Footer = () => {
                     </div>
 
                     {/* Right: Tagline */}
-                    <div>
+                    <div className="font-medium text-gray-400">
                         Empowering Global Technology Solutions
                     </div>
                 </div>

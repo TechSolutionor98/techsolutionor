@@ -13,6 +13,14 @@ import {
   Check,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import {
+  SectionBadge,
+  SectionHeading,
+  HighlightWord,
+  SectionParagraph,
+  CardHeading,
+  CardParagraph,
+} from "@/components/Typography";
 
 /**
  * 8 Industry-Standard Security, Testing & QA Pillars for Mobile Applications
@@ -214,29 +222,33 @@ export default function AppSecurityQA({ cmsContent }) {
         {/* ========================================================================= */}
         <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12">
           {/* Top Pill Badge */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#41B349]/10 border border-[#41B349]/25 text-[#41B349] font-black text-[11px] sm:text-xs uppercase tracking-widest mb-3 shadow-xs">
-            <span className="w-2 h-2 rounded-full bg-[#41B349] animate-pulse" />
-            <span>ENTERPRISE RELIABILITY &amp; INTEGRITY</span>
+          <div className="mb-3">
+            <SectionBadge variant="light">
+              ENTERPRISE RELIABILITY &amp; INTEGRITY
+            </SectionBadge>
           </div>
 
           {/* Main Title */}
-          <h2
-            className="text-2xl sm:text-3xl md:text-[34px] lg:text-[38px] font-black text-[#0D0F12] tracking-tight leading-tight mb-3 sm:mb-4"
-            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+          <SectionHeading
+            as="h2"
+            size="section"
+            theme="dark"
+            className="text-center mb-3 sm:mb-4"
           >
             App Security, Testing &amp;{" "}
-            <span className="text-[#41B349]">Quality Assurance</span>
-          </h2>
+            <HighlightWord>Quality Assurance</HighlightWord>
+          </SectionHeading>
 
           {/* Subtitle */}
-          <p
-            className="text-xs sm:text-sm md:text-[14.5px] text-[#0D0F12]/75 leading-relaxed font-normal"
-            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+          <SectionParagraph
+            size="md"
+            theme="slate"
+            className="text-center max-w-2xl mx-auto"
           >
             Every mobile app we build undergoes stringent multi-tier vulnerability testing,
             real-device performance profiling, and regulatory compliance validation. We ensure
             your application is rock-solid, secure, fast, and engineered for high-concurrency production.
-          </p>
+          </SectionParagraph>
         </div>
 
         {/* ========================================================================= */}
@@ -249,18 +261,16 @@ export default function AppSecurityQA({ cmsContent }) {
               className="bg-[#FFFFFF] rounded-2xl border border-[#41B349]/25 p-3.5 sm:p-4 text-center shadow-[0_4px_16px_rgba(0,0,0,0.03)] hover:border-[#41B349] hover:shadow-[0_8px_24px_rgba(65,179,73,0.12)] transition-all duration-300"
             >
               <div
-                className="text-2xl sm:text-3xl font-black text-[#41B349] tracking-tight mb-0.5"
-                style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+                className="text-2xl sm:text-3xl font-display font-black text-[#41B349] tracking-tight mb-0.5"
               >
                 {metric.value}
               </div>
               <div
-                className="text-xs sm:text-[12.5px] font-bold text-[#0D0F12] leading-tight"
-                style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+                className="text-xs sm:text-[12.5px] font-jakarta font-bold text-[#0D0F12] leading-tight"
               >
                 {metric.label}
               </div>
-              <div className="text-[10px] sm:text-[10.5px] text-[#0D0F12]/55 mt-0.5 font-medium">
+              <div className="text-[10px] sm:text-[10.5px] font-jakarta text-[#0D0F12]/55 mt-0.5 font-medium">
                 {metric.sub}
               </div>
             </div>
@@ -278,12 +288,11 @@ export default function AppSecurityQA({ cmsContent }) {
                 key={tab.id}
                 type="button"
                 onClick={() => setActiveTab(tab.id)}
-                className={`px-3.5 sm:px-4 py-1.5 rounded-full text-xs font-bold transition-all duration-300 cursor-pointer flex items-center gap-1.5 border ${
+                className={`px-3.5 sm:px-4 py-1.5 rounded-full text-xs font-jakarta font-semibold tracking-[-0.01em] transition-all duration-300 cursor-pointer flex items-center gap-1.5 border ${
                   isActive
                     ? "bg-[#41B349] text-white border-[#41B349] shadow-[0_4px_16px_rgba(65,179,73,0.3)]"
                     : "bg-[#FFFFFF] text-[#0D0F12]/75 border-[#0D0F12]/15 hover:border-[#41B349]/60 hover:text-[#0D0F12]"
                 }`}
-                style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
               >
                 <span>{tab.label}</span>
                 <span
@@ -330,7 +339,7 @@ export default function AppSecurityQA({ cmsContent }) {
                         <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#41B349]/10 border border-[#41B349]/25 flex items-center justify-center text-[#41B349] group-hover:bg-[#41B349] group-hover:text-white transition-all duration-300 shadow-xs shrink-0">
                           <IconComp size={18} className="stroke-[2.2]" />
                         </div>
-                        <span className="text-[10px] sm:text-[10.5px] font-mono font-bold uppercase tracking-wider text-[#41B349] bg-[#41B349]/10 px-2 py-0.5 rounded border border-[#41B349]/20">
+                        <span className="text-[10px] sm:text-[10.5px] font-jakarta font-bold uppercase tracking-wider text-[#41B349] bg-[#41B349]/10 px-2 py-0.5 rounded border border-[#41B349]/20">
                           {item.categoryLabel}
                         </span>
                       </div>
@@ -340,28 +349,30 @@ export default function AppSecurityQA({ cmsContent }) {
                     </div>
 
                     {/* Card Title */}
-                    <h3
-                      className="text-[16px] sm:text-[17.5px] font-black text-[#41B349] tracking-tight leading-snug mb-1.5"
-                      style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+                    <CardHeading
+                      as="h3"
+                      size="sm"
+                      theme="green"
+                      className="text-[#41B349] mb-1.5 leading-snug"
                     >
                       {item.title}
-                    </h3>
+                    </CardHeading>
 
                     {/* Summary Hook */}
                     <p
-                      className="text-[12px] sm:text-[12.5px] font-semibold text-[#0D0F12] leading-snug mb-2"
-                      style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                      className="font-jakarta text-[13px] sm:text-[13.5px] font-semibold text-[#0D0F12] leading-snug mb-2"
                     >
                       {item.summary}
                     </p>
 
                     {/* Detailed Industry Description */}
-                    <p
-                      className="text-[11.5px] sm:text-[12px] text-[#0D0F12]/75 leading-relaxed font-normal mb-3.5"
-                      style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                    <CardParagraph
+                      size="xs"
+                      theme="slate"
+                      className="mb-3.5 leading-relaxed"
                     >
                       {item.description}
-                    </p>
+                    </CardParagraph>
                   </div>
 
                   {/* Key Safeguards & Deliverables Chips */}
@@ -369,7 +380,7 @@ export default function AppSecurityQA({ cmsContent }) {
                     {item.keyPoints.map((kp, kIdx) => (
                       <span
                         key={kIdx}
-                        className="inline-flex items-center gap-1 text-[10px] sm:text-[10.5px] font-semibold px-2 py-0.5 rounded bg-[#41B349]/8 hover:bg-[#41B349]/15 border border-[#41B349]/20 text-[#0D0F12]/85 transition-colors"
+                        className="inline-flex items-center gap-1 font-jakarta text-[10px] sm:text-[10.5px] font-semibold px-2 py-0.5 rounded bg-[#41B349]/8 hover:bg-[#41B349]/15 border border-[#41B349]/20 text-[#0D0F12]/85 transition-colors"
                       >
                         <Check size={10} className="text-[#41B349] stroke-[3]" />
                         <span>{kp}</span>

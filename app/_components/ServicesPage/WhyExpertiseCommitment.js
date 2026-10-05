@@ -4,6 +4,15 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useQuote } from "@/app/_context/QuoteContext";
 import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
+import {
+  SectionBadge,
+  SectionHeading,
+  HighlightWord,
+  SectionParagraph,
+  CardHeading,
+  CardParagraph,
+  ButtonText,
+} from "@/components/Typography";
 
 import img1 from "@/components/Images/why_expertise_1.jpg";
 import img2 from "@/components/Images/why_expertise_2.jpg";
@@ -90,12 +99,10 @@ const WhyExpertiseCommitment = () => {
           {/* LEFT COLUMN: TEXT & CTA */}
           <div className="w-full lg:w-[42%] text-[#0D0F12] flex flex-col items-start">
             {/* Eyebrow Pill */}
-            <div 
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#36963D]/10 border border-[#36963D]/30 text-[#36963D] font-mono text-xs uppercase tracking-widest font-bold mb-4 shadow-2xs"
-              style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-            >
-              <span className="w-2 h-2 rounded-full bg-[#36963D] animate-pulse" />
-              <span>COMMITMENT TO EXCELLENCE</span>
+            <div className="mb-4">
+              <SectionBadge variant="light">
+                COMMITMENT TO EXCELLENCE
+              </SectionBadge>
             </div>
 
             {/* Cursive Subtitle */}
@@ -104,30 +111,32 @@ const WhyExpertiseCommitment = () => {
             </div>
 
             {/* Headline */}
-            <h2 
-              className="text-3xl sm:text-4xl md:text-[42px] font-black tracking-tight leading-[1.15] text-[#0D0F12] mb-5"
-              style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+            <SectionHeading
+              as="h2"
+              size="section"
+              theme="dark"
+              className="text-3xl sm:text-4xl md:text-[42px] leading-[1.15] mb-5"
             >
               Why Tech Solutionor? <br />
-              <span className="text-[#36963D]">Expertise &amp; Trust</span>
-            </h2>
+              <HighlightWord>Expertise &amp; Trust</HighlightWord>
+            </SectionHeading>
 
             {/* Paragraph */}
-            <p 
-              className="text-[#475569] text-sm sm:text-base leading-relaxed font-normal mb-8 max-w-[500px]"
-              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+            <SectionParagraph
+              size="md"
+              theme="slate"
+              className="mb-8 max-w-[500px]"
             >
               At Tech Solutionor, we are not simply a vendor; we operate as your embedded technology innovation partner. From systems architecture to product launch and commercial scaling, we collaborate transparently to ensure exceptional value.
-            </p>
+            </SectionParagraph>
 
             {/* Action Buttons & Carousel Nav */}
             <div className="flex flex-wrap items-center gap-4">
               <button
                 onClick={openQuote}
-                className="retro-shadow-pill inline-flex items-center gap-2.5 bg-[#36963D] hover:bg-[#2e8234] text-white font-black text-xs sm:text-sm uppercase tracking-wider py-3.5 px-8 rounded-full border-2 border-[#0D0F12] transition-all duration-200 cursor-pointer active:scale-95"
-                style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                className="retro-shadow-pill inline-flex items-center gap-2.5 bg-[#36963D] hover:bg-[#2e8234] text-white py-3.5 px-8 rounded-full border-2 border-[#0D0F12] transition-all duration-200 cursor-pointer active:scale-95 flex items-center justify-center"
               >
-                <span>Request Custom Scope</span>
+                <ButtonText className="text-xs sm:text-sm uppercase tracking-wider text-white">Request Custom Scope</ButtonText>
                 <ArrowRight className="w-4 h-4" />
               </button>
 
@@ -174,17 +183,19 @@ const WhyExpertiseCommitment = () => {
                   </div>
 
                   {/* Card Title */}
-                  <h3
-                    className="text-xl sm:text-2xl font-black text-[#0D0F12] group-hover:text-[#36963D] transition-colors duration-200 tracking-tight mb-2.5"
-                    style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+                  <CardHeading
+                    as="h3"
+                    size="sm"
+                    theme="dark"
+                    className="text-xl sm:text-2xl font-bold group-hover:text-[#36963D] transition-colors duration-200 tracking-tight mb-2.5"
                   >
                     {card.title}
-                  </h3>
+                  </CardHeading>
 
                   {/* Card Description */}
-                  <p className="text-xs sm:text-[13.5px] text-[#475569] leading-relaxed font-normal">
+                  <CardParagraph size="sm" theme="slate" className="text-xs sm:text-[13.5px] leading-relaxed">
                     {card.desc}
-                  </p>
+                  </CardParagraph>
                 </div>
               ))}
             </div>

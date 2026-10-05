@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { SectionHeading, CardHeading, CardParagraph } from "@/components/Typography";
 
 /**
  * Reusable KeyFeatures Component (Table-Style Layout matching reference design)
@@ -39,15 +40,15 @@ const KeyFeatures = ({
     if (!title || title.trim().toLowerCase() === "key features") {
       return (
         <>
-          <span className="block">NO RISK.</span>
-          <span className="block">ONLY RESULTS.</span>
+          <span className="block text-[#164326]">NO RISK.</span>
+          <span className="block text-[#41B349]">ONLY RESULTS.</span>
         </>
       );
     }
     return (
       <>
-        <span className="block">{title}</span>
-        {subtitle && <span className="block">{subtitle}</span>}
+        <span className="block text-[#164326]">{title}</span>
+        {subtitle && <span className="block text-[#41B349]">{subtitle}</span>}
       </>
     );
   };
@@ -56,27 +57,31 @@ const KeyFeatures = ({
     <section className="py-14 sm:py-20 md:py-24 bg-white select-none">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Centered Two-Line Header */}
-        <h2
-          className="text-3xl sm:text-4xl md:text-5xl font-black text-center tracking-tight text-[#164326] uppercase leading-[1.1] mb-10 sm:mb-14"
-          style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+        <SectionHeading
+          as="h2"
+          size="section"
+          className="text-center mb-10 sm:mb-14"
         >
           {formatTitle()}
-        </h2>
+        </SectionHeading>
 
         {/* Responsive Table Wrapper */}
-        <div className="w-full overflow-x-auto pb-4">
+        <div 
+          className="w-full overflow-x-auto no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        >
           <div className="min-w-[680px] md:min-w-0">
             {/* Table Column Headers */}
             <div className="grid grid-cols-12 gap-2 px-6 sm:px-8 pb-3 items-end">
               {/* Left empty space above feature titles */}
               <div className="col-span-6 sm:col-span-6" />
 
-              {/* 5 Column Metric Headers in Script / Italic */}
+              {/* 5 Column Metric Headers */}
               <div className="col-span-6 sm:col-span-6 grid grid-cols-5 text-center">
                 {columns.map((col, idx) => (
                   <span
                     key={idx}
-                    className="italic font-serif text-[12.5px] sm:text-[14px] font-medium text-[#1b4e2c] tracking-wide"
+                    className="font-jakarta text-[12.5px] sm:text-[14px] font-semibold text-[#164326] uppercase tracking-wider whitespace-nowrap block"
                   >
                     {col}
                   </span>
@@ -99,13 +104,22 @@ const KeyFeatures = ({
                     >
                       {/* Left: Feature Title & Description */}
                       <div className="col-span-6 sm:col-span-6 pr-4">
-                        <h3 className="text-xl sm:text-2xl font-black uppercase text-white tracking-wide leading-tight">
+                        <CardHeading
+                          as="h3"
+                          size="md"
+                          theme="light"
+                          className="text-[19px] sm:text-[21px] md:text-[22px] font-display uppercase tracking-tight text-white leading-snug"
+                        >
                           {item.title}
-                        </h3>
+                        </CardHeading>
                         {item.desc && (
-                          <p className="text-xs sm:text-sm text-white/90 font-normal mt-1 leading-relaxed max-w-sm">
+                          <CardParagraph
+                            size="sm"
+                            theme="light"
+                            className="text-[13.5px] sm:text-[15px] md:text-[15.5px] text-white/95 mt-2 leading-relaxed max-w-xl font-jakarta font-normal tracking-[-0.01em]"
+                          >
                             {item.desc}
-                          </p>
+                          </CardParagraph>
                         )}
                       </div>
 
@@ -154,13 +168,22 @@ const KeyFeatures = ({
                   >
                     {/* Left: Feature Title & Description */}
                     <div className="col-span-6 sm:col-span-6 pr-4">
-                      <h3 className="text-base sm:text-lg font-black uppercase text-[#1b4e2c] tracking-wide leading-tight">
+                      <CardHeading
+                        as="h3"
+                        size="sm"
+                        theme="dark"
+                        className="text-[17px] sm:text-[19px] md:text-[20px] font-display uppercase tracking-tight text-[#164326] leading-snug"
+                      >
                         {item.title}
-                      </h3>
+                      </CardHeading>
                       {item.desc && (
-                        <p className="text-xs sm:text-sm text-[#4B5563] font-normal mt-1 leading-relaxed max-w-sm">
+                        <CardParagraph
+                          size="sm"
+                          theme="slate"
+                          className="text-[13.5px] sm:text-[14.5px] md:text-[15px] text-[#4A5568] mt-2 leading-relaxed max-w-xl font-jakarta font-normal tracking-[-0.01em]"
+                        >
                           {item.desc}
-                        </p>
+                        </CardParagraph>
                       )}
                     </div>
 

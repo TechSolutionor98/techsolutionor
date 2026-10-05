@@ -6,6 +6,13 @@ import Link from 'next/link';
 import { ArrowDown, Sparkles } from 'lucide-react';
 import portfolioBanner from '@/components/Images/portfoliobanner.png';
 import { getCmsVal } from '@/lib/api-helper';
+import {
+  SectionBadge,
+  SectionHeading,
+  HighlightWord,
+  SectionParagraph,
+  ButtonText,
+} from '@/components/Typography';
 
 const PortfolioBanner = ({ cmsContent }) => {
   const badge = getCmsVal(cmsContent, "Real-World Client Case Studies", "portfoliobanner");
@@ -43,42 +50,43 @@ const PortfolioBanner = ({ cmsContent }) => {
           {/* Left Column: Heading & Content */}
           <div className="lg:col-span-7 text-left space-y-6">
             {/* Pill Tag */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#41B349]/10 border border-[#41B349]/30 text-[#41B349] text-xs sm:text-sm font-bold tracking-wider uppercase">
-              <Sparkles className="w-4 h-4 text-[#41B349]" />
-              <span>{badge}</span>
+            <div>
+              <SectionBadge variant="light" icon={<Sparkles className="w-3.5 h-3.5" />}>
+                {badge}
+              </SectionBadge>
             </div>
 
             {/* Main Heading */}
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[50px] font-extrabold tracking-tight leading-[1.15] text-[#111827]">
+            <SectionHeading as="h1" size="hero" theme="dark">
               {heading.includes("Digital Projects") ? (
                 <>
-                  Our Portfolio of <span className="text-[#41B349]">Digital Projects</span> &amp; Client Success Stories
+                  Our Portfolio of <HighlightWord>Digital Projects</HighlightWord> &amp; Client Success Stories
                 </>
               ) : (
                 heading
               )}
-            </h1>
+            </SectionHeading>
 
             {/* Description */}
-            <p className="text-base sm:text-lg text-[#4B5563] leading-relaxed max-w-2xl font-normal">
+            <SectionParagraph size="lg" theme="slate" className="max-w-2xl">
               {description}
-            </p>
+            </SectionParagraph>
 
             {/* Action Buttons */}
             <div className="flex flex-wrap items-center gap-4 pt-2">
               <button
                 onClick={scrollToProjects}
-                className="group relative inline-flex items-center gap-3 px-8 py-4 rounded-full bg-[#41B349] hover:bg-[#389e40] text-white font-bold text-base shadow-[0_10px_25px_rgba(65,179,73,0.3)] hover:shadow-[0_15px_30px_rgba(65,179,73,0.45)] transition-all duration-300 active:scale-95 cursor-pointer"
+                className="group relative inline-flex items-center gap-3 px-8 py-4 rounded-full bg-[#41B349] hover:bg-[#389e40] text-white shadow-[0_10px_25px_rgba(65,179,73,0.3)] hover:shadow-[0_15px_30px_rgba(65,179,73,0.45)] transition-all duration-300 active:scale-95 cursor-pointer"
               >
-                <span>{cta1}</span>
+                <ButtonText className="text-sm sm:text-base">{cta1}</ButtonText>
                 <ArrowDown className="w-4 h-4 group-hover:translate-y-1 transition-transform duration-300" />
               </button>
 
               <Link
                 href="/hire-us"
-                className="inline-flex items-center gap-2 px-7 py-4 rounded-full bg-white hover:bg-gray-50 border border-gray-200 text-[#111827] hover:text-[#41B349] font-bold text-base shadow-sm transition-all duration-300"
+                className="inline-flex items-center gap-2 px-7 py-4 rounded-full bg-white hover:bg-gray-50 border border-gray-200 text-[#111827] hover:text-[#41B349] shadow-sm transition-all duration-300"
               >
-                {cta2}
+                <ButtonText className="text-sm sm:text-base">{cta2}</ButtonText>
               </Link>
             </div>
           </div>

@@ -23,6 +23,13 @@ import Mubayya from '../../../../components/Images/mubayya.png';
 import Aljannah from '../../../../components/Images/aljannah.png';
 
 import { getCmsVal } from "@/lib/api-helper";
+import {
+  SectionBadge,
+  SectionHeading,
+  HighlightWord,
+  SectionParagraph,
+  CardHeading,
+} from "@/components/Typography";
 
 export const defaultProjects = {
   title: "Projects & Results",
@@ -286,14 +293,15 @@ const LogoCard = ({ icon, cardKey, onMouseEnter, onMouseLeave }) => {
           backdropFilter: 'blur(8px)',
         }}
       >
-        <h3
-          className="logo-title text-[#0F172A] font-bold text-xs min-[380px]:text-sm sm:text-base tracking-tight transition-colors duration-300 truncate w-full"
-          style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+        <CardHeading
+          as="h3"
+          theme="dark"
+          className="logo-title text-xs min-[380px]:text-sm sm:text-base tracking-tight transition-colors duration-300 truncate w-full"
         >
           {icon.name}
-        </h3>
+        </CardHeading>
         <span
-          className="text-[10px] min-[380px]:text-[11px] sm:text-xs font-semibold truncate w-full mt-0.5 tracking-wide"
+          className="font-jakarta text-[10px] min-[380px]:text-[11px] sm:text-xs font-semibold truncate w-full mt-0.5 tracking-wide"
           style={{ color: 'var(--card-accent)' }}
         >
           {icon.category}
@@ -377,21 +385,29 @@ const Projects = ({ cmsContent }) => {
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8 sm:mb-12">
         {/* Section Header */}
         <div className="text-center max-w-4xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#41B349]/15 border border-[#41B349]/30 text-[#41B349] font-extrabold text-xs uppercase tracking-widest mb-3">
-            <span className="w-2 h-2 rounded-full bg-[#41B349] animate-pulse" />
-            <span>PROVEN IMPACT & CLIENT SUCCESS</span>
-          </div>
+          <SectionBadge variant="dark" className="mb-3">
+            PROVEN IMPACT & CLIENT SUCCESS
+          </SectionBadge>
 
-          <h2
-            className="text-2xl sm:text-3xl md:text-5xl font-black text-white tracking-tight leading-tight"
-            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-          >
-            {title}
-          </h2>
+          {(() => {
+            if (title && title.includes("&")) {
+              const parts = title.split("&");
+              return (
+                <SectionHeading as="h2" size="section" theme="light">
+                  {parts[0].trim()} <HighlightWord>& {parts[1].trim()}</HighlightWord>
+                </SectionHeading>
+              );
+            }
+            return (
+              <SectionHeading as="h2" size="section" theme="light">
+                {title}
+              </SectionHeading>
+            );
+          })()}
 
-          <p className="mt-3 sm:mt-4 text-gray-300 text-xs min-[360px]:text-sm sm:text-base md:text-lg leading-relaxed font-medium">
+          <SectionParagraph theme="light" size="md" className="mt-3 sm:mt-4 text-gray-300">
             {description}
-          </p>
+          </SectionParagraph>
         </div>
       </div>
 

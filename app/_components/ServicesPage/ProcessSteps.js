@@ -2,6 +2,14 @@
 
 import React from "react";
 import { Lightbulb, Rocket, Settings, TrendingUp } from "lucide-react";
+import {
+  SectionBadge,
+  SectionHeading,
+  HighlightWord,
+  SectionParagraph,
+  CardHeading,
+  CardParagraph,
+} from "@/components/Typography";
 
 const steps = [
   {
@@ -51,32 +59,33 @@ const ProcessSteps = () => {
       <div className="max-w-[1280px] mx-auto px-5 sm:px-8 md:px-12 relative z-10">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-14 sm:mb-18">
-          <div 
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#36963D]/10 border border-[#36963D]/30 text-[#36963D] font-mono text-xs uppercase tracking-widest font-bold mb-3 shadow-2xs"
-            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-          >
-            <span className="w-2 h-2 rounded-full bg-[#36963D] animate-pulse" />
-            <span>HOW WE DELIVER</span>
+          <div className="mb-3">
+            <SectionBadge variant="light">
+              HOW WE DELIVER
+            </SectionBadge>
           </div>
 
           <div className="retro-script-font text-2xl sm:text-3xl text-[#36963D] font-normal tracking-wide mb-1 leading-snug">
             From Concept to Scale
           </div>
 
-          <h2
-            className="text-3xl sm:text-4xl md:text-5xl font-black text-[#0D0F12] tracking-tight leading-tight mb-4"
-            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+          <SectionHeading
+            as="h2"
+            size="section"
+            theme="dark"
+            className="mb-4"
           >
             Our Simple 4-Step <br className="hidden sm:inline" />
-            <span className="text-[#36963D]">Roadmap to Success</span>
-          </h2>
+            <HighlightWord>Roadmap to Success</HighlightWord>
+          </SectionHeading>
 
-          <p
-            className="text-[#475569] text-base sm:text-lg leading-relaxed font-normal max-w-2xl mx-auto"
-            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+          <SectionParagraph
+            size="lg"
+            theme="slate"
+            className="max-w-2xl mx-auto"
           >
             We follow an agile, structured delivery methodology that removes uncertainty, reduces time-to-market, and guarantees enterprise quality.
-          </p>
+          </SectionParagraph>
         </div>
 
         {/* 4 Step Cards Grid */}
@@ -99,7 +108,7 @@ const ProcessSteps = () => {
 
                     {/* Step Number Tag */}
                     <div 
-                      className="absolute -top-2.5 -right-2.5 px-2.5 py-0.5 rounded-full bg-[#36963D] text-white font-mono text-xs font-black border-2 border-[#0D0F12] shadow-2xs"
+                      className="absolute -top-2.5 -right-2.5 px-2.5 py-0.5 rounded-full bg-[#36963D] text-white font-jakarta text-xs font-bold border-2 border-[#0D0F12] shadow-2xs"
                     >
                       {step.number}
                     </div>
@@ -111,17 +120,19 @@ const ProcessSteps = () => {
                   </div>
 
                   {/* Step Title */}
-                  <h3
-                    className="text-2xl font-black text-[#0D0F12] group-hover:text-[#36963D] transition-colors duration-200 tracking-tight mb-3"
-                    style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+                  <CardHeading
+                    as="h3"
+                    size="sm"
+                    theme="dark"
+                    className="text-2xl font-bold group-hover:text-[#36963D] transition-colors duration-200 tracking-tight mb-3"
                   >
                     {step.title}
-                  </h3>
+                  </CardHeading>
 
                   {/* Step Description */}
-                  <p className="text-xs sm:text-[13.5px] text-[#475569] leading-relaxed font-normal">
+                  <CardParagraph size="sm" theme="slate" className="text-xs sm:text-[13.5px] leading-relaxed">
                     {step.desc}
-                  </p>
+                  </CardParagraph>
                 </div>
               </div>
             );

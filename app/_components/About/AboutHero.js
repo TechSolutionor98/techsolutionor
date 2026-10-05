@@ -4,6 +4,13 @@ import React from "react";
 import { FaArrowRight, FaChevronDown, FaCheckCircle } from "react-icons/fa";
 import { useQuote } from "@/app/_context/QuoteContext";
 import { getCmsVal } from "@/lib/api-helper";
+import {
+    SectionBadge,
+    SectionHeading,
+    HighlightWord,
+    SectionParagraph,
+    ButtonText
+} from "@/components/Typography";
 
 const AboutHero = ({ cmsContent }) => {
     const { openQuote } = useQuote();
@@ -37,32 +44,31 @@ const AboutHero = ({ cmsContent }) => {
 
             <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                 {/* Micro-Badge */}
-                <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-[#41B349]/10 border border-[#41B349]/30 text-[#41B349] font-extrabold text-xs uppercase tracking-widest mb-6 backdrop-blur-sm">
-                    <span className="w-2 h-2 rounded-full bg-[#41B349] animate-pulse" />
-                    <span>{badge}</span>
+                <div className="flex justify-center mb-6">
+                    <SectionBadge variant="light">
+                        {badge}
+                    </SectionBadge>
                 </div>
 
                 {/* Primary Heading */}
-                <h1 className="text-3xl sm:text-5xl md:text-6xl font-black text-[#111827] tracking-tight leading-[1.15] max-w-4xl mx-auto">
+                <SectionHeading as="h1" size="hero" theme="dark" className="max-w-4xl mx-auto">
                     {heading.includes("Scalable Realities") ? (
                         <>
                             Engineering Digital Excellence, Delivering{" "}
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#41B349] via-[#38a840] to-[#41B349]">
-                                Scalable Realities
-                            </span>
+                            <HighlightWord>Scalable Realities</HighlightWord>
                         </>
                     ) : (
                         heading
                     )}
-                </h1>
+                </SectionHeading>
 
                 {/* Description */}
-                <p className="mt-6 text-[#4B5563] text-base sm:text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-normal">
+                <SectionParagraph size="lg" theme="slate" className="mt-6 max-w-3xl mx-auto">
                     {description}
-                </p>
+                </SectionParagraph>
 
                 {/* Quick Impact Highlight Badges */}
-                <div className="mt-8 flex flex-wrap items-center justify-center gap-2.5 sm:gap-4 text-xs sm:text-sm font-semibold text-[#374151]">
+                <div className="mt-8 flex flex-wrap items-center justify-center gap-2.5 sm:gap-4 font-jakarta text-xs sm:text-[13px] font-semibold text-[#374151] tracking-[-0.01em]">
                     <div className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white border border-gray-200/90 shadow-sm">
                         <FaCheckCircle className="text-[#41B349] text-xs" />
                         <span>10+ Years of Craft</span>
@@ -85,16 +91,16 @@ const AboutHero = ({ cmsContent }) => {
                 <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
                     <button
                         onClick={openQuote}
-                        className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-[#41B349] hover:bg-[#369c3d] text-white font-extrabold px-8 py-4 rounded-full text-sm sm:text-base transition-all duration-300 shadow-lg shadow-[#41B349]/25 hover:scale-[1.02] cursor-pointer"
+                        className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-[#41B349] hover:bg-[#369c3d] text-white px-8 py-4 rounded-full transition-all duration-300 shadow-lg shadow-[#41B349]/25 hover:scale-[1.02] cursor-pointer"
                     >
-                        <span>{cta1}</span>
+                        <ButtonText className="text-sm sm:text-base">{cta1}</ButtonText>
                         <FaArrowRight size={13} />
                     </button>
                     <button
                         onClick={scrollToContent}
-                        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white hover:bg-gray-50 text-[#111827] hover:text-[#41B349] font-bold px-7 py-4 rounded-full text-sm sm:text-base border border-gray-200 shadow-sm transition-all duration-300 hover:border-gray-300 cursor-pointer"
+                        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white hover:bg-gray-50 text-[#111827] hover:text-[#41B349] px-7 py-4 rounded-full border border-gray-200 shadow-sm transition-all duration-300 hover:border-gray-300 cursor-pointer"
                     >
-                        <span>{cta2}</span>
+                        <ButtonText className="text-sm sm:text-base">{cta2}</ButtonText>
                         <FaChevronDown size={11} className="text-[#41B349]" />
                     </button>
                 </div>

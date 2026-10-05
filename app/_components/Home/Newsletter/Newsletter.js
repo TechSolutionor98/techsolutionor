@@ -4,6 +4,13 @@ import { FaArrowRight } from "react-icons/fa";
 import { useQuote } from "../../../../app/_context/QuoteContext";
 
 import { getCmsVal } from "@/lib/api-helper";
+import {
+  SectionBadge,
+  SectionHeading,
+  HighlightWord,
+  SectionParagraph,
+  ButtonText,
+} from "@/components/Typography";
 
 export const defaultNewsletter = {
   title: "Ready to scale your digital presence?\nHire the TechSolutionor team to\nhandle your project.",
@@ -45,6 +52,7 @@ const Newsletter = ({ content, cmsContent }) => {
 
   const title = getCmsVal(cmsContent, rawTitle, "newsletter");
   const buttonText = getCmsVal(cmsContent, rawData.buttonText, "newsletter");
+  const description = getCmsVal(cmsContent, rawData.description || "", "newsletter");
   const { line1, line2, line3 } = formatNewsletterTitle(title);
 
   return (
@@ -57,31 +65,40 @@ const Newsletter = ({ content, cmsContent }) => {
 
         {/* Left Column: Heading & Pill Badge */}
         <div className="max-w-2xl text-center md:text-left z-10">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#41B349]/15 border border-[#41B349]/30 text-[#41B349] font-black text-xs uppercase tracking-widest mb-4">
-            <span className="w-2 h-2 rounded-full bg-[#41B349] animate-pulse" />
-            <span>READY TO SCALE YOUR BUSINESS?</span>
-          </div>
+          <SectionBadge variant="dark" className="mb-4">
+            READY TO SCALE YOUR BUSINESS?
+          </SectionBadge>
 
-          <h2 
-            className="text-xl sm:text-3xl md:text-5xl font-black text-white leading-tight tracking-tight"
-            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+          <SectionHeading 
+            as="h2" 
+            size="section" 
+            theme="light"
+            className="text-xl sm:text-3xl md:text-5xl"
           >
             <span>{line1}</span>
             {line2 && (
-              <span className="text-[#41B349] block mt-1.5">
+              <HighlightWord as="span" className="block mt-1.5">
                 {line2} {line3 && <span>{line3}</span>}
-              </span>
+              </HighlightWord>
             )}
-          </h2>
+          </SectionHeading>
+
+          {description && (
+            <SectionParagraph size="md" theme="light" className="mt-4 text-gray-300">
+              {description}
+            </SectionParagraph>
+          )}
         </div>
 
         {/* Right Column: CTA Button */}
         <div className="shrink-0 z-10 w-full sm:w-auto flex justify-center">
           <button
             onClick={openQuote}
-            className="w-full sm:w-auto justify-center inline-flex items-center gap-3 sm:gap-4 bg-[#41B349] hover:bg-[#36963d] text-[#FCFCFC] text-sm sm:text-base md:text-lg font-extrabold px-6 sm:px-10 py-3.5 sm:py-5 rounded-full hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer border-2 border-white/60 group"
+            className="w-full sm:w-auto justify-center inline-flex items-center gap-3 sm:gap-4 bg-[#41B349] hover:bg-[#36963d] text-[#FCFCFC] px-6 sm:px-10 py-3.5 sm:py-5 rounded-full hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer border-2 border-white/60 group"
           >
-            <span>{buttonText}</span>
+            <ButtonText className="text-sm sm:text-base md:text-lg">
+              {buttonText}
+            </ButtonText>
             <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-white text-[#0D0F12] flex items-center justify-center shadow-md group-hover:translate-x-1 transition-transform duration-300">
               <FaArrowRight size={13} className="text-[#0D0F12]" />
             </div>

@@ -32,7 +32,8 @@ import {
   Sliders,
   ShieldCheck,
   History,
-  ChevronDown
+  ChevronDown,
+  UserCheck
 } from 'lucide-react';
 
 const ROLE_ALLOWED_ROUTES = {
@@ -40,6 +41,7 @@ const ROLE_ALLOWED_ROUTES = {
   admin: [
     "/admin",
     "/admin/emails",
+    "/admin/hire-us",
     "/admin/applications",
     "/admin/contact-submissions",
     "/admin/reviews",
@@ -58,6 +60,7 @@ const ROLE_ALLOWED_ROUTES = {
   client: [
     "/admin",
     "/admin/emails",
+    "/admin/hire-us",
     "/admin/applications",
     "/admin/contact-submissions",
     "/admin/reviews",
@@ -85,6 +88,7 @@ const ROLE_ALLOWED_ROUTES = {
   ],
   editor: [
     "/admin",
+    "/admin/hire-us",
     "/admin/applications",
     "/admin/contact-submissions",
     "/admin/pages",
@@ -94,6 +98,7 @@ const ROLE_ALLOWED_ROUTES = {
   ],
   viewer: [
     "/admin",
+    "/admin/hire-us",
     "/admin/applications",
     "/admin/contact-submissions",
     "/admin/pages",
@@ -110,6 +115,7 @@ const NAV_GROUPS = [
     icon: Inbox,
     items: [
       { href: "/admin/emails", label: "Email Inbox", icon: Mail, description: "HR & email communication" },
+      { href: "/admin/hire-us", label: "Hire Us", icon: UserCheck, description: "Manage Hire Us resource submissions" },
       { href: "/admin/contact-submissions", label: "Contact Messages", icon: Mail, description: "Inquiries from contact forms" },
       { href: "/admin/applications", label: "Job Applications", icon: Briefcase, description: "Career applicant resumes" },
       { href: "/admin/reviews", label: "Customer Reviews", icon: Star, description: "Ratings and testimonials" },
@@ -153,6 +159,7 @@ const NAV_GROUPS = [
 function getItemUnreadCount(href, unreadCounts) {
   if (!unreadCounts) return 0;
   if (href === '/admin/emails') return unreadCounts.unreadEmails || 0;
+  if (href === '/admin/hire-us') return unreadCounts.hireUs || 0;
   if (href === '/admin/contact-submissions') return unreadCounts.contactMessages || 0;
   if (href === '/admin/applications') return unreadCounts.jobApplications || 0;
   if (href === '/admin/reviews') return unreadCounts.customerReviews || 0;

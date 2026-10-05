@@ -6,6 +6,7 @@ import { generateCmsMetadata } from '@/lib/cms-fetch';
 import BlogSidebar from '@/app/_components/Blog/BlogSidebar';
 import BlogCommentForm from './BlogCommentForm';
 import { FaCalendarAlt, FaUser, FaClock, FaComment, FaTag, FaArrowLeft } from 'react-icons/fa';
+import { SectionBadge, SectionHeading, CardHeading, ButtonText } from '@/components/Typography';
 
 export const dynamic = 'force-dynamic';
 
@@ -99,19 +100,21 @@ export default async function BlogDetailPage({ params }) {
 
             {/* Category Badge */}
             {blog.category && (
-              <span className="inline-block bg-[#41b349]/10 text-[#41b349] text-xs font-bold uppercase tracking-wider px-3.5 py-1 rounded-full mb-3">
-                {blog.category}
-              </span>
+              <div className="mb-3">
+                <SectionBadge variant="light">
+                  {blog.category}
+                </SectionBadge>
+              </div>
             )}
 
             {/* 2. Directly below the image: Blog Title */}
-            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-[38px] font-bold text-gray-900 leading-tight mb-4">
+            <SectionHeading as="h1" size="md" theme="dark" className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] leading-tight mb-4">
               {blog.title}
-            </h1>
+            </SectionHeading>
 
             {/* Meta Info Bar */}
-            <div className="flex items-center gap-5 text-xs text-gray-500 flex-wrap pb-6 mb-8 border-b border-gray-100">
-              <div className="flex items-center gap-1.5 font-medium text-gray-700">
+            <div className="flex items-center gap-5 font-jakarta text-xs sm:text-sm text-gray-500 flex-wrap pb-6 mb-8 border-b border-gray-150">
+              <div className="flex items-center gap-1.5 font-semibold text-gray-800">
                 <FaUser className="text-[#41b349]" />
                 <span>{blog.author || 'Admin'}</span>
               </div>
@@ -133,27 +136,27 @@ export default async function BlogDetailPage({ params }) {
 
             {/* Excerpt Lead */}
             {blog.excerpt && (
-              <div className="text-lg md:text-xl text-gray-700 leading-relaxed font-normal mb-8 pb-6 border-b border-gray-100 italic">
+              <div className="font-jakarta text-lg md:text-xl text-gray-700 leading-relaxed font-normal mb-8 pb-6 border-b border-gray-150 italic">
                 "{blog.excerpt}"
               </div>
             )}
 
             {/* Rich HTML Content */}
             <div
-              className="prose max-w-none text-gray-800 leading-relaxed space-y-5 text-[16px] [&>h2]:text-2xl [&>h2]:font-bold [&>h2]:text-gray-900 [&>h2]:mt-8 [&>h2]:mb-4 [&>h3]:text-xl [&>h3]:font-bold [&>h3]:text-gray-900 [&>h3]:mt-6 [&>h3]:mb-3 [&>p]:leading-relaxed [&>p]:mb-4 [&>ul]:list-disc [&>ul]:pl-6 [&>ul]:mb-4 [&>ol]:list-decimal [&>ol]:pl-6 [&>ol]:mb-4 [&>blockquote]:border-l-4 [&>blockquote]:border-[#41b349] [&>blockquote]:pl-4 [&>blockquote]:italic [&>blockquote]:text-gray-600 [&>img]:rounded-xl [&>img]:my-6 [&>img]:shadow-sm"
+              className="prose max-w-none text-gray-800 font-jakarta leading-relaxed space-y-5 text-[16px] [&>h2]:text-2xl [&>h2]:font-bold [&>h2]:text-gray-900 [&>h2]:mt-8 [&>h2]:mb-4 [&>h3]:text-xl [&>h3]:font-bold [&>h3]:text-gray-900 [&>h3]:mt-6 [&>h3]:mb-3 [&>p]:leading-relaxed [&>p]:mb-4 [&>ul]:list-disc [&>ul]:pl-6 [&>ul]:mb-4 [&>ol]:list-decimal [&>ol]:pl-6 [&>ol]:mb-4 [&>blockquote]:border-l-4 [&>blockquote]:border-[#41b349] [&>blockquote]:pl-4 [&>blockquote]:italic [&>blockquote]:text-gray-600 [&>img]:rounded-xl [&>img]:my-6 [&>img]:shadow-sm"
               dangerouslySetInnerHTML={{ __html: blog.content }}
             />
 
             {/* Tags */}
             {Array.isArray(blog.tags) && blog.tags.length > 0 && (
-              <div className="mt-12 pt-6 border-t border-gray-100 flex items-center gap-2 flex-wrap">
-                <span className="text-xs font-bold text-gray-600 flex items-center gap-1">
+              <div className="mt-12 pt-6 border-t border-gray-150 flex items-center gap-2 flex-wrap">
+                <span className="font-jakarta text-xs font-bold text-gray-600 flex items-center gap-1">
                   <FaTag className="text-[#41b349]" /> Tags:
                 </span>
                 {blog.tags.map((tag, idx) => (
                   <span
                     key={idx}
-                    className="text-xs bg-gray-100 hover:bg-[#41b349]/10 hover:text-[#41b349] text-gray-600 px-3 py-1 rounded-full transition-colors"
+                    className="font-jakarta text-xs bg-gray-100 hover:bg-[#41b349]/10 hover:text-[#41b349] text-gray-600 px-3 py-1 rounded-full transition-colors"
                   >
                     #{tag.trim()}
                   </span>
@@ -162,23 +165,24 @@ export default async function BlogDetailPage({ params }) {
             )}
 
             {/* Navigation back to blog list */}
-            <div className="mt-10 pt-6 border-t border-gray-100 flex items-center justify-between">
+            <div className="mt-10 pt-6 border-t border-gray-150 flex items-center justify-between">
               <Link
                 href="/blog"
-                className="inline-flex items-center gap-2 text-sm font-semibold text-[#41b349] hover:text-black transition-colors"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-[#41b349] hover:text-[#369c3d] font-jakarta transition-colors"
               >
-                <FaArrowLeft /> Back to All Articles
+                <FaArrowLeft />
+                <ButtonText className="text-sm">Back to All Articles</ButtonText>
               </Link>
             </div>
 
             {/* Comments List Section */}
             <div className="mt-14 pt-8 border-t border-gray-200">
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">
+              <CardHeading as="h3" size="md" theme="dark" className="text-2xl mb-6">
                 Comments ({comments.length})
-              </h3>
+              </CardHeading>
 
               {comments.length === 0 ? (
-                <div className="bg-gray-50 rounded-xl p-6 text-center text-gray-500 text-sm">
+                <div className="bg-gray-50 rounded-xl p-6 text-center font-jakarta text-gray-500 text-sm">
                   No comments yet. Be the first to leave your feedback!
                 </div>
               ) : (
@@ -193,15 +197,15 @@ export default async function BlogDetailPage({ params }) {
                           <div className="w-8 h-8 rounded-full bg-[#41b349] text-white font-bold flex items-center justify-center text-xs">
                             {(c.authorName || 'U')[0].toUpperCase()}
                           </div>
-                          <span className="font-bold text-sm text-gray-900">
+                          <span className="font-jakarta font-bold text-sm text-gray-900">
                             {c.authorName}
                           </span>
                         </div>
-                        <span className="text-xs text-gray-400">
+                        <span className="font-jakarta text-xs text-gray-400">
                           {formatDate(c.createdAt)}
                         </span>
                       </div>
-                      <p className="text-sm text-gray-700 leading-relaxed pl-10">
+                      <p className="font-jakarta text-sm text-gray-700 leading-relaxed pl-10">
                         {c.comment}
                       </p>
                     </div>

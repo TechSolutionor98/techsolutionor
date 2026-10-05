@@ -15,6 +15,14 @@ import Swift from '../../../../components/Images/swift2.png';
 import PHP from '../../../../components/Images/php-1-1.png';
 
 import { getCmsVal } from "@/lib/api-helper";
+import {
+  SectionBadge,
+  SectionHeading,
+  HighlightWord,
+  SectionParagraph,
+  CardHeading,
+  ButtonText,
+} from "@/components/Typography";
 
 export const defaultTechnology = {
   sectionTitle: "Technology",
@@ -114,21 +122,17 @@ const Technology = ({ cmsContent }) => {
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#41B349]/10 border border-[#41B349]/20 text-[#41B349] font-extrabold text-xs uppercase tracking-widest mb-3">
-            <span className="w-2 h-2 rounded-full bg-[#41B349] animate-pulse" />
-            <span>{sectionTitle.toUpperCase()}</span>
-          </div>
+          <SectionBadge variant="light" className="mb-3">
+            {sectionTitle.toUpperCase()}
+          </SectionBadge>
 
-          <h2 
-            className="text-2xl sm:text-3xl md:text-5xl font-black text-[#0D0F12] tracking-tight leading-tight"
-            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-          >
-            {titleTop} <span className="text-[#41B349]">{titleBottom}</span>
-          </h2>
+          <SectionHeading as="h2" size="section" theme="dark">
+            {titleTop} <HighlightWord>{titleBottom}</HighlightWord>
+          </SectionHeading>
 
-          <p className="mt-3 sm:mt-4 text-[#4A5568] text-xs min-[360px]:text-sm sm:text-base md:text-lg leading-relaxed font-medium">
+          <SectionParagraph size="md" className="mt-3 sm:mt-4">
             {description}
-          </p>
+          </SectionParagraph>
         </div>
       </div>
 
@@ -235,13 +239,15 @@ const Technology = ({ cmsContent }) => {
                   <div className={`absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-transparent ${cfg.topAccent} to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
                   
                   <div className="relative z-10">
-                    <h3 
-                      className={`text-lg min-[380px]:text-xl sm:text-2xl font-black leading-tight tracking-tight transition-colors duration-200 ${cfg.titleColor}`}
-                      style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+                    <CardHeading 
+                      as="h3"
+                      size="md"
+                      theme="inherit"
+                      className={`text-lg min-[380px]:text-xl sm:text-2xl font-display uppercase tracking-tight leading-tight transition-colors duration-200 ${cfg.titleColor}`}
                     >
                       <span>{item.titleLine1}</span>
                       {item.titleLine2 && <span className="block mt-0.5">{item.titleLine2}</span>}
-                    </h3>
+                    </CardHeading>
                   </div>
 
                   <div className="my-2 min-[380px]:my-3 sm:my-4 w-full h-[145px] min-[380px]:h-[170px] sm:h-[200px] flex items-center justify-center p-2 min-[380px]:p-3 sm:p-4 relative z-10">
@@ -265,9 +271,9 @@ const Technology = ({ cmsContent }) => {
                   </div>
 
                   <div className="flex items-center justify-between pt-1 relative z-10">
-                    <span className={`text-xs font-extrabold uppercase tracking-wider transition-colors duration-200 ${cfg.footerTextColor}`}>
+                    <ButtonText className={`text-xs uppercase tracking-wider transition-colors duration-200 ${cfg.footerTextColor}`}>
                       Explore Tech
-                    </span>
+                    </ButtonText>
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${cfg.arrowClass}`}>
                       <FaArrowRight size={12} className="transition-transform group-hover:translate-x-0.5" />
                     </div>
