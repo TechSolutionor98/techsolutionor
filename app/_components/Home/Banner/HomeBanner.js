@@ -23,7 +23,6 @@ export const DEFAULT_GLOBAL_COUNTRIES = [
   "Netherlands",
   "Singapore",
   "Malaysia",
-  "India",
   "Pakistan",
 ];
 
