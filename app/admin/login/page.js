@@ -1,10 +1,12 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
 
@@ -71,6 +73,8 @@ export default function LoginPage() {
           required
           onChange={e => setEmail(e.target.value)}
           style={{
+            width: "100%",
+            boxSizing: "border-box",
             padding: "12px",
             borderRadius: "8px",
             border: "1px solid #ccc",
@@ -78,20 +82,46 @@ export default function LoginPage() {
             color:'black'
           }}
         />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          required
-          onChange={e => setPassword(e.target.value)}
-          style={{
-            padding: "12px",
-            borderRadius: "8px",
-            border: "1px solid #ccc",
-            fontSize: "16px",
-            color:'black'
-          }}
-        />
+        <div style={{ position: "relative", width: "100%" }}>
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="Password"
+            value={password}
+            required
+            onChange={e => setPassword(e.target.value)}
+            style={{
+              width: "100%",
+              boxSizing: "border-box",
+              padding: "12px",
+              paddingRight: "40px",
+              borderRadius: "8px",
+              border: "1px solid #ccc",
+              fontSize: "16px",
+              color:'black'
+            }}
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(prev => !prev)}
+            aria-label={showPassword ? "Hide password" : "Show password"}
+            style={{
+              position: "absolute",
+              right: "12px",
+              top: "50%",
+              transform: "translateY(-50%)",
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              padding: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: "#6b7280"
+            }}
+          >
+            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+          </button>
+        </div>
         <button
           type="submit"
           disabled={loading}

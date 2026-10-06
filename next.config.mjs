@@ -9,7 +9,6 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: [
       'lucide-react',
-      'react-icons',
       'framer-motion',
       'swiper',
       '@tsparticles/react',
