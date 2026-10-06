@@ -340,7 +340,7 @@ const TechnologiesBook = ({
     >
       {/* BOOK VIEWPORT (PURE SOLID WHITE, NORMAL FLOW, NO STICKY / PINNING) */}
       <div
-        className="w-full flex flex-col justify-center items-center overflow-hidden select-none px-4 sm:px-6 md:px-10 z-10 font-sans bg-white"
+        className="w-full flex flex-col justify-center items-center overflow-hidden select-none px-4 sm:px-6 md:px-10 z-10 font-jakarta bg-white"
         style={{
           backgroundColor: "#FFFFFF",
         }}
@@ -357,7 +357,7 @@ const TechnologiesBook = ({
               as="h2"
               size="section"
               theme="dark"
-              className="text-2xl sm:text-3xl md:text-[34px] lg:text-[38px] leading-tight"
+              className="leading-tight"
             >
               {titleText} <HighlightWord>{titleHighlightText}</HighlightWord>
             </SectionHeading>
@@ -688,7 +688,7 @@ const TechnologiesBook = ({
           </div>
 
           <div
-            className="text-[11px] sm:text-xs font-bold text-right w-32 tracking-wider text-[#0D0F12] font-outfit"
+            className="text-[11px] sm:text-xs font-semibold text-right w-32 tracking-wider text-[#0D0F12] font-jakarta"
           >
             PAGE {String(activeSpread * 2 + 1).padStart(2, "0")} - {String(activeSpread * 2 + 2).padStart(2, "0")} / {String(totalSpreads * 2).padStart(2, "0")}
           </div>
@@ -725,7 +725,7 @@ const TechContentPage = ({ tech, isLeft, pageNumber, openQuote }) => {
             {tech.subtitle || "// NEXT CHAPTER"}
           </span>
           <span
-            className="text-[11px] sm:text-xs font-black text-[#1B4E2C] tracking-widest font-outfit"
+            className="text-[11px] sm:text-xs font-bold text-[#1B4E2C] tracking-widest font-jakarta"
           >
             {String(pageNumber).padStart(2, "0")}
           </span>
@@ -741,8 +741,8 @@ const TechContentPage = ({ tech, isLeft, pageNumber, openQuote }) => {
 
           <CardHeading
             as="h2"
-            size="2xl"
-            className="text-xl sm:text-2xl md:text-[26px] font-black text-[#0D0F12] tracking-tight leading-tight mb-2 uppercase"
+            size="lg"
+            className="mb-2 uppercase"
           >
             {tech.title}
           </CardHeading>
@@ -756,7 +756,7 @@ const TechContentPage = ({ tech, isLeft, pageNumber, openQuote }) => {
 
           <button
             onClick={openQuote}
-            className="group relative inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 rounded-full bg-[#1B4E2C] hover:bg-[#153e23] text-white text-xs sm:text-[13px] font-bold tracking-wide transition-all duration-300 cursor-pointer active:scale-95 shadow-sm font-outfit"
+            className="group relative inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 rounded-full bg-[#1B4E2C] hover:bg-[#153e23] text-white text-xs sm:text-[13px] font-semibold tracking-wide transition-all duration-300 cursor-pointer active:scale-95 shadow-sm font-jakarta"
           >
             <ButtonText size="sm">Start yours</ButtonText>
             <span className="text-sm group-hover:translate-x-1 group-hover:translate-y-0.5 transition-transform duration-300">
@@ -768,7 +768,7 @@ const TechContentPage = ({ tech, isLeft, pageNumber, openQuote }) => {
         <div className="flex items-center justify-between text-[9.5px] sm:text-[10px] font-bold uppercase tracking-wider text-gray-400 border-t border-black/[0.06] pt-1.5 font-jakarta">
           <span>{tech.footerLeft || "TECH SOLUTIONOR • DIGITAL ENGINEERING"}</span>
           <span
-            className="text-[#1B4E2C] font-black font-outfit"
+            className="text-[#1B4E2C] font-bold font-jakarta"
           >
             PAGE {String(pageNumber).padStart(2, "0")}
           </span>
@@ -796,7 +796,7 @@ const TechContentPage = ({ tech, isLeft, pageNumber, openQuote }) => {
       {/* TOP HEADER ROW */}
       <div className="relative z-10 flex items-center justify-between">
         <span
-          className="text-[11px] sm:text-xs font-black text-[#1B4E2C] tracking-wider font-outfit"
+          className="text-[11px] sm:text-xs font-bold text-[#1B4E2C] tracking-wider font-jakarta"
         >
           {String(pageNumber).padStart(2, "0")}
         </span>
@@ -824,8 +824,8 @@ const TechContentPage = ({ tech, isLeft, pageNumber, openQuote }) => {
           )}
           <CardHeading
             as="h3"
-            size="2xl"
-            className="text-xl sm:text-2xl md:text-[26px] font-black text-[#0D0F12] tracking-tight uppercase"
+            size="lg"
+            className="uppercase"
           >
             {tech.title}
           </CardHeading>
@@ -858,7 +858,7 @@ const TechContentPage = ({ tech, isLeft, pageNumber, openQuote }) => {
       <div className="relative z-10 flex items-center justify-between text-[9.5px] sm:text-[10px] font-bold uppercase tracking-wider text-gray-400 border-t border-black/[0.06] pt-1.5 font-jakarta">
         <span>{tech.footerLeft || "TECH SOLUTIONOR • ECOSYSTEM"}</span>
         <span
-          className="text-[#1B4E2C] font-black font-outfit"
+          className="text-[#1B4E2C] font-bold font-jakarta"
         >
           PAGE {String(pageNumber).padStart(2, "0")}
         </span>
@@ -902,7 +902,7 @@ const TechVisualPage = ({ tech, isLeft, pageNumber, openQuote }) => {
           {tech.badge || "TECHNOLOGY SHOWCASE"}
         </span>
         <span
-          className="text-[11px] sm:text-xs font-black text-[#1B4E2C] tracking-wider font-outfit"
+          className="text-[11px] sm:text-xs font-bold text-[#1B4E2C] tracking-wider font-jakarta"
         >
           {String(pageNumber).padStart(2, "0")}
         </span>
@@ -945,7 +945,7 @@ const TechVisualPage = ({ tech, isLeft, pageNumber, openQuote }) => {
         {/* Clean, Simple Caption Label */}
         <div className="mt-2 text-center">
           <span
-            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/[0.03] border border-black/[0.06] text-[#0D0F12] text-[11px] sm:text-xs font-black tracking-widest uppercase font-outfit"
+            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/[0.03] border border-black/[0.06] text-[#0D0F12] text-[11px] sm:text-xs font-bold tracking-widest uppercase font-jakarta"
           >
             <span>{tech.title}</span>
             <span className="w-1 h-1 rounded-full bg-[#41B349]" />
@@ -960,7 +960,7 @@ const TechVisualPage = ({ tech, isLeft, pageNumber, openQuote }) => {
       <div className="relative z-10 flex items-center justify-between text-[9.5px] sm:text-[10px] font-bold uppercase tracking-wider text-gray-400 border-t border-black/[0.06] pt-1.5 font-jakarta">
         <span>{tech.footerLeft || "TECH SOLUTIONOR • ECOSYSTEM"}</span>
         <span
-          className="text-[#1B4E2C] font-black font-outfit"
+          className="text-[#1B4E2C] font-bold font-jakarta"
         >
           PAGE {String(pageNumber).padStart(2, "0")}
         </span>

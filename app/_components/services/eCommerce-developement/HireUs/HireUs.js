@@ -2,7 +2,7 @@
 import React from "react";
 import { FaArrowRight } from "react-icons/fa";
 import { useQuote } from "@/app/_context/QuoteContext";
-import { SectionHeading, SectionBadge, ButtonText } from "@/components/Typography";
+import { SectionHeading, SectionBadge, HighlightWord, ButtonText } from "@/components/Typography";
 
 const HireUs = ({
   badge = "READY TO SCALE YOUR BUSINESS?",
@@ -43,9 +43,9 @@ const HireUs = ({
           <SectionHeading as="h2" size="section" theme="light" className="text-left leading-tight">
             <span>{displayLine1}</span>
             {displayLine2 && (
-              <span className="text-[#41B349] block mt-1.5">
+              <HighlightWord className="block mt-1.5">
                 {displayLine2}
-              </span>
+              </HighlightWord>
             )}
           </SectionHeading>
         </div>

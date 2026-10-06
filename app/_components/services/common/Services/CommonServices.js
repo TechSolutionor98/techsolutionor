@@ -44,7 +44,7 @@ export default function CommonServices({
   const displayServices = services || data?.services || [];
 
   return (
-    <section className="w-full py-16 sm:py-20 md:py-24 bg-white font-sans relative overflow-hidden select-none">
+    <section className="w-full py-16 sm:py-20 md:py-24 bg-white font-jakarta relative overflow-hidden select-none">
       {/* Background Architectural Grid Accent */}
       <div className="absolute inset-0 pointer-events-none opacity-[0.03]">
         <div
@@ -128,7 +128,7 @@ export default function CommonServices({
                   <CardParagraph 
                     size="sm"
                     theme="slate"
-                    className="group-hover:text-white/95 text-[14px] sm:text-[14.5px] leading-[1.7]"
+                    className="group-hover:text-white/95 leading-relaxed"
                   >
                     {service.desc}
                   </CardParagraph>

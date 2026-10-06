@@ -44,14 +44,43 @@ export const metadata: Metadata = {
   },
 };
 
+let cachedSettings: any = null;
+let settingsExpiresAt = 0;
+
 async function getWebsiteSettings() {
+  if (cachedSettings && Date.now() < settingsExpiresAt) {
+    return cachedSettings;
+  }
+
   try {
-    const db = await getDb();
-    const settings = await db.collection('settings').findOne({ _id: 'website_settings' });
-    return settings || {};
+    let timer: any;
+    const timeoutPromise = new Promise((resolve) => {
+      timer = setTimeout(() => resolve({}), 2000);
+    });
+
+    const fetchPromise = (async () => {
+      const db = await getDb();
+      const settings = await db.collection('settings').findOne({ _id: 'website_settings' });
+      return settings || {};
+    })();
+
+    const result: any = await Promise.race([
+      fetchPromise.then((res) => {
+        clearTimeout(timer);
+        return res;
+      }).catch((e) => {
+        clearTimeout(timer);
+        return {};
+      }),
+      timeoutPromise,
+    ]);
+
+    cachedSettings = result;
+    settingsExpiresAt = Date.now() + 60 * 1000;
+    return result;
   } catch (err) {
     console.error("Error loading SSR website settings:", err);
-    return {};
+    return cachedSettings || {};
   }
 }
 

@@ -2,6 +2,15 @@
 
 import React, { useState } from "react";
 import { Users, Globe, FileText } from "lucide-react";
+import { getCmsVal } from "@/lib/api-helper";
+import {
+  SectionBadge,
+  SectionHeading,
+  HighlightWord,
+  SectionParagraph,
+  CardHeading,
+  CardParagraph,
+} from "@/components/Typography";
 
 /**
  * Our Software Development Process Data
@@ -59,10 +68,17 @@ const processStages = [
 export default function SoftwareProcess({ cmsContent }) {
   const [hoveredIdx, setHoveredIdx] = useState(null);
 
+  const dynamicBadge = getCmsVal(cmsContent, "ENTERPRISE AGILE LIFECYCLE", "softwareprocess");
+  const dynamicSubtitle = getCmsVal(
+    cmsContent,
+    "From architectural discovery and agile sprint delivery to continuous testing and automated cloud deployment, we engineer mission-critical enterprise software built to scale.",
+    "softwareprocess"
+  );
+
   return (
     <section
       id="software-development-process"
-      className="w-full py-16 sm:py-20 md:py-24 bg-[#FFFFFF] text-[#0D0F12] font-sans relative overflow-hidden select-none"
+      className="w-full py-16 sm:py-20 md:py-24 bg-[#FFFFFF] text-[#0D0F12] relative overflow-hidden select-none"
     >
       {/* Background Ambient Radial Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-gradient-to-r from-[#41B349]/10 via-[#41B349]/5 to-transparent rounded-full blur-[140px] pointer-events-none z-0" />
@@ -85,28 +101,31 @@ export default function SoftwareProcess({ cmsContent }) {
         {/* ========================================================================= */}
         <div className="text-center max-w-3xl mx-auto mb-14 sm:mb-16 md:mb-20">
           {/* Eyebrow Badge */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#41B349]/15 border border-[#41B349]/30 text-[#41B349] font-black text-[11px] sm:text-xs uppercase tracking-widest mb-3.5 shadow-xs">
-            <span className="w-2 h-2 rounded-full bg-[#41B349] animate-pulse" />
-            <span>ENTERPRISE AGILE LIFECYCLE</span>
+          <div className="mb-3">
+            <SectionBadge variant="light">
+              {dynamicBadge}
+            </SectionBadge>
           </div>
 
-          {/* Main Title */}
-          <h2
-            className="text-2xl sm:text-3xl md:text-[36px] lg:text-[42px] font-black text-[#0D0F12] tracking-tight leading-tight mb-3.5"
-            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+          {/* Main Title matching Homepage Typography */}
+          <SectionHeading
+            as="h2"
+            size="section"
+            theme="dark"
+            className="text-center mb-3.5"
           >
             Our Software Development{" "}
-            <span className="text-[#41B349]">Process</span>
-          </h2>
+            <HighlightWord>Process</HighlightWord>
+          </SectionHeading>
 
-          {/* Subtitle */}
-          <p
-            className="text-xs sm:text-sm md:text-[15px] text-[#0D0F12]/75 leading-relaxed font-normal max-w-2xl mx-auto"
-            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+          {/* Subtitle matching Homepage Typography */}
+          <SectionParagraph
+            size="md"
+            theme="slate"
+            className="max-w-2xl mx-auto text-center"
           >
-            From architectural discovery and agile sprint delivery to continuous testing and automated cloud deployment,
-            we engineer mission-critical enterprise software built to scale.
-          </p>
+            {dynamicSubtitle}
+          </SectionParagraph>
         </div>
 
         {/* ========================================================================= */}
@@ -225,23 +244,26 @@ export default function SoftwareProcess({ cmsContent }) {
                     />
                   </div>
 
-                  {/* Card Title */}
-                  <h3
-                    className={`text-[19px] sm:text-[20px] font-bold tracking-tight leading-snug mb-3.5 px-2 transition-colors duration-300 ${
+                  {/* Card Title matching Homepage Typography */}
+                  <CardHeading
+                    as="h3"
+                    size="md"
+                    theme="inherit"
+                    className={`mb-3.5 px-2 transition-colors duration-300 ${
                       isHovered ? "text-[#41B349]" : "text-[#0D0F12]"
                     }`}
-                    style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
                   >
                     {stage.title}
-                  </h3>
+                  </CardHeading>
 
-                  {/* Card Description */}
-                  <p
-                    className="text-[13px] sm:text-[13.5px] leading-[1.65] text-[#0D0F12]/75 font-normal px-1 max-w-[290px]"
-                    style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                  {/* Card Description matching Homepage Typography */}
+                  <CardParagraph
+                    size="sm"
+                    theme="slate"
+                    className="px-1 max-w-[290px]"
                   >
                     {stage.description}
-                  </p>
+                  </CardParagraph>
                 </div>
               );
             })}
@@ -278,23 +300,26 @@ export default function SoftwareProcess({ cmsContent }) {
                     />
                   </div>
 
-                  {/* Card Title */}
-                  <h3
-                    className={`text-[19px] font-bold tracking-tight leading-snug mb-3.5 px-2 transition-colors duration-300 ${
+                  {/* Card Title matching Homepage Typography */}
+                  <CardHeading
+                    as="h3"
+                    size="md"
+                    theme="inherit"
+                    className={`mb-3.5 px-2 transition-colors duration-300 ${
                       isHovered ? "text-[#41B349]" : "text-[#0D0F12]"
                     }`}
-                    style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
                   >
                     {stage.title}
-                  </h3>
+                  </CardHeading>
 
-                  {/* Card Description */}
-                  <p
-                    className="text-[13px] leading-[1.65] text-[#0D0F12]/75 font-normal px-1"
-                    style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                  {/* Card Description matching Homepage Typography */}
+                  <CardParagraph
+                    size="sm"
+                    theme="slate"
+                    className="px-1"
                   >
                     {stage.description}
-                  </p>
+                  </CardParagraph>
                 </div>
               );
             })}

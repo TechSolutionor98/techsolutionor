@@ -1,18 +1,20 @@
 "use client";
 import React from "react";
-import { SectionHeading, CardHeading, CardParagraph } from "@/components/Typography";
+import { SectionBadge, SectionHeading, HighlightWord, CardHeading, CardParagraph } from "@/components/Typography";
 
 /**
  * Reusable KeyFeatures Component (Table-Style Layout matching reference design)
  * Props:
  * - title: string (e.g. "Key Features" or "NO RISK.")
  * - subtitle: string (e.g. "ONLY RESULTS.")
+ * - badge: string (e.g. "HOW WE DELIVER")
  * - columns: array of column names (defaults to ['Speed', 'Flexible', 'Quality', 'Scalable', 'Cost-Effective'])
  * - features: array of { title, desc, checks? }
  */
 const KeyFeatures = ({
   title = "NO RISK.",
   subtitle = "ONLY RESULTS.",
+  badge = "HOW WE DELIVER",
   columns = ["Speed", "Flexible", "Quality", "Scalable", "Cost-Effective"],
   features = [],
 }) => {
@@ -40,15 +42,15 @@ const KeyFeatures = ({
     if (!title || title.trim().toLowerCase() === "key features") {
       return (
         <>
-          <span className="block text-[#164326]">NO RISK.</span>
-          <span className="block text-[#41B349]">ONLY RESULTS.</span>
+          <span className="block text-[#0D0F12]">NO RISK.</span>
+          <HighlightWord className="block">ONLY RESULTS.</HighlightWord>
         </>
       );
     }
     return (
       <>
-        <span className="block text-[#164326]">{title}</span>
-        {subtitle && <span className="block text-[#41B349]">{subtitle}</span>}
+        <span className="block text-[#0D0F12]">{title}</span>
+        {subtitle && <HighlightWord className="block">{subtitle}</HighlightWord>}
       </>
     );
   };
@@ -56,6 +58,15 @@ const KeyFeatures = ({
   return (
     <section className="py-14 sm:py-20 md:py-24 bg-white select-none">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Eyebrow Pill Badge */}
+        {badge && (
+          <div className="flex justify-center mb-3">
+            <SectionBadge variant="light">
+              {badge}
+            </SectionBadge>
+          </div>
+        )}
+
         {/* Centered Two-Line Header */}
         <SectionHeading
           as="h2"

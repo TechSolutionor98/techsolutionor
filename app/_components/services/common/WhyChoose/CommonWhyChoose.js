@@ -79,19 +79,19 @@ export default function CommonWhyChoose({
             as="h2"
             size="section"
             theme="dark"
-            className="text-2xl sm:text-3xl md:text-[34px] lg:text-[38px] leading-tight"
+            className="text-center"
           >
             {dynamicTitlePrefix}{" "}
-            <HighlightWord className="block sm:inline mt-0.5 sm:mt-0 text-[#1B4E2C]">
+            <HighlightWord className="block sm:inline mt-0.5 sm:mt-0">
               {dynamicTitleHighlight}
             </HighlightWord>
           </SectionHeading>
 
-          {/* Clean Subtitle matching Home Page Hierarchy */}
+          {/* Clean Subtitle matching Homepage Hierarchy */}
           <SectionParagraph
-            size="sm"
+            size="md"
             theme="slate"
-            className="max-w-lg mx-auto mt-1 hidden sm:block"
+            className="max-w-2xl mx-auto mt-3 text-center"
           >
             {displaySubtitle}
           </SectionParagraph>
@@ -204,9 +204,9 @@ function Card({ item, tagText, isActive, onMouseEnter, onMouseLeave }) {
           >
             {item.icon}
           </div>
-          {/* Category Tag matching Home Page badge styling */}
+          {/* Category Tag matching Homepage badge styling */}
           <span
-            className={`hidden sm:inline-block font-jakarta font-bold text-[9px] md:text-[10px] tracking-wider uppercase transition-colors duration-300 ${
+            className={`hidden sm:inline-block font-jakarta font-semibold text-[10px] md:text-[11px] tracking-wider uppercase transition-colors duration-300 ${
               isActive
                 ? "text-white/80"
                 : "text-[#1B4E2C] group-hover:text-white/80"
@@ -220,7 +220,7 @@ function Card({ item, tagText, isActive, onMouseEnter, onMouseLeave }) {
         <CardHeading
           as="h3"
           size="sm"
-          className={`text-[13px] sm:text-[15px] md:text-[16px] lg:text-[17px] font-display uppercase tracking-tight leading-snug transition-colors duration-300 mb-1 ${
+          className={`leading-snug transition-colors duration-300 mb-1 ${
             isActive
               ? "text-white"
               : "text-[#0D0F12] group-hover:text-white"
@@ -232,10 +232,10 @@ function Card({ item, tagText, isActive, onMouseEnter, onMouseLeave }) {
         {/* Card Description matching Homepage Typography */}
         <CardParagraph
           size="xs"
-          className={`text-[10px] sm:text-[11.5px] md:text-[12.5px] leading-relaxed transition-colors duration-300 line-clamp-2 sm:line-clamp-3 ${
+          className={`leading-relaxed transition-colors duration-300 line-clamp-2 sm:line-clamp-3 ${
             isActive
               ? "text-white/95"
-              : "text-[#475569] group-hover:text-white/95"
+              : "text-[#4B5563] group-hover:text-white/95"
           }`}
         >
           {item.desc}

@@ -1,9 +1,9 @@
 "use client";
 import React, { useState } from "react";
-import { SectionHeading } from "@/components/Typography";
+import { SectionBadge, SectionHeading, HighlightWord } from "@/components/Typography";
 
-// Props: faqs = array of {question, answer}, title = string
-const Faq = ({ faqs = [], title }) => {
+// Props: faqs = array of {question, answer}, title = string, badge = string
+const Faq = ({ faqs = [], title, badge = "QUESTIONS & ANSWERS" }) => {
   const [openIndex, setOpenIndex] = useState(null);
 
   const list = Array.isArray(faqs) ? faqs : [];
@@ -21,8 +21,8 @@ const Faq = ({ faqs = [], title }) => {
     if (!title) {
       return (
         <>
-          <span className="block">FREQUENTLY ASKED</span>
-          <span className="block">QUESTIONS</span>
+          <span className="block">FREQUENTLY ASKED</span>{" "}
+          <HighlightWord className="block">QUESTIONS</HighlightWord>
         </>
       );
     }
@@ -30,12 +30,22 @@ const Faq = ({ faqs = [], title }) => {
     if (cleanTitle.toLowerCase().includes("frequently asked questions")) {
       return (
         <>
-          <span className="block">FREQUENTLY ASKED</span>
-          <span className="block">QUESTIONS</span>
+          <span className="block">FREQUENTLY ASKED</span>{" "}
+          <HighlightWord className="block">QUESTIONS</HighlightWord>
         </>
       );
     }
-    return <span className="block uppercase">{title}</span>;
+    const parts = cleanTitle.split(" ");
+    if (parts.length > 1) {
+      const last = parts.pop();
+      return (
+        <>
+          <span>{parts.join(" ")} </span>
+          <HighlightWord>{last}</HighlightWord>
+        </>
+      );
+    }
+    return <span className="block uppercase">{cleanTitle}</span>;
   };
 
   const renderFaqItem = (faq, index) => {
@@ -85,6 +95,15 @@ const Faq = ({ faqs = [], title }) => {
   return (
     <section className="py-14 sm:py-20 md:py-24 bg-white select-none">
       <div className="max-w-[900px] mx-auto px-4 sm:px-6">
+        {/* Eyebrow Pill Badge */}
+        {badge && (
+          <div className="flex justify-center mb-3">
+            <SectionBadge variant="light">
+              {badge}
+            </SectionBadge>
+          </div>
+        )}
+
         {/* Centered Two-Line Header */}
         <SectionHeading
           as="h2"

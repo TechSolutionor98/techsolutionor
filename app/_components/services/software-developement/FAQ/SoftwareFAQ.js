@@ -47,11 +47,12 @@ const defaultSoftwareFaqs = [
 ];
 
 export default function SoftwareFAQ({ cmsContent }) {
+  const badge = getCmsVal(cmsContent, "FAQS & KNOWLEDGE BASE", "softwarefaq");
   const title = getCmsVal(cmsContent, "Frequently Asked Questions (FAQs)", "softwarefaq");
   const faqs = defaultSoftwareFaqs.map((item) => ({
     question: getCmsVal(cmsContent, item.question, "softwarefaq"),
     answer: getCmsVal(cmsContent, item.answer, "softwarefaq"),
   }));
 
-  return <Faq title={title} faqs={faqs} />;
+  return <Faq badge={badge} title={title} faqs={faqs} />;
 }

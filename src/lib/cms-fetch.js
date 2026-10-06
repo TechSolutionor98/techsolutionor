@@ -1,10 +1,57 @@
 import { getDb } from './mongodb';
 
+const seoCache = new Map();
+const contentCache = new Map();
+const CACHE_TTL_MS = 60 * 1000;
+
+function getCached(cache, key) {
+  const item = cache.get(key);
+  if (!item) return null;
+  if (Date.now() > item.expiresAt) {
+    cache.delete(key);
+    return null;
+  }
+  return item.value;
+}
+
+function setCached(cache, key, value) {
+  cache.set(key, {
+    value,
+    expiresAt: Date.now() + CACHE_TTL_MS,
+  });
+}
+
+function withTimeout(promise, ms = 2500, fallback = null) {
+  let timer;
+  const timeoutPromise = new Promise((resolve) => {
+    timer = setTimeout(() => resolve(fallback), ms);
+  });
+  return Promise.race([
+    promise.then((res) => {
+      clearTimeout(timer);
+      return res;
+    }).catch(() => {
+      clearTimeout(timer);
+      return fallback;
+    }),
+    timeoutPromise,
+  ]);
+}
+
 export async function getCmsSeo(path) {
   try {
-    const db = await getDb();
-    const seo = await db.collection('cms_seo').findOne({ path });
-    return seo || null;
+    if (!path) return null;
+    const cleanPath = path.trim();
+    const cached = getCached(seoCache, cleanPath);
+    if (cached !== null) return cached;
+
+    return await withTimeout((async () => {
+      const db = await getDb();
+      const seo = await db.collection('cms_seo').findOne({ path: cleanPath });
+      const result = seo || null;
+      setCached(seoCache, cleanPath, result);
+      return result;
+    })(), 2500, null);
   } catch (err) {
     console.error(`getCmsSeo error for ${path}:`, err);
     return null;
@@ -13,34 +60,43 @@ export async function getCmsSeo(path) {
 
 export async function getCmsContent(path) {
   try {
-    const db = await getDb();
-    const content = await db.collection('cms_page_content').findOne({
-      path,
-      status: 'published',
-    });
+    if (!path) return null;
+    const cleanPath = path.trim();
+    const cached = getCached(contentCache, cleanPath);
+    if (cached !== null) return cached;
 
-    if (!content) return null;
+    return await withTimeout((async () => {
+      const db = await getDb();
+      const content = await db.collection('cms_page_content').findOne({
+        path: cleanPath,
+        status: 'published',
+      });
 
-    const sections = {};
-    for (const section of content.sections || []) {
-      const key = section.sectionId || section.sectionName?.toLowerCase().replace(/\s+/g, '_') || `section_${section.order}`;
-      const fields = {};
-      for (const [fieldKey, field] of Object.entries(section.fields || {})) {
-        fields[fieldKey] = field.value !== undefined ? field.value : field;
+      if (!content) return null;
+
+      const sections = {};
+      for (const section of content.sections || []) {
+        const key = section.sectionId || section.sectionName?.toLowerCase().replace(/\s+/g, '_') || `section_${section.order}`;
+        const fields = {};
+        for (const [fieldKey, field] of Object.entries(section.fields || {})) {
+          fields[fieldKey] = field.value !== undefined ? field.value : field;
+        }
+        sections[key] = {
+          name: section.sectionName,
+          fields,
+          raw: section.fields,
+        };
       }
-      sections[key] = {
-        name: section.sectionName,
-        fields,
-        raw: section.fields,
-      };
-    }
 
-    return {
-      sections,
-      status: content.status,
-      version: content.version,
-      updatedAt: content.updatedAt,
-    };
+      const result = {
+        sections,
+        status: content.status,
+        version: content.version,
+        updatedAt: content.updatedAt,
+      };
+      setCached(contentCache, cleanPath, result);
+      return result;
+    })(), 2500, null);
   } catch (err) {
     console.error(`getCmsContent error for ${path}:`, err);
     return null;

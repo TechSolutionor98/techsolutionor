@@ -47,6 +47,7 @@ export const servicesKeyFeaturesData = {
 
   // 3. Software Development
   "software-development": {
+    badge: "HOW WE DELIVER",
     title: "HOW WE HELP",
     subtitle: "YOU GET RESULTS.",
     features: [

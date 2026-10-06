@@ -189,18 +189,18 @@ export default function CommonStruggling({
               as="h2"
               size="section"
               theme="dark"
-              className="text-2xl sm:text-3xl md:text-[34px] lg:text-[38px] leading-tight text-center"
+              className="text-center"
             >
-              <span className="text-[#1B4E2C] block">{displayTitle1}</span>
-              <span className="text-[#0D0F12] block mt-0.5">{displayTitle2}</span>
+              <HighlightWord className="block">{displayTitle1}</HighlightWord>
+              <span className="text-[#0D0F12] block mt-1">{displayTitle2}</span>
             </SectionHeading>
 
-            {/* Subtitle */}
+            {/* Subtitle matching Homepage Hierarchy */}
             {displaySubtitle && (
               <SectionParagraph
-                size="sm"
+                size="md"
                 theme="slate"
-                className="mt-1 max-w-xl mx-auto text-center hidden sm:block"
+                className="mt-3 max-w-2xl mx-auto text-center"
               >
                 {displaySubtitle}
               </SectionParagraph>
@@ -255,19 +255,19 @@ export default function CommonStruggling({
                       </span>
                     </div>
 
-                    {/* Card Title */}
+                    {/* Card Title matching Homepage Typography */}
                     <CardHeading
                       as="h3"
                       size="sm"
-                      className="text-[15px] sm:text-[16px] md:text-[17px] font-display uppercase tracking-tight text-[#0D0F12] leading-snug mb-1.5 line-clamp-2"
+                      className="leading-snug mb-1.5 line-clamp-2"
                     >
                       {card.title}
                     </CardHeading>
 
-                    {/* Card Description */}
+                    {/* Card Description matching Homepage Typography */}
                     <CardParagraph
                       size="xs"
-                      className="text-[11.5px] sm:text-[12px] md:text-[12.5px] text-gray-600 font-jakarta font-normal leading-relaxed mb-3 line-clamp-3"
+                      className="leading-relaxed mb-3 line-clamp-3"
                     >
                       {card.descParts ? (
                         <>
