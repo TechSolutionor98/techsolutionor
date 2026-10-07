@@ -11,7 +11,9 @@ import {
   AlertCircle, 
   Lock,
   Send,
-  Check
+  Check,
+  ChevronDown,
+  Plus
 } from "lucide-react";
 import { COUNTRY_DIAL_CODES } from "@/lib/country-phone";
 
@@ -252,10 +254,11 @@ export default function HireResourceForm() {
     keyResponsibilities: "",
     expectedDeliverables: "",
     preferredTools: "",
-    // 6. Project Information
+    // Project & Business Overview
     projectName: "",
     projectType: "",
     projectDescription: "",
+    projectGoals: "",
     projectStatus: "",
     projectUrl: "",
     // 7. Company Information
@@ -292,14 +295,14 @@ export default function HireResourceForm() {
     hasInternalTeam: "Partially",
     existingTeamRoles: ["Project Lead"],
     otherTeamRole: "",
-    needTechSolutionorTeam: "Yes",
+    needTechSolutionorTeam: "",
     // 14. Communication & Management
     communicationMethods: ["Email", "WhatsApp", "Google Meet"],
     otherCommunication: "",
     meetingFrequency: "Weekly Review",
     teamManager: "Tech Solutionor Project Manager",
     // 15. Additional Requirements
-    specialRequirements: ["NDA / Confidentiality", "Weekly Reporting", "Task Management"],
+    specialRequirements: [],
     additionalComments: "",
     // 16. Contact Information (Required *)
     fullName: "",
@@ -320,6 +323,7 @@ export default function HireResourceForm() {
   });
 
   const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [docAttachments, setDocAttachments] = useState({});
   const [serviceSearch, setServiceSearch] = useState("");
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -353,6 +357,53 @@ export default function HireResourceForm() {
         return next;
       });
     }
+  };
+
+  const handleDocFileChange = (docType, e) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+
+    const taggedFiles = files.map((f) => {
+      f.docType = docType;
+      return f;
+    });
+
+    setDocAttachments((prev) => ({
+      ...prev,
+      [docType]: [...(prev[docType] || []), ...taggedFiles],
+    }));
+
+    setFormData((prev) => {
+      const list = prev.documentationTypes || [];
+      if (!list.includes(docType)) {
+        return { ...prev, documentationTypes: [...list, docType] };
+      }
+      return prev;
+    });
+
+    setUploadedFiles((prev) => [...prev, ...taggedFiles]);
+
+    e.target.value = "";
+  };
+
+  const removeDocFile = (docType, fileIndex) => {
+    setDocAttachments((prev) => {
+      const currentList = prev[docType] || [];
+      const fileToRemove = currentList[fileIndex];
+      const updatedList = currentList.filter((_, i) => i !== fileIndex);
+
+      if (fileToRemove) {
+        setUploadedFiles((prevFiles) => prevFiles.filter((f) => f !== fileToRemove));
+      }
+
+      const next = { ...prev };
+      if (updatedList.length > 0) {
+        next[docType] = updatedList;
+      } else {
+        delete next[docType];
+      }
+      return next;
+    });
   };
 
   const handleFileChange = (e) => {
@@ -431,17 +482,12 @@ Requirement Type: ${formData.requirementType}
 Selected Services: ${selectedServicesText}
 Resources Count: ${formData.resourceCount} (Exact: ${formData.exactResourceCount || "N/A"})
 Experience Level: ${formData.experienceLevel}
-Skills Required: ${formData.requiredSkills || "None specified"}
-Key Responsibilities: ${formData.keyResponsibilities || "None specified"}
-Deliverables: ${formData.expectedDeliverables || "None specified"}
-Tools/Tech: ${formData.preferredTools || "None specified"}
 
---- PROJECT & COMPANY INFO ---
-Project Name: ${formData.projectName || "N/A"} (${formData.projectType || "General"})
-Status: ${formData.projectStatus || "N/A"}
-URL: ${formData.projectUrl || "N/A"}
-Company: ${formData.companyName || "N/A"} | Industry: ${formData.industry || "N/A"} | Size: ${formData.companySize || "N/A"}
-Company Website: ${formData.companyWebsite || "N/A"}
+--- PROJECT & BUSINESS OVERVIEW ---
+Company: ${formData.companyName || "N/A"} | Industry: ${formData.industry || "N/A"}
+Website: ${formData.companyWebsite || formData.projectUrl || "N/A"}
+Project Type: ${formData.projectType || "General"}
+Overview & Requirements: ${formData.projectDescription || "None specified"}
 
 --- ARRANGEMENT & SCHEDULE ---
 Arrangement: ${formData.workArrangement} in ${formData.city || ""}, ${formData.arrangementCountry || ""} (TZ: ${formData.timeZone})
@@ -452,11 +498,8 @@ Budget: ${budgetSummary}
 --- TEAM & DOCUMENTATION ---
 Documentation: ${formData.hasDocumentation} (${formData.documentationTypes.join(", ")})
 Internal Team: ${formData.hasInternalTeam} (${formData.existingTeamRoles.join(", ")})
-Tech Solutionor Team Needed: ${formData.needTechSolutionorTeam}
 Management: ${formData.teamManager} (Meeting: ${formData.meetingFrequency})
 Preferred Communication: ${formData.communicationMethods.join(", ")}
-Special Requirements: ${formData.specialRequirements.join(", ")}
-Additional Comments: ${formData.additionalComments || "None"}
 
 --- CONTACT DETAILS ---
 Name: ${formData.fullName}
@@ -468,7 +511,7 @@ WhatsApp: ${formData.whatsapp || "N/A"}
 Country: ${formData.country}
 Contact Method: ${formData.preferredContactMethod} | Best Time: ${formData.bestTimeToContact}
 Found Us Via: ${formData.referralSources.join(", ")}
-Attached Files: ${uploadedFiles.map(f => f.name).join(", ") || "None"}
+Attached Files: ${uploadedFiles.map(f => f.docType ? `${f.name} [${f.docType}]` : f.name).join(", ") || "None"}
       `.trim();
 
       const payload = {
@@ -494,8 +537,9 @@ Attached Files: ${uploadedFiles.map(f => f.name).join(", ") || "None"}
         projectName: formData.projectName,
         projectType: formData.projectType,
         projectDescription: formData.projectDescription,
+        projectGoals: formData.projectGoals,
         projectStatus: formData.projectStatus,
-        projectUrl: formData.projectUrl,
+        projectUrl: formData.companyWebsite || formData.projectUrl,
         industry: formData.industry,
         companyWebsite: formData.companyWebsite,
         companySize: formData.companySize,
@@ -531,12 +575,12 @@ Attached Files: ${uploadedFiles.map(f => f.name).join(", ") || "None"}
         preferredContactMethod: formData.preferredContactMethod,
         bestTimeToContact: formData.bestTimeToContact,
         referralSources: formData.referralSources,
-        attachedFilesList: uploadedFiles.map(f => ({ name: f.name, size: f.size, type: f.type })),
+        attachedFilesList: uploadedFiles.map(f => ({ name: f.name, size: f.size, type: f.type, docType: f.docType || "General" })),
         message: compiledMessage,
         source: "Hire Us Form",
         details: {
           ...formData,
-          attachedFilesList: uploadedFiles.map(f => ({ name: f.name, size: f.size, type: f.type })),
+          attachedFilesList: uploadedFiles.map(f => ({ name: f.name, size: f.size, type: f.type, docType: f.docType || "General" })),
         },
       };
 
@@ -565,6 +609,8 @@ Attached Files: ${uploadedFiles.map(f => f.name).join(", ") || "None"}
   const handleReset = () => {
     setSubmitSuccess(false);
     setSubmissionId("");
+    setDocAttachments({});
+    setUploadedFiles([]);
   };
 
   return (
@@ -659,423 +705,288 @@ Attached Files: ${uploadedFiles.map(f => f.name).join(", ") || "None"}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-7 items-start">
               
               {/* =================================================================== */}
-              {/* LEFT COLUMN: Steps 1, 3, 4, 5, 6, 7, 8, 9, 10, 11                   */}
+              {/* LEFT COLUMN: Sections 1 to 6                                        */}
               {/* =================================================================== */}
               <div className="lg:col-span-6 space-y-6">
                 
-                {/* 1. What Are You Looking For? */}
+                {/* 1. Resource Type */}
                 <div className="bg-white rounded-2xl border border-gray-200/90 p-5 sm:p-6 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:border-gray-300 transition-all">
-                  <div className="flex items-start gap-3 mb-4">
+                  <div className="flex items-start gap-3 mb-5">
                     <div className="w-7 h-7 rounded-full bg-[#41B349]/10 text-[#41B349] flex items-center justify-center font-bold text-xs shrink-0 border border-[#41B349]/20">
                       1
                     </div>
                     <div>
                       <h2 className="font-display uppercase tracking-tight text-[#0D0F12] text-base sm:text-lg leading-snug">
-                        What Are You Looking For?
+                        Resource Type
                       </h2>
                       <p className="font-jakarta text-xs text-[#4A5568] mt-0.5">
-                        Select your requirement type
+                        Specify your requirement type, number of resources, and required experience level
                       </p>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                    {REQUIREMENT_TYPES.map((type) => {
-                      const isSelected = formData.requirementType === type;
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    {/* Resource Type */}
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-700 mb-1.5 font-jakarta min-h-[32px] flex items-end">
+                        Resource Type
+                      </label>
+                      <div className="relative">
+                        <select
+                          value={formData.requirementType}
+                          onChange={(e) => handleInputChange("requirementType", e.target.value)}
+                          className="w-full rounded-xl border border-gray-200 pl-3.5 pr-8 py-2.5 text-xs sm:text-sm text-[#0D0F12] font-jakarta bg-white focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all cursor-pointer appearance-none shadow-sm hover:border-gray-300"
+                        >
+                          {REQUIREMENT_TYPES.map((type) => (
+                            <option key={type} value={type}>
+                              {type}
+                            </option>
+                          ))}
+                        </select>
+                        <ChevronDown className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                      </div>
+                    </div>
+
+                    {/* Number of Resources Required */}
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-700 mb-1.5 font-jakarta min-h-[32px] flex items-end">
+                        Number of Resources Required
+                      </label>
+                      <div className="relative">
+                        <select
+                          value={formData.resourceCount}
+                          onChange={(e) => handleInputChange("resourceCount", e.target.value)}
+                          className="w-full rounded-xl border border-gray-200 pl-3.5 pr-8 py-2.5 text-xs sm:text-sm text-[#0D0F12] font-jakarta bg-white focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all cursor-pointer appearance-none shadow-sm hover:border-gray-300"
+                        >
+                          {RESOURCE_COUNTS.map((count) => (
+                            <option key={count} value={count}>
+                              {count === "1" ? "1 Resource" : count === "Not Sure" ? "Not Sure" : `${count} Resources`}
+                            </option>
+                          ))}
+                        </select>
+                        <ChevronDown className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                      </div>
+                    </div>
+
+                    {/* Required Experience Level */}
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-700 mb-1.5 font-jakarta min-h-[32px] flex items-end">
+                        Required Experience Level
+                      </label>
+                      <div className="relative">
+                        <select
+                          value={formData.experienceLevel}
+                          onChange={(e) => handleInputChange("experienceLevel", e.target.value)}
+                          className="w-full rounded-xl border border-gray-200 pl-3.5 pr-8 py-2.5 text-xs sm:text-sm text-[#0D0F12] font-jakarta bg-white focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all cursor-pointer appearance-none shadow-sm hover:border-gray-300"
+                        >
+                          {EXPERIENCE_LEVELS.map((lvl) => (
+                            <option key={lvl} value={lvl}>
+                              {lvl}
+                            </option>
+                          ))}
+                        </select>
+                        <ChevronDown className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                      </div>
+                    </div>
+                  </div>
+
+                  {formData.resourceCount === "20+" && (
+                    <div className="mt-3.5 pt-3 border-t border-gray-100 flex items-center gap-3">
+                      <label className="text-xs font-semibold text-gray-700 font-jakarta shrink-0">
+                        Exact Headcount <span className="text-gray-400 font-normal lowercase">(optional)</span>:
+                      </label>
+                      <input
+                        type="number"
+                        min="20"
+                        placeholder="e.g. 25"
+                        value={formData.exactResourceCount}
+                        onChange={(e) => handleInputChange("exactResourceCount", e.target.value)}
+                        className="w-32 rounded-lg border border-gray-200 px-3 py-1.5 text-xs text-[#0D0F12] font-jakarta placeholder:text-gray-400 focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all bg-white"
+                      />
+                    </div>
+                  )}
+                </div>
+
+                {/* 2. Resource / Service Required */}
+                <div className="bg-white rounded-2xl border border-gray-200/90 p-5 sm:p-6 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:border-gray-300 transition-all">
+                  <div className="flex items-start gap-3 mb-3.5">
+                    <div className="w-7 h-7 rounded-full bg-[#41B349]/10 text-[#41B349] flex items-center justify-center font-bold text-xs shrink-0 border border-[#41B349]/20">
+                      2
+                    </div>
+                    <div>
+                      <h2 className="font-display uppercase tracking-tight text-[#0D0F12] text-base sm:text-lg leading-snug">
+                        Resource / Service Required
+                      </h2>
+                      <p className="font-jakarta text-xs text-[#4A5568] mt-0.5">
+                        Select one or more services
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Search Bar for services */}
+                  <div className="relative mb-3.5">
+                    <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <input
+                      type="text"
+                      placeholder="Search for a service..."
+                      value={serviceSearch}
+                      onChange={(e) => setServiceSearch(e.target.value)}
+                      className="w-full rounded-xl border border-gray-200 pl-9 pr-3.5 py-2 text-xs font-jakarta text-[#0D0F12] placeholder:text-gray-400 focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all bg-gray-50/50"
+                    />
+                  </div>
+
+                  {/* Service Checkboxes in 2 balanced columns */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 max-h-[320px] overflow-y-auto pr-1 custom-scrollbar">
+                    {filteredServices.map((svc) => {
+                      const isChecked = formData.services.includes(svc);
                       return (
                         <label
-                          key={type}
-                          onClick={() => handleInputChange("requirementType", type)}
-                          className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl border text-xs sm:text-sm font-jakarta font-medium cursor-pointer transition-all ${
-                            isSelected
-                              ? "border-[#41B349] bg-[#41B349]/5 text-[#0D0F12] font-semibold ring-1 ring-[#41B349]/30"
-                              : "border-gray-200 bg-white text-[#4A5568] hover:border-gray-300 hover:bg-gray-50/50"
+                          key={svc}
+                          className={`flex items-center gap-2.5 px-3 py-2 rounded-xl border text-xs font-jakarta cursor-pointer transition-all ${
+                            isChecked
+                              ? "border-[#41B349] bg-[#41B349]/5 text-[#0D0F12] font-semibold"
+                              : "border-gray-100 hover:bg-gray-50 text-[#4A5568]"
                           }`}
                         >
-                          <div
-                            className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 ${
-                              isSelected
-                                ? "border-[#41B349] bg-[#41B349]"
-                                : "border-gray-300 bg-white"
-                            }`}
-                          >
-                            {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
-                          </div>
-                          <span>{type}</span>
+                          <input
+                            type="checkbox"
+                            checked={isChecked}
+                            onChange={() => handleCheckboxToggle("services", svc)}
+                            className="w-3.5 h-3.5 rounded border-gray-300 accent-[#41B349] text-[#41B349] focus:ring-[#41B349] cursor-pointer"
+                          />
+                          <span className="select-none">{svc}</span>
                         </label>
                       );
                     })}
                   </div>
+
+                  {/* Other Requirement subfield */}
+                  <div className="mt-3.5 pt-3.5 border-t border-gray-100">
+                    <label className="block text-xs font-semibold text-gray-700 mb-1 font-jakarta">
+                      Other Requirement
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Please specify..."
+                      value={formData.otherService}
+                      onChange={(e) => handleInputChange("otherService", e.target.value)}
+                      className="w-full rounded-xl border border-gray-200 px-3.5 py-2 text-xs font-jakarta text-[#0D0F12] placeholder:text-gray-400 focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all bg-white"
+                    />
+                  </div>
                 </div>
 
-                {/* 3. Number of Resources Required */}
+                {/* 3. Project & Business Overview */}
                 <div className="bg-white rounded-2xl border border-gray-200/90 p-5 sm:p-6 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:border-gray-300 transition-all">
-                  <div className="flex items-start gap-3 mb-4">
+                  <div className="flex items-start gap-3 mb-5">
                     <div className="w-7 h-7 rounded-full bg-[#41B349]/10 text-[#41B349] flex items-center justify-center font-bold text-xs shrink-0 border border-[#41B349]/20">
                       3
                     </div>
                     <div>
                       <h2 className="font-display uppercase tracking-tight text-[#0D0F12] text-base sm:text-lg leading-snug">
-                        Number of Resources Required
+                        Project & Business Overview
                       </h2>
                       <p className="font-jakarta text-xs text-[#4A5568] mt-0.5">
-                        Choose estimated team headcount or enter exact number
+                        Essential details about your company and project requirements
                       </p>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 mb-4">
-                    {RESOURCE_COUNTS.map((count) => {
-                      const isSelected = formData.resourceCount === count;
-                      return (
-                        <label
-                          key={count}
-                          onClick={() => handleInputChange("resourceCount", count)}
-                          className={`flex items-center gap-2.5 px-3 py-2 rounded-xl border text-xs sm:text-sm font-jakarta font-medium cursor-pointer transition-all ${
-                            isSelected
-                              ? "border-[#41B349] bg-[#41B349]/5 text-[#0D0F12] font-semibold ring-1 ring-[#41B349]/30"
-                              : "border-gray-200 bg-white text-[#4A5568] hover:border-gray-300 hover:bg-gray-50/50"
-                          }`}
-                        >
-                          <div
-                            className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center shrink-0 ${
-                              isSelected
-                                ? "border-[#41B349] bg-[#41B349]"
-                                : "border-gray-300 bg-white"
-                            }`}
-                          >
-                            {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
-                          </div>
-                          <span>{count}</span>
+                  <div className="space-y-4">
+                    {/* Basic Essential Parameters */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                      {/* Company Name */}
+                      <div>
+                        <label className="block text-xs font-semibold text-gray-700 mb-1.5 font-jakarta">
+                          Company / Organization
                         </label>
-                      );
-                    })}
-                  </div>
+                        <input
+                          type="text"
+                          placeholder="e.g. Acme Innovations"
+                          value={formData.companyName}
+                          onChange={(e) => handleInputChange("companyName", e.target.value)}
+                          className="w-full rounded-xl border border-gray-200 px-3.5 py-2.5 text-xs sm:text-sm text-[#0D0F12] font-jakarta placeholder:text-gray-400 focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all bg-white hover:border-gray-300"
+                        />
+                      </div>
 
-                  <div>
-                    <label className="block text-xs font-semibold text-gray-700 mb-1 font-jakarta">
-                      Exact Number <span className="text-gray-400 font-normal lowercase">(optional)</span>
-                    </label>
-                    <input
-                      type="number"
-                      min="1"
-                      placeholder="Enter number"
-                      value={formData.exactResourceCount}
-                      onChange={(e) => handleInputChange("exactResourceCount", e.target.value)}
-                      className="w-full rounded-xl border border-gray-200 px-3.5 py-2 text-sm text-[#0D0F12] font-jakarta placeholder:text-gray-400 focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all bg-white"
-                    />
+                      {/* Business Industry */}
+                      <div>
+                        <label className="block text-xs font-semibold text-gray-700 mb-1.5 font-jakarta">
+                          Business Industry
+                        </label>
+                        <div className="relative">
+                          <select
+                            value={formData.industry}
+                            onChange={(e) => handleInputChange("industry", e.target.value)}
+                            className="w-full rounded-xl border border-gray-200 pl-3.5 pr-8 py-2.5 text-xs sm:text-sm text-[#0D0F12] font-jakarta bg-white focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all cursor-pointer appearance-none shadow-sm hover:border-gray-300"
+                          >
+                            <option value="">Select industry</option>
+                            {INDUSTRIES.map((ind) => (
+                              <option key={ind} value={ind}>{ind}</option>
+                            ))}
+                          </select>
+                          <ChevronDown className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                        </div>
+                      </div>
+
+                      {/* Website / Existing URL */}
+                      <div>
+                        <label className="block text-xs font-semibold text-gray-700 mb-1.5 font-jakarta">
+                          Website / Product Link <span className="text-gray-400 font-normal lowercase">(optional)</span>
+                        </label>
+                        <input
+                          type="url"
+                          placeholder="https://example.com"
+                          value={formData.companyWebsite}
+                          onChange={(e) => {
+                            handleInputChange("companyWebsite", e.target.value);
+                            handleInputChange("projectUrl", e.target.value);
+                          }}
+                          className="w-full rounded-xl border border-gray-200 px-3.5 py-2.5 text-xs sm:text-sm text-[#0D0F12] font-jakarta placeholder:text-gray-400 focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all bg-white hover:border-gray-300"
+                        />
+                      </div>
+
+                      {/* Project Type */}
+                      <div>
+                        <label className="block text-xs font-semibold text-gray-700 mb-1.5 font-jakarta">
+                          Project Type
+                        </label>
+                        <div className="relative">
+                          <select
+                            value={formData.projectType}
+                            onChange={(e) => handleInputChange("projectType", e.target.value)}
+                            className="w-full rounded-xl border border-gray-200 pl-3.5 pr-8 py-2.5 text-xs sm:text-sm text-[#0D0F12] font-jakarta bg-white focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all cursor-pointer appearance-none shadow-sm hover:border-gray-300"
+                          >
+                            <option value="">Select project type</option>
+                            {PROJECT_TYPES.map((pt) => (
+                              <option key={pt} value={pt}>{pt}</option>
+                            ))}
+                          </select>
+                          <ChevronDown className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Project Overview & Requirements Textarea */}
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-700 mb-1.5 font-jakarta">
+                        Project Overview & Requirements
+                      </label>
+                      <textarea
+                        rows="3"
+                        placeholder="Briefly describe your project, key requirements, goals, or what you'd like to build..."
+                        value={formData.projectDescription}
+                        onChange={(e) => handleInputChange("projectDescription", e.target.value)}
+                        className="w-full rounded-xl border border-gray-200 p-3.5 text-xs sm:text-sm text-[#0D0F12] font-jakarta placeholder:text-gray-400 focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all bg-white resize-y hover:border-gray-300"
+                      />
+                    </div>
                   </div>
                 </div>
 
-                {/* 4. Required Experience Level */}
+                {/* 4. Work Arrangement */}
                 <div className="bg-white rounded-2xl border border-gray-200/90 p-5 sm:p-6 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:border-gray-300 transition-all">
                   <div className="flex items-start gap-3 mb-4">
                     <div className="w-7 h-7 rounded-full bg-[#41B349]/10 text-[#41B349] flex items-center justify-center font-bold text-xs shrink-0 border border-[#41B349]/20">
                       4
-                    </div>
-                    <div>
-                      <h2 className="font-display uppercase tracking-tight text-[#0D0F12] text-base sm:text-lg leading-snug">
-                        Required Experience Level
-                      </h2>
-                      <p className="font-jakarta text-xs text-[#4A5568] mt-0.5">
-                        Select preferred seniority or background
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                    {EXPERIENCE_LEVELS.map((lvl) => {
-                      const isSelected = formData.experienceLevel === lvl;
-                      return (
-                        <label
-                          key={lvl}
-                          onClick={() => handleInputChange("experienceLevel", lvl)}
-                          className={`flex items-center gap-2 px-2.5 py-2 rounded-xl border text-xs sm:text-sm font-jakarta font-medium cursor-pointer transition-all ${
-                            isSelected
-                              ? "border-[#41B349] bg-[#41B349]/5 text-[#0D0F12] font-semibold ring-1 ring-[#41B349]/30"
-                              : "border-gray-200 bg-white text-[#4A5568] hover:border-gray-300 hover:bg-gray-50/50"
-                          }`}
-                        >
-                          <div
-                            className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center shrink-0 ${
-                              isSelected
-                                ? "border-[#41B349] bg-[#41B349]"
-                                : "border-gray-300 bg-white"
-                            }`}
-                          >
-                            {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
-                          </div>
-                          <span className="truncate">{lvl}</span>
-                        </label>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* 5. Skills & Project Details */}
-                <div className="bg-white rounded-2xl border border-gray-200/90 p-5 sm:p-6 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:border-gray-300 transition-all">
-                  <div className="flex items-start gap-3 mb-4">
-                    <div className="w-7 h-7 rounded-full bg-[#41B349]/10 text-[#41B349] flex items-center justify-center font-bold text-xs shrink-0 border border-[#41B349]/20">
-                      5
-                    </div>
-                    <div>
-                      <h2 className="font-display uppercase tracking-tight text-[#0D0F12] text-base sm:text-lg leading-snug">
-                        Skills & Project Details
-                      </h2>
-                      <p className="font-jakarta text-xs text-[#4A5568] mt-0.5">
-                        Provide specific requirements to help us match the right talent
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                    <div>
-                      <label className="block text-xs font-semibold text-gray-700 mb-1 font-jakarta">
-                        Required Skills
-                      </label>
-                      <textarea
-                        rows="3"
-                        placeholder="e.g. React, Next.js, Photoshop, Google Ads, Python..."
-                        value={formData.requiredSkills}
-                        onChange={(e) => handleInputChange("requiredSkills", e.target.value)}
-                        className="w-full rounded-xl border border-gray-200 p-3 text-xs sm:text-sm text-[#0D0F12] font-jakarta placeholder:text-gray-400 focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all bg-white resize-y"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-semibold text-gray-700 mb-1 font-jakarta">
-                        Key Responsibilities
-                      </label>
-                      <textarea
-                        rows="3"
-                        placeholder="e.g. Manage social media campaigns, build REST APIs, lead sprints..."
-                        value={formData.keyResponsibilities}
-                        onChange={(e) => handleInputChange("keyResponsibilities", e.target.value)}
-                        className="w-full rounded-xl border border-gray-200 p-3 text-xs sm:text-sm text-[#0D0F12] font-jakarta placeholder:text-gray-400 focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all bg-white resize-y"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-semibold text-gray-700 mb-1 font-jakarta">
-                        Expected Deliverables / Targets
-                      </label>
-                      <textarea
-                        rows="3"
-                        placeholder="e.g. Increase monthly traffic by 50%, generate 200 leads, launch MVP..."
-                        value={formData.expectedDeliverables}
-                        onChange={(e) => handleInputChange("expectedDeliverables", e.target.value)}
-                        className="w-full rounded-xl border border-gray-200 p-3 text-xs sm:text-sm text-[#0D0F12] font-jakarta placeholder:text-gray-400 focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all bg-white resize-y"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-semibold text-gray-700 mb-1 font-jakarta">
-                        Preferred Tools / Technologies
-                      </label>
-                      <textarea
-                        rows="3"
-                        placeholder="e.g. WordPress, Figma, Meta Business Suite, Docker, AWS, HubSpot..."
-                        value={formData.preferredTools}
-                        onChange={(e) => handleInputChange("preferredTools", e.target.value)}
-                        className="w-full rounded-xl border border-gray-200 p-3 text-xs sm:text-sm text-[#0D0F12] font-jakarta placeholder:text-gray-400 focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all bg-white resize-y"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* 6. Project Information */}
-                <div className="bg-white rounded-2xl border border-gray-200/90 p-5 sm:p-6 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:border-gray-300 transition-all">
-                  <div className="flex items-start gap-3 mb-4">
-                    <div className="w-7 h-7 rounded-full bg-[#41B349]/10 text-[#41B349] flex items-center justify-center font-bold text-xs shrink-0 border border-[#41B349]/20">
-                      6
-                    </div>
-                    <div>
-                      <h2 className="font-display uppercase tracking-tight text-[#0D0F12] text-base sm:text-lg leading-snug">
-                        Project Information
-                      </h2>
-                      <p className="font-jakarta text-xs text-[#4A5568] mt-0.5">
-                        Tell us about the project scope, background, and goals
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="space-y-3.5">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <div>
-                        <label className="block text-xs font-semibold text-gray-700 mb-1 font-jakarta">
-                          Project Name
-                        </label>
-                        <input
-                          type="text"
-                          placeholder="Enter project name"
-                          value={formData.projectName}
-                          onChange={(e) => handleInputChange("projectName", e.target.value)}
-                          className="w-full rounded-xl border border-gray-200 px-3.5 py-2 text-sm text-[#0D0F12] font-jakarta placeholder:text-gray-400 focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all bg-white"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-xs font-semibold text-gray-700 mb-1 font-jakarta">
-                          Project Type
-                        </label>
-                        <select
-                          value={formData.projectType}
-                          onChange={(e) => handleInputChange("projectType", e.target.value)}
-                          className="w-full rounded-xl border border-gray-200 px-3.5 py-2 text-sm text-[#0D0F12] font-jakarta bg-white focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all cursor-pointer"
-                        >
-                          <option value="">Select project type</option>
-                          {PROJECT_TYPES.map((pt) => (
-                            <option key={pt} value={pt}>{pt}</option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-semibold text-gray-700 mb-1 font-jakarta">
-                        Project Description
-                      </label>
-                      <textarea
-                        rows="3"
-                        placeholder="Tell us about your project, current stage, objectives and target audience..."
-                        value={formData.projectDescription}
-                        onChange={(e) => handleInputChange("projectDescription", e.target.value)}
-                        className="w-full rounded-xl border border-gray-200 p-3 text-xs sm:text-sm text-[#0D0F12] font-jakarta placeholder:text-gray-400 focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all bg-white resize-y"
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <div>
-                        <label className="block text-xs font-semibold text-gray-700 mb-1 font-jakarta">
-                          Current Project Status
-                        </label>
-                        <select
-                          value={formData.projectStatus}
-                          onChange={(e) => handleInputChange("projectStatus", e.target.value)}
-                          className="w-full rounded-xl border border-gray-200 px-3.5 py-2 text-sm text-[#0D0F12] font-jakarta bg-white focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all cursor-pointer"
-                        >
-                          <option value="">Select status</option>
-                          {PROJECT_STATUSES.map((ps) => (
-                            <option key={ps} value={ps}>{ps}</option>
-                          ))}
-                        </select>
-                      </div>
-
-                      <div>
-                        <label className="block text-xs font-semibold text-gray-700 mb-1 font-jakarta">
-                          Current Website / Application URL
-                        </label>
-                        <input
-                          type="url"
-                          placeholder="https://"
-                          value={formData.projectUrl}
-                          onChange={(e) => handleInputChange("projectUrl", e.target.value)}
-                          className="w-full rounded-xl border border-gray-200 px-3.5 py-2 text-sm text-[#0D0F12] font-jakarta placeholder:text-gray-400 focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all bg-white"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 7. Company / Business Information */}
-                <div className="bg-white rounded-2xl border border-gray-200/90 p-5 sm:p-6 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:border-gray-300 transition-all">
-                  <div className="flex items-start gap-3 mb-4">
-                    <div className="w-7 h-7 rounded-full bg-[#41B349]/10 text-[#41B349] flex items-center justify-center font-bold text-xs shrink-0 border border-[#41B349]/20">
-                      7
-                    </div>
-                    <div>
-                      <h2 className="font-display uppercase tracking-tight text-[#0D0F12] text-base sm:text-lg leading-snug">
-                        Company / Business Information
-                      </h2>
-                      <p className="font-jakarta text-xs text-[#4A5568] mt-0.5">
-                        Tell us about your organization and industry
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="space-y-3.5">
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                      <div>
-                        <label className="block text-xs font-semibold text-gray-700 mb-1 font-jakarta">
-                          Company Name
-                        </label>
-                        <input
-                          type="text"
-                          placeholder="Enter company name"
-                          value={formData.companyName}
-                          onChange={(e) => handleInputChange("companyName", e.target.value)}
-                          className="w-full rounded-xl border border-gray-200 px-3.5 py-2 text-sm text-[#0D0F12] font-jakarta placeholder:text-gray-400 focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all bg-white"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-xs font-semibold text-gray-700 mb-1 font-jakarta">
-                          Business Industry
-                        </label>
-                        <select
-                          value={formData.industry}
-                          onChange={(e) => handleInputChange("industry", e.target.value)}
-                          className="w-full rounded-xl border border-gray-200 px-3 py-2 text-xs sm:text-sm text-[#0D0F12] font-jakarta bg-white focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all cursor-pointer"
-                        >
-                          <option value="">Select industry</option>
-                          {INDUSTRIES.map((ind) => (
-                            <option key={ind} value={ind}>{ind}</option>
-                          ))}
-                        </select>
-                      </div>
-
-                      <div>
-                        <label className="block text-xs font-semibold text-gray-700 mb-1 font-jakarta">
-                          Company Website
-                        </label>
-                        <input
-                          type="url"
-                          placeholder="https://"
-                          value={formData.companyWebsite}
-                          onChange={(e) => handleInputChange("companyWebsite", e.target.value)}
-                          className="w-full rounded-xl border border-gray-200 px-3.5 py-2 text-sm text-[#0D0F12] font-jakarta placeholder:text-gray-400 focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all bg-white"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <div>
-                        <label className="block text-xs font-semibold text-gray-700 mb-1 font-jakarta">
-                          Company Size
-                        </label>
-                        <select
-                          value={formData.companySize}
-                          onChange={(e) => handleInputChange("companySize", e.target.value)}
-                          className="w-full rounded-xl border border-gray-200 px-3.5 py-2 text-sm text-[#0D0F12] font-jakarta bg-white focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all cursor-pointer"
-                        >
-                          <option value="">Select company size</option>
-                          {COMPANY_SIZES.map((sz) => (
-                            <option key={sz} value={sz}>{sz}</option>
-                          ))}
-                        </select>
-                      </div>
-
-                      <div>
-                        <label className="block text-xs font-semibold text-gray-700 mb-1 font-jakarta">
-                          Headquarters / Location
-                        </label>
-                        <input
-                          type="text"
-                          placeholder="e.g. Dubai, London, New York"
-                          value={formData.companyLocation}
-                          onChange={(e) => handleInputChange("companyLocation", e.target.value)}
-                          className="w-full rounded-xl border border-gray-200 px-3.5 py-2 text-sm text-[#0D0F12] font-jakarta placeholder:text-gray-400 focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all bg-white"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 8. Work Arrangement */}
-                <div className="bg-white rounded-2xl border border-gray-200/90 p-5 sm:p-6 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:border-gray-300 transition-all">
-                  <div className="flex items-start gap-3 mb-4">
-                    <div className="w-7 h-7 rounded-full bg-[#41B349]/10 text-[#41B349] flex items-center justify-center font-bold text-xs shrink-0 border border-[#41B349]/20">
-                      8
                     </div>
                     <div>
                       <h2 className="font-display uppercase tracking-tight text-[#0D0F12] text-base sm:text-lg leading-snug">
@@ -1167,11 +1078,11 @@ Attached Files: ${uploadedFiles.map(f => f.name).join(", ") || "None"}
                   </div>
                 </div>
 
-                {/* 9. Working Schedule */}
+                {/* 5. Working Schedule */}
                 <div className="bg-white rounded-2xl border border-gray-200/90 p-5 sm:p-6 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:border-gray-300 transition-all">
                   <div className="flex items-start gap-3 mb-4">
                     <div className="w-7 h-7 rounded-full bg-[#41B349]/10 text-[#41B349] flex items-center justify-center font-bold text-xs shrink-0 border border-[#41B349]/20">
-                      9
+                      5
                     </div>
                     <div>
                       <h2 className="font-display uppercase tracking-tight text-[#0D0F12] text-base sm:text-lg leading-snug">
@@ -1246,11 +1157,11 @@ Attached Files: ${uploadedFiles.map(f => f.name).join(", ") || "None"}
                   </div>
                 </div>
 
-                {/* 10. Engagement Duration */}
+                {/* 6. Engagement Duration */}
                 <div className="bg-white rounded-2xl border border-gray-200/90 p-5 sm:p-6 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:border-gray-300 transition-all">
                   <div className="flex items-start gap-3 mb-4">
                     <div className="w-7 h-7 rounded-full bg-[#41B349]/10 text-[#41B349] flex items-center justify-center font-bold text-xs shrink-0 border border-[#41B349]/20">
-                      10
+                      6
                     </div>
                     <div>
                       <h2 className="font-display uppercase tracking-tight text-[#0D0F12] text-base sm:text-lg leading-snug">
@@ -1304,11 +1215,188 @@ Attached Files: ${uploadedFiles.map(f => f.name).join(", ") || "None"}
                   </div>
                 </div>
 
-                {/* 11. Estimated Budget */}
+              </div>
+
+              {/* =================================================================== */}
+              {/* RIGHT COLUMN: Sections 7 to 12                                      */}
+              {/* =================================================================== */}
+              <div className="lg:col-span-6 space-y-6">
+                
+                {/* 7. Available Documentation & Resources */}
                 <div className="bg-white rounded-2xl border border-gray-200/90 p-5 sm:p-6 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:border-gray-300 transition-all">
                   <div className="flex items-start gap-3 mb-4">
                     <div className="w-7 h-7 rounded-full bg-[#41B349]/10 text-[#41B349] flex items-center justify-center font-bold text-xs shrink-0 border border-[#41B349]/20">
-                      11
+                      7
+                    </div>
+                    <div>
+                      <h2 className="font-display uppercase tracking-tight text-[#0D0F12] text-base sm:text-lg leading-snug">
+                        Available Documentation & Resources
+                      </h2>
+                      <p className="font-jakarta text-xs text-[#4A5568] mt-0.5">
+                        Share any existing briefs, wireframes, or reference materials
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    {/* Do you have documentation? (Yes / No only) */}
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-700 mb-1.5 font-jakarta">
+                        Do you have documentation?
+                      </label>
+                      <div className="flex flex-wrap gap-2.5">
+                        {["Yes", "No"].map((opt) => {
+                          const isSel = formData.hasDocumentation === opt;
+                          return (
+                            <label
+                              key={opt}
+                              onClick={() => handleInputChange("hasDocumentation", opt)}
+                              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl border text-xs sm:text-sm font-jakarta cursor-pointer transition-all ${
+                                isSel
+                                  ? "border-[#41B349] bg-[#41B349]/5 text-[#0D0F12] font-semibold ring-1 ring-[#41B349]/30"
+                                  : "border-gray-200 bg-white text-[#4A5568] hover:border-gray-300 hover:bg-gray-50/50"
+                              }`}
+                            >
+                              <div
+                                className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center ${
+                                  isSel ? "border-[#41B349] bg-[#41B349]" : "border-gray-300"
+                                }`}
+                              >
+                                {isSel && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
+                              </div>
+                              <span>{opt}</span>
+                            </label>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Documentation Type Attachment Interface */}
+                    {formData.hasDocumentation === "Yes" ? (
+                      <div className="space-y-4 pt-1">
+                        <div>
+                          <div className="flex items-center justify-between mb-2">
+                            <label className="block text-xs font-semibold text-gray-700 font-jakarta">
+                              Documentation Types & Specific Attachments
+                            </label>
+                            <span className="text-[11px] text-[#4A5568] font-jakarta">
+                              Click <strong className="text-[#41B349] font-bold">+</strong> to attach files
+                            </span>
+                          </div>
+
+                          <div className="space-y-2 max-h-[360px] overflow-y-auto pr-1.5 custom-scrollbar">
+                            {DOCUMENTATION_TYPES.map((dt) => {
+                              const docFiles = docAttachments[dt] || [];
+                              const hasFiles = docFiles.length > 0;
+                              const isChecked = formData.documentationTypes.includes(dt);
+
+                              return (
+                                <div
+                                  key={dt}
+                                  className={`p-2.5 rounded-xl border transition-all ${
+                                    hasFiles || isChecked
+                                      ? "border-[#41B349]/40 bg-[#41B349]/[0.02]"
+                                      : "border-gray-200/90 bg-white hover:border-gray-300"
+                                  }`}
+                                >
+                                  <div className="flex items-center justify-between gap-3">
+                                    <label className="flex items-center gap-2.5 cursor-pointer min-w-0 flex-1 select-none">
+                                      <input
+                                        type="checkbox"
+                                        checked={isChecked || hasFiles}
+                                        onChange={() => handleCheckboxToggle("documentationTypes", dt)}
+                                        className="w-4 h-4 rounded border-gray-300 accent-[#41B349] text-[#41B349] focus:ring-[#41B349] cursor-pointer shrink-0"
+                                      />
+                                      <span
+                                        className={`text-xs font-jakarta truncate ${
+                                          hasFiles || isChecked
+                                            ? "font-semibold text-[#0D0F12]"
+                                            : "text-[#4A5568]"
+                                        }`}
+                                      >
+                                        {dt}
+                                      </span>
+                                    </label>
+
+                                    {/* "+" Button to attach document for this specific type */}
+                                    <label
+                                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-jakarta font-medium bg-gray-50 hover:bg-[#41B349] text-[#4A5568] hover:text-white border border-gray-200 hover:border-[#41B349] transition-all cursor-pointer shrink-0 group shadow-2xs"
+                                      title={`Attach document for ${dt}`}
+                                    >
+                                      <Plus className="w-3.5 h-3.5 text-[#41B349] group-hover:text-white transition-colors" />
+                                      <span className="text-[11px] font-semibold">Attach</span>
+                                      <input
+                                        type="file"
+                                        multiple
+                                        className="hidden"
+                                        onChange={(e) => handleDocFileChange(dt, e)}
+                                        accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip,.jpg,.jpeg,.png,.fig"
+                                      />
+                                    </label>
+                                  </div>
+
+                                  {/* Uploaded Document(s) associated with this specific item */}
+                                  {hasFiles && (
+                                    <div className="mt-2 pt-2 border-t border-gray-100 space-y-1.5">
+                                      {docFiles.map((file, fIdx) => (
+                                        <div
+                                          key={fIdx}
+                                          className="flex items-center justify-between px-2.5 py-1.5 bg-gray-50/80 border border-gray-200/90 rounded-lg text-xs font-jakarta"
+                                        >
+                                          <div className="flex items-center gap-2 truncate min-w-0">
+                                            <FileText className="w-3.5 h-3.5 text-[#41B349] shrink-0" />
+                                            <span className="font-medium text-[#0D0F12] truncate text-xs">
+                                              {file.name}
+                                            </span>
+                                            <span className="text-gray-400 text-[10px] shrink-0">
+                                              ({(file.size / 1024).toFixed(1)} KB)
+                                            </span>
+                                          </div>
+                                          <button
+                                            type="button"
+                                            onClick={() => removeDocFile(dt, fIdx)}
+                                            className="text-gray-400 hover:text-red-500 p-0.5 ml-2 cursor-pointer transition-colors shrink-0"
+                                            title="Remove attachment"
+                                          >
+                                            <X className="w-3.5 h-3.5" />
+                                          </button>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+
+                        {/* Additional Reference Links */}
+                        <div>
+                          <label className="block text-xs font-semibold text-gray-700 mb-1 font-jakarta">
+                            Additional Reference Links <span className="text-gray-400 font-normal lowercase">(optional)</span>
+                          </label>
+                          <input
+                            type="text"
+                            placeholder="Enter URLs (e.g. Figma links, Google Drive, GitHub)..."
+                            value={formData.referenceLinks}
+                            onChange={(e) => handleInputChange("referenceLinks", e.target.value)}
+                            className="w-full rounded-xl border border-gray-200 px-3.5 py-2 text-sm text-[#0D0F12] font-jakarta placeholder:text-gray-400 focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all bg-white hover:border-gray-300"
+                          />
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="p-3.5 rounded-xl bg-gray-50 border border-gray-200/80 text-xs font-jakarta text-[#4A5568]">
+                        No documentation available. You can provide your requirements during our initial discovery call, or our team will help prepare technical specifications with you.
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* 8. Estimated Budget */}
+                <div className="bg-white rounded-2xl border border-gray-200/90 p-5 sm:p-6 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:border-gray-300 transition-all">
+                  <div className="flex items-start gap-3 mb-4">
+                    <div className="w-7 h-7 rounded-full bg-[#41B349]/10 text-[#41B349] flex items-center justify-center font-bold text-xs shrink-0 border border-[#41B349]/20">
+                      8
                     </div>
                     <div>
                       <h2 className="font-display uppercase tracking-tight text-[#0D0F12] text-base sm:text-lg leading-snug">
@@ -1381,231 +1469,11 @@ Attached Files: ${uploadedFiles.map(f => f.name).join(", ") || "None"}
                   </div>
                 </div>
 
-              </div>
-
-              {/* =================================================================== */}
-              {/* RIGHT COLUMN: Steps 2, 12, 13, 14, 15, 16, 17, 18 + Sidebar          */}
-              {/* =================================================================== */}
-              <div className="lg:col-span-6 space-y-6">
-                
-                {/* 2. Resource / Service Required */}
-                <div className="bg-white rounded-2xl border border-gray-200/90 p-5 sm:p-6 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:border-gray-300 transition-all">
-                  <div className="flex items-start gap-3 mb-3.5">
-                    <div className="w-7 h-7 rounded-full bg-[#41B349]/10 text-[#41B349] flex items-center justify-center font-bold text-xs shrink-0 border border-[#41B349]/20">
-                      2
-                    </div>
-                    <div>
-                      <h2 className="font-display uppercase tracking-tight text-[#0D0F12] text-base sm:text-lg leading-snug">
-                        Resource / Service Required
-                      </h2>
-                      <p className="font-jakarta text-xs text-[#4A5568] mt-0.5">
-                        Select one or more services
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Search Bar for services */}
-                  <div className="relative mb-3.5">
-                    <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-                    <input
-                      type="text"
-                      placeholder="Search for a service..."
-                      value={serviceSearch}
-                      onChange={(e) => setServiceSearch(e.target.value)}
-                      className="w-full rounded-xl border border-gray-200 pl-9 pr-3.5 py-2 text-xs font-jakarta text-[#0D0F12] placeholder:text-gray-400 focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all bg-gray-50/50"
-                    />
-                  </div>
-
-                  {/* Service Checkboxes in 2 balanced columns */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 max-h-[320px] overflow-y-auto pr-1 custom-scrollbar">
-                    {filteredServices.map((svc) => {
-                      const isChecked = formData.services.includes(svc);
-                      return (
-                        <label
-                          key={svc}
-                          className={`flex items-center gap-2.5 px-3 py-2 rounded-xl border text-xs font-jakarta cursor-pointer transition-all ${
-                            isChecked
-                              ? "border-[#41B349] bg-[#41B349]/5 text-[#0D0F12] font-semibold"
-                              : "border-gray-100 hover:bg-gray-50 text-[#4A5568]"
-                          }`}
-                        >
-                          <input
-                            type="checkbox"
-                            checked={isChecked}
-                            onChange={() => handleCheckboxToggle("services", svc)}
-                            className="w-3.5 h-3.5 rounded border-gray-300 accent-[#41B349] text-[#41B349] focus:ring-[#41B349] cursor-pointer"
-                          />
-                          <span className="select-none">{svc}</span>
-                        </label>
-                      );
-                    })}
-                  </div>
-
-                  {/* Other Requirement subfield */}
-                  <div className="mt-3.5 pt-3.5 border-t border-gray-100">
-                    <label className="block text-xs font-semibold text-gray-700 mb-1 font-jakarta">
-                      Other Requirement
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="Please specify..."
-                      value={formData.otherService}
-                      onChange={(e) => handleInputChange("otherService", e.target.value)}
-                      className="w-full rounded-xl border border-gray-200 px-3.5 py-2 text-xs font-jakarta text-[#0D0F12] placeholder:text-gray-400 focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all bg-white"
-                    />
-                  </div>
-                </div>
-
-                {/* 12. Available Documentation & Resources */}
+                {/* 9. Existing Resources & Team */}
                 <div className="bg-white rounded-2xl border border-gray-200/90 p-5 sm:p-6 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:border-gray-300 transition-all">
                   <div className="flex items-start gap-3 mb-4">
                     <div className="w-7 h-7 rounded-full bg-[#41B349]/10 text-[#41B349] flex items-center justify-center font-bold text-xs shrink-0 border border-[#41B349]/20">
-                      12
-                    </div>
-                    <div>
-                      <h2 className="font-display uppercase tracking-tight text-[#0D0F12] text-base sm:text-lg leading-snug">
-                        Available Documentation & Resources
-                      </h2>
-                      <p className="font-jakarta text-xs text-[#4A5568] mt-0.5">
-                        Share any existing briefs, wireframes, or reference materials
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    {/* Do you have documentation? */}
-                    <div>
-                      <label className="block text-xs font-semibold text-gray-700 mb-1.5 font-jakarta">
-                        Do you have documentation?
-                      </label>
-                      <div className="flex flex-wrap gap-2.5">
-                        {["Yes", "No", "Some Documents"].map((opt) => {
-                          const isSel = formData.hasDocumentation === opt;
-                          return (
-                            <label
-                              key={opt}
-                              onClick={() => handleInputChange("hasDocumentation", opt)}
-                              className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs sm:text-sm font-jakarta cursor-pointer transition-all ${
-                                isSel
-                                  ? "border-[#41B349] bg-[#41B349]/5 text-[#0D0F12] font-semibold"
-                                  : "border-gray-200 bg-white text-[#4A5568] hover:border-gray-300"
-                              }`}
-                            >
-                              <div
-                                className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center ${
-                                  isSel ? "border-[#41B349] bg-[#41B349]" : "border-gray-300"
-                                }`}
-                              >
-                                {isSel && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
-                              </div>
-                              <span>{opt}</span>
-                            </label>
-                          );
-                        })}
-                      </div>
-                    </div>
-
-                    {/* Documentation Type (checkboxes) */}
-                    <div>
-                      <label className="block text-xs font-semibold text-gray-700 mb-1.5 font-jakarta">
-                        Documentation Type
-                      </label>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 max-h-[220px] overflow-y-auto pr-1 custom-scrollbar">
-                        {DOCUMENTATION_TYPES.map((dt) => {
-                          const isChecked = formData.documentationTypes.includes(dt);
-                          return (
-                            <label
-                              key={dt}
-                              className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg border text-xs font-jakarta cursor-pointer transition-all ${
-                                isChecked
-                                  ? "border-[#41B349] bg-[#41B349]/5 text-[#0D0F12] font-semibold"
-                                  : "border-transparent hover:bg-gray-50 text-[#4A5568]"
-                              }`}
-                            >
-                              <input
-                                type="checkbox"
-                                checked={isChecked}
-                                onChange={() => handleCheckboxToggle("documentationTypes", dt)}
-                                className="w-3.5 h-3.5 rounded border-gray-300 accent-[#41B349] text-[#41B349] focus:ring-[#41B349] cursor-pointer"
-                              />
-                              <span className="select-none truncate">{dt}</span>
-                            </label>
-                          );
-                        })}
-                      </div>
-                    </div>
-
-                    {/* Upload Files dropzone */}
-                    <div>
-                      <label className="block text-xs font-semibold text-gray-700 mb-1 font-jakarta">
-                        Upload Files
-                      </label>
-                      <label className="border-2 border-dashed border-gray-200 hover:border-[#41B349] rounded-xl p-4 text-center cursor-pointer bg-gray-50/50 hover:bg-[#41B349]/5 transition-all flex flex-col items-center justify-center">
-                        <UploadCloud className="w-6 h-6 text-[#41B349] mb-1.5" />
-                        <span className="text-xs sm:text-sm font-semibold font-jakarta text-[#0D0F12]">
-                          Drag & drop files here or click to upload
-                        </span>
-                        <span className="text-[11px] text-gray-500 mt-0.5 font-jakarta">
-                          Supports: PDF, DOC, DOCX, PPT, XLS, ZIP, JPG, PNG (Max 10MB)
-                        </span>
-                        <input
-                          type="file"
-                          multiple
-                          onChange={handleFileChange}
-                          accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip,.jpg,.jpeg,.png"
-                          className="hidden"
-                        />
-                      </label>
-
-                      {/* Uploaded File Previews */}
-                      {uploadedFiles.length > 0 && (
-                        <div className="mt-2.5 space-y-1.5">
-                          {uploadedFiles.map((file, idx) => (
-                            <div
-                              key={idx}
-                              className="flex items-center justify-between px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-lg text-xs font-jakarta"
-                            >
-                              <div className="flex items-center gap-2 truncate">
-                                <FileText className="w-3.5 h-3.5 text-[#41B349] shrink-0" />
-                                <span className="font-medium text-[#0D0F12] truncate">{file.name}</span>
-                                <span className="text-gray-500 text-[10px]">
-                                  ({(file.size / 1024).toFixed(1)} KB)
-                                </span>
-                              </div>
-                              <button
-                                type="button"
-                                onClick={() => removeFile(idx)}
-                                className="text-gray-400 hover:text-red-500 p-1 cursor-pointer"
-                              >
-                                <X className="w-3.5 h-3.5" />
-                              </button>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Additional Reference Links */}
-                    <div>
-                      <label className="block text-xs font-semibold text-gray-700 mb-1 font-jakarta">
-                        Additional Reference Links
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="Enter URLs (e.g. Figma links, Google Drive, GitHub)..."
-                        value={formData.referenceLinks}
-                        onChange={(e) => handleInputChange("referenceLinks", e.target.value)}
-                        className="w-full rounded-xl border border-gray-200 px-3.5 py-2 text-sm text-[#0D0F12] font-jakarta placeholder:text-gray-400 focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all bg-white"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* 13. Existing Resources & Team */}
-                <div className="bg-white rounded-2xl border border-gray-200/90 p-5 sm:p-6 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:border-gray-300 transition-all">
-                  <div className="flex items-start gap-3 mb-4">
-                    <div className="w-7 h-7 rounded-full bg-[#41B349]/10 text-[#41B349] flex items-center justify-center font-bold text-xs shrink-0 border border-[#41B349]/20">
-                      13
+                      9
                     </div>
                     <div>
                       <h2 className="font-display uppercase tracking-tight text-[#0D0F12] text-base sm:text-lg leading-snug">
@@ -1689,45 +1557,14 @@ Attached Files: ${uploadedFiles.map(f => f.name).join(", ") || "None"}
                         </div>
                       )}
                     </div>
-
-                    <div>
-                      <label className="block text-xs font-semibold text-gray-700 mb-1.5 font-jakarta">
-                        Need Tech Solutionor Team?
-                      </label>
-                      <div className="flex flex-wrap gap-2.5">
-                        {["Yes", "No", "Maybe"].map((opt) => {
-                          const isSel = formData.needTechSolutionorTeam === opt;
-                          return (
-                            <label
-                              key={opt}
-                              onClick={() => handleInputChange("needTechSolutionorTeam", opt)}
-                              className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs sm:text-sm font-jakarta cursor-pointer transition-all ${
-                                isSel
-                                  ? "border-[#41B349] bg-[#41B349]/5 text-[#0D0F12] font-semibold"
-                                  : "border-gray-200 bg-white text-[#4A5568] hover:border-gray-300"
-                              }`}
-                            >
-                              <div
-                                className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center ${
-                                  isSel ? "border-[#41B349] bg-[#41B349]" : "border-gray-300"
-                                }`}
-                              >
-                                {isSel && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
-                              </div>
-                              <span>{opt}</span>
-                            </label>
-                          );
-                        })}
-                      </div>
-                    </div>
                   </div>
                 </div>
 
-                {/* 14. Communication & Management */}
+                {/* 10. Communication & Management */}
                 <div className="bg-white rounded-2xl border border-gray-200/90 p-5 sm:p-6 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:border-gray-300 transition-all">
                   <div className="flex items-start gap-3 mb-4">
                     <div className="w-7 h-7 rounded-full bg-[#41B349]/10 text-[#41B349] flex items-center justify-center font-bold text-xs shrink-0 border border-[#41B349]/20">
-                      14
+                      10
                     </div>
                     <div>
                       <h2 className="font-display uppercase tracking-tight text-[#0D0F12] text-base sm:text-lg leading-snug">
@@ -1806,68 +1643,7 @@ Attached Files: ${uploadedFiles.map(f => f.name).join(", ") || "None"}
                   </div>
                 </div>
 
-                {/* 15. Additional Requirements */}
-                <div className="bg-white rounded-2xl border border-gray-200/90 p-5 sm:p-6 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:border-gray-300 transition-all">
-                  <div className="flex items-start gap-3 mb-4">
-                    <div className="w-7 h-7 rounded-full bg-[#41B349]/10 text-[#41B349] flex items-center justify-center font-bold text-xs shrink-0 border border-[#41B349]/20">
-                      15
-                    </div>
-                    <div>
-                      <h2 className="font-display uppercase tracking-tight text-[#0D0F12] text-base sm:text-lg leading-snug">
-                        Additional Requirements
-                      </h2>
-                      <p className="font-jakarta text-xs text-[#4A5568] mt-0.5">
-                        Governance, security, and project tracking preferences
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-xs font-semibold text-gray-700 mb-1.5 font-jakarta">
-                        Special Requirements
-                      </label>
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                        {SPECIAL_REQUIREMENTS.map((req) => {
-                          const isChecked = formData.specialRequirements.includes(req);
-                          return (
-                            <label
-                              key={req}
-                              className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg border text-xs font-jakarta cursor-pointer transition-all ${
-                                isChecked
-                                  ? "border-[#41B349] bg-[#41B349]/5 text-[#0D0F12] font-semibold"
-                                  : "border-gray-100 hover:bg-gray-50 text-[#4A5568]"
-                              }`}
-                            >
-                              <input
-                                type="checkbox"
-                                checked={isChecked}
-                                onChange={() => handleCheckboxToggle("specialRequirements", req)}
-                                className="w-3.5 h-3.5 rounded border-gray-300 accent-[#41B349] text-[#41B349] focus:ring-[#41B349] cursor-pointer"
-                              />
-                              <span className="select-none truncate">{req}</span>
-                            </label>
-                          );
-                        })}
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-semibold text-gray-700 mb-1 font-jakarta">
-                        Additional Comments
-                      </label>
-                      <textarea
-                        rows="3"
-                        placeholder="Any other details, custom tooling requirements, security standards..."
-                        value={formData.additionalComments}
-                        onChange={(e) => handleInputChange("additionalComments", e.target.value)}
-                        className="w-full rounded-xl border border-gray-200 p-3 text-xs sm:text-sm text-[#0D0F12] font-jakarta placeholder:text-gray-400 focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all bg-white resize-y"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* 16. Contact Information (REQUIRED SECTION *) */}
+                {/* 11. Contact Information (REQUIRED SECTION *) */}
                 <div 
                   id="section-contact-info"
                   className={`bg-white rounded-2xl border ${
@@ -1879,7 +1655,7 @@ Attached Files: ${uploadedFiles.map(f => f.name).join(", ") || "None"}
                   <div className="flex items-start justify-between gap-3 mb-4">
                     <div className="flex items-start gap-3">
                       <div className="w-7 h-7 rounded-full bg-[#41B349] text-white flex items-center justify-center font-bold text-xs shrink-0">
-                        16
+                        11
                       </div>
                       <div>
                         <div className="flex items-center gap-1.5">
@@ -2073,11 +1849,11 @@ Attached Files: ${uploadedFiles.map(f => f.name).join(", ") || "None"}
                   </div>
                 </div>
 
-                {/* 17. How Did You Find Tech Solutionor? */}
+                {/* 12. How Did You Find Tech Solutionor? */}
                 <div className="bg-white rounded-2xl border border-gray-200/90 p-5 sm:p-6 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:border-gray-300 transition-all">
                   <div className="flex items-start gap-3 mb-4">
                     <div className="w-7 h-7 rounded-full bg-[#41B349]/10 text-[#41B349] flex items-center justify-center font-bold text-xs shrink-0 border border-[#41B349]/20">
-                      17
+                      12
                     </div>
                     <div>
                       <h2 className="font-display uppercase tracking-tight text-[#0D0F12] text-base sm:text-lg leading-snug">
@@ -2126,106 +1902,110 @@ Attached Files: ${uploadedFiles.map(f => f.name).join(", ") || "None"}
                   )}
                 </div>
 
-                {/* 18. Final Confirmation & Submit (REQUIRED SECTION *) */}
-                <div 
-                  id="section-confirmation"
-                  className={`bg-white rounded-2xl border ${
-                    errors.confirmAccurate || errors.confirmContact
-                      ? "border-red-400 ring-2 ring-red-100"
-                      : "border-gray-200/90 shadow-[0_1px_3px_rgba(0,0,0,0.03)]"
-                  } p-5 sm:p-6 transition-all hover:border-gray-300`}
-                >
-                  <div className="flex items-start gap-3 mb-4">
-                    <div className="w-7 h-7 rounded-full bg-[#41B349] text-white flex items-center justify-center font-bold text-xs shrink-0">
-                      18
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-1.5">
-                        <h2 className="font-display uppercase tracking-tight text-[#0D0F12] text-base sm:text-lg leading-snug">
-                          Final Confirmation
-                        </h2>
-                        <span className="text-red-500 font-bold">*</span>
-                      </div>
-                      <p className="font-jakarta text-xs text-[#4A5568] mt-0.5">
-                        Please review and confirm before submitting your requirements
-                      </p>
-                    </div>
+              </div>
+
+            </div>
+
+            {/* =================================================================== */}
+            {/* 13. FINAL CONFIRMATION & SUBMIT (CENTERED)                          */}
+            {/* =================================================================== */}
+            <div className="mt-8 max-w-3xl mx-auto">
+              <div 
+                id="section-confirmation"
+                className={`bg-white rounded-2xl border ${
+                  errors.confirmAccurate || errors.confirmContact
+                    ? "border-red-400 ring-2 ring-red-100"
+                    : "border-gray-200/90 shadow-[0_1px_3px_rgba(0,0,0,0.03)]"
+                } p-6 sm:p-8 transition-all hover:border-gray-300`}
+              >
+                <div className="flex items-start gap-3 mb-5">
+                  <div className="w-7 h-7 rounded-full bg-[#41B349] text-white flex items-center justify-center font-bold text-xs shrink-0">
+                    13
                   </div>
-
-                  <div className="space-y-3 mb-6">
-                    {/* Checkbox 1 */}
-                    <label 
-                      id="field-confirmAccurate"
-                      className="flex items-start gap-3 cursor-pointer group"
-                    >
-                      <input
-                        type="checkbox"
-                        checked={formData.confirmAccurate}
-                        onChange={(e) => handleInputChange("confirmAccurate", e.target.checked)}
-                        className="w-4 h-4 mt-0.5 rounded border-gray-300 accent-[#41B349] text-[#41B349] focus:ring-[#41B349] cursor-pointer"
-                      />
-                      <span className="text-xs sm:text-sm text-[#4A5568] font-jakarta select-none leading-relaxed group-hover:text-[#0D0F12]">
-                        I confirm that the information provided in this form is accurate and complete. <span className="text-red-500 font-bold">*</span>
-                      </span>
-                    </label>
-                    {errors.confirmAccurate && (
-                      <p className="text-xs text-red-500 pl-7 font-jakarta flex items-center gap-1">
-                        <AlertCircle className="w-3 h-3 shrink-0" /> {errors.confirmAccurate}
-                      </p>
-                    )}
-
-                    {/* Checkbox 2 */}
-                    <label 
-                      id="field-confirmContact"
-                      className="flex items-start gap-3 cursor-pointer group"
-                    >
-                      <input
-                        type="checkbox"
-                        checked={formData.confirmContact}
-                        onChange={(e) => handleInputChange("confirmContact", e.target.checked)}
-                        className="w-4 h-4 mt-0.5 rounded border-gray-300 accent-[#41B349] text-[#41B349] focus:ring-[#41B349] cursor-pointer"
-                      />
-                      <span className="text-xs sm:text-sm text-[#4A5568] font-jakarta select-none leading-relaxed group-hover:text-[#0D0F12]">
-                        I agree that Tech Solutionor may contact me regarding my requirement and discuss suitable services, resources, pricing and project solutions. <span className="text-red-500 font-bold">*</span>
-                      </span>
-                    </label>
-                    {errors.confirmContact && (
-                      <p className="text-xs text-red-500 pl-7 font-jakarta flex items-center gap-1">
-                        <AlertCircle className="w-3 h-3 shrink-0" /> {errors.confirmContact}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Submit Button */}
                   <div>
-                    <button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="w-full inline-flex items-center justify-center gap-2.5 bg-[#41B349] hover:bg-[#36963d] text-white font-jakarta font-semibold text-base py-3.5 sm:py-4 px-8 rounded-xl shadow-sm hover:shadow-md active:scale-[0.99] transition-all duration-200 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed group"
-                    >
-                      {isSubmitting ? (
-                        <>
-                          <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                          <span>Submitting Your Requirement...</span>
-                        </>
-                      ) : (
-                        <>
-                          <span>Submit Your Requirement</span>
-                          <Send className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                        </>
-                      )}
-                    </button>
-
-                    {/* Privacy Reassurance */}
-                    <p className="text-center text-xs text-gray-500 font-jakarta mt-3 flex items-center justify-center gap-1.5">
-                      <Lock className="w-3.5 h-3.5 text-gray-400" />
-                      <span>Your information is safe with us. We respect your privacy.</span>
+                    <div className="flex items-center gap-1.5">
+                      <h2 className="font-display uppercase tracking-tight text-[#0D0F12] text-base sm:text-lg leading-snug">
+                        Final Confirmation
+                      </h2>
+                      <span className="text-red-500 font-bold">*</span>
+                    </div>
+                    <p className="font-jakarta text-xs sm:text-sm text-[#4A5568] mt-0.5">
+                      Please review and confirm before submitting your requirements
                     </p>
                   </div>
                 </div>
 
-              </div>
+                <div className="space-y-3.5 mb-7 bg-gray-50/70 rounded-xl p-4 sm:p-5 border border-gray-100">
+                  {/* Checkbox 1 */}
+                  <label 
+                    id="field-confirmAccurate"
+                    className="flex items-start gap-3 cursor-pointer group"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={formData.confirmAccurate}
+                      onChange={(e) => handleInputChange("confirmAccurate", e.target.checked)}
+                      className="w-4 h-4 mt-0.5 rounded border-gray-300 accent-[#41B349] text-[#41B349] focus:ring-[#41B349] cursor-pointer shrink-0"
+                    />
+                    <span className="text-xs sm:text-sm text-[#4A5568] font-jakarta select-none leading-relaxed group-hover:text-[#0D0F12]">
+                      I confirm that the information provided in this form is accurate and complete. <span className="text-red-500 font-bold">*</span>
+                    </span>
+                  </label>
+                  {errors.confirmAccurate && (
+                    <p className="text-xs text-red-500 pl-7 font-jakarta flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3 shrink-0" /> {errors.confirmAccurate}
+                    </p>
+                  )}
 
+                  {/* Checkbox 2 */}
+                  <label 
+                    id="field-confirmContact"
+                    className="flex items-start gap-3 cursor-pointer group"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={formData.confirmContact}
+                      onChange={(e) => handleInputChange("confirmContact", e.target.checked)}
+                      className="w-4 h-4 mt-0.5 rounded border-gray-300 accent-[#41B349] text-[#41B349] focus:ring-[#41B349] cursor-pointer shrink-0"
+                    />
+                    <span className="text-xs sm:text-sm text-[#4A5568] font-jakarta select-none leading-relaxed group-hover:text-[#0D0F12]">
+                      I agree that Tech Solutionor may contact me regarding my requirement and discuss suitable services, resources, pricing and project solutions. <span className="text-red-500 font-bold">*</span>
+                    </span>
+                  </label>
+                  {errors.confirmContact && (
+                    <p className="text-xs text-red-500 pl-7 font-jakarta flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3 shrink-0" /> {errors.confirmContact}
+                    </p>
+                  )}
+                </div>
+
+                {/* Submit Button & Privacy */}
+                <div className="flex flex-col items-center">
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full sm:w-auto min-w-[280px] sm:min-w-[340px] inline-flex items-center justify-center gap-2.5 bg-[#41B349] hover:bg-[#36963d] text-white font-jakarta font-semibold text-base py-3.5 sm:py-4 px-8 rounded-xl shadow-sm hover:shadow-md active:scale-[0.99] transition-all duration-200 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed group"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        <span>Submitting Your Requirement...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Submit Your Requirement</span>
+                        <Send className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                      </>
+                    )}
+                  </button>
+
+                  {/* Privacy Reassurance */}
+                  <p className="text-center text-xs text-gray-500 font-jakarta mt-3.5 flex items-center justify-center gap-1.5">
+                    <Lock className="w-3.5 h-3.5 text-gray-400" />
+                    <span>Your information is safe with us. We respect your privacy.</span>
+                  </p>
+                </div>
+              </div>
             </div>
           </form>
         </main>
