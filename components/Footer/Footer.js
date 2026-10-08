@@ -10,51 +10,54 @@ import {
 } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { SiGooglecalendar } from "react-icons/si";
+import { CardHeading } from "@/components/Typography";
 
 const Footer = () => {
     const footerLinks = {
         "Technologies": [
-            { name: "SWIFT Network", href: "/technologies/swift" },
             { name: "React Development", href: "/technologies/react" },
             { name: "Python Development", href: "/technologies/python" },
-            { name: "HTML Development", href: "/technologies/html" },
             { name: "Laravel Development", href: "/technologies/laravel" },
-            { name: "Go Development", href: "/technologies" },
-            { name: "C++ Development", href: "/technologies" },
+            { name: "Flutter Development", href: "/technologies/flutter" },
+            { name: "Swift Development", href: "/technologies/swift" },
             { name: "WordPress Development", href: "/technologies/wordpress" },
-            { name: "PHP Development", href: "/technologies/php" },
             { name: "Shopify Development", href: "/technologies/shopify" },
+            { name: "JavaScript Development", href: "/technologies/javascript" },
+            { name: "PHP Development", href: "/technologies/php" },
             { name: "Angular Development", href: "/technologies/angular" },
-            { name: "JavaScript Development", href: "/technologies/javascript" }
+            { name: "Go Development", href: "/technologies/go" },
+            { name: "C++ Development", href: "/technologies/c-plus-plus" }
         ],
         "Services": [
-            { name: "App Development", href: "/services/app-development" },
             { name: "Web Development", href: "/services/web-development" },
+            { name: "App Development", href: "/services/app-development" },
             { name: "Software Development", href: "/services/software-development" },
-            { name: "POS Development", href: "/services/pos-development" },
             { name: "Ecommerce Development", href: "/services/ecommerce-development" },
-            { name: "Graphic Designing", href: "/services/graphics-ui-ux" },
-            { name: "UI/UX Designing", href: "/services/graphics-ui-ux" },
-            { name: "Social Media Marketing", href: "/services/digital-marketing" },
-            { name: "Digital Marketing", href: "/services/digital-marketing" },
-            { name: "Lead Generation", href: "/services/lead-generation" },
-            { name: "PPC And Amazon Ads", href: "/services/ppc-amazon-ads" },
-            { name: "Search Engine Optimization", href: "/services/search-engine-optimization" },
-            { name: "Content Writing", href: "/services/content-writing" }
+            { name: "POS Development", href: "/pos-development" },
+            { name: "Graphic & UI/UX Design", href: "/services/graphic-design" },
+            { name: "Content Writing", href: "/services/content-writing" },
+            { name: "Call Center Solutions", href: "/services/call-center" }
         ],
-        "Industries": [
-            "SAAS", "Finance", "B2B & B2C", "Healthcare", "Education", 
-            "Retail & E-commerce", "Manufacturing", "Non-profit & NGOs", "Automotive"
+        "Digital Marketing": [
+            { name: "Search Engine Optimization", href: "/services/search-engine-optimization" },
+            { name: "Digital Marketing", href: "/services/digital-marketing" },
+            { name: "Social Media Marketing", href: "/services/social-media" },
+            { name: "PPC & Amazon Ads", href: "/services/ppc-amazon-ads" },
+            { name: "Google Ads Management", href: "/services/google-ads" },
+            { name: "Meta Ads & Marketing", href: "/services/meta" },
+            { name: "Lead Generation", href: "/services/lead-generation" },
+            { name: "Free SEO Audit", href: "/claim-your-free-seo-audit" }
         ],
         "Company": [
             { name: "About Us", href: "/about-us" },
             { name: "Contact Us", href: "/contact-us" },
+            { name: "Our Projects", href: "/our-portfolio" },
+            { name: "Hire Resources", href: "/hire-resources" },
+            { name: "Career", href: "/career" },
+            { name: "Become a Partner", href: "/become-a-partner" },
             { name: "Privacy Policy", href: "/privacy-policy" },
             { name: "Terms and Conditions", href: "/terms-and-conditions" },
-            { name: "Blogs", href: "/blog" },
-            { name: "Our Projects", href: "/our-portfolio" },
-            { name: "Career", href: "/career" },
-            { name: "Become a Partner", href: "/become-a-partner" }
+            { name: "Blogs", href: "/blog" }
         ]
     };
 
@@ -72,12 +75,14 @@ const Footer = () => {
                         <div key={section} className="flex flex-col">
                             {/* Heading / Title */}
                             <div className="flex items-center mb-4 sm:mb-5">
-                                <h3 
-                                    className="text-base sm:text-[17px] font-extrabold text-[#41B349] uppercase tracking-wider"
-                                    style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
+                                <CardHeading 
+                                    as="h3" 
+                                    size="md" 
+                                    theme="inherit" 
+                                    className="text-[#41B349] select-none"
                                 >
                                     {section}
-                                </h3>
+                                </CardHeading>
                             </div>
 
                             {/* Links List */}
