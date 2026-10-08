@@ -21,6 +21,7 @@ import {
   sanitizePhoneDigits,
   validatePhoneNumber,
 } from "@/lib/country-phone";
+import { SectionBadge, HighlightWord } from "@/components/Typography";
 
 // --- PRESET DATA ---
 
@@ -671,21 +672,22 @@ Attached Files: ${uploadedFiles.map(f => f.docType ? `${f.name} [${f.docType}]` 
     <div className="w-full bg-[#FFFFFF] min-h-screen text-[#0D0F12]">
 
       {/* ========================================================================= */}
-      {/* 1. CLEAN FORM PAGE HEADER (Simple White Background, Standalone Form UI)   */}
+      {/* 1. CLEAN FORM PAGE HEADER (Home Hero Style & Typography, Centered)        */}
       {/* ========================================================================= */}
       <header className="w-full bg-white border-b border-gray-100">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-          <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#41B349]/10 text-[#2C9434] text-xs font-semibold uppercase tracking-wider font-jakarta mb-3 border border-[#41B349]/20">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#41B349]" />
-              Resource & Talent Intake
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-16">
+          <div className="max-w-4xl mx-auto flex flex-col items-center text-center">
+            <div className="mb-3.5 sm:mb-4">
+              <SectionBadge variant="light">
+                Resource & Talent Intake
+              </SectionBadge>
             </div>
 
-            <h1 className="font-display uppercase tracking-tight text-3xl sm:text-4xl lg:text-[40px] leading-tight text-[#0D0F12]">
-              Hire IT & Digital Marketing <span className="text-[#41B349] italic">Resources</span>
+            <h1 className="font-display uppercase tracking-tight text-3xl sm:text-4xl md:text-5xl lg:text-[54px] xl:text-[60px] leading-[1.08] sm:leading-[1.02] text-[#0D0F12] text-center">
+              Hire IT & Digital Marketing <HighlightWord>Resources</HighlightWord>
             </h1>
 
-            <p className="mt-2.5 text-sm sm:text-base text-[#4A5568] font-jakarta leading-relaxed max-w-2xl">
+            <p className="mt-3.5 sm:mt-4 text-sm sm:text-base md:text-[17px] text-[#4A5568] font-jakarta leading-relaxed max-w-2xl mx-auto text-center font-normal sm:font-medium tracking-[-0.01em]">
               Looking for a skilled professional, multiple resources, a dedicated team or an agency?
               Tell us about your requirements, project, budget, timeline and preferred working arrangement.
               Our team will review your request and get back to you with the best solution.
