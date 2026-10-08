@@ -1,144 +1,71 @@
 "use client";
 
 import React, { useState, useMemo, useEffect } from 'react';
-import { 
-  Search, 
-  X, 
-  Phone, 
-  Mail, 
-  Calendar, 
-  Briefcase, 
-  Globe, 
-  Clock, 
-  FileText, 
-  Download, 
-  CheckCircle2, 
-  XCircle, 
-  Trash2, 
-  Loader2,
-  AlertCircle,
-  ExternalLink,
-  ChevronDown,
+import {
+  Search,
+  X,
+  Phone,
+  Mail,
+  DollarSign,
+  Calendar,
+  Briefcase,
+  MapPin,
+  Clock,
   CheckCheck,
   RefreshCw,
-  Copy,
+  Download,
+  FileText,
+  Trash2,
   Check,
-  Building2,
-  DollarSign,
+  Copy,
   Users,
   Layers,
   MessageSquare,
-  Eye,
-  Filter,
-  ArrowRight,
-  Shield,
   FileCheck,
-  Send,
-  Sparkles
+  ExternalLink,
+  ShieldCheck,
+  Sparkles,
+  Link2
 } from 'lucide-react';
 
 const STATUS_OPTIONS = [
-  { value: 'Pending', label: 'Pending / New', color: 'bg-amber-50 text-amber-700 border-amber-200' },
-  { value: 'In Review', label: 'In Review', color: 'bg-blue-50 text-blue-700 border-blue-200' },
-  { value: 'Contacted', label: 'Contacted', color: 'bg-purple-50 text-purple-700 border-purple-200' },
-  { value: 'Proposal Sent', label: 'Proposal Sent', color: 'bg-indigo-50 text-indigo-700 border-indigo-200' },
-  { value: 'Converted', label: 'Converted / Hired', color: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
-  { value: 'Archived', label: 'Archived / Closed', color: 'bg-gray-100 text-gray-700 border-gray-200' },
+  { value: 'Pending', label: 'Pending', color: 'bg-amber-100 text-amber-900 border-amber-300' },
+  { value: 'In Review', label: 'In Review', color: 'bg-blue-100 text-blue-900 border-blue-300' },
+  { value: 'Contacted', label: 'Contacted', color: 'bg-purple-100 text-purple-900 border-purple-300' },
+  { value: 'Proposal Sent', label: 'Proposal Sent', color: 'bg-indigo-100 text-indigo-900 border-indigo-300' },
+  { value: 'Converted', label: 'Converted', color: 'bg-emerald-100 text-emerald-900 border-emerald-300' },
+  { value: 'Archived', label: 'Archived', color: 'bg-gray-100 text-gray-800 border-gray-300' },
 ];
 
 function getStatusBadge(status) {
   const found = STATUS_OPTIONS.find(s => s.value.toLowerCase() === (status || '').toLowerCase());
-  return found || { value: status || 'Pending', label: status || 'Pending', color: 'bg-gray-50 text-gray-700 border-gray-200' };
+  return found || { value: status || 'Pending', label: status || 'Pending', color: 'bg-gray-100 text-gray-800 border-gray-300' };
 }
 
-function formatDate(isoStr) {
-  if (!isoStr) return 'N/A';
-  try {
-    const d = new Date(isoStr);
-    if (isNaN(d.getTime())) return isoStr;
-    return d.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  } catch (_) {
-    return isoStr;
-  }
-}
-
-function formatRelativeTime(isoStr) {
-  if (!isoStr) return '';
-  try {
-    const d = new Date(isoStr);
-    const now = new Date();
-    const diffSec = Math.floor((now.getTime() - d.getTime()) / 1000);
-    if (diffSec < 60) return 'Just now';
-    if (diffSec < 3600) return `${Math.floor(diffSec / 60)}m ago`;
-    if (diffSec < 86400) return `${Math.floor(diffSec / 3600)}h ago`;
-    if (diffSec < 604800) return `${Math.floor(diffSec / 86400)}d ago`;
-    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-  } catch (_) {
-    return '';
-  }
-}
-
-export default function HireUsTableClient({ initialData = [], apiBase = '' }) {
+export default function HireUsTableClient({ initialData = [], apiBase = process.env.NEXT_PUBLIC_API_URL || '' }) {
   const [rows, setRows] = useState(initialData || []);
   const [query, setQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
-  const [typeFilter, setTypeFilter] = useState('all');
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [loading, setLoading] = useState(false);
   const [viewRow, setViewRow] = useState(null);
-  const [detailTab, setDetailTab] = useState('specs');
-  
-  // Status update states
+
+  // Status & Notes editing in modal
   const [updatingStatusId, setUpdatingStatusId] = useState(null);
-  const [statusNote, setStatusNote] = useState('');
   const [adminNoteInput, setAdminNoteInput] = useState('');
   const [isSavingNotes, setIsSavingNotes] = useState(false);
-
-  // Deletion modal
-  const [deleteCandidate, setDeleteCandidate] = useState(null);
-  const [isDeleting, setIsDeleting] = useState(false);
-
-  // Copy helper
   const [copiedKey, setCopiedKey] = useState(null);
 
-  // Toast alert
-  const [toastMessage, setToastMessage] = useState(null);
-
-  const showToast = (text, type = 'success') => {
-    setToastMessage({ text, type });
-    setTimeout(() => {
-      setToastMessage(null);
-    }, 4500);
-  };
+  // Deletion state
+  const [deleteCandidate, setDeleteCandidate] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     if (!initialData || initialData.length === 0) {
       refresh();
     }
   }, []);
-
-  async function refresh() {
-    try {
-      setLoading(true);
-      const res = await fetch(`${apiBase}/api/hire-submissions`, { cache: 'no-store' });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
-      setRows(Array.isArray(data) ? data : []);
-      setPage(1);
-    } catch (err) {
-      console.error('Failed to fetch hire submissions:', err);
-      showToast('Failed to refresh data: ' + err.message, 'error');
-    } finally {
-      setLoading(false);
-    }
-  }
 
   // Sort latest first
   const sorted = useMemo(() => {
@@ -151,36 +78,21 @@ export default function HireUsTableClient({ initialData = [], apiBase = '' }) {
 
   // Tab counts
   const counts = useMemo(() => {
-    const unread = sorted.filter(r => !r.isRead).length;
-    const pending = sorted.filter(r => (r.status || 'Pending').toLowerCase() === 'pending').length;
-    const inReview = sorted.filter(r => (r.status || '').toLowerCase() === 'in review').length;
-    const contacted = sorted.filter(r => (r.status || '').toLowerCase() === 'contacted').length;
-    const proposal = sorted.filter(r => (r.status || '').toLowerCase() === 'proposal sent').length;
-    const converted = sorted.filter(r => (r.status || '').toLowerCase() === 'converted').length;
-    const archived = sorted.filter(r => (r.status || '').toLowerCase() === 'archived').length;
-
+    const unreadCount = sorted.filter(r => !r.isRead).length;
+    const pendingCount = sorted.filter(r => (r.status || 'Pending').toLowerCase() === 'pending').length;
+    const inReviewCount = sorted.filter(r => (r.status || '').toLowerCase() === 'in review').length;
+    const contactedCount = sorted.filter(r => (r.status || '').toLowerCase() === 'contacted').length;
+    const convertedCount = sorted.filter(r => (r.status || '').toLowerCase() === 'converted').length;
     return {
       all: sorted.length,
-      unread,
-      pending,
-      inReview,
-      contacted,
-      proposal,
-      converted,
-      archived,
+      unread: unreadCount,
+      pending: pendingCount,
+      inReview: inReviewCount,
+      contacted: contactedCount,
+      converted: convertedCount,
     };
   }, [sorted]);
 
-  // Unique Requirement Types for filter dropdown
-  const uniqueTypes = useMemo(() => {
-    const types = new Set();
-    sorted.forEach(r => {
-      if (r.requirementType) types.add(r.requirementType);
-    });
-    return Array.from(types);
-  }, [sorted]);
-
-  // Filtered rows
   const filtered = useMemo(() => {
     let result = sorted;
 
@@ -191,17 +103,17 @@ export default function HireUsTableClient({ initialData = [], apiBase = '' }) {
       result = result.filter(r => (r.status || 'Pending').toLowerCase() === statusFilter.toLowerCase());
     }
 
-    // Filter by requirement type
-    if (typeFilter !== 'all') {
-      result = result.filter(r => r.requirementType === typeFilter);
-    }
-
-    // Search query
+    // Filter by search query across all active client-side fields
     const q = query.trim().toLowerCase();
     if (q) {
       result = result.filter(r => {
         const servicesStr = Array.isArray(r.services) ? r.services.join(' ') : (r.services || '');
         const filesStr = Array.isArray(r.attachedFilesList) ? r.attachedFilesList.map(f => f.name).join(' ') : '';
+        const teamRolesStr = Array.isArray(r.existingTeamRoles) ? r.existingTeamRoles.join(' ') : '';
+        const commMethodsStr = Array.isArray(r.communicationMethods) ? r.communicationMethods.join(' ') : '';
+        const docTypesStr = Array.isArray(r.documentationTypes) ? r.documentationTypes.join(' ') : '';
+        const referralStr = Array.isArray(r.referralSources) ? r.referralSources.join(' ') : '';
+
         const haystack = [
           r.name,
           r.fullName,
@@ -209,19 +121,35 @@ export default function HireUsTableClient({ initialData = [], apiBase = '' }) {
           r.phone,
           r.whatsapp,
           r.country,
-          r.organization,
-          r.companyName,
           r.jobTitle,
           r.requirementType,
           servicesStr,
           r.otherService,
+          r.resourceCount,
+          r.exactResourceCount,
           r.experienceLevel,
-          r.requiredSkills,
-          r.projectName,
-          r.projectType,
           r.workArrangement,
-          r.budget,
+          r.requiredLocation,
+          r.city,
+          r.timeZone,
+          r.workingHours,
+          r.workingDays,
           r.duration,
+          r.budgetType,
+          r.budget,
+          r.hasInternalTeam,
+          teamRolesStr,
+          r.otherTeamRole,
+          r.teamManager,
+          r.meetingFrequency,
+          commMethodsStr,
+          r.hasDocumentation,
+          docTypesStr,
+          r.referenceLinks,
+          r.preferredContactMethod,
+          r.bestTimeToContact,
+          referralStr,
+          r.otherReferral,
           r.message,
           r.adminNotes,
           filesStr,
@@ -232,1143 +160,959 @@ export default function HireUsTableClient({ initialData = [], apiBase = '' }) {
     }
 
     return result;
-  }, [sorted, statusFilter, typeFilter, query]);
+  }, [sorted, query, statusFilter]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
   const pageData = filtered.slice((page - 1) * pageSize, page * pageSize);
 
-  // Trigger sync of unread count badges in sidebar
-  const notifySidebarRefresh = () => {
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('admin-notifications-refresh'));
-    }
-  };
+  const getGlobalIndex = (pageIndex) => (page - 1) * pageSize + pageIndex + 1;
 
-  // Open view modal and mark as read
-  async function handleOpenView(row) {
-    setViewRow(row);
+  async function refresh() {
+    try {
+      setLoading(true);
+      const baseUrl = apiBase || '';
+      const res = await fetch(`${baseUrl}/api/hire-submissions`, { cache: 'no-store' });
+      if (!res.ok) throw new Error('Fetch failed');
+      const data = await res.json();
+      setRows(Array.isArray(data) ? data : []);
+      setPage(1);
+    } catch (err) {
+      console.error('Failed to refresh hire submissions:', err);
+      alert('Failed to refresh: ' + err.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function downloadCSV() {
+    if (!rows || rows.length === 0) return alert('No data available to export');
+    const headers = [
+      '#',
+      'Status',
+      'Name',
+      'Job Title',
+      'Email',
+      'Phone',
+      'WhatsApp',
+      'Country',
+      'Requirement Type',
+      'Resource Count',
+      'Experience Level',
+      'Services Required',
+      'Other Requirement',
+      'Work Arrangement',
+      'Time Zone',
+      'Location / City',
+      'Working Hours',
+      'Working Days',
+      'Hours Per Day',
+      'Hours Per Week',
+      'Duration',
+      'Start Date',
+      'End Date',
+      'Budget Type',
+      'Budget',
+      'Currency',
+      'Internal Team',
+      'Existing Team Roles',
+      'Other Roles',
+      'Team Manager',
+      'Meeting Frequency',
+      'Communication Methods',
+      'Has Documentation',
+      'Documentation Types',
+      'Reference Links',
+      'Preferred Contact Method',
+      'Best Time to Contact',
+      'Referral Source',
+      'Other Referral',
+      'Confirmed Accurate',
+      'Consent to Contact',
+      'Attached Files Count',
+      'Admin Notes',
+      'Submitted At'
+    ];
+
+    const csv = [headers.join(',')].concat(rows.map((r, i) => {
+      const servicesStr = Array.isArray(r.services) ? r.services.join('; ') : (r.services || '');
+      const filesCount = Array.isArray(r.attachedFilesList) ? r.attachedFilesList.length : 0;
+      const teamRolesStr = Array.isArray(r.existingTeamRoles) ? r.existingTeamRoles.join('; ') : '';
+      const commStr = Array.isArray(r.communicationMethods) ? r.communicationMethods.join('; ') : '';
+      const docTypesStr = Array.isArray(r.documentationTypes) ? r.documentationTypes.join('; ') : '';
+      const referralStr = Array.isArray(r.referralSources) ? r.referralSources.join('; ') : '';
+
+      const vals = [
+        i + 1,
+        r.status || 'Pending',
+        r.name || r.fullName || '',
+        r.jobTitle || '',
+        r.email || '',
+        r.phone || '',
+        r.whatsapp || '',
+        r.country || '',
+        r.requirementType || 'Dedicated Resource',
+        `${r.resourceCount || '1'}${r.exactResourceCount ? ` (${r.exactResourceCount})` : ''}`,
+        r.experienceLevel || '',
+        servicesStr,
+        r.otherService || '',
+        r.workArrangement || 'Remote',
+        r.timeZone || '',
+        r.city || r.requiredLocation || '',
+        r.workingHours || '',
+        r.workingDays || '',
+        r.hoursPerDay || '',
+        r.hoursPerWeek || '',
+        r.duration || '',
+        r.startDate || '',
+        r.endDate || '',
+        r.budgetType || '',
+        r.budget || `${r.currency || 'USD'} ${r.minBudget || '0'} - ${r.maxBudget || '0'}`,
+        r.currency || 'USD',
+        r.hasInternalTeam || '',
+        teamRolesStr,
+        r.otherTeamRole || '',
+        r.teamManager || '',
+        r.meetingFrequency || '',
+        commStr,
+        r.hasDocumentation || '',
+        docTypesStr,
+        r.referenceLinks || '',
+        r.preferredContactMethod || '',
+        r.bestTimeToContact || '',
+        referralStr,
+        r.otherReferral || '',
+        r.confirmAccurate ? 'Yes' : 'No',
+        r.confirmContact ? 'Yes' : 'No',
+        filesCount,
+        r.adminNotes || r.statusNote || '',
+        r.createdAt ? new Date(r.createdAt).toLocaleString() : ''
+      ];
+
+      return vals.map(v => {
+        const s = ((v ?? '') + '').replace(/"/g, '""');
+        return `"${s}"`;
+      }).join(',');
+    })).join('\n');
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `hire_us_submissions_${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  async function handleOpenView(row, idx) {
+    const inquiryNo = getGlobalIndex(idx);
+    setViewRow({ ...row, inquiryNo });
     setAdminNoteInput(row.adminNotes || row.statusNote || '');
-    setDetailTab('specs');
 
     if (!row.isRead) {
-      setRows(prev => prev.map(r => ((r.id === row.id || r._id === row._id) ? { ...r, isRead: true } : r)));
+      const targetId = row.id || row._id;
+      setRows(prev => prev.map(r => ((r.id === targetId || r._id === targetId) ? { ...r, isRead: true } : r)));
       try {
-        await fetch(`${apiBase}/api/hire-submissions`, {
+        const baseUrl = apiBase || '';
+        await fetch(`${baseUrl}/api/hire-submissions`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id: row.id || row._id, isRead: true })
+          body: JSON.stringify({ id: targetId, isRead: true })
         });
-        notifySidebarRefresh();
-      } catch (err) {
-        console.error('Failed to mark read:', err);
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('admin-notifications-refresh'));
+        }
+      } catch (e) {
+        console.error('Failed to mark read:', e);
       }
     }
   }
 
-  // Toggle Read / Unread
-  async function handleToggleRead(row, e) {
-    e?.stopPropagation?.();
-    const newIsRead = !row.isRead;
-    const targetId = row.id || row._id;
-
-    setRows(prev => prev.map(r => ((r.id === targetId || r._id === targetId) ? { ...r, isRead: newIsRead } : r)));
-    if (viewRow && (viewRow.id === targetId || viewRow._id === targetId)) {
-      setViewRow(prev => ({ ...prev, isRead: newIsRead }));
-    }
-
-    try {
-      const res = await fetch(`${apiBase}/api/hire-submissions`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: targetId, isRead: newIsRead })
-      });
-      if (!res.ok) throw new Error('Failed to update read state');
-      notifySidebarRefresh();
-      showToast(newIsRead ? 'Marked as read' : 'Marked as unread');
-    } catch (err) {
-      console.error(err);
-      showToast('Failed to update read state', 'error');
-    }
-  }
-
-  // Mark all as read
   async function handleMarkAllRead() {
-    if (counts.unread === 0) return;
     setRows(prev => prev.map(r => ({ ...r, isRead: true })));
     try {
-      const res = await fetch(`${apiBase}/api/hire-submissions`, {
+      const baseUrl = apiBase || '';
+      await fetch(`${baseUrl}/api/hire-submissions`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ markAll: true })
       });
-      if (!res.ok) throw new Error('Failed to mark all read');
-      notifySidebarRefresh();
-      showToast('All hire submissions marked as read');
-    } catch (err) {
-      console.error(err);
-      showToast('Failed to mark all read', 'error');
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('admin-notifications-refresh'));
+      }
+    } catch (e) {
+      console.error('Failed to mark all read:', e);
     }
   }
 
-  // Quick Status Change
-  async function handleStatusChange(row, newStatus, customNote = '') {
-    const targetId = row.id || row._id;
+  // Update Status
+  const handleStatusChange = async (targetId, newStatus) => {
     setUpdatingStatusId(targetId);
-
     try {
-      const res = await fetch(`${apiBase}/api/hire-submissions`, {
+      const baseUrl = apiBase || '';
+      const res = await fetch(`${baseUrl}/api/hire-submissions`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           id: targetId,
           status: newStatus,
-          note: customNote || `Status updated to ${newStatus}`,
-          isRead: true,
-        })
+          note: `Status updated to ${newStatus} by admin`,
+        }),
       });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to update status');
+      if (!res.ok) throw new Error('Status update failed');
 
-      const updatedSub = data.submission || { ...row, status: newStatus, isRead: true };
-
-      setRows(prev => prev.map(r => ((r.id === targetId || r._id === targetId) ? { ...r, ...updatedSub } : r)));
+      setRows(prev => prev.map(r => (r.id === targetId || r._id === targetId) ? { ...r, status: newStatus } : r));
       if (viewRow && (viewRow.id === targetId || viewRow._id === targetId)) {
-        setViewRow(prev => ({ ...prev, ...updatedSub }));
+        setViewRow(prev => ({
+          ...prev,
+          status: newStatus,
+          statusHistory: [
+            ...(prev.statusHistory || []),
+            { status: newStatus, note: `Status updated to ${newStatus}`, changedAt: new Date().toISOString() }
+          ]
+        }));
       }
-
-      notifySidebarRefresh();
-      showToast(`Status changed to ${newStatus}`);
     } catch (err) {
-      console.error('Status change error:', err);
-      showToast(`Failed to update status: ${err.message}`, 'error');
+      alert('Failed to update status: ' + err.message);
     } finally {
       setUpdatingStatusId(null);
     }
-  }
+  };
 
-  // Save Admin Notes
-  async function handleSaveAdminNotes(row) {
-    if (!row) return;
-    const targetId = row.id || row._id;
+  // Save Internal Remarks
+  const handleSaveAdminNotes = async (targetId) => {
     setIsSavingNotes(true);
-
     try {
-      const res = await fetch(`${apiBase}/api/hire-submissions`, {
+      const baseUrl = apiBase || '';
+      const res = await fetch(`${baseUrl}/api/hire-submissions`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           id: targetId,
           adminNotes: adminNoteInput,
-        })
+        }),
       });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to save notes');
+      if (!res.ok) throw new Error('Failed to save remarks');
 
-      setRows(prev => prev.map(r => ((r.id === targetId || r._id === targetId) ? { ...r, adminNotes: adminNoteInput } : r)));
-      setViewRow(prev => ({ ...prev, adminNotes: adminNoteInput }));
-
-      showToast('Internal notes saved successfully');
+      setRows(prev => prev.map(r => (r.id === targetId || r._id === targetId) ? { ...r, adminNotes: adminNoteInput } : r));
+      if (viewRow && (viewRow.id === targetId || viewRow._id === targetId)) {
+        setViewRow(prev => ({ ...prev, adminNotes: adminNoteInput }));
+      }
+      alert('Internal remarks saved successfully');
     } catch (err) {
-      console.error(err);
-      showToast('Failed to save notes: ' + err.message, 'error');
+      alert('Failed to save remarks: ' + err.message);
     } finally {
       setIsSavingNotes(false);
     }
-  }
+  };
 
   // Delete submission
-  async function confirmDelete() {
+  const confirmDelete = async () => {
     if (!deleteCandidate) return;
     const targetId = deleteCandidate.id || deleteCandidate._id;
     setIsDeleting(true);
 
     try {
-      const res = await fetch(`${apiBase}/api/hire-submissions?id=${targetId}`, {
+      const baseUrl = apiBase || '';
+      const res = await fetch(`${baseUrl}/api/hire-submissions?id=${targetId}`, {
         method: 'DELETE',
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to delete');
 
-      setRows(prev => prev.filter(r => r.id !== targetId && r._id !== targetId));
+      if (!res.ok) throw new Error('Failed to delete submission');
+
+      setRows(prev => prev.filter(r => (r.id !== targetId && r._id !== targetId)));
       if (viewRow && (viewRow.id === targetId || viewRow._id === targetId)) {
         setViewRow(null);
       }
       setDeleteCandidate(null);
-      notifySidebarRefresh();
-      showToast('Hire submission deleted permanently');
     } catch (err) {
-      console.error(err);
-      showToast('Failed to delete submission: ' + err.message, 'error');
+      alert('Error deleting submission: ' + err.message);
     } finally {
       setIsDeleting(false);
     }
-  }
+  };
 
-  // Copy helper
   const copyToClipboard = (text, key) => {
     if (!text) return;
     navigator.clipboard.writeText(text);
     setCopiedKey(key);
-    setTimeout(() => setCopiedKey(null), 2000);
+    setTimeout(() => {
+      setCopiedKey(null);
+    }, 2000);
   };
 
-  // Export to CSV
-  function downloadCSV() {
-    if (!rows || rows.length === 0) {
-      return showToast('No data available to export', 'error');
-    }
-
-    const headers = [
-      '#',
-      'Status',
-      'Full Name',
-      'Email',
-      'Phone',
-      'WhatsApp',
-      'Country',
-      'Job Title',
-      'Organization / Company',
-      'Requirement Type',
-      'Services / Roles',
-      'Resource Count',
-      'Experience Level',
-      'Required Skills',
-      'Key Responsibilities',
-      'Deliverables',
-      'Preferred Tools',
-      'Project Name',
-      'Project Type',
-      'Project Status',
-      'Work Arrangement',
-      'Location / City',
-      'Time Zone',
-      'Working Hours',
-      'Duration',
-      'Start Date',
-      'End Date',
-      'Budget Type',
-      'Budget Range',
-      'Currency',
-      'Documentation',
-      'Internal Team',
-      'Preferred Contact Method',
-      'Best Time to Contact',
-      'Referral Source',
-      'Attached Files',
-      'Admin Notes',
-      'Submitted Date',
-    ];
-
-    const csvRows = [headers.join(',')];
-
-    filtered.forEach((r, idx) => {
-      const servicesStr = Array.isArray(r.services) ? r.services.join('; ') : (r.services || '');
-      const filesStr = Array.isArray(r.attachedFilesList) ? r.attachedFilesList.map(f => f.name).join('; ') : '';
-      const referralStr = Array.isArray(r.referralSources) ? r.referralSources.join('; ') : '';
-      const budgetRange = `${r.currency || 'USD'} ${r.minBudget || '0'} - ${r.maxBudget || '0'}`;
-
-      const rowData = [
-        idx + 1,
-        r.status || 'Pending',
-        r.name || r.fullName || '',
-        r.email || '',
-        r.phone || '',
-        r.whatsapp || '',
-        r.country || '',
-        r.jobTitle || '',
-        r.organization || r.companyName || '',
-        r.requirementType || 'Dedicated Resource',
-        servicesStr,
-        r.resourceCount || '1',
-        r.experienceLevel || '',
-        r.requiredSkills || '',
-        r.keyResponsibilities || '',
-        r.expectedDeliverables || '',
-        r.preferredTools || '',
-        r.projectName || '',
-        r.projectType || '',
-        r.projectStatus || '',
-        r.workArrangement || 'Remote',
-        `${r.city || ''} ${r.arrangementCountry || ''}`.trim(),
-        r.timeZone || '',
-        r.workingHours || '',
-        r.duration || '',
-        r.startDate || '',
-        r.endDate || '',
-        r.budgetType || '',
-        r.budget || budgetRange,
-        r.currency || 'USD',
-        r.hasDocumentation || '',
-        r.hasInternalTeam || '',
-        r.preferredContactMethod || '',
-        r.bestTimeToContact || '',
-        referralStr,
-        filesStr,
-        r.adminNotes || r.statusNote || '',
-        r.createdAt ? new Date(r.createdAt).toLocaleString() : '',
-      ];
-
-      const formattedLine = rowData.map(v => {
-        const str = ((v ?? '') + '').replace(/"/g, '""');
-        return `"${str}"`;
-      }).join(',');
-
-      csvRows.push(formattedLine);
-    });
-
-    const blob = new Blob([csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `hire_us_submissions_${new Date().toISOString().split('T')[0]}.csv`;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    URL.revokeObjectURL(url);
-
-    showToast('Submissions exported to CSV successfully');
-  }
-
   return (
-    <div className="space-y-6">
+    <div className="w-full">
+      {/* Total Submissions Header */}
+      <p className="text-sm text-gray-600 mb-3 font-medium">
+        <span className="font-bold text-gray-800">Total Submissions:</span> {rows.length}
+      </p>
 
-      {/* Toast Notification */}
-      {toastMessage && (
-        <div className={`fixed bottom-6 right-6 z-50 flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg border text-sm font-medium transition-all transform animate-in slide-in-from-bottom duration-300 ${
-          toastMessage.type === 'error' 
-            ? 'bg-red-50 text-red-800 border-red-200' 
-            : 'bg-emerald-50 text-emerald-800 border-emerald-200'
-        }`}>
-          {toastMessage.type === 'error' ? (
-            <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
-          ) : (
-            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-          )}
-          <span>{toastMessage.text}</span>
-          <button 
-            onClick={() => setToastMessage(null)}
-            className="p-1 hover:bg-black/5 rounded-md ml-1"
-          >
-            <X className="w-3.5 h-3.5" />
-          </button>
-        </div>
-      )}
-
-      {/* ========================================================================= */}
-      {/* 1. PAGE HEADER & PRIMARY ACTIONS                                          */}
-      {/* ========================================================================= */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-gray-200">
-        <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-2xl sm:text-[28px] font-bold text-gray-900 uppercase tracking-tight">
-              Hire Us Submissions
-            </h1>
-            {counts.unread > 0 && (
-              <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-amber-500 text-white animate-pulse">
-                {counts.unread} New
+      {/* Row 1: Filter Tabs on Left | Action Buttons on Right */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-3">
+        {/* Filter Tabs */}
+        <div className="flex flex-wrap bg-gray-100 p-1 rounded-lg text-xs font-semibold gap-1">
+          {[
+            { key: 'all', label: 'All Submissions', count: counts.all },
+            { key: 'unread', label: 'Unread', count: counts.unread, isHighlight: counts.unread > 0 },
+            { key: 'Pending', label: 'Pending', count: counts.pending },
+            { key: 'In Review', label: 'In Review', count: counts.inReview },
+            { key: 'Contacted', label: 'Contacted', count: counts.contacted },
+            { key: 'Converted', label: 'Converted', count: counts.converted },
+          ].map(tab => (
+            <button
+              key={tab.key}
+              type="button"
+              onClick={() => { setStatusFilter(tab.key); setPage(1); }}
+              className={`px-3 py-1.5 rounded-md transition-all cursor-pointer flex items-center gap-1.5 ${statusFilter === tab.key
+                  ? 'bg-white text-[#34953C] font-bold shadow-xs'
+                  : 'text-gray-600 hover:text-gray-900'
+                }`}
+            >
+              <span>{tab.label}</span>
+              <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded-full ${tab.isHighlight
+                  ? 'bg-red-500 text-white'
+                  : statusFilter === tab.key
+                    ? 'bg-gray-100 text-[#34953C]'
+                    : 'bg-gray-200 text-gray-600'
+                }`}>
+                {tab.count}
               </span>
-            )}
-          </div>
-          <p className="text-sm text-gray-500 mt-1">
-            Review, evaluate and manage all dedicated resource inquiries, developer team requests and client specifications.
-          </p>
+            </button>
+          ))}
         </div>
 
-        <div className="flex items-center gap-2.5 flex-wrap">
+        {/* Global Action Buttons */}
+        <div className="flex items-center gap-2">
           {counts.unread > 0 && (
             <button
               onClick={handleMarkAllRead}
-              className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 shadow-sm transition-colors cursor-pointer"
-              title="Mark all as read"
+              className="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs transition-all cursor-pointer flex items-center gap-1.5 shadow-xs"
+              title="Mark all submissions as read"
             >
-              <CheckCheck className="w-3.5 h-3.5 text-emerald-600" />
+              <CheckCheck className="w-3.5 h-3.5" />
               <span>Mark All Read</span>
             </button>
           )}
-
-          <button
-            onClick={downloadCSV}
-            className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 shadow-sm transition-colors cursor-pointer"
-            title="Export filtered records to CSV"
-          >
-            <Download className="w-3.5 h-3.5 text-gray-600" />
-            <span>Export CSV</span>
-          </button>
-
           <button
             onClick={refresh}
-            disabled={loading}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-white bg-[#41B349] hover:bg-[#36963d] rounded-lg shadow-sm transition-all cursor-pointer disabled:opacity-60"
-            title="Refresh submissions"
+            className={`px-3.5 py-1.5 rounded-lg bg-[#34953C] hover:bg-[#2b7e32] text-white font-semibold text-xs ${loading ? 'opacity-60' : ''} transition-all cursor-pointer`}
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
-            <span>{loading ? 'Refreshing...' : 'Refresh'}</span>
+            {loading ? 'Refreshing...' : 'Refresh'}
+          </button>
+          <button
+            onClick={downloadCSV}
+            className="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition-all cursor-pointer"
+          >
+            Export CSV
           </button>
         </div>
       </div>
 
-      {/* ========================================================================= */}
-      {/* 2. STATS KPI OVERVIEW CARDS                                               */}
-      {/* ========================================================================= */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
-        <button
-          onClick={() => { setStatusFilter('all'); setPage(1); }}
-          className={`p-4 rounded-xl text-left border transition-all cursor-pointer ${
-            statusFilter === 'all'
-              ? 'bg-emerald-50/50 border-[#41B349] ring-2 ring-[#41B349]/20'
-              : 'bg-white border-gray-200 hover:border-gray-300'
-          }`}
-        >
-          <div className="flex items-center justify-between text-xs text-gray-500 font-medium mb-1">
-            <span>Total Intake</span>
-            <Users className="w-4 h-4 text-gray-400" />
-          </div>
-          <div className="text-2xl font-bold text-gray-900">{counts.all}</div>
-          <div className="text-[11px] text-gray-400 mt-0.5">All submissions</div>
-        </button>
-
-        <button
-          onClick={() => { setStatusFilter('unread'); setPage(1); }}
-          className={`p-4 rounded-xl text-left border transition-all cursor-pointer ${
-            statusFilter === 'unread'
-              ? 'bg-amber-50/50 border-amber-500 ring-2 ring-amber-500/20'
-              : 'bg-white border-gray-200 hover:border-gray-300'
-          }`}
-        >
-          <div className="flex items-center justify-between text-xs text-amber-700 font-medium mb-1">
-            <span>Unread / New</span>
-            <Sparkles className="w-4 h-4 text-amber-500" />
-          </div>
-          <div className="text-2xl font-bold text-amber-700">{counts.unread}</div>
-          <div className="text-[11px] text-amber-600 mt-0.5">Awaiting first review</div>
-        </button>
-
-        <button
-          onClick={() => { setStatusFilter('Pending'); setPage(1); }}
-          className={`p-4 rounded-xl text-left border transition-all cursor-pointer ${
-            statusFilter === 'Pending'
-              ? 'bg-amber-50/50 border-amber-500 ring-2 ring-amber-500/20'
-              : 'bg-white border-gray-200 hover:border-gray-300'
-          }`}
-        >
-          <div className="flex items-center justify-between text-xs text-amber-700 font-medium mb-1">
-            <span>Pending</span>
-            <Clock className="w-4 h-4 text-amber-500" />
-          </div>
-          <div className="text-2xl font-bold text-gray-900">{counts.pending}</div>
-          <div className="text-[11px] text-gray-400 mt-0.5">Needs action</div>
-        </button>
-
-        <button
-          onClick={() => { setStatusFilter('In Review'); setPage(1); }}
-          className={`p-4 rounded-xl text-left border transition-all cursor-pointer ${
-            statusFilter === 'In Review'
-              ? 'bg-blue-50/50 border-blue-500 ring-2 ring-blue-500/20'
-              : 'bg-white border-gray-200 hover:border-gray-300'
-          }`}
-        >
-          <div className="flex items-center justify-between text-xs text-blue-700 font-medium mb-1">
-            <span>In Review</span>
-            <Eye className="w-4 h-4 text-blue-500" />
-          </div>
-          <div className="text-2xl font-bold text-gray-900">{counts.inReview}</div>
-          <div className="text-[11px] text-gray-400 mt-0.5">Under evaluation</div>
-        </button>
-
-        <button
-          onClick={() => { setStatusFilter('Contacted'); setPage(1); }}
-          className={`p-4 rounded-xl text-left border transition-all cursor-pointer ${
-            statusFilter === 'Contacted'
-              ? 'bg-purple-50/50 border-purple-500 ring-2 ring-purple-500/20'
-              : 'bg-white border-gray-200 hover:border-gray-300'
-          }`}
-        >
-          <div className="flex items-center justify-between text-xs text-purple-700 font-medium mb-1">
-            <span>Contacted</span>
-            <MessageSquare className="w-4 h-4 text-purple-500" />
-          </div>
-          <div className="text-2xl font-bold text-gray-900">{counts.contacted}</div>
-          <div className="text-[11px] text-gray-400 mt-0.5">In communication</div>
-        </button>
-
-        <button
-          onClick={() => { setStatusFilter('Converted'); setPage(1); }}
-          className={`p-4 rounded-xl text-left border transition-all cursor-pointer ${
-            statusFilter === 'Converted'
-              ? 'bg-emerald-50/50 border-emerald-500 ring-2 ring-emerald-500/20'
-              : 'bg-white border-gray-200 hover:border-gray-300'
-          }`}
-        >
-          <div className="flex items-center justify-between text-xs text-emerald-700 font-medium mb-1">
-            <span>Converted</span>
-            <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-          </div>
-          <div className="text-2xl font-bold text-emerald-700">{counts.converted}</div>
-          <div className="text-[11px] text-gray-400 mt-0.5">Client onboarded</div>
-        </button>
-      </div>
-
-      {/* ========================================================================= */}
-      {/* 3. SEARCH & FILTER TOOLBAR                                                */}
-      {/* ========================================================================= */}
-      <div className="bg-white p-3.5 sm:p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col md:flex-row items-center justify-between gap-3">
-        {/* Search Input */}
-        <div className="relative w-full md:max-w-md">
-          <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+      {/* Row 2: Search Bar placed below filter buttons | Rows per page & Count on Right */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-3">
+        {/* Search Bar */}
+        <div className="relative flex items-center w-full sm:w-80 md:w-96">
+          <Search className="w-3.5 h-3.5 text-gray-400 absolute left-3 pointer-events-none" />
           <input
-            type="text"
             value={query}
-            onChange={(e) => { setQuery(e.target.value); setPage(1); }}
-            placeholder="Search by client name, email, phone, role, company..."
-            className="w-full pl-10 pr-9 py-2 text-sm text-gray-800 placeholder-gray-400 bg-gray-50/70 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#41B349]/30 focus:border-[#41B349] transition-all"
+            onChange={e => { setQuery(e.target.value); setPage(1); }}
+            placeholder="Search name, email, phone, role, service, budget..."
+            className="w-full pl-9 pr-8 py-1.5 border border-gray-300 rounded-lg text-xs outline-none focus:border-[#34953C] focus:ring-1 focus:ring-[#34953C] transition-all bg-white"
           />
           {query && (
             <button
               onClick={() => { setQuery(''); setPage(1); }}
-              className="absolute right-3 top-1/2 -translate-y-1/2 p-0.5 text-gray-400 hover:text-gray-600 rounded"
+              className="absolute right-2.5 p-0.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors cursor-pointer"
+              title="Clear search"
             >
               <X className="w-3.5 h-3.5" />
             </button>
           )}
         </div>
 
-        {/* Dropdowns / Filter selectors */}
-        <div className="flex items-center gap-2.5 w-full md:w-auto flex-wrap sm:flex-nowrap justify-end">
-          {/* Requirement Type Filter */}
-          <div className="flex items-center gap-1.5 w-full sm:w-auto">
-            <span className="text-xs text-gray-500 whitespace-nowrap">Model:</span>
+        {/* Rows per page & Count */}
+        <div className="flex items-center justify-between sm:justify-end gap-3.5 text-xs">
+          <div className="flex items-center gap-2">
+            <span className="text-gray-600">Rows per page:</span>
             <select
-              value={typeFilter}
-              onChange={(e) => { setTypeFilter(e.target.value); setPage(1); }}
-              className="px-2.5 py-2 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#41B349]/30 cursor-pointer"
+              value={pageSize}
+              onChange={e => { setPageSize(Number(e.target.value)); setPage(1); }}
+              className="border border-gray-300 rounded-md px-2 py-1 text-xs outline-none focus:border-[#34953C] cursor-pointer bg-white"
             >
-              <option value="all">All Engagement Models</option>
-              {uniqueTypes.map(t => (
-                <option key={t} value={t}>{t}</option>
+              {[10, 25, 50, 100].map(n => (
+                <option key={n} value={n}>{n}</option>
               ))}
             </select>
           </div>
 
-          {/* Status Filter */}
-          <div className="flex items-center gap-1.5 w-full sm:w-auto">
-            <span className="text-xs text-gray-500 whitespace-nowrap">Status:</span>
-            <select
-              value={statusFilter}
-              onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
-              className="px-2.5 py-2 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#41B349]/30 cursor-pointer"
-            >
-              <option value="all">All Statuses ({counts.all})</option>
-              <option value="unread">Unread Only ({counts.unread})</option>
-              {STATUS_OPTIONS.map(opt => (
-                <option key={opt.value} value={opt.value}>{opt.label}</option>
-              ))}
-            </select>
+          <div className="text-gray-500 font-medium whitespace-nowrap">
+            Showing {Math.min(filtered.length, (page - 1) * pageSize + 1)} - {Math.min(filtered.length, page * pageSize)} of {filtered.length} submissions
           </div>
         </div>
       </div>
 
-      {/* ========================================================================= */}
-      {/* 4. SUBMISSIONS DATA TABLE                                                 */}
-      {/* ========================================================================= */}
-      <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
-        {loading ? (
-          <div className="py-20 flex flex-col items-center justify-center text-gray-400 gap-3">
-            <Loader2 className="w-8 h-8 animate-spin text-[#41B349]" />
-            <p className="text-sm">Loading Hire Us submissions...</p>
-          </div>
-        ) : filtered.length === 0 ? (
-          <div className="py-16 text-center text-gray-500 px-4">
-            <div className="w-14 h-14 mx-auto mb-3.5 rounded-full bg-emerald-50 flex items-center justify-center text-[#41B349]">
-              <Users className="w-7 h-7" />
-            </div>
-            <h3 className="text-base font-semibold text-gray-800">No Hire Us Submissions Found</h3>
-            <p className="text-xs text-gray-500 mt-1 max-w-sm mx-auto">
-              {query || statusFilter !== 'all' || typeFilter !== 'all'
-                ? "Try clearing your search query or adjusting your filters to find what you're looking for."
-                : "When prospective clients submit talent requirements via the Hire Us or Hire Resources form, they will automatically appear here."}
-            </p>
-            {(query || statusFilter !== 'all' || typeFilter !== 'all') && (
-              <button
-                onClick={() => { setQuery(''); setStatusFilter('all'); setTypeFilter('all'); }}
-                className="mt-4 px-3.5 py-1.5 text-xs font-medium text-[#41B349] bg-emerald-50 rounded-lg hover:bg-emerald-100 transition-colors"
-              >
-                Reset Filters
-              </button>
-            )}
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="bg-gray-50/80 border-b border-gray-200 text-[11px] font-semibold uppercase tracking-wider text-gray-500">
-                  <th className="py-3 px-4 w-12 text-center">#</th>
-                  <th className="py-3 px-4">Status</th>
-                  <th className="py-3 px-4">Client & Contact</th>
-                  <th className="py-3 px-4">Engagement & Roles</th>
-                  <th className="py-3 px-4">Scope & Arrangement</th>
-                  <th className="py-3 px-4">Budget</th>
-                  <th className="py-3 px-4">Submitted</th>
-                  <th className="py-3 px-4 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100 text-sm">
-                {pageData.map((row, idx) => {
-                  const globalIdx = (page - 1) * pageSize + idx + 1;
-                  const isUnread = !row.isRead;
-                  const statusBadge = getStatusBadge(row.status);
-                  const servicesList = Array.isArray(row.services) ? row.services : [];
-                  const filesCount = Array.isArray(row.attachedFilesList) ? row.attachedFilesList.length : 0;
+      {/* Submissions Table - matching Contact Submissions styling exactly */}
+      <div style={{ overflowX: "auto", minHeight: "560px", maxHeight: "620px", overflowY: "auto" }} className="w-full border border-gray-200 rounded-lg bg-white">
+        <table style={{ whiteSpace: "nowrap" }} className="w-full text-xs text-left">
+          <thead className="bg-[#34953C] text-white sticky top-0 z-10">
+            <tr>
+              <th className="px-4 py-2.5 text-left font-semibold min-w-[210px]">Client</th>
+              <th className="px-4 py-2.5 text-left font-semibold min-w-[190px]">Resource & Model</th>
+              <th className="px-4 py-2.5 text-left font-semibold min-w-[200px] max-w-[240px]">Services Requested</th>
+              <th className="px-4 py-2.5 text-left font-semibold w-28">Status</th>
+              <th className="px-4 py-2.5 text-left font-semibold w-36">Submitted At</th>
+              <th className="px-4 py-2.5 text-right font-semibold w-20">Action</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-100 bg-white">
+            {pageData.length === 0 ? (
+              <tr>
+                <td colSpan={6} className="px-4 py-28 text-center text-gray-400 font-medium">
+                  No submissions found.
+                </td>
+              </tr>
+            ) : (
+              pageData.map((s, idx) => {
+                const targetId = s.id ?? s._id ?? idx;
+                const dt = s.createdAt ? new Date(s.createdAt) : null;
+                const formattedDate = dt ? dt.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '—';
+                const formattedTime = dt ? dt.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '';
+                const initial = s.name ? s.name.trim().charAt(0).toUpperCase() : (s.email ? s.email.trim().charAt(0).toUpperCase() : 'C');
+                const isUnread = !s.isRead;
+                const statusBadge = getStatusBadge(s.status);
+                const servicesList = Array.isArray(s.services) ? s.services : [];
 
-                  return (
-                    <tr
-                      key={row.id || row._id || idx}
-                      onClick={() => handleOpenView(row)}
-                      className={`hover:bg-emerald-50/30 transition-colors cursor-pointer group ${
-                        isUnread ? 'bg-amber-50/25 font-medium' : 'bg-white'
-                      }`}
-                    >
-                      {/* Index / Unread dot */}
-                      <td className="py-3.5 px-4 text-center text-xs text-gray-400 group-hover:text-gray-600">
-                        <div className="flex items-center justify-center gap-1.5">
+                return (
+                  <tr
+                    key={targetId}
+                    className={`align-middle transition-all ${isUnread ? 'bg-green-50/50 hover:bg-green-50/80 font-medium' : 'hover:bg-gray-50/80'}`}
+                  >
+                    {/* 1. Client Column: Avatar on left, Name inline, Email & Job title on line below */}
+                    <td className="px-4 py-2.5 text-left align-middle min-w-[210px]">
+                      <div className="flex flex-col space-y-0.5">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <div className="w-7 h-7 bg-emerald-100 text-[#2b7e32] border border-emerald-200 rounded-full flex items-center justify-center font-bold text-xs shrink-0">
+                            {initial}
+                          </div>
+                          <span className={`text-xs break-words min-w-0 leading-tight ${isUnread ? 'font-extrabold text-gray-950' : 'font-bold text-gray-900'}`}>
+                            {s.name || s.fullName || 'Anonymous Client'}
+                          </span>
                           {isUnread && (
-                            <span 
-                              className="w-2 h-2 rounded-full bg-amber-500 shrink-0" 
-                              title="Unread requirement" 
-                            />
-                          )}
-                          <span>{globalIdx}</span>
-                        </div>
-                      </td>
-
-                      {/* Status */}
-                      <td className="py-3.5 px-4" onClick={(e) => e.stopPropagation()}>
-                        <div className="relative inline-block">
-                          <select
-                            value={row.status || 'Pending'}
-                            disabled={updatingStatusId === (row.id || row._id)}
-                            onChange={(e) => handleStatusChange(row, e.target.value)}
-                            className={`text-[11px] font-semibold uppercase tracking-wider py-1 pl-2.5 pr-6 rounded-full border cursor-pointer focus:outline-none focus:ring-1 focus:ring-emerald-500 ${statusBadge.color}`}
-                          >
-                            {STATUS_OPTIONS.map(opt => (
-                              <option key={opt.value} value={opt.value}>
-                                {opt.label}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                      </td>
-
-                      {/* Client & Contact */}
-                      <td className="py-3.5 px-4">
-                        <div className="flex flex-col">
-                          <div className="flex items-center gap-2">
-                            <span className="font-semibold text-gray-900 group-hover:text-[#41B349] transition-colors">
-                              {row.name || row.fullName || 'Anonymous'}
+                            <span className="px-1.5 py-0.5 rounded text-[9px] font-extrabold bg-emerald-100 text-[#2b7e32] border border-emerald-200 uppercase tracking-wider shrink-0">
+                              NEW
                             </span>
-                            {row.country && (
-                              <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-gray-100 text-gray-600">
-                                {row.country}
-                              </span>
-                            )}
-                          </div>
-
-                          {(row.organization || row.companyName || row.jobTitle) && (
-                            <div className="text-xs text-gray-500 flex items-center gap-1.5 mt-0.5">
-                              <Building2 className="w-3 h-3 text-gray-400 shrink-0" />
-                              <span className="truncate max-w-[180px]">
-                                {[row.jobTitle, row.organization || row.companyName].filter(Boolean).join(' • ')}
-                              </span>
-                            </div>
                           )}
-
-                          <div className="flex items-center gap-3 text-xs text-gray-500 mt-1" onClick={(e) => e.stopPropagation()}>
-                            {row.email && (
-                              <a
-                                href={`mailto:${row.email}`}
-                                className="inline-flex items-center gap-1 hover:text-[#41B349] transition-colors"
-                                title={`Email: ${row.email}`}
-                              >
-                                <Mail className="w-3 h-3 text-gray-400" />
-                                <span className="truncate max-w-[140px]">{row.email}</span>
-                              </a>
-                            )}
-                            {row.phone && (
-                              <a
-                                href={`tel:${row.phone}`}
-                                className="inline-flex items-center gap-1 hover:text-[#41B349] transition-colors"
-                                title={`Call: ${row.phone}`}
-                              >
-                                <Phone className="w-3 h-3 text-gray-400" />
-                                <span>{row.phone}</span>
-                              </a>
-                            )}
-                          </div>
                         </div>
-                      </td>
 
-                      {/* Engagement & Roles */}
-                      <td className="py-3.5 px-4">
-                        <div className="flex flex-col gap-1 max-w-[240px]">
-                          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-gray-800">
-                            <Briefcase className="w-3 h-3 text-[#41B349]" />
-                            <span>{row.requirementType || 'Dedicated Resource'}</span>
+                        <div className="text-[11px] text-gray-500 flex items-center gap-1.5 truncate">
+                          {s.email && <span className="font-mono text-gray-500 truncate max-w-[140px]">{s.email}</span>}
+                          {s.country && <span className="text-gray-400">• {s.country}</span>}
+                        </div>
+                      </div>
+                    </td>
+
+                    {/* 2. Resource & Model Column */}
+                    <td className="px-4 py-2.5 align-middle min-w-[190px]">
+                      <div className="flex flex-col space-y-0.5">
+                        <div className="font-bold text-gray-900 text-xs flex items-center gap-1.5">
+                          <Briefcase className="w-3.5 h-3.5 text-[#34953C] shrink-0" />
+                          <span className="truncate max-w-[160px]">{s.requirementType || 'Dedicated Resource'}</span>
+                        </div>
+                        <div className="text-[11px] text-gray-600 flex items-center gap-1.5">
+                          <span>
+                            <strong>{s.resourceCount || '1'}</strong> {parseInt(s.resourceCount, 10) === 1 ? 'Resource' : 'Resources'}
+                            {s.exactResourceCount ? ` (${s.exactResourceCount})` : ''}
                           </span>
-
-                          {/* Services Tags */}
-                          {servicesList.length > 0 ? (
-                            <div className="flex flex-wrap gap-1 mt-0.5">
-                              {servicesList.slice(0, 2).map((srv, sIdx) => (
-                                <span
-                                  key={sIdx}
-                                  className="text-[10px] font-medium px-2 py-0.5 rounded-md bg-gray-100 text-gray-700 border border-gray-200 truncate max-w-[150px]"
-                                >
-                                  {srv}
-                                </span>
-                              ))}
-                              {servicesList.length > 2 && (
-                                <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                  +{servicesList.length - 2} more
-                                </span>
-                              )}
-                            </div>
-                          ) : (
-                            <span className="text-xs text-gray-400 italic">No specific service</span>
-                          )}
-
-                          {row.experienceLevel && (
-                            <span className="text-[11px] text-gray-500">
-                              Exp: <span className="font-medium text-gray-700">{row.experienceLevel}</span>
-                            </span>
-                          )}
+                          {s.experienceLevel && <span className="text-gray-400">• {s.experienceLevel}</span>}
                         </div>
-                      </td>
+                      </div>
+                    </td>
 
-                      {/* Scope & Arrangement */}
-                      <td className="py-3.5 px-4">
-                        <div className="flex flex-col text-xs text-gray-600 gap-0.5">
-                          <div className="flex items-center gap-1.5">
-                            <span className="font-semibold text-gray-900">
-                              {row.resourceCount} {parseInt(row.resourceCount, 10) === 1 ? 'Resource' : 'Resources'}
+                    {/* 3. Services Requested Column (wrapped pills) */}
+                    <td className="px-4 py-2.5 align-middle whitespace-normal min-w-[200px] max-w-[240px]">
+                      <div className="flex flex-wrap gap-1 items-center">
+                        {servicesList.length > 0 ? (
+                          servicesList.slice(0, 2).map((srv, sIdx) => (
+                            <span
+                              key={sIdx}
+                              className="text-[10px] font-medium px-2 py-0.5 rounded-md bg-gray-100 text-gray-700 border border-gray-200 truncate max-w-[130px]"
+                            >
+                              {srv}
                             </span>
-                            <span className="text-gray-300">•</span>
-                            <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-slate-100 text-slate-700">
-                              {row.workArrangement || 'Remote'}
-                            </span>
-                          </div>
-
-                          {row.duration && (
-                            <span className="text-[11px] text-gray-500">
-                              Duration: <span className="text-gray-700 font-medium">{row.duration}</span>
-                            </span>
-                          )}
-
-                          {filesCount > 0 && (
-                            <div className="flex items-center gap-1 text-[11px] text-emerald-600 mt-0.5">
-                              <FileCheck className="w-3 h-3" />
-                              <span>{filesCount} {filesCount === 1 ? 'file' : 'files'} attached</span>
-                            </div>
-                          )}
-                        </div>
-                      </td>
-
-                      {/* Budget */}
-                      <td className="py-3.5 px-4">
-                        <div className="flex flex-col text-xs">
-                          {row.budget ? (
-                            <span className="font-semibold text-gray-900 truncate max-w-[130px]">
-                              {row.budget}
-                            </span>
-                          ) : row.minBudget || row.maxBudget ? (
-                            <span className="font-semibold text-gray-900">
-                              {row.currency || 'USD'} {row.minBudget || '0'} - {row.maxBudget || '0'}
-                            </span>
-                          ) : (
-                            <span className="text-gray-400 italic">Flexible</span>
-                          )}
-                          {row.budgetType && (
-                            <span className="text-[11px] text-gray-500">{row.budgetType}</span>
-                          )}
-                        </div>
-                      </td>
-
-                      {/* Submitted Date */}
-                      <td className="py-3.5 px-4 whitespace-nowrap">
-                        <div className="flex flex-col text-xs">
-                          <span className="font-medium text-gray-900">
-                            {formatRelativeTime(row.createdAt)}
+                          ))
+                        ) : s.otherService ? (
+                          <span className="text-[10px] font-medium px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 border border-blue-200 truncate">
+                            {s.otherService}
                           </span>
-                          <span className="text-[11px] text-gray-400">
-                            {row.createdAt ? new Date(row.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A'}
+                        ) : (
+                          <span className="text-gray-400 text-xs italic">—</span>
+                        )}
+                        {servicesList.length > 2 && (
+                          <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200">
+                            +{servicesList.length - 2}
                           </span>
-                        </div>
-                      </td>
+                        )}
+                      </div>
+                    </td>
 
-                      {/* Quick Actions */}
-                      <td className="py-3.5 px-4 text-right" onClick={(e) => e.stopPropagation()}>
-                        <div className="flex items-center justify-end gap-1.5">
-                          <button
-                            onClick={() => handleOpenView(row)}
-                            className="p-1.5 text-gray-500 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors cursor-pointer"
-                            title="View Full Specifications"
-                          >
-                            <Eye className="w-4 h-4" />
-                          </button>
+                    {/* 4. Status Badge Column */}
+                    <td className="px-4 py-2.5 align-middle">
+                      <div className="relative inline-block" onClick={(e) => e.stopPropagation()}>
+                        <select
+                          value={s.status || 'Pending'}
+                          disabled={updatingStatusId === targetId}
+                          onChange={(e) => handleStatusChange(targetId, e.target.value)}
+                          className={`text-[11px] font-bold uppercase tracking-wider py-1 pl-2.5 pr-6 rounded-full border cursor-pointer focus:outline-none ${statusBadge.color}`}
+                        >
+                          {STATUS_OPTIONS.map(opt => (
+                            <option key={opt.value} value={opt.value}>{opt.label}</option>
+                          ))}
+                        </select>
+                      </div>
+                    </td>
 
-                          <button
-                            onClick={(e) => handleToggleRead(row, e)}
-                            className="p-1.5 text-gray-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors cursor-pointer"
-                            title={isUnread ? "Mark as Read" : "Mark as Unread"}
-                          >
-                            <CheckCheck className={`w-4 h-4 ${isUnread ? 'text-amber-500' : 'text-gray-400'}`} />
-                          </button>
+                    {/* 7. Submitted At Column */}
+                    <td className="px-4 py-2.5 align-middle text-[11px] text-gray-500 whitespace-nowrap">
+                      <div className="font-semibold text-gray-700 leading-tight">{formattedDate}</div>
+                      <div className="text-gray-400 text-[10px] leading-tight">{formattedTime}</div>
+                    </td>
 
-                          <button
-                            onClick={() => setDeleteCandidate(row)}
-                            className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
-                            title="Delete Submission"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
-
-        {/* ========================================================================= */}
-        {/* 5. TABLE PAGINATION FOOTER                                                */}
-        {/* ========================================================================= */}
-        {!loading && filtered.length > 0 && (
-          <div className="p-3.5 sm:p-4 bg-gray-50/70 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-600">
-            <div className="flex items-center gap-2">
-              <span>Showing</span>
-              <span className="font-semibold text-gray-900">
-                {(page - 1) * pageSize + 1} - {Math.min(page * pageSize, filtered.length)}
-              </span>
-              <span>of</span>
-              <span className="font-semibold text-gray-900">{filtered.length}</span>
-              <span>records</span>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-1.5">
-                <span>Per page:</span>
-                <select
-                  value={pageSize}
-                  onChange={(e) => { setPageSize(Number(e.target.value)); setPage(1); }}
-                  className="px-2 py-1 bg-white border border-gray-300 rounded text-xs focus:outline-none"
-                >
-                  <option value={10}>10</option>
-                  <option value={25}>25</option>
-                  <option value={50}>50</option>
-                  <option value={100}>100</option>
-                </select>
-              </div>
-
-              <div className="flex items-center gap-1">
-                <button
-                  onClick={() => setPage(p => Math.max(1, p - 1))}
-                  disabled={page === 1}
-                  className="px-2.5 py-1 bg-white border border-gray-300 rounded text-xs hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
-                >
-                  Prev
-                </button>
-                <span className="px-2 font-medium text-gray-700">
-                  Page {page} of {totalPages}
-                </span>
-                <button
-                  onClick={() => setPage(p => Math.min(totalPages, p + 1))}
-                  disabled={page === totalPages}
-                  className="px-2.5 py-1 bg-white border border-gray-300 rounded text-xs hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
-                >
-                  Next
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+                    {/* 8. Action Column */}
+                    <td className="px-4 py-2.5 text-right align-middle whitespace-nowrap">
+                      <button
+                        onClick={() => handleOpenView(s, idx)}
+                        className="px-3 py-1 bg-[#34953C] hover:bg-[#2b7e32] text-white text-[11px] font-bold rounded-md transition cursor-pointer shadow-2xs"
+                      >
+                        View
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })
+            )}
+          </tbody>
+        </table>
       </div>
 
-      {/* ========================================================================= */}
-      {/* 6. FULL DETAILS DRAWER / MODAL                                            */}
-      {/* ========================================================================= */}
+      {/* Pagination - Matching Contact Submissions */}
+      <div className="flex items-center justify-between mt-6">
+        <div className="text-xs text-gray-500">
+          Page {page} of {totalPages}
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            disabled={page <= 1}
+            onClick={() => setPage(p => Math.max(1, p - 1))}
+            className="px-3 py-1.5 border border-gray-300 rounded text-xs disabled:opacity-40 bg-white hover:bg-gray-100 transition cursor-pointer"
+          >
+            Previous
+          </button>
+          <div className="px-3 py-1.5 font-bold text-xs bg-gray-100 rounded text-gray-800">{page}</div>
+          <button
+            disabled={page >= totalPages}
+            onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+            className="px-3 py-1.5 border border-gray-300 rounded text-xs disabled:opacity-40 bg-white hover:bg-gray-100 transition cursor-pointer"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+
+      {/* View Detail Modal Popup - Structured like Contact Submissions Modal */}
       {viewRow && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-end animate-in fade-in duration-200">
-          <div 
-            className="w-full max-w-3xl h-full bg-white shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-right duration-300"
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 sm:p-6" onClick={() => setViewRow(null)}>
+          <div
+            className="bg-white rounded-2xl shadow-2xl w-full max-w-[820px] max-h-[92vh] flex flex-col overflow-hidden border border-gray-100 animate-in fade-in zoom-in-95 duration-200"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
-            <div className="px-6 py-4.5 bg-gradient-to-r from-gray-900 to-gray-800 text-white flex items-center justify-between shrink-0">
+            <div className="bg-[#34953C] px-6 sm:px-8 py-4.5 flex items-center justify-between text-white shrink-0">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-[#41B349]">
-                  <Users className="w-5 h-5" />
+                <div className="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center font-bold text-sm">
+                  #{viewRow.inquiryNo}
                 </div>
                 <div>
-                  <div className="flex items-center gap-2">
-                    <h2 className="text-lg font-bold">
-                      {viewRow.name || viewRow.fullName || 'Requirement Details'}
-                    </h2>
-                    <span className="text-xs px-2 py-0.5 rounded-full bg-white/20 text-white font-medium">
-                      {viewRow.requirementType || 'Dedicated Resource'}
-                    </span>
-                  </div>
-                  <p className="text-xs text-gray-300 mt-0.5">
-                    Submitted on {formatDate(viewRow.createdAt)}
+                  <h2 className="text-white text-base sm:text-lg font-bold leading-tight">
+                    Hire Requirement Details
+                  </h2>
+                  <p className="text-white/80 text-[11px] font-medium">
+                    Inquiry #{viewRow.inquiryNo} &bull; {viewRow.requirementType || 'Dedicated Resource'}
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => handleToggleRead(viewRow)}
-                  className="px-2.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-xs font-medium text-white transition-colors cursor-pointer flex items-center gap-1.5"
-                  title="Toggle Read"
-                >
-                  <CheckCheck className={`w-3.5 h-3.5 ${viewRow.isRead ? 'text-emerald-400' : 'text-gray-300'}`} />
-                  <span>{viewRow.isRead ? 'Read' : 'Mark Read'}</span>
-                </button>
+              <div className="flex items-center gap-2.5">
+                <span className={`px-3 py-1 rounded-full text-xs font-bold shadow-2xs ${getStatusBadge(viewRow.status).color}`}>
+                  {viewRow.status || 'Pending'}
+                </span>
                 <button
                   onClick={() => setViewRow(null)}
-                  className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
+                  className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/25 flex items-center justify-center text-white/90 hover:text-white transition-all cursor-pointer"
+                  title="Close modal"
                 >
-                  <X className="w-5 h-5" />
+                  <X className="w-4 h-4" />
                 </button>
               </div>
             </div>
 
-            {/* Quick Status Bar */}
-            <div className="px-6 py-3 bg-gray-50 border-b border-gray-200 flex flex-wrap items-center justify-between gap-3 shrink-0">
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-semibold text-gray-600">Lead Status:</span>
-                <select
-                  value={viewRow.status || 'Pending'}
-                  disabled={updatingStatusId === (viewRow.id || viewRow._id)}
-                  onChange={(e) => handleStatusChange(viewRow, e.target.value)}
-                  className={`text-xs font-bold uppercase tracking-wider py-1 px-3 rounded-full border cursor-pointer focus:outline-none ${getStatusBadge(viewRow.status).color}`}
-                >
-                  {STATUS_OPTIONS.map(opt => (
-                    <option key={opt.value} value={opt.value}>{opt.label}</option>
-                  ))}
-                </select>
+            {/* Modal Scrollable Body */}
+            <div className="p-6 sm:p-8 space-y-5 overflow-y-auto flex-1 text-left">
+
+              {/* 1. Author / Client Profile Card */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 sm:p-5 rounded-xl bg-gray-50/90 border border-gray-200/80">
+                <div className="flex items-center gap-3.5 min-w-0">
+                  <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xl sm:text-2xl border-2 border-emerald-200/80 shrink-0">
+                    {viewRow.name ? viewRow.name.trim().charAt(0).toUpperCase() : (viewRow.email ? viewRow.email.trim().charAt(0).toUpperCase() : 'C')}
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="text-base sm:text-lg font-bold text-gray-900 leading-snug truncate">
+                      {viewRow.name || viewRow.fullName || 'Anonymous Client'}
+                    </h3>
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1 text-xs text-gray-500">
+                      {viewRow.jobTitle && (
+                        <span className="font-semibold text-gray-700 flex items-center gap-1">
+                          <Briefcase className="w-3.5 h-3.5 text-gray-400" />
+                          <span>{viewRow.jobTitle}</span>
+                        </span>
+                      )}
+                      {viewRow.country && (
+                        <span className="flex items-center gap-1 text-gray-600">
+                          <MapPin className="w-3.5 h-3.5 text-gray-400" />
+                          <span>{viewRow.country}</span>
+                        </span>
+                      )}
+                      {viewRow.email && (
+                        <a
+                          href={`mailto:${viewRow.email}`}
+                          className="flex items-center gap-1.5 font-mono text-gray-600 hover:text-[#34953C] transition-colors"
+                          title="Send email"
+                        >
+                          <Mail className="w-3.5 h-3.5 text-gray-400" />
+                          <span className="truncate">{viewRow.email}</span>
+                        </a>
+                      )}
+                      {viewRow.phone && (
+                        <a
+                          href={`tel:${viewRow.phone}`}
+                          className="flex items-center gap-1.5 font-semibold text-gray-600 hover:text-[#34953C] transition-colors"
+                          title="Call phone"
+                        >
+                          <Phone className="w-3.5 h-3.5 text-gray-400" />
+                          <span>{viewRow.phone}</span>
+                        </a>
+                      )}
+                      {viewRow.whatsapp && (
+                        <a
+                          href={`https://wa.me/${viewRow.whatsapp.replace(/[^0-9]/g, '')}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="flex items-center gap-1.5 font-semibold text-emerald-700 hover:underline"
+                          title="WhatsApp chat"
+                        >
+                          <MessageSquare className="w-3.5 h-3.5" />
+                          <span>{viewRow.whatsapp}</span>
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 shrink-0">
+                  {viewRow.email && (
+                    <a
+                      href={`mailto:${viewRow.email}`}
+                      className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 bg-white hover:bg-gray-100 border border-gray-300 rounded-lg text-xs font-semibold text-gray-700 shadow-2xs transition-all cursor-pointer"
+                    >
+                      <Mail className="w-3.5 h-3.5 text-gray-500" />
+                      <span>Reply via Email</span>
+                    </a>
+                  )}
+                  {viewRow.whatsapp && (
+                    <a
+                      href={`https://wa.me/${viewRow.whatsapp.replace(/[^0-9]/g, '')}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-800 rounded-lg text-xs font-semibold shadow-2xs transition-all cursor-pointer"
+                    >
+                      <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />
+                      <span>WhatsApp</span>
+                    </a>
+                  )}
+                </div>
               </div>
 
-              {/* Direct Communication Quick Links */}
-              <div className="flex items-center gap-2">
-                {viewRow.email && (
-                  <a
-                    href={`mailto:${viewRow.email}`}
-                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium bg-white border border-gray-300 text-gray-700 hover:text-[#41B349] hover:border-[#41B349] shadow-xs transition-colors"
-                  >
-                    <Mail className="w-3.5 h-3.5 text-gray-500" />
-                    <span>Send Email</span>
-                  </a>
-                )}
-                {viewRow.phone && (
-                  <a
-                    href={`tel:${viewRow.phone}`}
-                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium bg-white border border-gray-300 text-gray-700 hover:text-[#41B349] hover:border-[#41B349] shadow-xs transition-colors"
-                  >
-                    <Phone className="w-3.5 h-3.5 text-gray-500" />
-                    <span>Call</span>
-                  </a>
-                )}
-                {viewRow.whatsapp && (
-                  <a
-                    href={`https://wa.me/${viewRow.whatsapp.replace(/[^0-9]/g, '')}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-300 hover:bg-emerald-100 shadow-xs transition-colors"
-                  >
-                    <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />
-                    <span>WhatsApp</span>
-                  </a>
-                )}
-              </div>
-            </div>
+              {/* 2. Structured Key Info Grid (All Client Form Fields cleanly presented) */}
+              <div>
+                <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400 block mb-2.5">
+                  Client Talent Specifications
+                </span>
 
-            {/* Modal Tabs */}
-            <div className="px-6 bg-white border-b border-gray-200 flex items-center gap-4 text-xs font-semibold shrink-0">
-              <button
-                onClick={() => setDetailTab('specs')}
-                className={`py-3 border-b-2 transition-all cursor-pointer ${
-                  detailTab === 'specs' 
-                    ? 'border-[#41B349] text-[#41B349]' 
-                    : 'border-transparent text-gray-500 hover:text-gray-800'
-                }`}
-              >
-                Requirement Specs
-              </button>
-              <button
-                onClick={() => setDetailTab('client')}
-                className={`py-3 border-b-2 transition-all cursor-pointer ${
-                  detailTab === 'client' 
-                    ? 'border-[#41B349] text-[#41B349]' 
-                    : 'border-transparent text-gray-500 hover:text-gray-800'
-                }`}
-              >
-                Client & Company
-              </button>
-              <button
-                onClick={() => setDetailTab('project')}
-                className={`py-3 border-b-2 transition-all cursor-pointer ${
-                  detailTab === 'project' 
-                    ? 'border-[#41B349] text-[#41B349]' 
-                    : 'border-transparent text-gray-500 hover:text-gray-800'
-                }`}
-              >
-                Project & Schedule
-              </button>
-              <button
-                onClick={() => setDetailTab('notes')}
-                className={`py-3 border-b-2 transition-all cursor-pointer ${
-                  detailTab === 'notes' 
-                    ? 'border-[#41B349] text-[#41B349]' 
-                    : 'border-transparent text-gray-500 hover:text-gray-800'
-                }`}
-              >
-                Admin Notes & History
-              </button>
-              <button
-                onClick={() => setDetailTab('raw')}
-                className={`py-3 border-b-2 transition-all cursor-pointer ${
-                  detailTab === 'raw' 
-                    ? 'border-[#41B349] text-[#41B349]' 
-                    : 'border-transparent text-gray-500 hover:text-gray-800'
-                }`}
-              >
-                Compiled Message
-              </button>
-            </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
 
-            {/* Modal Body / Tab Content */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-6">
-
-              {/* TAB 1: REQUIREMENT SPECS */}
-              {detailTab === 'specs' && (
-                <div className="space-y-6">
-                  {/* Overview Cards */}
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    <div className="p-3.5 bg-gray-50 rounded-xl border border-gray-200">
-                      <span className="text-[11px] uppercase tracking-wider text-gray-500 font-semibold block mb-1">
-                        Requirement Type
-                      </span>
-                      <span className="text-sm font-bold text-gray-900">
+                  {/* Model & Headcount */}
+                  <div className="bg-white p-3.5 rounded-xl border border-gray-200 shadow-2xs flex flex-col justify-between">
+                    <div className="flex items-center gap-1.5 text-gray-400 mb-1.5">
+                      <Briefcase className="w-3.5 h-3.5 text-[#34953C]" />
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Requirement Model</span>
+                    </div>
+                    <div>
+                      <span className="text-xs font-bold text-gray-900 block truncate">
                         {viewRow.requirementType || 'Dedicated Resource'}
                       </span>
-                    </div>
-
-                    <div className="p-3.5 bg-gray-50 rounded-xl border border-gray-200">
-                      <span className="text-[11px] uppercase tracking-wider text-gray-500 font-semibold block mb-1">
-                        Resource Count
-                      </span>
-                      <span className="text-sm font-bold text-gray-900">
-                        {viewRow.resourceCount} {viewRow.exactResourceCount ? `(Exact: ${viewRow.exactResourceCount})` : ''}
+                      <span className="text-[11px] text-gray-500 mt-0.5 block">
+                        Headcount: <strong>{viewRow.resourceCount || '1'}</strong> {viewRow.exactResourceCount ? `(Exact: ${viewRow.exactResourceCount})` : ''}
                       </span>
                     </div>
+                  </div>
 
-                    <div className="p-3.5 bg-gray-50 rounded-xl border border-gray-200">
-                      <span className="text-[11px] uppercase tracking-wider text-gray-500 font-semibold block mb-1">
-                        Experience Required
-                      </span>
-                      <span className="text-sm font-bold text-gray-900">
+                  {/* Experience Level */}
+                  <div className="bg-white p-3.5 rounded-xl border border-gray-200 shadow-2xs flex flex-col justify-between">
+                    <div className="flex items-center gap-1.5 text-gray-400 mb-1.5">
+                      <Users className="w-3.5 h-3.5 text-blue-600" />
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Experience Required</span>
+                    </div>
+                    <div>
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold bg-blue-50 text-blue-800 border border-blue-200/80">
                         {viewRow.experienceLevel || '3-5 Years'}
                       </span>
                     </div>
                   </div>
 
-                  {/* Services Requested */}
-                  <div className="p-4 bg-white rounded-xl border border-gray-200 shadow-xs">
-                    <h3 className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3 flex items-center gap-1.5">
-                      <Layers className="w-4 h-4 text-[#41B349]" />
-                      Requested Roles & Services
-                    </h3>
-                    <div className="flex flex-wrap gap-2">
-                      {Array.isArray(viewRow.services) && viewRow.services.length > 0 ? (
-                        viewRow.services.map((srv, idx) => (
-                          <span
-                            key={idx}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200"
-                          >
-                            <Check className="w-3.5 h-3.5 text-emerald-600" />
-                            {srv}
-                          </span>
-                        ))
-                      ) : (
-                        <p className="text-xs text-gray-400 italic">No services listed</p>
+                  {/* Budget */}
+                  <div className="bg-white p-3.5 rounded-xl border border-gray-200 shadow-2xs flex flex-col justify-between">
+                    <div className="flex items-center gap-1.5 text-gray-400 mb-1.5">
+                      <DollarSign className="w-3.5 h-3.5 text-emerald-600" />
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Estimated Budget</span>
+                    </div>
+                    <div>
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200/80">
+                        {viewRow.budget || `${viewRow.currency || 'USD'} ${viewRow.minBudget || '0'} - ${viewRow.maxBudget || '0'}`}
+                      </span>
+                      {viewRow.budgetType && (
+                        <span className="text-[10px] text-gray-500 block mt-0.5">{viewRow.budgetType}</span>
                       )}
-                      {viewRow.otherService && (
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-blue-50 text-blue-800 border border-blue-200">
-                          Other: {viewRow.otherService}
+                    </div>
+                  </div>
+
+                  {/* Work Arrangement */}
+                  <div className="bg-white p-3.5 rounded-xl border border-gray-200 shadow-2xs flex flex-col justify-between">
+                    <div className="flex items-center gap-1.5 text-gray-400 mb-1.5">
+                      <MapPin className="w-3.5 h-3.5 text-gray-400" />
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Work Arrangement</span>
+                    </div>
+                    <div>
+                      <span className="text-xs font-bold text-gray-900 block">
+                        {viewRow.workArrangement || 'Remote'}
+                      </span>
+                      <span className="text-[11px] text-gray-500 truncate block mt-0.5">
+                        Location: {viewRow.city || viewRow.requiredLocation || 'Remote / Office'}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Time Zone */}
+                  <div className="bg-white p-3.5 rounded-xl border border-gray-200 shadow-2xs flex flex-col justify-between">
+                    <div className="flex items-center gap-1.5 text-gray-400 mb-1.5">
+                      <Clock className="w-3.5 h-3.5 text-gray-400" />
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Preferred Time Zone</span>
+                    </div>
+                    <span className="text-xs font-bold text-gray-900 truncate">
+                      {viewRow.timeZone || 'Client Local Time'}
+                    </span>
+                  </div>
+
+                  {/* Working Schedule */}
+                  <div className="bg-white p-3.5 rounded-xl border border-gray-200 shadow-2xs flex flex-col justify-between">
+                    <div className="flex items-center gap-1.5 text-gray-400 mb-1.5">
+                      <Calendar className="w-3.5 h-3.5 text-gray-400" />
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Working Schedule</span>
+                    </div>
+                    <div>
+                      <span className="text-xs font-bold text-gray-900 block truncate">
+                        {viewRow.workingHours || 'Full-Time (8h/day)'}
+                      </span>
+                      <span className="text-[11px] text-gray-500 block mt-0.5 truncate">
+                        {viewRow.workingDays || 'Monday - Friday'} ({viewRow.hoursPerDay || '8'}h/d, {viewRow.hoursPerWeek || '40'}h/w)
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Engagement Duration */}
+                  <div className="bg-white p-3.5 rounded-xl border border-gray-200 shadow-2xs flex flex-col justify-between">
+                    <div className="flex items-center gap-1.5 text-gray-400 mb-1.5">
+                      <Clock className="w-3.5 h-3.5 text-gray-400" />
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Engagement Duration</span>
+                    </div>
+                    <div>
+                      <span className="text-xs font-bold text-gray-900 block truncate">
+                        {viewRow.duration || 'Flexible'}
+                      </span>
+                      <span className="text-[10px] text-gray-500 block mt-0.5 truncate">
+                        Start: {viewRow.startDate || 'Immediate'} &bull; End: {viewRow.endDate || 'Flexible'}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Internal Team Setup */}
+                  <div className="bg-white p-3.5 rounded-xl border border-gray-200 shadow-2xs flex flex-col justify-between">
+                    <div className="flex items-center gap-1.5 text-gray-400 mb-1.5">
+                      <Users className="w-3.5 h-3.5 text-gray-400" />
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Internal Team</span>
+                    </div>
+                    <div>
+                      <span className="text-xs font-bold text-gray-900 block">
+                        Has Team: {viewRow.hasInternalTeam || 'No'}
+                      </span>
+                      {Array.isArray(viewRow.existingTeamRoles) && viewRow.existingTeamRoles.length > 0 && (
+                        <span className="text-[10px] text-gray-500 block mt-0.5 truncate" title={viewRow.existingTeamRoles.join(', ')}>
+                          Roles: {viewRow.existingTeamRoles.join(', ')}
                         </span>
                       )}
                     </div>
                   </div>
 
-                  {/* Skills & Responsibilities */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="p-4 bg-gray-50/70 rounded-xl border border-gray-200">
-                      <h4 className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
-                        Specific Skills Required
-                      </h4>
-                      <p className="text-xs text-gray-800 whitespace-pre-wrap leading-relaxed">
-                        {viewRow.requiredSkills || 'None specified by client'}
-                      </p>
+                  {/* Management & Communication */}
+                  <div className="bg-white p-3.5 rounded-xl border border-gray-200 shadow-2xs flex flex-col justify-between">
+                    <div className="flex items-center gap-1.5 text-gray-400 mb-1.5">
+                      <MessageSquare className="w-3.5 h-3.5 text-gray-400" />
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Management & Comm</span>
                     </div>
-
-                    <div className="p-4 bg-gray-50/70 rounded-xl border border-gray-200">
-                      <h4 className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
-                        Key Responsibilities
-                      </h4>
-                      <p className="text-xs text-gray-800 whitespace-pre-wrap leading-relaxed">
-                        {viewRow.keyResponsibilities || 'None specified by client'}
-                      </p>
-                    </div>
-
-                    <div className="p-4 bg-gray-50/70 rounded-xl border border-gray-200">
-                      <h4 className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
-                        Expected Deliverables
-                      </h4>
-                      <p className="text-xs text-gray-800 whitespace-pre-wrap leading-relaxed">
-                        {viewRow.expectedDeliverables || 'None specified by client'}
-                      </p>
-                    </div>
-
-                    <div className="p-4 bg-gray-50/70 rounded-xl border border-gray-200">
-                      <h4 className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
-                        Preferred Tools & Technologies
-                      </h4>
-                      <p className="text-xs text-gray-800 whitespace-pre-wrap leading-relaxed">
-                        {viewRow.preferredTools || 'None specified by client'}
-                      </p>
+                    <div>
+                      <span className="text-xs font-bold text-gray-900 block truncate">
+                        Manager: {viewRow.teamManager || 'Client'}
+                      </span>
+                      <span className="text-[10px] text-gray-500 block mt-0.5 truncate">
+                        Meetings: {viewRow.meetingFrequency || 'Weekly Review'}
+                      </span>
                     </div>
                   </div>
 
-                  {/* Attached Files List */}
+                  {/* Documentation & Specifications */}
+                  <div className="bg-white p-3.5 rounded-xl border border-gray-200 shadow-2xs flex flex-col justify-between">
+                    <div className="flex items-center gap-1.5 text-gray-400 mb-1.5">
+                      <FileCheck className="w-3.5 h-3.5 text-[#34953C]" />
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Available Documentation</span>
+                    </div>
+                    <div>
+                      <span className="text-xs font-bold text-gray-900 block">
+                        Has Documentation: {viewRow.hasDocumentation || 'No'}
+                      </span>
+                      {Array.isArray(viewRow.documentationTypes) && viewRow.documentationTypes.length > 0 && (
+                        <span className="text-[10px] text-gray-500 block mt-0.5 truncate" title={viewRow.documentationTypes.join(', ')}>
+                          Types: {viewRow.documentationTypes.join(', ')}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Preferred Contact Mode */}
+                  <div className="bg-white p-3.5 rounded-xl border border-gray-200 shadow-2xs flex flex-col justify-between">
+                    <div className="flex items-center gap-1.5 text-gray-400 mb-1.5">
+                      <Phone className="w-3.5 h-3.5 text-gray-400" />
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Preferred Contact</span>
+                    </div>
+                    <div>
+                      <span className="text-xs font-bold text-gray-900 block">
+                        {viewRow.preferredContactMethod || 'Email'}
+                      </span>
+                      <span className="text-[10px] text-gray-500 block mt-0.5">
+                        Best Time: {viewRow.bestTimeToContact || 'Any Time'}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Referral Source */}
+                  <div className="bg-white p-3.5 rounded-xl border border-gray-200 shadow-2xs flex flex-col justify-between">
+                    <div className="flex items-center gap-1.5 text-gray-400 mb-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Found Us Via</span>
+                    </div>
+                    <div>
+                      <span className="text-xs font-bold text-gray-900 block truncate">
+                        {Array.isArray(viewRow.referralSources) ? viewRow.referralSources.join(', ') : 'Direct'}
+                        {viewRow.otherReferral ? ` (${viewRow.otherReferral})` : ''}
+                      </span>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              {/* Services Requested Card */}
+              <div className="p-4 sm:p-5 bg-white rounded-xl border border-gray-200 shadow-2xs space-y-2.5">
+                <div className="flex items-center gap-1.5 text-gray-400">
+                  <Layers className="w-4 h-4 text-[#34953C]" />
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400">
+                    Requested Services & Talent Roles
+                  </span>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {Array.isArray(viewRow.services) && viewRow.services.length > 0 ? (
+                    viewRow.services.map((srv, sIdx) => (
+                      <span
+                        key={sIdx}
+                        className="inline-flex items-center gap-1 px-3 py-1 rounded-lg text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200"
+                      >
+                        <Check className="w-3.5 h-3.5 text-emerald-600" />
+                        {srv}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="text-gray-400 text-xs italic">No specific service selected</span>
+                  )}
+                  {viewRow.otherService && (
+                    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-lg text-xs font-bold bg-blue-50 text-blue-800 border border-blue-200">
+                      Other: {viewRow.otherService}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* Reference Links & Attached Files (if any) */}
+              {(viewRow.referenceLinks || (Array.isArray(viewRow.attachedFilesList) && viewRow.attachedFilesList.length > 0)) && (
+                <div className="p-4 sm:p-5 bg-white rounded-xl border border-gray-200 shadow-2xs space-y-3">
+                  <div className="flex items-center gap-1.5 text-gray-400">
+                    <FileCheck className="w-4 h-4 text-[#34953C]" />
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400">
+                      Documentation Links & Attachments
+                    </span>
+                  </div>
+
+                  {viewRow.referenceLinks && (
+                    <div className="text-xs">
+                      <span className="text-gray-500 block mb-0.5">Reference Links:</span>
+                      <a
+                        href={viewRow.referenceLinks.startsWith('http') ? viewRow.referenceLinks : `https://${viewRow.referenceLinks}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-blue-600 hover:underline inline-flex items-center gap-1 font-semibold break-all"
+                      >
+                        <Link2 className="w-3.5 h-3.5 shrink-0" />
+                        <span>{viewRow.referenceLinks}</span>
+                        <ExternalLink className="w-3 h-3 shrink-0" />
+                      </a>
+                    </div>
+                  )}
+
                   {Array.isArray(viewRow.attachedFilesList) && viewRow.attachedFilesList.length > 0 && (
-                    <div className="p-4 bg-white rounded-xl border border-gray-200">
-                      <h3 className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3 flex items-center gap-1.5">
-                        <FileCheck className="w-4 h-4 text-[#41B349]" />
-                        Attached Files & Documents ({viewRow.attachedFilesList.length})
-                      </h3>
+                    <div>
+                      <span className="text-gray-500 text-xs block mb-1.5">Attached Files ({viewRow.attachedFilesList.length}):</span>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         {viewRow.attachedFilesList.map((file, fIdx) => (
-                          <div 
-                            key={fIdx}
-                            className="p-2.5 rounded-lg border border-gray-200 bg-gray-50/60 flex items-center justify-between text-xs"
-                          >
+                          <div key={fIdx} className="p-2.5 rounded-lg border border-gray-200 bg-gray-50/70 flex items-center justify-between text-xs">
                             <div className="flex items-center gap-2 truncate">
-                              <FileText className="w-4 h-4 text-gray-400 shrink-0" />
-                              <span className="font-medium text-gray-800 truncate">{file.name}</span>
+                              <FileText className="w-4 h-4 text-[#34953C] shrink-0" />
+                              <div className="truncate">
+                                <span className="font-semibold text-gray-800 block truncate">{file.name}</span>
+                                {file.docType && <span className="text-[10px] text-gray-500">[{file.docType}]</span>}
+                              </div>
                             </div>
                             {file.size && (
-                              <span className="text-[11px] text-gray-400 shrink-0 ml-2">
+                              <span className="text-[10px] text-gray-400 shrink-0 ml-2">
                                 {(file.size / 1024).toFixed(0)} KB
                               </span>
                             )}
@@ -1377,441 +1121,143 @@ export default function HireUsTableClient({ initialData = [], apiBase = '' }) {
                       </div>
                     </div>
                   )}
-
-                  {/* Special Requirements */}
-                  {Array.isArray(viewRow.specialRequirements) && viewRow.specialRequirements.length > 0 && (
-                    <div className="p-4 bg-amber-50/50 rounded-xl border border-amber-200">
-                      <h4 className="text-xs font-bold text-amber-900 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                        <Shield className="w-4 h-4 text-amber-600" />
-                        Special Requirements & Governance
-                      </h4>
-                      <div className="flex flex-wrap gap-1.5">
-                        {viewRow.specialRequirements.map((req, rIdx) => (
-                          <span
-                            key={rIdx}
-                            className="text-xs px-2.5 py-1 rounded bg-white text-amber-800 border border-amber-300 font-medium"
-                          >
-                            {req}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
                 </div>
               )}
 
-              {/* TAB 2: CLIENT & COMPANY */}
-              {detailTab === 'client' && (
-                <div className="space-y-6">
-                  {/* Contact Info Card */}
-                  <div className="p-5 bg-white rounded-xl border border-gray-200 shadow-xs space-y-4">
-                    <h3 className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3 flex items-center gap-1.5">
-                      <Users className="w-4 h-4 text-[#41B349]" />
-                      Primary Contact Information
-                    </h3>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                      <div>
-                        <span className="text-gray-400 block mb-0.5">Full Name</span>
-                        <div className="flex items-center gap-2">
-                          <span className="font-semibold text-gray-900 text-sm">{viewRow.name || viewRow.fullName || 'N/A'}</span>
-                          <button
-                            onClick={() => copyToClipboard(viewRow.name || viewRow.fullName, 'name')}
-                            className="text-gray-400 hover:text-gray-600"
-                            title="Copy Name"
-                          >
-                            {copiedKey === 'name' ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
-                          </button>
-                        </div>
-                      </div>
-
-                      <div>
-                        <span className="text-gray-400 block mb-0.5">Email Address</span>
-                        <div className="flex items-center gap-2">
-                          <a href={`mailto:${viewRow.email}`} className="font-semibold text-[#41B349] hover:underline">
-                            {viewRow.email || 'N/A'}
-                          </a>
-                          <button
-                            onClick={() => copyToClipboard(viewRow.email, 'email')}
-                            className="text-gray-400 hover:text-gray-600"
-                            title="Copy Email"
-                          >
-                            {copiedKey === 'email' ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
-                          </button>
-                        </div>
-                      </div>
-
-                      <div>
-                        <span className="text-gray-400 block mb-0.5">Phone Number</span>
-                        <div className="flex items-center gap-2">
-                          <a href={`tel:${viewRow.phone}`} className="font-semibold text-gray-900 hover:text-[#41B349]">
-                            {viewRow.phone || 'N/A'}
-                          </a>
-                          <button
-                            onClick={() => copyToClipboard(viewRow.phone, 'phone')}
-                            className="text-gray-400 hover:text-gray-600"
-                            title="Copy Phone"
-                          >
-                            {copiedKey === 'phone' ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
-                          </button>
-                        </div>
-                      </div>
-
-                      <div>
-                        <span className="text-gray-400 block mb-0.5">WhatsApp</span>
-                        <div className="flex items-center gap-2">
-                          {viewRow.whatsapp ? (
-                            <a 
-                              href={`https://wa.me/${viewRow.whatsapp.replace(/[^0-9]/g, '')}`} 
-                              target="_blank" 
-                              rel="noreferrer"
-                              className="font-semibold text-emerald-700 hover:underline"
-                            >
-                              {viewRow.whatsapp}
-                            </a>
-                          ) : (
-                            <span className="text-gray-400">Not provided</span>
-                          )}
-                        </div>
-                      </div>
-
-                      <div>
-                        <span className="text-gray-400 block mb-0.5">Country / Location</span>
-                        <span className="font-semibold text-gray-900">{viewRow.country || 'N/A'}</span>
-                      </div>
-
-                      <div>
-                        <span className="text-gray-400 block mb-0.5">Job Title</span>
-                        <span className="font-semibold text-gray-900">{viewRow.jobTitle || 'N/A'}</span>
-                      </div>
-
-                      <div>
-                        <span className="text-gray-400 block mb-0.5">Preferred Contact Method</span>
-                        <span className="font-semibold text-gray-900">{viewRow.preferredContactMethod || 'Email'}</span>
-                      </div>
-
-                      <div>
-                        <span className="text-gray-400 block mb-0.5">Best Time To Contact</span>
-                        <span className="font-semibold text-gray-900">{viewRow.bestTimeToContact || 'Anytime'}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Company Info Card */}
-                  <div className="p-5 bg-white rounded-xl border border-gray-200 shadow-xs space-y-4">
-                    <h3 className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3 flex items-center gap-1.5">
-                      <Building2 className="w-4 h-4 text-[#41B349]" />
-                      Company / Organization Profile
-                    </h3>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                      <div>
-                        <span className="text-gray-400 block mb-0.5">Company / Organization</span>
-                        <span className="font-semibold text-gray-900 text-sm">
-                          {viewRow.companyName || viewRow.organization || 'N/A'}
-                        </span>
-                      </div>
-
-                      <div>
-                        <span className="text-gray-400 block mb-0.5">Industry Sector</span>
-                        <span className="font-semibold text-gray-900">{viewRow.industry || 'N/A'}</span>
-                      </div>
-
-                      <div>
-                        <span className="text-gray-400 block mb-0.5">Company Size</span>
-                        <span className="font-semibold text-gray-900">{viewRow.companySize || 'N/A'}</span>
-                      </div>
-
-                      <div>
-                        <span className="text-gray-400 block mb-0.5">Website URL</span>
-                        {viewRow.companyWebsite ? (
-                          <a 
-                            href={viewRow.companyWebsite.startsWith('http') ? viewRow.companyWebsite : `https://${viewRow.companyWebsite}`}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="font-semibold text-[#41B349] hover:underline inline-flex items-center gap-1"
-                          >
-                            <span>{viewRow.companyWebsite}</span>
-                            <ExternalLink className="w-3 h-3" />
-                          </a>
-                        ) : (
-                          <span className="text-gray-400">Not provided</span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Referral Source */}
-                  {Array.isArray(viewRow.referralSources) && viewRow.referralSources.length > 0 && (
-                    <div className="p-4 bg-gray-50 rounded-xl border border-gray-200 text-xs">
-                      <span className="text-gray-400 block mb-1">Found Us Via:</span>
-                      <span className="font-semibold text-gray-800">
-                        {viewRow.referralSources.join(', ')}
+              {/* 3. Compiled Specifications Message Box (Matching Contact Submissions Message Box) */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400">
+                    Compiled Requirement Summary
+                  </span>
+                  <div className="flex items-center gap-2">
+                    {viewRow.message && (
+                      <span className="text-[11px] text-gray-400 font-medium">
+                        {viewRow.message.length} characters
                       </span>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* TAB 3: PROJECT & SCHEDULE */}
-              {detailTab === 'project' && (
-                <div className="space-y-6">
-                  {/* Project Details */}
-                  <div className="p-5 bg-white rounded-xl border border-gray-200 shadow-xs space-y-4">
-                    <h3 className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3 flex items-center gap-1.5">
-                      <Briefcase className="w-4 h-4 text-[#41B349]" />
-                      Project Details & Stage
-                    </h3>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                      <div>
-                        <span className="text-gray-400 block mb-0.5">Project Name</span>
-                        <span className="font-semibold text-gray-900 text-sm">
-                          {viewRow.projectName || 'Not specified'}
-                        </span>
-                      </div>
-
-                      <div>
-                        <span className="text-gray-400 block mb-0.5">Project Type</span>
-                        <span className="font-semibold text-gray-900">
-                          {viewRow.projectType || 'General'}
-                        </span>
-                      </div>
-
-                      <div>
-                        <span className="text-gray-400 block mb-0.5">Project Status / Stage</span>
-                        <span className="font-semibold text-gray-900">
-                          {viewRow.projectStatus || 'N/A'}
-                        </span>
-                      </div>
-
-                      <div>
-                        <span className="text-gray-400 block mb-0.5">Project URL / Prototype</span>
-                        {viewRow.projectUrl ? (
-                          <a 
-                            href={viewRow.projectUrl.startsWith('http') ? viewRow.projectUrl : `https://${viewRow.projectUrl}`}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="font-semibold text-[#41B349] hover:underline inline-flex items-center gap-1"
-                          >
-                            <span>{viewRow.projectUrl}</span>
-                            <ExternalLink className="w-3 h-3" />
-                          </a>
-                        ) : (
-                          <span className="text-gray-400">None</span>
-                        )}
-                      </div>
-                    </div>
-
-                    {viewRow.projectDescription && (
-                      <div className="pt-2 border-t border-gray-100">
-                        <span className="text-gray-400 text-xs block mb-1">Project Description / Scope</span>
-                        <p className="text-xs text-gray-800 whitespace-pre-wrap leading-relaxed bg-gray-50 p-3 rounded-lg border border-gray-200">
-                          {viewRow.projectDescription}
-                        </p>
-                      </div>
                     )}
-                  </div>
-
-                  {/* Work Arrangement & Schedule */}
-                  <div className="p-5 bg-white rounded-xl border border-gray-200 shadow-xs space-y-4">
-                    <h3 className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3 flex items-center gap-1.5">
-                      <Clock className="w-4 h-4 text-[#41B349]" />
-                      Working Arrangement & Schedule
-                    </h3>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-                      <div className="p-3 bg-gray-50 rounded-lg">
-                        <span className="text-gray-400 block mb-0.5">Arrangement</span>
-                        <span className="font-bold text-gray-900">{viewRow.workArrangement || 'Remote'}</span>
-                      </div>
-
-                      <div className="p-3 bg-gray-50 rounded-lg">
-                        <span className="text-gray-400 block mb-0.5">Location / City</span>
-                        <span className="font-bold text-gray-900">
-                          {[viewRow.city, viewRow.arrangementCountry].filter(Boolean).join(', ') || 'Remote'}
-                        </span>
-                      </div>
-
-                      <div className="p-3 bg-gray-50 rounded-lg">
-                        <span className="text-gray-400 block mb-0.5">Time Zone</span>
-                        <span className="font-bold text-gray-900">{viewRow.timeZone || 'Client Local'}</span>
-                      </div>
-
-                      <div className="p-3 bg-gray-50 rounded-lg">
-                        <span className="text-gray-400 block mb-0.5">Working Hours</span>
-                        <span className="font-bold text-gray-900">{viewRow.workingHours || 'Full-Time'}</span>
-                      </div>
-
-                      <div className="p-3 bg-gray-50 rounded-lg">
-                        <span className="text-gray-400 block mb-0.5">Working Days</span>
-                        <span className="font-bold text-gray-900">{viewRow.workingDays || 'Monday - Friday'}</span>
-                      </div>
-
-                      <div className="p-3 bg-gray-50 rounded-lg">
-                        <span className="text-gray-400 block mb-0.5">Duration</span>
-                        <span className="font-bold text-gray-900">{viewRow.duration || 'Flexible'}</span>
-                      </div>
-                    </div>
-
-                    {(viewRow.startDate || viewRow.endDate) && (
-                      <div className="text-xs text-gray-600 flex items-center gap-4 pt-1">
-                        <span>Target Start: <strong className="text-gray-900">{viewRow.startDate || 'Immediate'}</strong></span>
-                        <span>Target End: <strong className="text-gray-900">{viewRow.endDate || 'Flexible'}</strong></span>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Budget Card */}
-                  <div className="p-5 bg-white rounded-xl border border-gray-200 shadow-xs">
-                    <h3 className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3 flex items-center gap-1.5">
-                      <DollarSign className="w-4 h-4 text-[#41B349]" />
-                      Estimated Budget & Model
-                    </h3>
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-emerald-50/50 rounded-xl border border-emerald-200 gap-2">
-                      <div>
-                        <span className="text-xs text-emerald-800 font-medium block">
-                          {viewRow.budgetType || 'Budget Model'}
-                        </span>
-                        <span className="text-xl font-bold text-gray-900">
-                          {viewRow.budget || `${viewRow.currency || 'USD'} ${viewRow.minBudget || '0'} - ${viewRow.maxBudget || '0'}`}
-                        </span>
-                      </div>
-                      <span className="text-xs font-semibold px-2.5 py-1 rounded bg-white text-emerald-800 border border-emerald-300 self-start sm:self-auto">
-                        Currency: {viewRow.currency || 'USD'}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* TAB 4: ADMIN NOTES & HISTORY */}
-              {detailTab === 'notes' && (
-                <div className="space-y-6">
-                  {/* Status History */}
-                  <div className="p-5 bg-white rounded-xl border border-gray-200 shadow-xs">
-                    <h3 className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-4 flex items-center gap-1.5">
-                      <Clock className="w-4 h-4 text-[#41B349]" />
-                      Status Audit Trail & Timeline
-                    </h3>
-
-                    {Array.isArray(viewRow.statusHistory) && viewRow.statusHistory.length > 0 ? (
-                      <div className="space-y-3 relative before:absolute before:inset-0 before:left-3 before:w-0.5 before:bg-gray-200">
-                        {viewRow.statusHistory.map((item, idx) => (
-                          <div key={idx} className="relative flex items-start gap-3 pl-7">
-                            <span className="absolute left-1.5 top-1.5 w-3 h-3 rounded-full bg-[#41B349] ring-4 ring-white shrink-0" />
-                            <div className="flex-1 bg-gray-50 p-3 rounded-lg border border-gray-200 text-xs">
-                              <div className="flex items-center justify-between gap-2 mb-1">
-                                <span className={`font-bold px-2 py-0.5 rounded text-[10px] uppercase tracking-wider ${getStatusBadge(item.status).color}`}>
-                                  {item.status}
-                                </span>
-                                <span className="text-[11px] text-gray-400">
-                                  {formatDate(item.changedAt)}
-                                </span>
-                              </div>
-                              <p className="text-gray-700">{item.note || 'Status updated'}</p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-xs text-gray-400 italic">No previous status history logged.</p>
-                    )}
-                  </div>
-
-                  {/* Internal Notes Editor */}
-                  <div className="p-5 bg-white rounded-xl border border-gray-200 shadow-xs space-y-3">
-                    <h3 className="text-xs font-bold uppercase tracking-wider text-gray-500 flex items-center gap-1.5">
-                      <FileText className="w-4 h-4 text-[#41B349]" />
-                      Internal Team Remarks & Notes
-                    </h3>
-                    <p className="text-xs text-gray-500">
-                      Add private notes, candidate matching updates, proposal status, or client call summaries visible only to admins.
-                    </p>
-                    <textarea
-                      rows={4}
-                      value={adminNoteInput}
-                      onChange={(e) => setAdminNoteInput(e.target.value)}
-                      placeholder="e.g., Called client on Oct 5. Interested in hiring 2 Senior React devs for 6 months. Sent custom proposal."
-                      className="w-full p-3 text-xs text-gray-800 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#41B349]/30 focus:border-[#41B349]"
-                    />
-                    <div className="flex justify-end">
-                      <button
-                        onClick={() => handleSaveAdminNotes(viewRow)}
-                        disabled={isSavingNotes}
-                        className="px-4 py-2 text-xs font-semibold text-white bg-[#41B349] hover:bg-[#36963d] rounded-lg shadow-sm transition-all cursor-pointer disabled:opacity-60 flex items-center gap-1.5"
-                      >
-                        {isSavingNotes && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-                        <span>{isSavingNotes ? 'Saving Notes...' : 'Save Internal Notes'}</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* TAB 5: RAW / COMPILED MESSAGE */}
-              {detailTab === 'raw' && (
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-xs font-bold uppercase tracking-wider text-gray-500">
-                      Full Compiled Specification
-                    </h3>
                     <button
-                      onClick={() => copyToClipboard(viewRow.message, 'rawMessage')}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-100 hover:bg-gray-200 text-gray-700 transition-colors cursor-pointer"
+                      onClick={() => copyToClipboard(viewRow.message, 'specMessage')}
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded text-xs font-semibold bg-gray-100 hover:bg-gray-200 text-gray-700 transition cursor-pointer"
                     >
-                      {copiedKey === 'rawMessage' ? (
+                      {copiedKey === 'specMessage' ? (
                         <>
                           <Check className="w-3.5 h-3.5 text-emerald-600" />
-                          <span>Copied!</span>
+                          <span>Copied</span>
                         </>
                       ) : (
                         <>
                           <Copy className="w-3.5 h-3.5" />
-                          <span>Copy Message</span>
+                          <span>Copy</span>
                         </>
                       )}
                     </button>
                   </div>
-
-                  <pre className="p-4 bg-gray-900 text-gray-100 rounded-xl text-xs font-mono overflow-x-auto whitespace-pre-wrap leading-relaxed border border-gray-800">
-                    {viewRow.message || 'No compiled message provided'}
-                  </pre>
                 </div>
-              )}
+                <div className="bg-gray-50/90 rounded-xl p-4 sm:p-5 text-xs sm:text-sm text-gray-800 whitespace-pre-wrap break-words border border-gray-200/80 leading-relaxed font-mono min-h-[90px]">
+                  {viewRow.message || <span className="text-gray-400 italic">No message summary compiled.</span>}
+                </div>
+              </div>
+
+              {/* 4. Internal Admin Notes & Audit Trail */}
+              <div className="p-4 sm:p-5 bg-white rounded-xl border border-gray-200 shadow-2xs space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400">
+                    Admin Remarks & Status Notes
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-semibold text-gray-600">Update Status:</span>
+                    <select
+                      value={viewRow.status || 'Pending'}
+                      disabled={updatingStatusId === (viewRow.id || viewRow._id)}
+                      onChange={(e) => handleStatusChange(viewRow.id || viewRow._id, e.target.value)}
+                      className={`text-xs font-bold uppercase tracking-wider py-1 px-2.5 rounded-md border cursor-pointer ${getStatusBadge(viewRow.status).color}`}
+                    >
+                      {STATUS_OPTIONS.map(opt => (
+                        <option key={opt.value} value={opt.value}>{opt.label}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <textarea
+                  rows={3}
+                  value={adminNoteInput}
+                  onChange={(e) => setAdminNoteInput(e.target.value)}
+                  placeholder="Add internal remarks, client discussion summary, candidate matching progress..."
+                  className="w-full p-3 text-xs text-gray-800 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:border-[#34953C] focus:ring-1 focus:ring-[#34953C]"
+                />
+
+                <div className="flex justify-end">
+                  <button
+                    onClick={() => handleSaveAdminNotes(viewRow.id || viewRow._id)}
+                    disabled={isSavingNotes}
+                    className="px-4 py-1.5 text-xs font-bold text-white bg-[#34953C] hover:bg-[#2b7e32] rounded-lg shadow-2xs transition cursor-pointer disabled:opacity-60"
+                  >
+                    {isSavingNotes ? 'Saving...' : 'Save Remarks'}
+                  </button>
+                </div>
+              </div>
 
             </div>
 
-            {/* Modal Footer */}
-            <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 flex items-center justify-between shrink-0">
-              <button
-                onClick={() => setDeleteCandidate(viewRow)}
-                className="text-xs font-semibold text-red-600 hover:text-red-700 hover:underline flex items-center gap-1 cursor-pointer"
-              >
-                <Trash2 className="w-3.5 h-3.5" />
-                <span>Delete Submission</span>
-              </button>
+            {/* Modal Footer - Structured like Contact Submissions */}
+            <div className="px-6 sm:px-8 py-3.5 bg-gray-50 border-t border-gray-200 flex items-center justify-between gap-3 shrink-0">
+              <div className="flex items-center gap-3">
+                <span className="text-xs text-gray-400 font-medium hidden sm:inline">
+                  Inquiry #{viewRow.inquiryNo} &bull; {viewRow.status || 'Pending'}
+                </span>
+                <button
+                  onClick={() => setDeleteCandidate(viewRow)}
+                  className="text-xs font-semibold text-red-600 hover:text-red-700 hover:underline flex items-center gap-1 cursor-pointer"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  <span>Delete</span>
+                </button>
+              </div>
 
-              <button
-                onClick={() => setViewRow(null)}
-                className="px-4 py-2 text-xs font-semibold text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer shadow-xs"
-              >
-                Close
-              </button>
+              <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end">
+                {viewRow.phone && (
+                  <a
+                    href={`tel:${viewRow.phone}`}
+                    className="px-3.5 py-2 rounded-lg border border-gray-300 bg-white hover:bg-gray-100 text-gray-700 text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <Phone className="w-3.5 h-3.5 text-gray-500" />
+                    <span>Call</span>
+                  </a>
+                )}
+                {viewRow.email && (
+                  <a
+                    href={`mailto:${viewRow.email}`}
+                    className="px-3.5 py-2 rounded-lg border border-gray-300 bg-white hover:bg-gray-100 text-gray-700 text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <Mail className="w-3.5 h-3.5 text-gray-500" />
+                    <span>Email</span>
+                  </a>
+                )}
+                <button
+                  type="button"
+                  onClick={() => setViewRow(null)}
+                  className="px-6 py-2 bg-[#34953C] hover:bg-[#2b7e32] text-white rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-xs"
+                >
+                  Close
+                </button>
+              </div>
             </div>
 
           </div>
         </div>
       )}
 
-      {/* ========================================================================= */}
-      {/* 7. DELETE CONFIRMATION MODAL                                              */}
-      {/* ========================================================================= */}
+      {/* Delete Confirmation Modal */}
       {deleteCandidate && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-gray-200 space-y-4 animate-in zoom-in-95 duration-200">
-            <div className="w-12 h-12 rounded-full bg-red-50 text-red-600 flex items-center justify-center mx-auto">
-              <AlertCircle className="w-6 h-6" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" onClick={() => setDeleteCandidate(null)}>
+          <div
+            className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-4 border border-gray-100 animate-in fade-in zoom-in-95 duration-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="w-12 h-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center mx-auto">
+              <Trash2 className="w-6 h-6" />
             </div>
 
             <div className="text-center">
@@ -1827,17 +1273,16 @@ export default function HireUsTableClient({ initialData = [], apiBase = '' }) {
               <button
                 onClick={() => setDeleteCandidate(null)}
                 disabled={isDeleting}
-                className="flex-1 px-4 py-2.5 text-xs font-semibold text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors cursor-pointer"
+                className="flex-1 px-4 py-2 text-xs font-semibold text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 onClick={confirmDelete}
                 disabled={isDeleting}
-                className="flex-1 px-4 py-2.5 text-xs font-semibold text-white bg-red-600 hover:bg-red-700 rounded-xl transition-all cursor-pointer shadow-sm disabled:opacity-60 flex items-center justify-center gap-1.5"
+                className="flex-1 px-4 py-2 text-xs font-semibold text-white bg-red-600 hover:bg-red-700 rounded-lg transition cursor-pointer disabled:opacity-60"
               >
-                {isDeleting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-                <span>{isDeleting ? 'Deleting...' : 'Yes, Delete'}</span>
+                {isDeleting ? 'Deleting...' : 'Yes, Delete'}
               </button>
             </div>
           </div>
