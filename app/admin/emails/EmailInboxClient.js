@@ -96,12 +96,12 @@ export default function EmailInboxClient() {
     };
     window.addEventListener('admin-notifications-refresh', handleNotificationRefresh);
 
-    // Poll every 30 seconds silently while tab is active
+    // Poll every 120 seconds silently while tab is active (conserves Vercel function limits)
     const pollInterval = setInterval(() => {
       if (typeof document !== 'undefined' && document.visibilityState === 'visible') {
         fetchThreads(true);
       }
-    }, 30000);
+    }, 120000);
 
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {

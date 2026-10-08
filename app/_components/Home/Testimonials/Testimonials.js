@@ -128,8 +128,12 @@ const Testimonials = ({ content, cmsContent, initialReviews = [] }) => {
   const hoveredSlotsRef = useRef({ 0: false, 1: false, 2: false, 3: false })
   const nextIndexRef = useRef(4)
 
-  // Fetch real reviews dynamically from live backend / Google sync API
+  // Fetch real reviews dynamically only if initialReviews were not already supplied by server
   useEffect(() => {
+    if (initialReviews && Array.isArray(initialReviews) && initialReviews.length > 0) {
+      return;
+    }
+
     let isMounted = true
     async function fetchReviews() {
       try {
@@ -154,7 +158,7 @@ const Testimonials = ({ content, cmsContent, initialReviews = [] }) => {
     return () => {
       isMounted = false
     }
-  }, [content, cmsContent])
+  }, [content, cmsContent, initialReviews])
 
   // Parse section titles dynamically
   const sectionTitlePrefix = getCmsVal(cmsContent, content?.titlePrefix || defaultTestimonials.titlePrefix, 'testimonials')

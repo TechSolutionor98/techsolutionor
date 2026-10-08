@@ -83,8 +83,16 @@ export function AdminNotificationProvider({ children }) {
   const prevTotalRef = useRef(null);
   const isInitialFetchRef = useRef(true);
 
+  const lastActivityRef = useRef(Date.now());
+
   const fetchNotifications = useCallback(async (isSilent = false) => {
     try {
+      // Do not poll if admin is not authenticated
+      if (typeof window !== 'undefined' && !localStorage.getItem('jwt')) {
+        setLoading(false);
+        return;
+      }
+
       if (!isSilent) setLoading(true);
       const res = await fetch('/api/admin/notifications', { cache: 'no-store' });
       if (!res.ok) {
@@ -139,17 +147,32 @@ export function AdminNotificationProvider({ children }) {
     }
   }, []);
 
-  // Initial load and periodic polling every 30 seconds
+  // Polling with strict visibility and user idle guards to conserve Vercel execution limits
   useEffect(() => {
     fetchNotifications();
 
-    const interval = setInterval(() => {
-      fetchNotifications(true);
-    }, 30000);
+    const updateActivity = () => {
+      lastActivityRef.current = Date.now();
+    };
 
-    // Refresh when tab gains focus
+    window.addEventListener('mousemove', updateActivity, { passive: true });
+    window.addEventListener('keydown', updateActivity, { passive: true });
+    window.addEventListener('click', updateActivity, { passive: true });
+    window.addEventListener('scroll', updateActivity, { passive: true });
+
+    // Poll every 120 seconds (2 minutes) ONLY when tab is visible and admin was active in last 15 min
+    const interval = setInterval(() => {
+      const isVisible = typeof document !== 'undefined' && document.visibilityState === 'visible';
+      const isRecentlyActive = (Date.now() - lastActivityRef.current) < 15 * 60 * 1000;
+      if (isVisible && isRecentlyActive) {
+        fetchNotifications(true);
+      }
+    }, 120000);
+
+    // Refresh immediately when tab gains focus
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
+        lastActivityRef.current = Date.now();
         fetchNotifications(true);
       }
     };
@@ -157,12 +180,17 @@ export function AdminNotificationProvider({ children }) {
 
     // Refresh on custom event dispatched by admin pages
     const handleCustomRefresh = () => {
+      lastActivityRef.current = Date.now();
       fetchNotifications(true);
     };
     window.addEventListener('admin-notifications-refresh', handleCustomRefresh);
 
     return () => {
       clearInterval(interval);
+      window.removeEventListener('mousemove', updateActivity);
+      window.removeEventListener('keydown', updateActivity);
+      window.removeEventListener('click', updateActivity);
+      window.removeEventListener('scroll', updateActivity);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('admin-notifications-refresh', handleCustomRefresh);
     };

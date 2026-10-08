@@ -23,20 +23,22 @@ export default async function HomePage() {
   }
 
   let serverContent = null;
-  try {
-    const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000";
-    const res = await fetch(`${apiBase}/api/admin/content/home`, { 
-      next: { revalidate: 60 },
-      signal: AbortSignal.timeout(1000)
-    });
-    if (res.ok) {
-      const result = await res.json();
-      if (result.ok) {
-        serverContent = result.data;
+  const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL;
+  if (apiBase && !apiBase.includes('localhost:5000')) {
+    try {
+      const res = await fetch(`${apiBase}/api/admin/content/home`, { 
+        next: { revalidate: 60 },
+        signal: AbortSignal.timeout(1000)
+      });
+      if (res.ok) {
+        const result = await res.json();
+        if (result.ok) {
+          serverContent = result.data;
+        }
       }
+    } catch (err) {
+      // Ignore fetch error if server is not reachable
     }
-  } catch (err) {
-    // Ignore fetch error if server is not reachable
   }
 
   let approvedReviews = [];
