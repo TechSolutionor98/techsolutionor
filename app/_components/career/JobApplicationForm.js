@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
+import { SectionBadge, HighlightWord } from "@/components/Typography";
 import { 
   UploadCloud, 
   FileText, 
@@ -642,45 +643,38 @@ export default function JobApplicationForm({ selectedPosition, onResetPosition }
 
       <div className="max-w-[1000px] mx-auto px-5 sm:px-8 md:px-10">
         {/* Section Header */}
-        <div className="text-center max-w-[700px] mx-auto mb-14">
-          <div 
-            className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#36963D]/10 border border-[#36963D]/30 text-[#36963D] font-mono text-xs uppercase tracking-widest font-bold mb-4"
-            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-          >
-            <span>JOIN OUR TALENT ROSTER</span>
+        <div className="text-center max-w-[700px] mx-auto mb-12 sm:mb-14">
+          <div className="mb-4 sm:mb-5 flex justify-center">
+            <SectionBadge variant="light">
+              <span>JOIN OUR TALENT ROSTER</span>
+            </SectionBadge>
           </div>
 
-          <h2 
-            className="text-3xl sm:text-4xl md:text-[40px] font-black tracking-tight text-[#0D0F12] mb-4 leading-tight"
-            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-          >
-            Submit Your <span className="text-[#36963D]">Application</span>
+          <h2 className="font-display uppercase tracking-tight text-2xl sm:text-3xl md:text-4xl text-[#0D0F12] mb-4 leading-tight">
+            Submit Your <HighlightWord>Application</HighlightWord>
           </h2>
 
-          <p 
-            className="text-[#475569] text-base sm:text-lg leading-relaxed font-normal"
-            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
-          >
+          <p className="font-jakarta text-[#4A5568] text-sm sm:text-base leading-relaxed tracking-[-0.01em]">
             Take the first step toward your next big career milestone. Complete the required details, upload your CV/resume, and our recruitment team will review your application.
           </p>
         </div>
 
         {/* Success State View */}
         {successData ? (
-          <div className="bg-[#FFFFFF] border-2 border-[#36963D]/40 rounded-3xl p-8 sm:p-12 shadow-xl text-center max-w-[650px] mx-auto animate-in fade-in-50 duration-500">
-            <div className="w-18 h-18 bg-[#36963D]/10 text-[#36963D] rounded-full flex items-center justify-center mx-auto mb-6">
+          <div className="bg-[#FFFFFF] border-2 border-[#41B349]/40 rounded-3xl p-8 sm:p-12 shadow-xl text-center max-w-[650px] mx-auto animate-in fade-in-50 duration-500 font-jakarta">
+            <div className="w-18 h-18 bg-[#41B349]/10 text-[#41B349] rounded-full flex items-center justify-center mx-auto mb-6">
               <CheckCircle2 className="w-10 h-10" />
             </div>
 
-            <h3 className="text-2xl sm:text-3xl font-black text-[#0D0F12] mb-3" style={{ fontFamily: "'Outfit', sans-serif" }}>
+            <h3 className="font-display uppercase tracking-tight text-2xl sm:text-3xl text-[#0D0F12] mb-3">
               Application Successfully Submitted!
             </h3>
 
-            <p className="text-[#475569] text-base leading-relaxed mb-6">
-              Thank you, <strong className="text-[#0D0F12]">{successData.name}</strong>! We have received your application for the position of <strong className="text-[#36963D]">{successData.position}</strong>.
+            <p className="text-[#4A5568] text-base leading-relaxed mb-6">
+              Thank you, <strong className="text-[#0D0F12]">{successData.name}</strong>! We have received your application for the position of <strong className="text-[#41B349]">{successData.position}</strong>.
             </p>
 
-            <div className="bg-[#F8FAFC] border border-gray-200 rounded-2xl p-5 mb-8 text-left text-sm text-[#475569] space-y-2">
+            <div className="bg-[#F8FAFC] border border-gray-200 rounded-2xl p-5 mb-8 text-left text-sm text-[#4A5568] space-y-2">
               <p>• A confirmation record has been registered with our recruitment team.</p>
               <p>• Our talent acquisition team reviews every profile thoroughly.</p>
               <p>• You will receive status updates directly at <strong className="text-[#0D0F12]">{successData.email}</strong>.</p>
@@ -688,14 +682,14 @@ export default function JobApplicationForm({ selectedPosition, onResetPosition }
 
             <button
               onClick={() => setSuccessData(null)}
-              className="bg-[#36963D] hover:bg-[#2e8234] text-white px-8 py-3.5 rounded-full font-bold text-sm sm:text-base transition-all duration-300 shadow-md hover:shadow-lg cursor-pointer"
+              className="bg-[#41B349] hover:bg-[#36963D] text-white px-8 py-3.5 rounded-full font-jakarta font-semibold tracking-[-0.01em] text-sm sm:text-base transition-all duration-300 shadow-md hover:shadow-lg cursor-pointer"
             >
               Submit Another Application
             </button>
           </div>
         ) : (
           /* Application Form - Direct Clean & Minimal Layout */
-          <div className="w-full max-w-[880px] mx-auto">
+          <div className="w-full max-w-[880px] mx-auto font-jakarta">
             {/* Form Alert Banner */}
             {formAlert && (
               <div 
@@ -1122,8 +1116,7 @@ export default function JobApplicationForm({ selectedPosition, onResetPosition }
                 <button
                   type="submit"
                   disabled={sendingOtp}
-                  className="w-full bg-[#36963D] hover:bg-[#2e8234] disabled:opacity-70 text-white py-4 rounded-full font-bold text-base transition-all duration-300 shadow-md hover:shadow-lg hover:scale-[1.01] active:scale-[0.99] cursor-pointer flex items-center justify-center gap-2.5"
-                  style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                  className="w-full bg-[#41B349] hover:bg-[#36963D] disabled:opacity-70 text-white py-4 rounded-full font-jakarta font-semibold tracking-[-0.01em] text-base transition-all duration-300 shadow-md hover:shadow-lg hover:scale-[1.01] active:scale-[0.99] cursor-pointer flex items-center justify-center gap-2.5"
                 >
                   {sendingOtp ? (
                     <>
@@ -1180,8 +1173,7 @@ export default function JobApplicationForm({ selectedPosition, onResetPosition }
             {/* Modal Title */}
             <h3 
               id="otp-modal-title"
-              className="text-2xl font-black text-[#0D0F12] text-center mb-2"
-              style={{ fontFamily: "'Outfit', sans-serif" }}
+              className="font-display uppercase tracking-tight text-xl sm:text-2xl text-[#0D0F12] text-center mb-2"
             >
               Verify Your Email
             </h3>
@@ -1279,8 +1271,7 @@ export default function JobApplicationForm({ selectedPosition, onResetPosition }
                 type="button"
                 onClick={handleVerifyAndSubmit}
                 disabled={verifyingOtp || otpDigits.some((d) => !d)}
-                className="w-full bg-[#36963D] hover:bg-[#2e8234] disabled:opacity-50 text-white py-3.5 rounded-full font-bold text-sm sm:text-base transition-all duration-300 shadow-md hover:shadow-lg cursor-pointer flex items-center justify-center gap-2"
-                style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                className="w-full bg-[#41B349] hover:bg-[#36963D] disabled:opacity-50 text-white py-3.5 rounded-full font-jakarta font-semibold tracking-[-0.01em] text-sm sm:text-base transition-all duration-300 shadow-md hover:shadow-lg cursor-pointer flex items-center justify-center gap-2"
               >
                 {verifyingOtp ? (
                   <>

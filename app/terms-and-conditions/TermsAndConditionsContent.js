@@ -25,6 +25,7 @@ import {
   ChevronRight
 } from "lucide-react";
 import { getCmsVal } from "@/lib/api-helper";
+import { SectionBadge, HighlightWord } from "@/components/Typography";
 
 const sections = [
   { id: "introduction", title: "1. Introduction", icon: FileText },
@@ -90,21 +91,20 @@ export default function TermsAndConditionsContent({ cmsContent }) {
 
         <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           {/* Eyebrow Pill */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#41B349]/10 border border-[#41B349]/30 text-[#36963D] font-mono text-xs uppercase tracking-widest font-bold mb-6 shadow-2xs">
-            <Scale className="w-4 h-4 text-[#41B349]" />
-            <span>{getCmsVal(cmsContent, "TERMS OF ENGAGEMENT & SERVICE", "termshero")}</span>
+          <div className="mb-4 sm:mb-5 flex justify-center">
+            <SectionBadge variant="light">
+              <Scale className="w-4 h-4 text-[#41B349]" />
+              <span>{getCmsVal(cmsContent, "TERMS OF ENGAGEMENT & SERVICE", "termshero")}</span>
+            </SectionBadge>
           </div>
 
           {/* Main Title */}
-          <h1 
-            className="text-3xl sm:text-5xl md:text-6xl font-black text-[#111827] tracking-tight leading-[1.15] mb-6"
-            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-          >
-            {getCmsVal(cmsContent, "Terms & Conditions", "termshero")}
+          <h1 className="font-display uppercase tracking-tight text-3xl sm:text-4xl md:text-5xl lg:text-[54px] xl:text-[60px] leading-[1.08] sm:leading-[1.02] text-[#0D0F12] text-center mb-5 sm:mb-6">
+            Terms & <HighlightWord>Conditions</HighlightWord>
           </h1>
 
           {/* Subtitle */}
-          <p className="text-gray-600 text-sm sm:text-base md:text-lg max-w-3xl mx-auto leading-relaxed font-normal">
+          <p className="text-[#4A5568] text-sm sm:text-base md:text-[17px] max-w-3xl mx-auto leading-relaxed font-normal sm:font-medium text-center font-jakarta tracking-[-0.01em]">
             {getCmsVal(
               cmsContent,
               "These Terms and Conditions govern your access to and use of Tech Solutionor's website, software engineering services, technical consultations, SEO audits, and digital solutions. Please review them carefully.",
@@ -127,12 +127,12 @@ export default function TermsAndConditionsContent({ cmsContent }) {
                   <Layers className="w-4 h-4" />
                 </div>
                 <div>
-                  <h2 className="text-sm font-bold text-gray-900">Terms Outline</h2>
-                  <p className="text-[11px] text-gray-500">Jump directly to a clause</p>
+                  <h2 className="font-display uppercase tracking-tight text-base sm:text-lg text-[#0D0F12]">Terms Outline</h2>
+                  <p className="font-jakarta text-[11px] text-gray-500">Jump directly to a clause</p>
                 </div>
               </div>
 
-              <nav className="space-y-1 max-h-[calc(100vh-220px)] overflow-y-auto pr-1">
+              <nav className="space-y-1 max-h-[calc(100vh-220px)] overflow-y-auto pr-1 font-jakarta">
                 {sections.map((sec) => {
                   const Icon = sec.icon;
                   const isActive = activeSection === sec.id;
@@ -174,7 +174,7 @@ export default function TermsAndConditionsContent({ cmsContent }) {
           </aside>
 
           {/* Terms Articles (Right Side) */}
-          <main className="lg:col-span-8 space-y-12 sm:space-y-14">
+          <main className="lg:col-span-8 space-y-12 sm:space-y-14 font-jakarta">
             
             {/* Section 1: Introduction */}
             <article id="introduction" className="scroll-mt-24 bg-white rounded-3xl p-6 sm:p-8 md:p-10 border border-gray-100 shadow-[0_4px_24px_rgba(0,0,0,0.02)]">
@@ -182,10 +182,7 @@ export default function TermsAndConditionsContent({ cmsContent }) {
                 <div className="w-10 h-10 rounded-xl bg-[#41B349]/10 text-[#41B349] flex items-center justify-center shrink-0">
                   <FileText className="w-5 h-5" />
                 </div>
-                <h2 
-                  className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight"
-                  style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-                >
+                <h2 className="font-display uppercase tracking-tight text-xl sm:text-2xl text-[#0D0F12]">
                   1. Introduction
                 </h2>
               </div>
@@ -206,10 +203,7 @@ export default function TermsAndConditionsContent({ cmsContent }) {
                 <div className="w-10 h-10 rounded-xl bg-[#41B349]/10 text-[#41B349] flex items-center justify-center shrink-0">
                   <CheckCircle2 className="w-5 h-5" />
                 </div>
-                <h2 
-                  className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight"
-                  style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-                >
+                <h2 className="font-display uppercase tracking-tight text-xl sm:text-2xl text-[#0D0F12]">
                   2. Acceptance of Terms
                 </h2>
               </div>
@@ -230,10 +224,7 @@ export default function TermsAndConditionsContent({ cmsContent }) {
                 <div className="w-10 h-10 rounded-xl bg-[#41B349]/10 text-[#41B349] flex items-center justify-center shrink-0">
                   <Layers className="w-5 h-5" />
                 </div>
-                <h2 
-                  className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight"
-                  style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-                >
+                <h2 className="font-display uppercase tracking-tight text-xl sm:text-2xl text-[#0D0F12]">
                   3. About Our Services
                 </h2>
               </div>
@@ -279,10 +270,7 @@ export default function TermsAndConditionsContent({ cmsContent }) {
                 <div className="w-10 h-10 rounded-xl bg-[#41B349]/10 text-[#41B349] flex items-center justify-center shrink-0">
                   <Globe className="w-5 h-5" />
                 </div>
-                <h2 
-                  className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight"
-                  style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-                >
+                <h2 className="font-display uppercase tracking-tight text-xl sm:text-2xl text-[#0D0F12]">
                   4. Use of the Website
                 </h2>
               </div>
@@ -320,10 +308,7 @@ export default function TermsAndConditionsContent({ cmsContent }) {
                 <div className="w-10 h-10 rounded-xl bg-[#41B349]/10 text-[#41B349] flex items-center justify-center shrink-0">
                   <UserCheck className="w-5 h-5" />
                 </div>
-                <h2 
-                  className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight"
-                  style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-                >
+                <h2 className="font-display uppercase tracking-tight text-xl sm:text-2xl text-[#0D0F12]">
                   5. User Responsibilities
                 </h2>
               </div>
@@ -356,10 +341,7 @@ export default function TermsAndConditionsContent({ cmsContent }) {
                 <div className="w-10 h-10 rounded-xl bg-[#41B349]/10 text-[#41B349] flex items-center justify-center shrink-0">
                   <Send className="w-5 h-5" />
                 </div>
-                <h2 
-                  className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight"
-                  style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-                >
+                <h2 className="font-display uppercase tracking-tight text-xl sm:text-2xl text-[#0D0F12]">
                   6. Service Requests and Communications
                 </h2>
               </div>
@@ -380,10 +362,7 @@ export default function TermsAndConditionsContent({ cmsContent }) {
                 <div className="w-10 h-10 rounded-xl bg-[#41B349]/10 text-[#41B349] flex items-center justify-center shrink-0">
                   <Shield className="w-5 h-5" />
                 </div>
-                <h2 
-                  className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight"
-                  style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-                >
+                <h2 className="font-display uppercase tracking-tight text-xl sm:text-2xl text-[#0D0F12]">
                   7. Intellectual Property Rights
                 </h2>
               </div>
@@ -419,10 +398,7 @@ export default function TermsAndConditionsContent({ cmsContent }) {
                 <div className="w-10 h-10 rounded-xl bg-[#41B349]/10 text-[#41B349] flex items-center justify-center shrink-0">
                   <FileCode className="w-5 h-5" />
                 </div>
-                <h2 
-                  className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight"
-                  style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-                >
+                <h2 className="font-display uppercase tracking-tight text-xl sm:text-2xl text-[#0D0F12]">
                   8. Website Content
                 </h2>
               </div>
@@ -443,10 +419,7 @@ export default function TermsAndConditionsContent({ cmsContent }) {
                 <div className="w-10 h-10 rounded-xl bg-[#41B349]/10 text-[#41B349] flex items-center justify-center shrink-0">
                   <ExternalLink className="w-5 h-5" />
                 </div>
-                <h2 
-                  className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight"
-                  style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-                >
+                <h2 className="font-display uppercase tracking-tight text-xl sm:text-2xl text-[#0D0F12]">
                   9. Third-Party Links and Services
                 </h2>
               </div>
@@ -467,10 +440,7 @@ export default function TermsAndConditionsContent({ cmsContent }) {
                 <div className="w-10 h-10 rounded-xl bg-[#41B349]/10 text-[#41B349] flex items-center justify-center shrink-0">
                   <CreditCard className="w-5 h-5" />
                 </div>
-                <h2 
-                  className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight"
-                  style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-                >
+                <h2 className="font-display uppercase tracking-tight text-xl sm:text-2xl text-[#0D0F12]">
                   10. Payments and Service Fees, where applicable
                 </h2>
               </div>
@@ -503,10 +473,7 @@ export default function TermsAndConditionsContent({ cmsContent }) {
                 <div className="w-10 h-10 rounded-xl bg-[#41B349]/10 text-[#41B349] flex items-center justify-center shrink-0">
                   <Lock className="w-5 h-5" />
                 </div>
-                <h2 
-                  className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight"
-                  style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-                >
+                <h2 className="font-display uppercase tracking-tight text-xl sm:text-2xl text-[#0D0F12]">
                   11. Privacy and Data Protection
                 </h2>
               </div>
@@ -527,10 +494,7 @@ export default function TermsAndConditionsContent({ cmsContent }) {
                 <div className="w-10 h-10 rounded-xl bg-[#41B349]/10 text-[#41B349] flex items-center justify-center shrink-0">
                   <AlertTriangle className="w-5 h-5" />
                 </div>
-                <h2 
-                  className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight"
-                  style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-                >
+                <h2 className="font-display uppercase tracking-tight text-xl sm:text-2xl text-[#0D0F12]">
                   12. Limitation of Liability
                 </h2>
               </div>
@@ -555,10 +519,7 @@ export default function TermsAndConditionsContent({ cmsContent }) {
                 <div className="w-10 h-10 rounded-xl bg-[#41B349]/10 text-[#41B349] flex items-center justify-center shrink-0">
                   <AlertCircle className="w-5 h-5" />
                 </div>
-                <h2 
-                  className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight"
-                  style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-                >
+                <h2 className="font-display uppercase tracking-tight text-xl sm:text-2xl text-[#0D0F12]">
                   13. Disclaimer of Warranties
                 </h2>
               </div>
@@ -582,10 +543,7 @@ export default function TermsAndConditionsContent({ cmsContent }) {
                 <div className="w-10 h-10 rounded-xl bg-[#41B349]/10 text-[#41B349] flex items-center justify-center shrink-0">
                   <ShieldAlert className="w-5 h-5" />
                 </div>
-                <h2 
-                  className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight"
-                  style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-                >
+                <h2 className="font-display uppercase tracking-tight text-xl sm:text-2xl text-[#0D0F12]">
                   14. Indemnification
                 </h2>
               </div>
@@ -618,10 +576,7 @@ export default function TermsAndConditionsContent({ cmsContent }) {
                 <div className="w-10 h-10 rounded-xl bg-[#41B349]/10 text-[#41B349] flex items-center justify-center shrink-0">
                   <XCircle className="w-5 h-5" />
                 </div>
-                <h2 
-                  className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight"
-                  style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-                >
+                <h2 className="font-display uppercase tracking-tight text-xl sm:text-2xl text-[#0D0F12]">
                   15. Termination
                 </h2>
               </div>
@@ -642,10 +597,7 @@ export default function TermsAndConditionsContent({ cmsContent }) {
                 <div className="w-10 h-10 rounded-xl bg-[#41B349]/10 text-[#41B349] flex items-center justify-center shrink-0">
                   <RefreshCw className="w-5 h-5" />
                 </div>
-                <h2 
-                  className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight"
-                  style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-                >
+                <h2 className="font-display uppercase tracking-tight text-xl sm:text-2xl text-[#0D0F12]">
                   16. Changes to These Terms
                 </h2>
               </div>
@@ -666,10 +618,7 @@ export default function TermsAndConditionsContent({ cmsContent }) {
                 <div className="w-10 h-10 rounded-xl bg-[#41B349]/10 text-[#41B349] flex items-center justify-center shrink-0">
                   <Scale className="w-5 h-5" />
                 </div>
-                <h2 
-                  className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight"
-                  style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-                >
+                <h2 className="font-display uppercase tracking-tight text-xl sm:text-2xl text-[#0D0F12]">
                   17. Governing Law and Jurisdiction
                 </h2>
               </div>
@@ -694,10 +643,7 @@ export default function TermsAndConditionsContent({ cmsContent }) {
                 <div className="w-10 h-10 rounded-xl bg-[#41B349]/10 text-[#41B349] flex items-center justify-center shrink-0">
                   <Mail className="w-5 h-5" />
                 </div>
-                <h2 
-                  className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight"
-                  style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-                >
+                <h2 className="font-display uppercase tracking-tight text-xl sm:text-2xl text-[#0D0F12]">
                   18. Contact Information
                 </h2>
               </div>

@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Briefcase, Sparkles, Users, Award, ShieldCheck } from "lucide-react";
 import { getCmsVal } from "@/lib/api-helper";
+import { SectionBadge, HighlightWord } from "@/components/Typography";
 
 export default function CareerHero({ cmsContent }) {
   const badge = getCmsVal(cmsContent, "WE ARE EXPANDING OUR GLOBAL TEAM", "careerhero");
@@ -35,24 +36,19 @@ export default function CareerHero({ cmsContent }) {
         {/* Left Content */}
         <div className="w-full lg:w-7/12 text-left">
           {/* Eyebrow Pill Badge */}
-          <div 
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#36963D]/10 border border-[#36963D]/30 text-[#36963D] font-mono text-xs uppercase tracking-widest font-bold mb-6 shadow-2xs"
-            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-          >
-            <span className="w-2 h-2 rounded-full bg-[#36963D] animate-pulse" />
-            <span>{badge}</span>
+          <div className="mb-5 sm:mb-6">
+            <SectionBadge variant="light">
+              <span>{badge}</span>
+            </SectionBadge>
           </div>
 
           {/* Main Headline */}
-          <h1 
-            className="text-3xl sm:text-4xl md:text-[46px] lg:text-[52px] font-black leading-[1.12] tracking-tight text-[#0D0F12] mb-6"
-            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-          >
+          <h1 className="font-display uppercase tracking-tight text-3xl sm:text-4xl md:text-5xl lg:text-[54px] xl:text-[60px] leading-[1.08] sm:leading-[1.02] text-[#0D0F12] mb-5 sm:mb-6">
             {title.includes("Visionaries") ? (
               <>
                 Build Your Career With <br />
                 A High-Impact Team of <br />
-                <span className="text-[#36963D]">Visionaries.</span>
+                <HighlightWord>Visionaries.</HighlightWord>
               </>
             ) : (
               title
@@ -60,10 +56,7 @@ export default function CareerHero({ cmsContent }) {
           </h1>
 
           {/* Subtitle */}
-          <p 
-            className="text-[#475569] text-base md:text-lg max-w-[540px] mb-8 leading-relaxed font-normal"
-            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
-          >
+          <p className="font-jakarta text-[#4A5568] text-base md:text-[17px] max-w-[540px] mb-8 leading-relaxed font-normal sm:font-medium tracking-[-0.01em]">
             {subtitle}
           </p>
 
@@ -71,8 +64,7 @@ export default function CareerHero({ cmsContent }) {
           <div className="flex flex-wrap items-center gap-4 mb-10">
             <button 
               onClick={() => scrollTo('application-form')}
-              className="bg-[#36963D] hover:bg-[#2e8234] text-white px-8 py-3.5 rounded-full font-bold text-sm sm:text-base transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2.5 group"
-              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+              className="bg-[#41B349] hover:bg-[#36963D] text-white px-8 py-3.5 rounded-full font-jakarta font-semibold tracking-[-0.01em] text-sm sm:text-base transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2.5 group"
             >
               <span>{cta1}</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -80,31 +72,30 @@ export default function CareerHero({ cmsContent }) {
 
             <button 
               onClick={() => scrollTo('application-form')}
-              className="bg-white hover:bg-gray-50 text-[#0D0F12] border border-gray-300 hover:border-[#36963D] px-7 py-3.5 rounded-full font-bold text-sm sm:text-base transition-all duration-300 shadow-xs hover:shadow-sm cursor-pointer flex items-center gap-2"
-              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+              className="bg-white hover:bg-gray-50 text-[#0D0F12] border border-gray-300 hover:border-[#41B349] px-7 py-3.5 rounded-full font-jakarta font-semibold tracking-[-0.01em] text-sm sm:text-base transition-all duration-300 shadow-xs hover:shadow-sm cursor-pointer flex items-center gap-2"
             >
-              <Briefcase className="w-4 h-4 text-[#36963D]" />
+              <Briefcase className="w-4 h-4 text-[#41B349]" />
               <span>{cta2}</span>
             </button>
           </div>
 
           {/* Quick Metrics Bar */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-6 border-t border-gray-200/80">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-6 border-t border-gray-200/80 font-jakarta">
             <div>
-              <p className="text-2xl font-black text-[#0D0F12]" style={{ fontFamily: "'Outfit', sans-serif" }}>50+</p>
-              <p className="text-xs text-[#64748B] font-medium uppercase tracking-wider">Engineers & Creatives</p>
+              <p className="font-display uppercase tracking-tight text-2xl sm:text-3xl text-[#0D0F12]">50+</p>
+              <p className="font-jakarta text-xs text-[#64748B] font-medium uppercase tracking-wider mt-1">Engineers & Creatives</p>
             </div>
             <div>
-              <p className="text-2xl font-black text-[#36963D]" style={{ fontFamily: "'Outfit', sans-serif" }}>15+</p>
-              <p className="text-xs text-[#64748B] font-medium uppercase tracking-wider">Global Countries Served</p>
+              <p className="font-display uppercase tracking-tight text-2xl sm:text-3xl text-[#41B349]">15+</p>
+              <p className="font-jakarta text-xs text-[#64748B] font-medium uppercase tracking-wider mt-1">Global Countries Served</p>
             </div>
             <div>
-              <p className="text-2xl font-black text-[#0D0F12]" style={{ fontFamily: "'Outfit', sans-serif" }}>98%</p>
-              <p className="text-xs text-[#64748B] font-medium uppercase tracking-wider">Team Retention Rate</p>
+              <p className="font-display uppercase tracking-tight text-2xl sm:text-3xl text-[#0D0F12]">98%</p>
+              <p className="font-jakarta text-xs text-[#64748B] font-medium uppercase tracking-wider mt-1">Team Retention Rate</p>
             </div>
             <div>
-              <p className="text-2xl font-black text-[#36963D]" style={{ fontFamily: "'Outfit', sans-serif" }}>4.9/5</p>
-              <p className="text-xs text-[#64748B] font-medium uppercase tracking-wider">Employee Satisfaction</p>
+              <p className="font-display uppercase tracking-tight text-2xl sm:text-3xl text-[#41B349]">4.9/5</p>
+              <p className="font-jakarta text-xs text-[#64748B] font-medium uppercase tracking-wider mt-1">Employee Satisfaction</p>
             </div>
           </div>
         </div>

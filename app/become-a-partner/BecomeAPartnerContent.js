@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import Faq from "@/components/Faq/Faq";
 import { getCmsVal } from "@/lib/api-helper";
+import { SectionBadge, HighlightWord } from "@/components/Typography";
 
 export default function BecomeAPartnerContent({ cmsContent }) {
   const scrollTo = (id) => {
@@ -177,6 +178,7 @@ export default function BecomeAPartnerContent({ cmsContent }) {
       {/* ========================================================
           1. HERO SECTION (Seamless transition, no separator border)
          ======================================================== */}
+      {/* 1. HERO SECTION */}
       <section className="relative w-full bg-[#FFFFFF] overflow-hidden py-16 sm:py-20 md:py-24">
         {/* Ambient Glow & Dot Pattern */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[850px] h-[420px] bg-[radial-gradient(circle_at_top,_rgba(65,179,73,0.14)_0%,_transparent_70%)] pointer-events-none" />
@@ -184,22 +186,20 @@ export default function BecomeAPartnerContent({ cmsContent }) {
 
         <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           {/* Eyebrow Pill */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#41B349]/10 border border-[#41B349]/30 text-[#36963D] font-mono text-xs uppercase tracking-widest font-bold mb-6 shadow-2xs">
-            <span className="w-2 h-2 rounded-full bg-[#41B349] animate-pulse" />
-            <Handshake className="w-3.5 h-3.5 text-[#41B349]" />
-            <span>{getCmsVal(cmsContent, "GLOBAL PARTNERSHIP NETWORK", "partnerhero")}</span>
+          <div className="mb-4 sm:mb-5 flex justify-center">
+            <SectionBadge variant="light">
+              <Handshake className="w-4 h-4 text-[#41B349]" />
+              <span>{getCmsVal(cmsContent, "GLOBAL PARTNERSHIP NETWORK", "partnerhero")}</span>
+            </SectionBadge>
           </div>
 
           {/* Main Headline */}
-          <h1 
-            className="text-3xl sm:text-5xl md:text-6xl font-black text-[#111827] tracking-tight leading-[1.14] mb-6"
-            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-          >
-            {getCmsVal(cmsContent, "Scale Faster, Earn More With Our Strategic Technology Partnership", "partnerhero")}
+          <h1 className="font-display uppercase tracking-tight text-3xl sm:text-4xl md:text-5xl lg:text-[54px] xl:text-[60px] leading-[1.08] sm:leading-[1.02] text-[#0D0F12] text-center mb-5 sm:mb-6">
+            Scale Faster, Earn More With Our <HighlightWord>Strategic Technology Partnership</HighlightWord>
           </h1>
 
           {/* Subtitle */}
-          <p className="text-gray-600 text-base sm:text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-normal mb-8">
+          <p className="text-[#4A5568] text-sm sm:text-base md:text-[17px] max-w-3xl mx-auto leading-relaxed font-normal sm:font-medium text-center font-jakarta tracking-[-0.01em] mb-8">
             {getCmsVal(
               cmsContent,
               "Collaborate with Tech Solutionor to expand your technical delivery capacity, monetize high-value enterprise referrals, or deliver white-label custom software, web apps, and digital solutions with guaranteed quality.",
@@ -211,7 +211,7 @@ export default function BecomeAPartnerContent({ cmsContent }) {
           <div className="flex flex-wrap items-center justify-center gap-4 mb-14">
             <button
               onClick={() => scrollTo("partner-inquiries")}
-              className="bg-[#36963D] hover:bg-[#2d8033] text-white px-8 py-3.5 rounded-full font-bold text-sm sm:text-base transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2.5 group"
+              className="bg-[#41B349] hover:bg-[#36963D] text-white px-8 py-3.5 rounded-full font-jakarta font-semibold tracking-[-0.01em] text-sm sm:text-base transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2.5 group"
             >
               <span>Get in Touch</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -219,44 +219,44 @@ export default function BecomeAPartnerContent({ cmsContent }) {
 
             <button
               onClick={() => scrollTo("partner-tracks")}
-              className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-7 py-3.5 rounded-full font-bold text-sm sm:text-base transition-all duration-200 cursor-pointer"
+              className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-7 py-3.5 rounded-full font-jakarta font-semibold tracking-[-0.01em] text-sm sm:text-base transition-all duration-200 cursor-pointer"
             >
               Explore Partner Tracks
             </button>
           </div>
 
           {/* Key Metric Highlight Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 max-w-5xl mx-auto text-left">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 max-w-5xl mx-auto text-left font-jakarta">
             <div className="bg-white/80 rounded-2xl p-5 border border-gray-200/90 shadow-2xs backdrop-blur-sm">
-              <div className="text-2xl sm:text-3xl font-black text-[#36963D] mb-1" style={{ fontFamily: "'Outfit', sans-serif" }}>
+              <div className="font-display uppercase tracking-tight text-2xl sm:text-3xl text-[#41B349] mb-1">
                 Up to 25%
               </div>
-              <p className="text-xs sm:text-sm font-semibold text-gray-900">Referral Commission</p>
-              <p className="text-[11px] text-gray-500 mt-0.5">High-margin payouts on closed contracts</p>
+              <p className="font-jakarta text-xs sm:text-sm font-semibold text-gray-900">Referral Commission</p>
+              <p className="font-jakarta text-[11px] text-gray-500 mt-0.5">High-margin payouts on closed contracts</p>
             </div>
 
             <div className="bg-white/80 rounded-2xl p-5 border border-gray-200/90 shadow-2xs backdrop-blur-sm">
-              <div className="text-2xl sm:text-3xl font-black text-[#111827] mb-1" style={{ fontFamily: "'Outfit', sans-serif" }}>
+              <div className="font-display uppercase tracking-tight text-2xl sm:text-3xl text-[#0D0F12] mb-1">
                 100%
               </div>
-              <p className="text-xs sm:text-sm font-semibold text-gray-900">White-Label Delivery</p>
-              <p className="text-[11px] text-gray-500 mt-0.5">Strict NDAs &amp; client confidentiality</p>
+              <p className="font-jakarta text-xs sm:text-sm font-semibold text-gray-900">White-Label Delivery</p>
+              <p className="font-jakarta text-[11px] text-gray-500 mt-0.5">Strict NDAs &amp; client confidentiality</p>
             </div>
 
             <div className="bg-white/80 rounded-2xl p-5 border border-gray-200/90 shadow-2xs backdrop-blur-sm">
-              <div className="text-2xl sm:text-3xl font-black text-[#111827] mb-1" style={{ fontFamily: "'Outfit', sans-serif" }}>
+              <div className="font-display uppercase tracking-tight text-2xl sm:text-3xl text-[#0D0F12] mb-1">
                 48 Hours
               </div>
-              <p className="text-xs sm:text-sm font-semibold text-gray-900">Rapid Onboarding</p>
-              <p className="text-[11px] text-gray-500 mt-0.5">Quick NDA &amp; immediate project kickoff</p>
+              <p className="font-jakarta text-xs sm:text-sm font-semibold text-gray-900">Rapid Onboarding</p>
+              <p className="font-jakarta text-[11px] text-gray-500 mt-0.5">Quick NDA &amp; immediate project kickoff</p>
             </div>
 
-            <div className="bg-white/80 rounded-2xl p-5 border border-gray-200/90 shadow-2xs backdrop-blur-sm">
-              <div className="text-2xl sm:text-3xl font-black text-[#36963D] mb-1" style={{ fontFamily: "'Outfit', sans-serif" }}>
+            <div className="bg-white/80 rounded-2xl p-5 border border-gray-200/90 shadow-2xl backdrop-blur-sm">
+              <div className="font-display uppercase tracking-tight text-2xl sm:text-3xl text-[#41B349] mb-1">
                 UAE &amp; Global
               </div>
-              <p className="text-xs sm:text-sm font-semibold text-gray-900">International Reach</p>
-              <p className="text-[11px] text-gray-500 mt-0.5">Dubai HQ with worldwide coverage</p>
+              <p className="font-jakarta text-xs sm:text-sm font-semibold text-gray-900">International Reach</p>
+              <p className="font-jakarta text-[11px] text-gray-500 mt-0.5">Dubai HQ with worldwide coverage</p>
             </div>
           </div>
         </div>
@@ -265,21 +265,20 @@ export default function BecomeAPartnerContent({ cmsContent }) {
       {/* ========================================================
           2. PARTNERSHIP TRACKS / MODELS
          ======================================================== */}
-      <section id="partner-tracks" className="w-full py-16 sm:py-20 md:py-24 bg-gray-50/50">
+      <section id="partner-tracks" className="w-full py-16 sm:py-20 md:py-24 bg-gray-50/50 font-jakarta">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
-          <div className="text-center max-w-3xl mx-auto mb-14">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#41B349]/10 text-[#36963D] font-mono text-xs uppercase tracking-wider font-bold mb-3">
-              <Layers className="w-3.5 h-3.5" />
-              <span>TAILORED COLLABORATION</span>
+          <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-14">
+            <div className="mb-4 sm:mb-5 flex justify-center">
+              <SectionBadge variant="light">
+                <Layers className="w-4 h-4 text-[#41B349]" />
+                <span>TAILORED COLLABORATION</span>
+              </SectionBadge>
             </div>
-            <h2 
-              className="text-2xl sm:text-4xl font-extrabold text-[#111827] tracking-tight mb-4"
-              style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-            >
-              Choose the Partnership Model That Fits You
+            <h2 className="font-display uppercase tracking-tight text-2xl sm:text-3xl md:text-4xl text-[#0D0F12] mb-4">
+              Choose the Partnership <HighlightWord>Model That Fits You</HighlightWord>
             </h2>
-            <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
+            <p className="font-jakarta text-[#4A5568] text-sm sm:text-base leading-relaxed">
               Whether you want to refer enterprise deals, expand your agency’s development capacity under your own brand, or resell proprietary software, we have a structured program built for your growth.
             </p>
           </div>
@@ -295,27 +294,24 @@ export default function BecomeAPartnerContent({ cmsContent }) {
                     <div className="w-12 h-12 rounded-2xl bg-[#41B349]/10 flex items-center justify-center">
                       {track.icon}
                     </div>
-                    <span className="px-3 py-1 rounded-full bg-gray-100 text-gray-700 text-[11px] font-bold tracking-wide uppercase">
+                    <span className="px-3 py-1 rounded-full bg-gray-100 text-gray-700 text-[11px] font-bold tracking-wide uppercase font-jakarta">
                       {track.badge}
                     </span>
                   </div>
 
-                  <h3 
-                    className="text-xl sm:text-2xl font-bold text-gray-900 mb-3"
-                    style={{ fontFamily: "'Outfit', sans-serif" }}
-                  >
+                  <h3 className="font-display uppercase tracking-tight text-xl sm:text-2xl text-[#0D0F12] mb-3">
                     {track.title}
                   </h3>
 
-                  <p className="text-gray-600 text-sm leading-relaxed mb-6">
+                  <p className="text-[#4A5568] text-sm leading-relaxed mb-6 font-jakarta">
                     {track.summary}
                   </p>
 
                   <div className="space-y-3 mb-8">
                     {track.benefits.map((b, idx) => (
                       <div key={idx} className="flex items-start gap-3">
-                        <CheckCircle2 className="w-4 h-4 text-[#36963D] shrink-0 mt-0.5" />
-                        <span className="text-xs sm:text-[13.5px] text-gray-700 leading-snug">{b}</span>
+                        <CheckCircle2 className="w-4 h-4 text-[#41B349] shrink-0 mt-0.5" />
+                        <span className="text-xs sm:text-[13.5px] text-gray-700 leading-snug font-jakarta">{b}</span>
                       </div>
                     ))}
                   </div>
@@ -323,7 +319,7 @@ export default function BecomeAPartnerContent({ cmsContent }) {
 
                 <button
                   onClick={() => scrollTo("partner-inquiries")}
-                  className="w-full py-3 px-5 rounded-xl border border-gray-200 hover:border-[#36963D] hover:bg-[#41B349]/5 text-gray-900 hover:text-[#36963D] font-bold text-xs sm:text-sm transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full py-3 px-5 rounded-xl border border-gray-200 hover:border-[#41B349] hover:bg-[#41B349]/5 text-gray-900 hover:text-[#41B349] font-jakarta font-semibold tracking-[-0.01em] text-xs sm:text-sm transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <span>Inquire About This Track</span>
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -338,21 +334,20 @@ export default function BecomeAPartnerContent({ cmsContent }) {
       {/* ========================================================
           3. WHY PARTNER WITH TECH SOLUTIONOR (Value Props)
          ======================================================== */}
-      <section className="w-full py-16 sm:py-20 md:py-24 bg-white">
+      <section className="w-full py-16 sm:py-20 md:py-24 bg-white font-jakarta">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
-          <div className="text-center max-w-3xl mx-auto mb-14">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#41B349]/10 text-[#36963D] font-mono text-xs uppercase tracking-wider font-bold mb-3">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>THE TECH SOLUTIONOR ADVANTAGE</span>
+          <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-14">
+            <div className="mb-4 sm:mb-5 flex justify-center">
+              <SectionBadge variant="light">
+                <Sparkles className="w-4 h-4 text-[#41B349]" />
+                <span>THE TECH SOLUTIONOR ADVANTAGE</span>
+              </SectionBadge>
             </div>
-            <h2 
-              className="text-2xl sm:text-4xl font-extrabold text-[#111827] tracking-tight mb-4"
-              style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-            >
-              Why Top Agencies &amp; Consultancies Partner With Us
+            <h2 className="font-display uppercase tracking-tight text-2xl sm:text-3xl md:text-4xl text-[#0D0F12] mb-4">
+              Why Top Agencies &amp; <HighlightWord>Consultancies Partner With Us</HighlightWord>
             </h2>
-            <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
+            <p className="font-jakarta text-[#4A5568] text-sm sm:text-base leading-relaxed">
               We treat our partners as true business allies. From transparent financial terms to elite engineering execution, our platform is built to make your partnership frictionless and profitable.
             </p>
           </div>
@@ -366,10 +361,10 @@ export default function BecomeAPartnerContent({ cmsContent }) {
                 <div className="w-12 h-12 rounded-2xl bg-white shadow-2xs border border-gray-100 flex items-center justify-center mb-5">
                   {vp.icon}
                 </div>
-                <h3 className="text-lg font-bold text-gray-900 mb-2">
+                <h3 className="font-display uppercase tracking-tight text-base sm:text-lg text-[#0D0F12] mb-2">
                   {vp.title}
                 </h3>
-                <p className="text-gray-600 text-xs sm:text-sm leading-relaxed">
+                <p className="font-jakarta text-[#4A5568] text-xs sm:text-sm leading-relaxed">
                   {vp.description}
                 </p>
               </div>
@@ -382,21 +377,20 @@ export default function BecomeAPartnerContent({ cmsContent }) {
       {/* ========================================================
           4. HOW IT WORKS (4-STEP ONBOARDING)
          ======================================================== */}
-      <section className="w-full py-16 sm:py-20 md:py-24 bg-gray-50/70">
+      <section className="w-full py-16 sm:py-20 md:py-24 bg-gray-50/70 font-jakarta">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
-          <div className="text-center max-w-3xl mx-auto mb-14">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#41B349]/10 text-[#36963D] font-mono text-xs uppercase tracking-wider font-bold mb-3">
-              <Clock className="w-3.5 h-3.5" />
-              <span>FAST &amp; FRICTIONLESS</span>
+          <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-14">
+            <div className="mb-4 sm:mb-5 flex justify-center">
+              <SectionBadge variant="light">
+                <Clock className="w-4 h-4 text-[#41B349]" />
+                <span>FAST &amp; FRICTIONLESS</span>
+              </SectionBadge>
             </div>
-            <h2 
-              className="text-2xl sm:text-4xl font-extrabold text-[#111827] tracking-tight mb-4"
-              style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-            >
-              How Our Partnership Works
+            <h2 className="font-display uppercase tracking-tight text-2xl sm:text-3xl md:text-4xl text-[#0D0F12] mb-4">
+              How Our <HighlightWord>Partnership Works</HighlightWord>
             </h2>
-            <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
+            <p className="font-jakarta text-[#4A5568] text-sm sm:text-base leading-relaxed">
               Get up and running in 4 clear, transparent steps. From application to kickoff in under 48 hours.
             </p>
           </div>
@@ -408,13 +402,13 @@ export default function BecomeAPartnerContent({ cmsContent }) {
                 className="bg-white rounded-3xl p-6 sm:p-7 border border-gray-200/90 shadow-2xs relative flex flex-col justify-between"
               >
                 <div>
-                  <div className="w-12 h-12 rounded-2xl bg-[#41B349]/15 text-[#36963D] font-mono text-lg font-black flex items-center justify-center mb-5">
+                  <div className="w-12 h-12 rounded-2xl bg-[#41B349]/15 text-[#41B349] font-display text-lg font-black flex items-center justify-center mb-5">
                     {st.step}
                   </div>
-                  <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2">
+                  <h3 className="font-display uppercase tracking-tight text-base sm:text-lg text-[#0D0F12] mb-2">
                     {st.title}
                   </h3>
-                  <p className="text-gray-600 text-xs sm:text-[13px] leading-relaxed">
+                  <p className="font-jakarta text-[#4A5568] text-xs sm:text-[13px] leading-relaxed">
                     {st.desc}
                   </p>
                 </div>
@@ -433,33 +427,32 @@ export default function BecomeAPartnerContent({ cmsContent }) {
       {/* ========================================================
           6. DIRECT SUPPORT & CTA BOX
          ======================================================== */}
-      <section id="partner-inquiries" className="w-full py-16 sm:py-20 bg-white">
+      <section id="partner-inquiries" className="w-full py-16 sm:py-20 bg-white font-jakarta">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-[#0D0F12] border border-gray-800 text-white rounded-3xl p-8 sm:p-12 md:p-14 relative overflow-hidden shadow-xl">
             {/* Top Glowing Green Accent Line */}
             <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-transparent via-[#41B349] to-transparent opacity-90" />
             
             <div className="relative z-10 max-w-2xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-[#41B349] font-mono text-xs uppercase tracking-wider font-bold mb-4">
-                <Mail className="w-3.5 h-3.5" />
-                <span>DIRECT PARTNERSHIP INQUIRIES</span>
+              <div className="mb-4">
+                <SectionBadge variant="dark">
+                  <Mail className="w-4 h-4 text-[#41B349]" />
+                  <span>DIRECT PARTNERSHIP INQUIRIES</span>
+                </SectionBadge>
               </div>
 
-              <h2 
-                className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight mb-4"
-                style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-              >
-                Ready to Grow Together with Tech Solutionor?
+              <h2 className="font-display uppercase tracking-tight text-2xl sm:text-3xl md:text-4xl text-white mb-4 leading-tight">
+                Ready to Grow Together with <HighlightWord>Tech Solutionor?</HighlightWord>
               </h2>
 
-              <p className="text-gray-300 text-sm sm:text-base leading-relaxed mb-8">
+              <p className="font-jakarta text-gray-300 text-sm sm:text-base leading-relaxed mb-8">
                 Connect directly with our corporate team in Dubai or schedule a strategic briefing to discuss bespoke partner models and commercial opportunities.
               </p>
 
               <div className="flex flex-wrap items-center gap-4">
                 <a
                   href="mailto:info@techsolutionor.com"
-                  className="inline-flex items-center gap-2.5 bg-[#41B349] hover:bg-[#36963D] text-white px-7 py-3.5 rounded-full font-bold text-xs sm:text-sm transition-all duration-300 shadow-lg hover:scale-105"
+                  className="inline-flex items-center gap-2.5 bg-[#41B349] hover:bg-[#36963D] text-white px-7 py-3.5 rounded-full font-jakarta font-semibold tracking-[-0.01em] text-xs sm:text-sm transition-all duration-300 shadow-lg hover:scale-105"
                 >
                   <Mail className="w-4 h-4" />
                   <span>info@techsolutionor.com</span>
@@ -467,7 +460,7 @@ export default function BecomeAPartnerContent({ cmsContent }) {
 
                 <Link
                   href="/contact-us"
-                  className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-6 py-3.5 rounded-full font-bold text-xs sm:text-sm transition-all duration-200"
+                  className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-6 py-3.5 rounded-full font-jakarta font-semibold tracking-[-0.01em] text-xs sm:text-sm transition-all duration-200"
                 >
                   <span>Contact Page</span>
                   <ArrowRight className="w-4 h-4" />

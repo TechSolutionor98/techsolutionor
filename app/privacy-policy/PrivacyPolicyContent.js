@@ -26,6 +26,7 @@ import {
   Building
 } from "lucide-react";
 import { getCmsVal } from "@/lib/api-helper";
+import { SectionBadge, HighlightWord } from "@/components/Typography";
 
 const sections = [
   { id: "introduction", title: "1. Introduction", icon: Shield },
@@ -90,21 +91,20 @@ export default function PrivacyPolicyContent({ cmsContent }) {
 
         <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           {/* Eyebrow Pill */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#41B349]/10 border border-[#41B349]/30 text-[#36963D] font-mono text-xs uppercase tracking-widest font-bold mb-6 shadow-2xs">
-            <ShieldCheck className="w-4 h-4 text-[#41B349]" />
-            <span>{getCmsVal(cmsContent, "LEGAL & DATA PRIVACY", "privacyhero")}</span>
+          <div className="mb-4 sm:mb-5 flex justify-center">
+            <SectionBadge variant="light">
+              <ShieldCheck className="w-4 h-4 text-[#41B349]" />
+              <span>{getCmsVal(cmsContent, "LEGAL & DATA PRIVACY", "privacyhero")}</span>
+            </SectionBadge>
           </div>
 
           {/* Main Title */}
-          <h1 
-            className="text-3xl sm:text-5xl md:text-6xl font-black text-[#111827] tracking-tight leading-[1.15] mb-6"
-            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-          >
-            {getCmsVal(cmsContent, "Privacy Policy", "privacyhero")}
+          <h1 className="font-display uppercase tracking-tight text-3xl sm:text-4xl md:text-5xl lg:text-[54px] xl:text-[60px] leading-[1.08] sm:leading-[1.02] text-[#0D0F12] text-center mb-5 sm:mb-6">
+            Privacy <HighlightWord>Policy</HighlightWord>
           </h1>
 
           {/* Subtitle */}
-          <p className="text-gray-600 text-sm sm:text-base md:text-lg max-w-3xl mx-auto leading-relaxed font-normal">
+          <p className="text-[#4A5568] text-sm sm:text-base md:text-[17px] max-w-3xl mx-auto leading-relaxed font-normal sm:font-medium text-center font-jakarta tracking-[-0.01em]">
             {getCmsVal(
               cmsContent,
               "At Tech Solutionor, protecting your privacy and ensuring the integrity of your personal and business data is a cornerstone of our software engineering and digital services. This policy transparently explains what data we collect, how we handle it, and how your rights are safeguarded.",
@@ -126,12 +126,12 @@ export default function PrivacyPolicyContent({ cmsContent }) {
                   <Layers className="w-4 h-4" />
                 </div>
                 <div>
-                  <h2 className="text-sm font-bold text-gray-900">Table of Contents</h2>
-                  <p className="text-[11px] text-gray-500">Jump to any section</p>
+                  <h2 className="font-display uppercase tracking-tight text-base sm:text-lg text-[#0D0F12]">Table of Contents</h2>
+                  <p className="font-jakarta text-[11px] text-gray-500">Jump to any section</p>
                 </div>
               </div>
 
-              <nav className="space-y-1 max-h-[calc(100vh-220px)] overflow-y-auto pr-1">
+              <nav className="space-y-1 max-h-[calc(100vh-220px)] overflow-y-auto pr-1 font-jakarta">
                 {sections.map((sec) => {
                   const Icon = sec.icon;
                   const isActive = activeSection === sec.id;
@@ -173,7 +173,7 @@ export default function PrivacyPolicyContent({ cmsContent }) {
           </aside>
 
           {/* Privacy Policy Detailed Articles (Right Side) */}
-          <main className="lg:col-span-8 space-y-12 sm:space-y-14">
+          <main className="lg:col-span-8 space-y-12 sm:space-y-14 font-jakarta">
             
             {/* Section 1: Introduction */}
             <article id="introduction" className="scroll-mt-24 bg-white rounded-3xl p-6 sm:p-8 md:p-10 border border-gray-100 shadow-[0_4px_24px_rgba(0,0,0,0.02)]">
@@ -181,10 +181,7 @@ export default function PrivacyPolicyContent({ cmsContent }) {
                 <div className="w-10 h-10 rounded-xl bg-[#41B349]/10 text-[#41B349] flex items-center justify-center shrink-0">
                   <Shield className="w-5 h-5" />
                 </div>
-                <h2 
-                  className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight"
-                  style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-                >
+                <h2 className="font-display uppercase tracking-tight text-xl sm:text-2xl text-[#0D0F12]">
                   1. Introduction
                 </h2>
               </div>
@@ -216,10 +213,7 @@ export default function PrivacyPolicyContent({ cmsContent }) {
                 <div className="w-10 h-10 rounded-xl bg-[#41B349]/10 text-[#41B349] flex items-center justify-center shrink-0">
                   <Database className="w-5 h-5" />
                 </div>
-                <h2 
-                  className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight"
-                  style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-                >
+                <h2 className="font-display uppercase tracking-tight text-xl sm:text-2xl text-[#0D0F12]">
                   2. Information We Collect
                 </h2>
               </div>
@@ -260,10 +254,7 @@ export default function PrivacyPolicyContent({ cmsContent }) {
                 <div className="w-10 h-10 rounded-xl bg-[#41B349]/10 text-[#41B349] flex items-center justify-center shrink-0">
                   <UserCheck className="w-5 h-5" />
                 </div>
-                <h2 
-                  className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight"
-                  style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-                >
+                <h2 className="font-display uppercase tracking-tight text-xl sm:text-2xl text-[#0D0F12]">
                   3. Personal Information
                 </h2>
               </div>
@@ -304,10 +295,7 @@ export default function PrivacyPolicyContent({ cmsContent }) {
                 <div className="w-10 h-10 rounded-xl bg-[#41B349]/10 text-[#41B349] flex items-center justify-center shrink-0">
                   <Layers className="w-5 h-5" />
                 </div>
-                <h2 
-                  className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight"
-                  style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-                >
+                <h2 className="font-display uppercase tracking-tight text-xl sm:text-2xl text-[#0D0F12]">
                   4. How We Collect Information
                 </h2>
               </div>
@@ -348,10 +336,7 @@ export default function PrivacyPolicyContent({ cmsContent }) {
                 <div className="w-10 h-10 rounded-xl bg-[#41B349]/10 text-[#41B349] flex items-center justify-center shrink-0">
                   <FileText className="w-5 h-5" />
                 </div>
-                <h2 
-                  className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight"
-                  style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-                >
+                <h2 className="font-display uppercase tracking-tight text-xl sm:text-2xl text-[#0D0F12]">
                   5. How We Use Your Information
                 </h2>
               </div>
@@ -401,10 +386,7 @@ export default function PrivacyPolicyContent({ cmsContent }) {
                 <div className="w-10 h-10 rounded-xl bg-[#41B349]/10 text-[#41B349] flex items-center justify-center shrink-0">
                   <Cookie className="w-5 h-5" />
                 </div>
-                <h2 
-                  className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight"
-                  style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-                >
+                <h2 className="font-display uppercase tracking-tight text-xl sm:text-2xl text-[#0D0F12]">
                   6. Cookies and Tracking Technologies
                 </h2>
               </div>
@@ -461,10 +443,7 @@ export default function PrivacyPolicyContent({ cmsContent }) {
                 <div className="w-10 h-10 rounded-xl bg-[#41B349]/10 text-[#41B349] flex items-center justify-center shrink-0">
                   <BarChart3 className="w-5 h-5" />
                 </div>
-                <h2 
-                  className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight"
-                  style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-                >
+                <h2 className="font-display uppercase tracking-tight text-xl sm:text-2xl text-[#0D0F12]">
                   7. Website Analytics
                 </h2>
               </div>
@@ -485,10 +464,7 @@ export default function PrivacyPolicyContent({ cmsContent }) {
                 <div className="w-10 h-10 rounded-xl bg-[#41B349]/10 text-[#41B349] flex items-center justify-center shrink-0">
                   <Server className="w-5 h-5" />
                 </div>
-                <h2 
-                  className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight"
-                  style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-                >
+                <h2 className="font-display uppercase tracking-tight text-xl sm:text-2xl text-[#0D0F12]">
                   8. Third-Party Services
                 </h2>
               </div>
@@ -525,10 +501,7 @@ export default function PrivacyPolicyContent({ cmsContent }) {
                 <div className="w-10 h-10 rounded-xl bg-[#41B349]/10 text-[#41B349] flex items-center justify-center shrink-0">
                   <Share2 className="w-5 h-5" />
                 </div>
-                <h2 
-                  className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight"
-                  style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-                >
+                <h2 className="font-display uppercase tracking-tight text-xl sm:text-2xl text-[#0D0F12]">
                   9. Data Sharing and Disclosure
                 </h2>
               </div>
@@ -575,10 +548,7 @@ export default function PrivacyPolicyContent({ cmsContent }) {
                 <div className="w-10 h-10 rounded-xl bg-[#41B349]/10 text-[#41B349] flex items-center justify-center shrink-0">
                   <Lock className="w-5 h-5" />
                 </div>
-                <h2 
-                  className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight"
-                  style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-                >
+                <h2 className="font-display uppercase tracking-tight text-xl sm:text-2xl text-[#0D0F12]">
                   10. Data Security
                 </h2>
               </div>
@@ -622,10 +592,7 @@ export default function PrivacyPolicyContent({ cmsContent }) {
                 <div className="w-10 h-10 rounded-xl bg-[#41B349]/10 text-[#41B349] flex items-center justify-center shrink-0">
                   <Clock className="w-5 h-5" />
                 </div>
-                <h2 
-                  className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight"
-                  style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-                >
+                <h2 className="font-display uppercase tracking-tight text-xl sm:text-2xl text-[#0D0F12]">
                   11. Data Retention
                 </h2>
               </div>
@@ -666,10 +633,7 @@ export default function PrivacyPolicyContent({ cmsContent }) {
                 <div className="w-10 h-10 rounded-xl bg-[#41B349]/10 text-[#41B349] flex items-center justify-center shrink-0">
                   <CheckCircle2 className="w-5 h-5" />
                 </div>
-                <h2 
-                  className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight"
-                  style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-                >
+                <h2 className="font-display uppercase tracking-tight text-xl sm:text-2xl text-[#0D0F12]">
                   12. User Rights and Choices
                 </h2>
               </div>
@@ -738,10 +702,7 @@ export default function PrivacyPolicyContent({ cmsContent }) {
                 <div className="w-10 h-10 rounded-xl bg-[#41B349]/10 text-[#41B349] flex items-center justify-center shrink-0">
                   <ExternalLink className="w-5 h-5" />
                 </div>
-                <h2 
-                  className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight"
-                  style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-                >
+                <h2 className="font-display uppercase tracking-tight text-xl sm:text-2xl text-[#0D0F12]">
                   13. Third-Party Links
                 </h2>
               </div>
@@ -762,10 +723,7 @@ export default function PrivacyPolicyContent({ cmsContent }) {
                 <div className="w-10 h-10 rounded-xl bg-[#41B349]/10 text-[#41B349] flex items-center justify-center shrink-0">
                   <Users className="w-5 h-5" />
                 </div>
-                <h2 
-                  className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight"
-                  style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-                >
+                <h2 className="font-display uppercase tracking-tight text-xl sm:text-2xl text-[#0D0F12]">
                   14. Children&apos;s Privacy
                 </h2>
               </div>
@@ -786,10 +744,7 @@ export default function PrivacyPolicyContent({ cmsContent }) {
                 <div className="w-10 h-10 rounded-xl bg-[#41B349]/10 text-[#41B349] flex items-center justify-center shrink-0">
                   <Globe className="w-5 h-5" />
                 </div>
-                <h2 
-                  className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight"
-                  style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-                >
+                <h2 className="font-display uppercase tracking-tight text-xl sm:text-2xl text-[#0D0F12]">
                   15. International Data Transfers
                 </h2>
               </div>
@@ -810,10 +765,7 @@ export default function PrivacyPolicyContent({ cmsContent }) {
                 <div className="w-10 h-10 rounded-xl bg-[#41B349]/10 text-[#41B349] flex items-center justify-center shrink-0">
                   <RefreshCw className="w-5 h-5" />
                 </div>
-                <h2 
-                  className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight"
-                  style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-                >
+                <h2 className="font-display uppercase tracking-tight text-xl sm:text-2xl text-[#0D0F12]">
                   16. Updates to This Privacy Policy
                 </h2>
               </div>
@@ -834,10 +786,7 @@ export default function PrivacyPolicyContent({ cmsContent }) {
                 <div className="w-10 h-10 rounded-xl bg-[#41B349]/10 text-[#41B349] flex items-center justify-center shrink-0">
                   <Mail className="w-5 h-5" />
                 </div>
-                <h2 
-                  className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight"
-                  style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}
-                >
+                <h2 className="font-display uppercase tracking-tight text-xl sm:text-2xl text-[#0D0F12]">
                   17. Contact Information
                 </h2>
               </div>
