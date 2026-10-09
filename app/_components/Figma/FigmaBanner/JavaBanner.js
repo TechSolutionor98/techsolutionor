@@ -9,15 +9,17 @@ const FigmaBanner = ({ cmsContent }) => {
     <CommonTechHero
       cmsContent={cmsContent}
       cmsPrefix="figmabanner"
-      badge="COLLABORATIVE UI/UX DESIGN"
-      titleLine1="Figma: Modern Design"
-      titleLine2="Systems & Interactive"
-      titleAccent="Prototypes."
-      description="Figma is the gold standard for digital product design. We create comprehensive design systems, component libraries, high-fidelity clickable prototypes, and intuitive UX flows that accelerate development."
+      badge="MODERN UI/UX DESIGN • GLOBAL"
+      titleLine1="Intuitive Figma UI/UX"
+      titleLine2="Design & Prototypes:"
+      titleAccent="Crafted for Scale."
+      description="We craft modern UI/UX wireframes, interactive prototypes, and design systems in Figma. From user research to layouts, our team delivers intuitive digital products."
       image={FigmaImg}
       imageAlt="Figma Design"
-      ctaText="Explore Figma"
-      ctaHref="#framework"
+      showPrimaryCta={false}
+      quoteButtonStyle="primary"
+      headingClassName="text-[26px] sm:text-3xl md:text-[50px] lg:text-[56px] leading-[1.08] sm:leading-[1.02] mb-5"
+      paragraphClassName="max-w-[480px] mb-6 text-sm sm:text-base md:text-[15.5px] leading-relaxed text-[#4A5568]"
     />
   );
 };

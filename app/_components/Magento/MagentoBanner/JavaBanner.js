@@ -9,15 +9,17 @@ const MagentoBanner = ({ cmsContent }) => {
     <CommonTechHero
       cmsContent={cmsContent}
       cmsPrefix="magentobanner"
-      badge="ENTERPRISE COMMERCE ARCHITECTURE"
-      titleLine1="Magento: Scalable Power"
-      titleLine2="for High-Volume Digital"
-      titleAccent="Marketplaces."
-      description="Adobe Commerce (Magento) offers unmatched customization and flexibility for enterprise stores. We architect robust B2B and B2C shopping experiences with complex catalogs and high transaction volumes."
+      badge="ENTERPRISE ADOBE COMMERCE • GLOBAL"
+      titleLine1="Enterprise Magento"
+      titleLine2="Commerce Platforms:"
+      titleAccent="Built for Scale."
+      description="We engineer enterprise Magento and Adobe Commerce stores tailored for high order volumes. From custom modules to ERP sync, we deliver stable and secure commerce."
       image={MagentoImg}
       imageAlt="Magento Commerce"
-      ctaText="Explore Magento"
-      ctaHref="#framework"
+      showPrimaryCta={false}
+      quoteButtonStyle="primary"
+      headingClassName="text-[26px] sm:text-3xl md:text-[50px] lg:text-[56px] leading-[1.08] sm:leading-[1.02] mb-5"
+      paragraphClassName="max-w-[480px] mb-6 text-sm sm:text-base md:text-[15.5px] leading-relaxed text-[#4A5568]"
     />
   );
 };

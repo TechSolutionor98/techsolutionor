@@ -9,15 +9,17 @@ const WpBanner = ({ cmsContent }) => {
     <CommonTechHero
       cmsContent={cmsContent}
       cmsPrefix="wpbanner"
-      badge="ENTERPRISE CMS LEADER"
-      titleLine1="WordPress: Custom CMS"
-      titleLine2="& Corporate Web"
-      titleAccent="Solutions."
-      description="WordPress powers flexible, scalable digital publications and corporate portals. We engineer custom bespoke themes, headless architectures, enterprise security, and streamlined editorial workflows."
+      badge="ENTERPRISE WORDPRESS • GLOBAL"
+      titleLine1="Custom WordPress CMS"
+      titleLine2="Built for Scale:"
+      titleAccent="Secure & Fast."
+      description="We design and build custom WordPress themes, plugins, and headless CMS platforms. From speed optimization to security, our team delivers clean and easy-to-manage sites."
       image={WpImg}
       imageAlt="WordPress CMS"
-      ctaText="Explore WordPress"
-      ctaHref="#framework"
+      showPrimaryCta={false}
+      quoteButtonStyle="primary"
+      headingClassName="text-[26px] sm:text-3xl md:text-[50px] lg:text-[56px] leading-[1.08] sm:leading-[1.02] mb-5"
+      paragraphClassName="max-w-[480px] mb-6 text-sm sm:text-base md:text-[15.5px] leading-relaxed text-[#4A5568]"
     />
   );
 };

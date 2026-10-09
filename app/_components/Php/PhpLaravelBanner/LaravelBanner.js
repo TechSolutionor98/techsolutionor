@@ -9,15 +9,17 @@ const PhpBanner = ({ cmsContent }) => {
     <CommonTechHero
       cmsContent={cmsContent}
       cmsPrefix="phpbanner"
-      badge="SERVER-SIDE FOUNDATION"
-      titleLine1="PHP: Dynamic Server"
-      titleLine2="Solutions for Enterprise"
-      titleAccent="Web Applications."
-      description="PHP powers over 70% of the web. We build modern, secure, and fast PHP 8+ backend systems, RESTful microservices, and custom content management solutions tailored to commercial demands."
+      badge="MODERN PHP DEVELOPMENT • GLOBAL"
+      titleLine1="Modern PHP Backend"
+      titleLine2="Solutions Built for Scale:"
+      titleAccent="Trusted & Secure."
+      description="We build dynamic websites, secure portals, and custom backend systems using modern PHP. From custom modules to database integration, we deliver dependable results."
       image={PhpImg}
       imageAlt="PHP Language"
-      ctaText="Explore PHP"
-      ctaHref="#framework"
+      showPrimaryCta={false}
+      quoteButtonStyle="primary"
+      headingClassName="text-[26px] sm:text-3xl md:text-[50px] lg:text-[56px] leading-[1.08] sm:leading-[1.02] mb-5"
+      paragraphClassName="max-w-[480px] mb-6 text-sm sm:text-base md:text-[15.5px] leading-relaxed text-[#4A5568]"
     />
   );
 };

@@ -9,15 +9,17 @@ const PythonBanner = ({ cmsContent }) => {
     <CommonTechHero
       cmsContent={cmsContent}
       cmsPrefix="pythonbanner"
-      badge="AI & GENERAL PURPOSE"
-      titleLine1="Python: Modern Power"
-      titleLine2="for Web, AI and App"
-      titleAccent="Development."
-      description="Python is a versatile, high-performance programming language used to build modern web applications, artificial intelligence, automation pipelines, and scalable backend solutions."
+      badge="PYTHON & BACKEND SYSTEMS • GLOBAL"
+      titleLine1="Enterprise Python"
+      titleLine2="Backend & API Systems:"
+      titleAccent="Built for Scale."
+      description="We engineer secure, scalable backend systems, APIs, and data solutions using Python. From web apps to automation, our team delivers clean code and reliable performance."
       image={PythonImg}
       imageAlt="Python Language"
-      ctaText="Explore Python"
-      ctaHref="#framework"
+      showPrimaryCta={false}
+      quoteButtonStyle="primary"
+      headingClassName="text-[26px] sm:text-3xl md:text-[50px] lg:text-[56px] leading-[1.08] sm:leading-[1.02] mb-5"
+      paragraphClassName="max-w-[480px] mb-6 text-sm sm:text-base md:text-[15.5px] leading-relaxed text-[#4A5568]"
     />
   );
 };

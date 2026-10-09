@@ -9,15 +9,17 @@ const LaravelBanner = ({ cmsContent }) => {
     <CommonTechHero
       cmsContent={cmsContent}
       cmsPrefix="laravelbanner"
-      badge="PHP MVC FRAMEWORK"
-      titleLine1="Laravel: Powerful PHP"
-      titleLine2="Framework for Web"
-      titleAccent="Applications."
-      description="Laravel is a leading PHP framework known for its elegant syntax and powerful tools. It simplifies web development with features like MVC architecture, routing, and Blade templating, making it perfect for creating robust and scalable applications."
+      badge="PHP MVC FRAMEWORK • GLOBAL"
+      titleLine1="Laravel Development"
+      titleLine2="Services Built for Scale:"
+      titleAccent="Engineered for Speed."
+      description="We build fast, secure web applications and robust APIs using Laravel. From MVC architecture to custom packages, our team delivers clean code and reliable performance."
       image={LaravelImg}
       imageAlt="Laravel Framework"
-      ctaText="Explore Laravel"
-      ctaHref="#framework"
+      showPrimaryCta={false}
+      quoteButtonStyle="primary"
+      headingClassName="text-[26px] sm:text-3xl md:text-[50px] lg:text-[56px] leading-[1.08] sm:leading-[1.02] mb-5"
+      paragraphClassName="max-w-[480px] mb-6 text-sm sm:text-base md:text-[15.5px] leading-relaxed text-[#4A5568]"
     />
   );
 };

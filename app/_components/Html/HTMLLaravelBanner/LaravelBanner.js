@@ -9,15 +9,17 @@ const HTMLBanner = ({ cmsContent }) => {
     <CommonTechHero
       cmsContent={cmsContent}
       cmsPrefix="htmlbanner"
-      badge="SEMANTIC WEB ARCHITECTURE"
-      titleLine1="HTML5: The Essential"
-      titleLine2="Building Block of Modern"
-      titleAccent="Websites."
-      description="HTML forms the structural foundation of the World Wide Web. We engineer clean, semantic, accessible, and SEO-optimized HTML5 codebases that ensure flawless cross-device performance."
+      badge="CLEAN WEB FOUNDATIONS • GLOBAL"
+      titleLine1="Semantic HTML5 Web"
+      titleLine2="Development Built for Scale:"
+      titleAccent="Fast & Accessible."
+      description="We craft clean, semantic HTML5 structures optimized for modern browsers, accessibility, and SEO. Our team delivers fast-loading pages and rock-solid web foundations."
       image={HtmlImg}
       imageAlt="HTML5"
-      ctaText="Explore HTML5"
-      ctaHref="#framework"
+      showPrimaryCta={false}
+      quoteButtonStyle="primary"
+      headingClassName="text-[26px] sm:text-3xl md:text-[50px] lg:text-[56px] leading-[1.08] sm:leading-[1.02] mb-5"
+      paragraphClassName="max-w-[480px] mb-6 text-sm sm:text-base md:text-[15.5px] leading-relaxed text-[#4A5568]"
     />
   );
 };

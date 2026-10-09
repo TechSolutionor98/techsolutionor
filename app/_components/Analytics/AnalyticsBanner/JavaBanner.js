@@ -9,15 +9,17 @@ const AnalyticsBanner = ({ cmsContent }) => {
     <CommonTechHero
       cmsContent={cmsContent}
       cmsPrefix="analyticsbanner"
-      badge="DATA-DRIVEN BUSINESS INTELLIGENCE"
-      titleLine1="Analytics: Actionable"
-      titleLine2="Data & Performance"
-      titleAccent="Tracking."
-      description="Data empowers confident decision-making. We deploy Google Analytics 4, custom event tracking, conversion attribution modeling, and automated executive dashboards that expose growth opportunities."
+      badge="DATA & BUSINESS ANALYTICS • GLOBAL"
+      titleLine1="Advanced Analytics"
+      titleLine2="Tracking for Growth:"
+      titleAccent="Clean Data."
+      description="We set up Google Analytics 4, Tag Manager, and conversion tracking pipelines. From custom event tracking to dashboard reporting, we provide clean, actionable data."
       image={AnalyticsImg}
       imageAlt="Analytics Intelligence"
-      ctaText="Explore Analytics"
-      ctaHref="#framework"
+      showPrimaryCta={false}
+      quoteButtonStyle="primary"
+      headingClassName="text-[26px] sm:text-3xl md:text-[50px] lg:text-[56px] leading-[1.08] sm:leading-[1.02] mb-5"
+      paragraphClassName="max-w-[480px] mb-6 text-sm sm:text-base md:text-[15.5px] leading-relaxed text-[#4A5568]"
     />
   );
 };

@@ -9,15 +9,17 @@ const NetBanner = ({ cmsContent }) => {
     <CommonTechHero
       cmsContent={cmsContent}
       cmsPrefix="dotnetbanner"
-      badge="MICROSOFT ENTERPRISE ECOSYSTEM"
-      titleLine1=".NET: Enterprise Core"
-      titleLine2="for Mission-Critical"
-      titleAccent="Cloud Systems."
-      description="Microsoft .NET delivers high-speed, secure, and rock-solid software solutions. We build enterprise desktop, web, and microservice architectures with C# and ASP.NET Core that power large-scale corporate operations."
+      badge="ENTERPRISE MICROSOFT .NET • GLOBAL"
+      titleLine1="Enterprise .NET Core"
+      titleLine2="Cloud Architecture:"
+      titleAccent="Built for Scale."
+      description="We develop enterprise web services, cloud microservices, and desktop software with Microsoft .NET. Our team delivers secure architecture and high-throughput systems."
       image={NetImg}
       imageAlt=".NET Framework"
-      ctaText="Explore .NET"
-      ctaHref="#framework"
+      showPrimaryCta={false}
+      quoteButtonStyle="primary"
+      headingClassName="text-[26px] sm:text-3xl md:text-[50px] lg:text-[56px] leading-[1.08] sm:leading-[1.02] mb-5"
+      paragraphClassName="max-w-[480px] mb-6 text-sm sm:text-base md:text-[15.5px] leading-relaxed text-[#4A5568]"
     />
   );
 };

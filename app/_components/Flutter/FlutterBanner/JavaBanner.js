@@ -9,15 +9,17 @@ const FlutterBanner = ({ cmsContent }) => {
     <CommonTechHero
       cmsContent={cmsContent}
       cmsPrefix="flutterbanner"
-      badge="CROSS-PLATFORM MOBILE FRAMEWORK"
-      titleLine1="Flutter: Native Performance"
-      titleLine2="from a Single Unified"
-      titleAccent="Codebase."
-      description="Google Flutter enables rapid development of natively compiled iOS and Android mobile apps. We engineer fluid, 60fps responsive mobile applications that reduce engineering time while maximizing performance."
+      badge="CROSS-PLATFORM MOBILE • GLOBAL"
+      titleLine1="Google Flutter Mobile"
+      titleLine2="Apps Built for Scale:"
+      titleAccent="Native & Fast."
+      description="We build cross-platform mobile apps for iOS and Android with Flutter. From a single codebase, our team delivers native performance and beautiful user interfaces."
       image={FlutterImg}
       imageAlt="Flutter Mobile"
-      ctaText="Explore Flutter"
-      ctaHref="#framework"
+      showPrimaryCta={false}
+      quoteButtonStyle="primary"
+      headingClassName="text-[26px] sm:text-3xl md:text-[50px] lg:text-[56px] leading-[1.08] sm:leading-[1.02] mb-5"
+      paragraphClassName="max-w-[480px] mb-6 text-sm sm:text-base md:text-[15.5px] leading-relaxed text-[#4A5568]"
     />
   );
 };
