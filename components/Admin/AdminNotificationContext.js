@@ -207,6 +207,8 @@ export function AdminNotificationProvider({ children }) {
       const fieldMap = {
         contact: 'contactMessages',
         appointment: 'contactMessages',
+        hire: 'hireUs',
+        hireUs: 'hireUs',
         application: 'jobApplications',
         review: 'customerReviews',
         comment: 'blogComments',
@@ -246,6 +248,7 @@ export function AdminNotificationProvider({ children }) {
       setNotifications([]);
       setUnreadCounts({
         contactMessages: 0,
+        hireUs: 0,
         jobApplications: 0,
         customerReviews: 0,
         blogComments: 0,
@@ -255,12 +258,14 @@ export function AdminNotificationProvider({ children }) {
       setUnreadByGroup({ inquiries: 0, blogs: 0 });
     } else {
       setNotifications(prev =>
-        prev.filter(item => item.type !== type)
+        prev.filter(item => item.type !== type && !(type === 'hire' && item.type === 'hireUs'))
       );
       setUnreadCounts(prev => {
         const fieldMap = {
           contact: 'contactMessages',
           appointment: 'contactMessages',
+          hire: 'hireUs',
+          hireUs: 'hireUs',
           application: 'jobApplications',
           review: 'customerReviews',
           comment: 'blogComments',

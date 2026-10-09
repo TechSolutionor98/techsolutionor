@@ -13,7 +13,8 @@ import {
   Star,
   MessageSquare,
   ChevronRight,
-  ExternalLink
+  ExternalLink,
+  UserCheck
 } from 'lucide-react';
 
 function getNotificationIcon(type) {
@@ -29,6 +30,13 @@ function getNotificationIcon(type) {
         icon: Mail,
         bgColor: 'bg-blue-100 text-blue-700 border-blue-200',
         label: 'Contact Us',
+      };
+    case 'hire':
+    case 'hireUs':
+      return {
+        icon: UserCheck,
+        bgColor: 'bg-emerald-100 text-emerald-700 border-emerald-200',
+        label: 'Hire Us',
       };
     case 'application':
       return {
@@ -90,6 +98,7 @@ export default function NotificationBell() {
   const totalUnread = unreadCounts.total || 0;
 
   const unreadContact = unreadCounts.contactMessages || 0;
+  const unreadHire = unreadCounts.hireUs || 0;
   const unreadJob = unreadCounts.jobApplications || 0;
   const unreadReview = unreadCounts.customerReviews || 0;
   const unreadBlog = unreadCounts.blogComments || 0;
@@ -97,6 +106,7 @@ export default function NotificationBell() {
 
   const CATEGORIES = [
     { id: 'contact', label: 'Contact', icon: Mail, count: unreadContact },
+    { id: 'hire', label: 'Hire Us', icon: UserCheck, count: unreadHire },
     { id: 'email', label: 'Email', icon: Mail, count: unreadEmail },
     { id: 'job', label: 'Job', icon: Briefcase, count: unreadJob },
     { id: 'review', label: 'Review', icon: Star, count: unreadReview },
@@ -134,6 +144,9 @@ export default function NotificationBell() {
       // 2. Category filter
       if (categoryFilter === 'contact') {
         return item.type === 'contact' || item.type === 'appointment';
+      }
+      if (categoryFilter === 'hire') {
+        return item.type === 'hire' || item.type === 'hireUs';
       }
       if (categoryFilter === 'email') {
         return item.type === 'email';
@@ -245,9 +258,9 @@ export default function NotificationBell() {
             )}
           </div>
 
-          {/* Row 2: 4 Category Filter Buttons in a Single Inline Row */}
+          {/* Row 2: Category Filter Buttons */}
           <div className="px-3 py-2 bg-gray-50/70 border-b border-gray-100 flex-shrink-0">
-            <div className="grid grid-cols-4 gap-1.5">
+            <div className="grid grid-cols-3 gap-1.5">
               {CATEGORIES.map(cat => {
                 const isActive = categoryFilter === cat.id;
                 const CatIcon = cat.icon;
@@ -264,8 +277,8 @@ export default function NotificationBell() {
                     title={`Filter by ${cat.label} (${cat.count} unread)`}
                   >
                     <CatIcon className={`w-3.5 h-3.5 flex-shrink-0 ${isActive ? 'text-white' : 'text-gray-500'}`} />
-                    <span>{cat.label}</span>
-                    <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded-full ${
+                    <span className="truncate">{cat.label}</span>
+                    <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded-full flex-shrink-0 ${
                       isActive
                         ? 'bg-white text-[#34953C]'
                         : cat.count > 0
@@ -288,7 +301,9 @@ export default function NotificationBell() {
                   <CheckCheck className="w-5 h-5" />
                 </div>
                 <p className="text-xs font-bold text-gray-800">
-                  {categoryFilter !== 'all' ? `No unread ${categoryFilter} notifications` : 'All caught up!'}
+                  {categoryFilter !== 'all'
+                    ? `No unread ${categoryFilter === 'hire' ? 'Hire Us' : categoryFilter} notifications`
+                    : 'All caught up!'}
                 </p>
                 <p className="text-[11px] text-gray-400 mt-0.5">
                   {categoryFilter !== 'all'
