@@ -9,15 +9,17 @@ const AppDevBanner = ({ cmsContent }) => {
     <CommonServiceHero
       cmsContent={cmsContent}
       cmsPrefix="appdevbanner"
-      badge="IOS & ANDROID ENGINEERING"
+      badge="IOS & ANDROID ENGINEERING • GLOBAL"
       titleLine1="Mobile App Development"
-      titleLine2="Company Built for Scale"
-      titleAccent="for Startups & Enterprises."
-      description="We provide custom mobile app development services globally, delivering secure, scalable and user-focused iOS, Android and cross-platform applications. From idea validation to launch and ongoing support, we build high-performing digital products built to drive business growth."
+      titleLine2="Company Built for Scale:"
+      titleAccent="Trusted Worldwide."
+      description="We design and build high-performance iOS and Android mobile applications. From initial concept to app launch, our team delivers intuitive design and reliable code."
       image={AppImg}
       imageAlt="Mobile App Development Company"
-      ctaText="Explore App Services"
-      ctaHref="#industries"
+      showPrimaryCta={false}
+      quoteButtonStyle="primary"
+      headingClassName="text-[26px] sm:text-3xl md:text-[50px] lg:text-[56px] leading-[1.08] sm:leading-[1.02] mb-5"
+      paragraphClassName="max-w-[480px] mb-6 text-sm sm:text-base md:text-[15.5px] leading-relaxed text-[#4A5568]"
     />
   );
 };

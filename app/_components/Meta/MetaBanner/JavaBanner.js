@@ -9,15 +9,17 @@ const MetaBanner = ({ cmsContent }) => {
     <CommonServiceHero
       cmsContent={cmsContent}
       cmsPrefix="metabanner"
-      badge="SOCIAL ADVERTISING & TARGETING"
+      badge="FACEBOOK & INSTAGRAM ADS • GLOBAL"
       titleLine1="Meta Ads Management"
-      titleLine2="High-Conversion Campaigns Across"
-      titleAccent="Facebook & Instagram."
-      description="Reach billions of active buyers across Meta's ecosystem. We design high-ROAS social advertising funnels, conversion tracking architectures, and creative testing frameworks that scale brand revenue."
+      titleLine2="Company Built for Scale:"
+      titleAccent="Trusted Worldwide."
+      description="We launch and manage targeted ad campaigns across Facebook and Instagram. From creative testing to audience retargeting, we focus on profitable campaign growth."
       image={MetaImg}
       imageAlt="Meta Advertising Services"
-      ctaText="Explore Meta Ads"
-      ctaHref="#overview"
+      showPrimaryCta={false}
+      quoteButtonStyle="primary"
+      headingClassName="text-[26px] sm:text-3xl md:text-[50px] lg:text-[56px] leading-[1.08] sm:leading-[1.02] mb-5"
+      paragraphClassName="max-w-[480px] mb-6 text-sm sm:text-base md:text-[15.5px] leading-relaxed text-[#4A5568]"
     />
   );
 };

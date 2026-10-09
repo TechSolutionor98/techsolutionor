@@ -10,15 +10,17 @@ const CallCenterBanner = ({ cmsContent }) => {
     <CommonServiceHero
       cmsContent={cmsContent}
       cmsPrefix="callcenterbanner"
-      badge="24/7 CUSTOMER EXPERIENCE"
-      titleLine1="Professional Call Center"
-      titleLine2="& Customer Support"
-      titleAccent="Services Worldwide."
-      description="Dedicated 24/7 inbound and outbound customer support desks, multilingual helpdesk outsourcing, and proactive technical service management ensuring exceptional brand loyalty and customer satisfaction."
+      badge="24/7 CUSTOMER SUPPORT DESK • GLOBAL"
+      titleLine1="Call Center Solutions"
+      titleLine2="Company Built for Scale:"
+      titleAccent="Trusted Worldwide."
+      description="We provide dependable 24/7 customer support desks tailored to your business needs. Our agents handle inquiries, tickets, and customer care with professional care."
       image={CallImg || FallbackImg}
       imageAlt="Call Center & Support Services"
-      ctaText="Explore Support"
-      ctaHref="#callcenter-services"
+      showPrimaryCta={false}
+      quoteButtonStyle="primary"
+      headingClassName="text-[26px] sm:text-3xl md:text-[50px] lg:text-[56px] leading-[1.08] sm:leading-[1.02] mb-5"
+      paragraphClassName="max-w-[480px] mb-6 text-sm sm:text-base md:text-[15.5px] leading-relaxed text-[#4A5568]"
     />
   );
 };

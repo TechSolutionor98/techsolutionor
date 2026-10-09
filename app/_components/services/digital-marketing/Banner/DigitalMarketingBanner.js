@@ -10,15 +10,17 @@ const DigitalMarketingBanner = ({ cmsContent }) => {
     <CommonServiceHero
       cmsContent={cmsContent}
       cmsPrefix="digitalbanner"
-      badge="FULL-FUNNEL PERFORMANCE MARKETING"
-      titleLine1="Result-Driven Digital"
-      titleLine2="Marketing Services for"
-      titleAccent="Global Brands."
-      description="Omnichannel growth strategies connecting data analytics, conversion funnel optimization, multi-channel customer acquisition, and relentless performance tracking to scale your commercial pipeline."
+      badge="FULL-FUNNEL DIGITAL MARKETING • GLOBAL"
+      titleLine1="Digital Marketing Services"
+      titleLine2="Company Built for Scale:"
+      titleAccent="Trusted Worldwide."
+      description="We run data-driven digital marketing campaigns to connect you with the right audience. From search to social channels, we help your business grow consistently."
       image={DigitalImg || FallbackImg}
       imageAlt="Digital Marketing Services"
-      ctaText="Explore Marketing"
-      ctaHref="#digital-services"
+      showPrimaryCta={false}
+      quoteButtonStyle="primary"
+      headingClassName="text-[26px] sm:text-3xl md:text-[50px] lg:text-[56px] leading-[1.08] sm:leading-[1.02] mb-5"
+      paragraphClassName="max-w-[480px] mb-6 text-sm sm:text-base md:text-[15.5px] leading-relaxed text-[#4A5568]"
     />
   );
 };

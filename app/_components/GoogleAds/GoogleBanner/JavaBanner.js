@@ -9,15 +9,17 @@ const GoogleBanner = ({ cmsContent }) => {
     <CommonServiceHero
       cmsContent={cmsContent}
       cmsPrefix="googleadsbanner"
-      badge="HIGH-INTENT SEARCH & PPC"
+      badge="GOOGLE SEARCH & PPC ADS • GLOBAL"
       titleLine1="Google Ads Management"
-      titleLine2="Targeted Search, Shopping"
-      titleAccent="& Performance Max."
-      description="Capture high-intent customers at the exact moment of search. We architect, manage, and continuously optimize data-driven Google Ads campaigns engineered to lower CPA and maximize qualified conversions."
+      titleLine2="Company Built for Scale:"
+      titleAccent="Trusted Worldwide."
+      description="We manage Google Search, Shopping, and Display campaigns to capture active buyers. Our team focuses on high-intent keywords, clear ad messaging, and lower CPA."
       image={GoogleAdsImg}
       imageAlt="Google Ads Management Services"
-      ctaText="Explore PPC Solutions"
-      ctaHref="#overview"
+      showPrimaryCta={false}
+      quoteButtonStyle="primary"
+      headingClassName="text-[26px] sm:text-3xl md:text-[50px] lg:text-[56px] leading-[1.08] sm:leading-[1.02] mb-5"
+      paragraphClassName="max-w-[480px] mb-6 text-sm sm:text-base md:text-[15.5px] leading-relaxed text-[#4A5568]"
     />
   );
 };

@@ -10,15 +10,17 @@ const GraphicBanner = ({ cmsContent }) => {
     <CommonServiceHero
       cmsContent={cmsContent}
       cmsPrefix="graphicbanner"
-      badge="VISUAL IDENTITY & PRODUCT DESIGN"
-      titleLine1="Graphic Design Services"
-      titleLine2="& Visual Identity That Transform"
-      titleAccent="Ideas Into Iconic Brands."
-      description="Human-centered UI/UX prototypes, modern design systems in Figma, corporate brand identities, and high-impact marketing graphics that captivate audiences and establish market leadership."
+      badge="CREATIVE DESIGN & BRANDING • GLOBAL"
+      titleLine1="Graphic Design & Branding"
+      titleLine2="Company Built for Scale:"
+      titleAccent="Trusted Worldwide."
+      description="We craft modern brand identities, intuitive UI/UX designs, and engaging visual assets. From wireframes to design systems, our team delivers clean creative work."
       image={GraphicImg || FallbackImg}
       imageAlt="Graphic Design Services"
-      ctaText="Explore Design"
-      ctaHref="#graphic-services"
+      showPrimaryCta={false}
+      quoteButtonStyle="primary"
+      headingClassName="text-[26px] sm:text-3xl md:text-[50px] lg:text-[56px] leading-[1.08] sm:leading-[1.02] mb-5"
+      paragraphClassName="max-w-[480px] mb-6 text-sm sm:text-base md:text-[15.5px] leading-relaxed text-[#4A5568]"
     />
   );
 };

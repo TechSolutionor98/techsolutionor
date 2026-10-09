@@ -58,10 +58,10 @@ const TechnologiesHero = ({ cmsContent }) => {
           </div>
 
           {/* Main Headline */}
-          <SectionHeading 
-            as="h1" 
-            size="hero" 
-            theme="dark" 
+          <SectionHeading
+            as="h1"
+            size="hero"
+            theme="dark"
             className="text-3xl sm:text-4xl md:text-[44px] lg:text-[50px] leading-[1.12] mb-6"
           >
             {title.includes("Digital Solution") ? (
@@ -75,9 +75,9 @@ const TechnologiesHero = ({ cmsContent }) => {
           </SectionHeading>
 
           {/* Subtitle */}
-          <SectionParagraph 
-            size="lg" 
-            theme="slate" 
+          <SectionParagraph
+            size="lg"
+            theme="slate"
             className="max-w-[480px] mb-8"
           >
             {subtitle}
@@ -85,7 +85,7 @@ const TechnologiesHero = ({ cmsContent }) => {
 
           {/* CTA Button */}
           <Link href="#Technologies" className="inline-block group">
-            <button 
+            <button
               className="bg-[#36963D] hover:bg-[#2e8234] text-white px-8 py-3.5 sm:py-4 rounded-full transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2.5"
             >
               <ButtonText className="text-sm sm:text-base text-white">{buttonText}</ButtonText>
@@ -101,16 +101,16 @@ const TechnologiesHero = ({ cmsContent }) => {
             <div className="absolute inset-4 rounded-full bg-[#FFFFFF] pointer-events-none" />
             <div className="absolute inset-0 flex items-center justify-center">
               {typeof image === 'string' && (image.startsWith('http') || image.startsWith('/')) ? (
-                <img 
-                  src={image} 
-                  alt="Technologies Specialist" 
+                <img
+                  src={image}
+                  alt="Technologies Specialist"
                   className="w-full h-full object-contain filter drop-shadow-md"
                 />
               ) : (
-                <Image 
-                  src={BannerPic} 
-                  alt="Technologies Specialist" 
-                  fill 
+                <Image
+                  src={BannerPic}
+                  alt="Technologies Specialist"
+                  fill
                   priority
                   className="object-contain filter drop-shadow-md"
                 />

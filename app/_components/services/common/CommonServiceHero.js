@@ -29,6 +29,10 @@ const CommonServiceHero = ({
   ctaText = "Explore Solutions",
   ctaHref = "#overview",
   onCtaClick,
+  headingClassName = "text-[26px] sm:text-3xl md:text-[50px] lg:text-[56px] leading-[1.08] sm:leading-[1.02] mb-5",
+  paragraphClassName = "max-w-[480px] mb-6 text-sm sm:text-base md:text-[15.5px] leading-relaxed text-[#4A5568]",
+  showPrimaryCta = false,
+  quoteButtonStyle = "primary",
 }) => {
   const { openQuote } = useQuote();
 
@@ -69,62 +73,72 @@ const CommonServiceHero = ({
           </div>
 
           {/* Main Headline matching Homepage Typography */}
-          <SectionHeading 
-            as="h1" 
-            size="hero" 
-            theme="dark" 
-            className="text-3xl sm:text-4xl md:text-[44px] lg:text-[50px] leading-[1.12] mb-6"
+          <h1 
+            className={`font-display uppercase tracking-tight text-[#0D0F12] ${headingClassName || "text-[26px] sm:text-3xl md:text-[50px] lg:text-[56px] leading-[1.08] sm:leading-[1.02] mb-5"}`}
           >
             {dynamicLine1} {dynamicLine2 && <><br />{dynamicLine2}</>} <br />
             <HighlightWord>{dynamicLine3}</HighlightWord>
-          </SectionHeading>
+          </h1>
 
           {/* Subtitle */}
-          <SectionParagraph 
-            size="lg" 
-            theme="slate" 
-            className="max-w-[490px] mb-8"
+          <p 
+            className={`font-jakarta font-normal sm:font-medium tracking-[-0.01em] text-[#4A5568] ${paragraphClassName || "max-w-[480px] mb-6 text-sm sm:text-base md:text-[15.5px] leading-relaxed"}`}
           >
             {dynamicDesc}
-          </SectionParagraph>
+          </p>
 
           {/* CTA Buttons */}
           <div className="flex flex-wrap items-center gap-4">
-            {onCtaClick ? (
-              <button 
-                onClick={onCtaClick}
-                className="bg-[#36963D] hover:bg-[#2e8234] text-white px-8 py-3.5 sm:py-4 rounded-full transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2.5"
-              >
-                <ButtonText className="text-sm sm:text-base text-white">{dynamicCtaText || ctaText}</ButtonText>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </button>
-            ) : ctaHref && ctaHref.startsWith("#") ? (
-              <a href={ctaHref} className="inline-block group">
-                <button 
-                  className="bg-[#36963D] hover:bg-[#2e8234] text-white px-8 py-3.5 sm:py-4 rounded-full transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2.5"
-                >
-                  <ButtonText className="text-sm sm:text-base text-white">{dynamicCtaText || ctaText}</ButtonText>
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </button>
-              </a>
-            ) : (
-              <Link href={ctaHref || "#overview"} className="inline-block group">
-                <button 
-                  className="bg-[#36963D] hover:bg-[#2e8234] text-white px-8 py-3.5 sm:py-4 rounded-full transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2.5"
-                >
-                  <ButtonText className="text-sm sm:text-base text-white">{dynamicCtaText || ctaText}</ButtonText>
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </button>
-              </Link>
+            {showPrimaryCta && (
+              <>
+                {onCtaClick ? (
+                  <button 
+                    onClick={onCtaClick}
+                    className="bg-[#36963D] hover:bg-[#2e8234] text-white px-8 py-3.5 sm:py-4 rounded-full transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2.5"
+                  >
+                    <ButtonText className="text-sm sm:text-base text-white">{dynamicCtaText || ctaText}</ButtonText>
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </button>
+                ) : ctaHref && ctaHref.startsWith("#") ? (
+                  <a href={ctaHref} className="inline-block group">
+                    <button 
+                      className="bg-[#36963D] hover:bg-[#2e8234] text-white px-8 py-3.5 sm:py-4 rounded-full transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2.5"
+                    >
+                      <ButtonText className="text-sm sm:text-base text-white">{dynamicCtaText || ctaText}</ButtonText>
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </button>
+                  </a>
+                ) : (
+                  <Link href={ctaHref || "#overview"} className="inline-block group">
+                    <button 
+                      className="bg-[#36963D] hover:bg-[#2e8234] text-white px-8 py-3.5 sm:py-4 rounded-full transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2.5"
+                    >
+                      <ButtonText className="text-sm sm:text-base text-white">{dynamicCtaText || ctaText}</ButtonText>
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </button>
+                  </Link>
+                )}
+              </>
             )}
 
-            <button 
-              onClick={openQuote}
-              className="bg-transparent hover:bg-[#36963D]/10 text-[#0D0F12] hover:text-[#36963D] border-2 border-[#0D0F12]/30 hover:border-[#36963D] px-7 py-3.5 sm:py-4 rounded-full transition-all duration-300 cursor-pointer flex items-center gap-2"
-            >
-              <Sparkles className="w-4 h-4 text-[#36963D]" />
-              <ButtonText className="text-sm sm:text-base text-[#0D0F12] hover:text-[#36963D]">Get Free Quote</ButtonText>
-            </button>
+            {quoteButtonStyle === "primary" ? (
+              <button 
+                onClick={openQuote}
+                className="bg-[#2E8234] hover:bg-[#256f2c] text-white px-8 py-3.5 sm:py-4 rounded-full transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2.5"
+                style={{ backgroundColor: '#2E8234' }}
+              >
+                <Sparkles className="w-4 h-4 text-white" />
+                <ButtonText className="text-sm sm:text-base text-white">Get Free Quote</ButtonText>
+              </button>
+            ) : (
+              <button 
+                onClick={openQuote}
+                className="bg-transparent hover:bg-[#36963D]/10 text-[#0D0F12] hover:text-[#36963D] border-2 border-[#0D0F12]/30 hover:border-[#36963D] px-7 py-3.5 sm:py-4 rounded-full transition-all duration-300 cursor-pointer flex items-center gap-2"
+              >
+                <Sparkles className="w-4 h-4 text-[#36963D]" />
+                <ButtonText className="text-sm sm:text-base text-[#0D0F12] hover:text-[#36963D]">Get Free Quote</ButtonText>
+              </button>
+            )}
           </div>
         </div>
 

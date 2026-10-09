@@ -10,15 +10,17 @@ const SoftwareDevBanner = ({ cmsContent }) => {
     <CommonServiceHero
       cmsContent={cmsContent}
       cmsPrefix="softwarebanner"
-      badge="BESPOKE ENTERPRISE SOFTWARE"
+      badge="CUSTOM ENTERPRISE SOFTWARE • GLOBAL"
       titleLine1="Custom Software Development"
-      titleLine2="Engineered for Scale That"
-      titleAccent="Delivers Measurable Results."
-      description="From business automation platforms and cloud microservices to SaaS products and enterprise CRM/ERP integrations, we engineer robust software architectures built for scalability, high throughput, and commercial reliability."
+      titleLine2="Company Built for Scale:"
+      titleAccent="Trusted Worldwide."
+      description="We engineer custom enterprise software, cloud platforms, and SaaS products. Our team delivers clean architecture, secure integrations, and dependable performance."
       image={SoftwareImg || FallbackImg}
       imageAlt="Custom Software Development Services"
-      ctaText="Explore Software"
-      ctaHref="#software-services"
+      showPrimaryCta={false}
+      quoteButtonStyle="primary"
+      headingClassName="text-[26px] sm:text-3xl md:text-[50px] lg:text-[56px] leading-[1.08] sm:leading-[1.02] mb-5"
+      paragraphClassName="max-w-[480px] mb-6 text-sm sm:text-base md:text-[15.5px] leading-relaxed text-[#4A5568]"
     />
   );
 };

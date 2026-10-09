@@ -10,15 +10,17 @@ const HireUsBanner = ({ cmsContent }) => {
     <CommonServiceHero
       cmsContent={cmsContent}
       cmsPrefix="hireusbanner"
-      badge="DEDICATED ENGINEERING TALENT"
-      titleLine1="Hire Skilled Developers"
-      titleLine2="& Tech Experts for Your"
-      titleAccent="Next Big Milestone."
-      description="Scale your development capabilities with elite, pre-vetted senior software engineers, full-stack developers, mobile app architects, and dedicated digital product teams on flexible engagement models."
+      badge="DEDICATED TECH TALENT • GLOBAL"
+      titleLine1="Hire Dedicated Developers"
+      titleLine2="Company Built for Scale:"
+      titleAccent="Trusted Worldwide."
+      description="Hire experienced software engineers, web developers, and designers on flexible models. We provide pre-vetted tech talent ready to accelerate your project roadmap."
       image={HireImg || FallbackImg}
       imageAlt="Hire Dedicated Developers"
-      ctaText="Hire Us"
-      ctaHref="/hire-resources"
+      showPrimaryCta={false}
+      quoteButtonStyle="primary"
+      headingClassName="text-[26px] sm:text-3xl md:text-[50px] lg:text-[56px] leading-[1.08] sm:leading-[1.02] mb-5"
+      paragraphClassName="max-w-[480px] mb-6 text-sm sm:text-base md:text-[15.5px] leading-relaxed text-[#4A5568]"
     />
   );
 };

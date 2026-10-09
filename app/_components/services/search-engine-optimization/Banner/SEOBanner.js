@@ -10,15 +10,17 @@ const SEOBanner = ({ cmsContent }) => {
     <CommonServiceHero
       cmsContent={cmsContent}
       cmsPrefix="seobanner"
-      badge="ORGANIC SEARCH DOMINANCE"
-      titleLine1="Effective SEO Strategies"
-      titleLine2="to Maximize Your ROI &"
-      titleAccent="Online Authority."
-      description="In-depth technical SEO audits, high-intent keyword strategies, authoritative backlink building, and local Dubai/UAE Google Maps ranking to dominate competitive organic search positions."
+      badge="SEARCH ENGINE OPTIMIZATION • GLOBAL"
+      titleLine1="Effective SEO Services"
+      titleLine2="Company Built for Scale:"
+      titleAccent="Trusted Worldwide."
+      description="We help your website rank higher in organic search through technical SEO audits, quality content, and keyword research for steady, long-term traffic growth."
       image={SeoImg || FallbackImg}
       imageAlt="Search Engine Optimization Services"
-      ctaText="Explore SEO Services"
-      ctaHref="#seo-services"
+      showPrimaryCta={false}
+      quoteButtonStyle="primary"
+      headingClassName="text-[26px] sm:text-3xl md:text-[50px] lg:text-[56px] leading-[1.08] sm:leading-[1.02] mb-5"
+      paragraphClassName="max-w-[480px] mb-6 text-sm sm:text-base md:text-[15.5px] leading-relaxed text-[#4A5568]"
     />
   );
 };

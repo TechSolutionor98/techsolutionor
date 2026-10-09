@@ -14,11 +14,13 @@ const WebDevBanner = ({ cmsContent }) => {
       titleLine1="Best Web Development"
       titleLine2="Company Built for Scale:"
       titleAccent="Trusted Worldwide."
-      description="Partner with the best web development company to build high-performance, scalable websites through expert web design and development services. From ambitious startups to global enterprises, we create conversion-focused web solutions that boost engagement, strengthen brand authority and maximize ROI."
+      description="We design and build fast, responsive websites and custom web applications. From corporate sites to scalable platforms, our team delivers clean code and reliable performance."
       image={WebDevImg || FallbackImg}
       imageAlt="Web Development Company"
-      ctaText="Explore Web Solutions"
-      ctaHref="#technologies-book-section"
+      showPrimaryCta={false}
+      quoteButtonStyle="primary"
+      headingClassName="text-[26px] sm:text-3xl md:text-[50px] lg:text-[56px] leading-[1.08] sm:leading-[1.02] mb-5"
+      paragraphClassName="max-w-[480px] mb-6 text-sm sm:text-base md:text-[15.5px] leading-relaxed text-[#4A5568]"
     />
   );
 };

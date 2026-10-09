@@ -10,15 +10,17 @@ const Banner = ({ cmsContent }) => {
     <CommonServiceHero
       cmsContent={cmsContent}
       cmsPrefix="socialbanner"
-      badge="AUDIENCE GROWTH & ENGAGEMENT"
-      titleLine1="Unlocking the Power of"
-      titleLine2="Social Media for Real"
-      titleAccent="Commercial Growth."
-      description="Strategic content curation, viral short-form video campaigns, active community management, and paid social acceleration across Meta, LinkedIn, and TikTok that turn followers into brand advocates."
+      badge="AUDIENCE GROWTH & ENGAGEMENT • GLOBAL"
+      titleLine1="Social Media Marketing"
+      titleLine2="Company Built for Scale:"
+      titleAccent="Trusted Worldwide."
+      description="We create and manage strategic social media campaigns that build genuine audience engagement. From content to community care, we help your brand connect."
       image={SmImg || FallbackImg}
       imageAlt="Social Media Growth"
-      ctaText="Explore Social Media"
-      ctaHref="#social-services"
+      showPrimaryCta={false}
+      quoteButtonStyle="primary"
+      headingClassName="text-[26px] sm:text-3xl md:text-[50px] lg:text-[56px] leading-[1.08] sm:leading-[1.02] mb-5"
+      paragraphClassName="max-w-[480px] mb-6 text-sm sm:text-base md:text-[15.5px] leading-relaxed text-[#4A5568]"
     />
   );
 };

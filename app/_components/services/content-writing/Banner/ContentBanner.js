@@ -10,15 +10,17 @@ const ContentBanner = ({ cmsContent }) => {
     <CommonServiceHero
       cmsContent={cmsContent}
       cmsPrefix="contentbanner"
-      badge="PERSUASIVE EDITORIAL & COPY"
-      titleLine1="High‑Quality Content"
-      titleLine2="Writing Services for SEO"
-      titleAccent="& High Engagement."
-      description="Authoritative editorial articles, commercial sales copy, technical documentation, and conversion landing page copy tailored to captivate readers, build trust, and drive action."
+      badge="PROFESSIONAL CONTENT WRITING • GLOBAL"
+      titleLine1="Content Writing Services"
+      titleLine2="Company Built for Scale:"
+      titleAccent="Trusted Worldwide."
+      description="We write clear, engaging content that connects with your audience and builds trust. From SEO blog articles to website copy, our writers deliver authentic messaging."
       image={CwImg || FallbackImg}
       imageAlt="Content Writing Services"
-      ctaText="Explore Content Services"
-      ctaHref="#content-services"
+      showPrimaryCta={false}
+      quoteButtonStyle="primary"
+      headingClassName="text-[26px] sm:text-3xl md:text-[50px] lg:text-[56px] leading-[1.08] sm:leading-[1.02] mb-5"
+      paragraphClassName="max-w-[480px] mb-6 text-sm sm:text-base md:text-[15.5px] leading-relaxed text-[#4A5568]"
     />
   );
 };

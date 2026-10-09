@@ -10,15 +10,17 @@ const AmazonBanner = ({ cmsContent }) => {
     <CommonServiceHero
       cmsContent={cmsContent}
       cmsPrefix="amazonbanner"
-      badge="HIGH-ROI PAID ACQUISITION"
-      titleLine1="PPC Advertising & Amazon"
-      titleLine2="Ads Management Services"
-      titleAccent="to Accelerate Sales."
-      description="Laser-targeted Google Search & Display campaigns, Amazon Sponsored Products, and programmatic retargeting funnels engineered to minimize cost-per-acquisition and deliver industry-leading ROAS."
+      badge="PAID SEARCH & AMAZON ADS • GLOBAL"
+      titleLine1="PPC & Amazon Advertising"
+      titleLine2="Company Built for Scale:"
+      titleAccent="Trusted Worldwide."
+      description="We manage targeted paid search and Amazon ad campaigns focused on efficient spend. From keyword strategy to ad creative, our team optimizes for profitable sales."
       image={PpcImg || FallbackImg}
       imageAlt="PPC & Amazon Advertising"
-      ctaText="Explore PPC Ads"
-      ctaHref="#ppc-services"
+      showPrimaryCta={false}
+      quoteButtonStyle="primary"
+      headingClassName="text-[26px] sm:text-3xl md:text-[50px] lg:text-[56px] leading-[1.08] sm:leading-[1.02] mb-5"
+      paragraphClassName="max-w-[480px] mb-6 text-sm sm:text-base md:text-[15.5px] leading-relaxed text-[#4A5568]"
     />
   );
 };
