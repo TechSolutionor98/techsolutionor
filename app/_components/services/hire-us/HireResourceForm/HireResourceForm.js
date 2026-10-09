@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useRef, useEffect } from "react";
 import Link from "next/link";
 import {
   Search,
@@ -13,7 +13,12 @@ import {
   Send,
   Check,
   ChevronDown,
-  Plus
+  Plus,
+  ShieldCheck,
+  RotateCw,
+  Edit2,
+  Loader2,
+  ArrowRight
 } from "lucide-react";
 import {
   COUNTRY_DIAL_CODES,
@@ -309,6 +314,264 @@ export default function HireResourceForm() {
   const [submissionId, setSubmissionId] = useState("");
   const [phoneDigits, setPhoneDigits] = useState("");
 
+  // Flow States: Step 1 Contact Information -> Verification -> Remaining Form
+  const [isContactVerified, setIsContactVerified] = useState(false);
+  const [draftSubmissionId, setDraftSubmissionId] = useState("");
+  const [isSavingContact, setIsSavingContact] = useState(false);
+  const [contactStepError, setContactStepError] = useState("");
+
+  // Inline Email Verification States
+  const [showVerification, setShowVerification] = useState(false);
+  const [otpDigits, setOtpDigits] = useState(["", "", "", "", "", ""]);
+  const [otpError, setOtpError] = useState("");
+  const [verifyingOtp, setVerifyingOtp] = useState(false);
+  const [resendingOtp, setResendingOtp] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
+
+  const otpInputRefs = useRef([]);
+
+  // Countdown timer for OTP resend cooldown
+  useEffect(() => {
+    if (resendCooldown <= 0) return;
+    const timer = setInterval(() => {
+      setResendCooldown((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [resendCooldown]);
+
+  // Handle focus and scroll when verification is triggered
+  useEffect(() => {
+    if (showVerification) {
+      setTimeout(() => {
+        const el = document.getElementById("inline-email-verification");
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
+        otpInputRefs.current[0]?.focus();
+      }, 150);
+    }
+  }, [showVerification]);
+
+  const handleOtpChange = (index, value) => {
+    const cleaned = value.replace(/\D/g, "");
+    if (!cleaned && value !== "") return;
+    const digit = cleaned.slice(-1);
+    const newDigits = [...otpDigits];
+    newDigits[index] = digit;
+    setOtpDigits(newDigits);
+    setOtpError("");
+    if (index < 5 && digit) {
+      otpInputRefs.current[index + 1]?.focus();
+    }
+  };
+
+  const handleOtpKeyDown = (index, e) => {
+    if (e.key === "Backspace" && !otpDigits[index] && index > 0) {
+      otpInputRefs.current[index - 1]?.focus();
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      handleVerifyOtp();
+    }
+  };
+
+  const handleOtpPaste = (e) => {
+    e.preventDefault();
+    const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
+    if (!pasted) return;
+    const newDigits = [...otpDigits];
+    for (let i = 0; i < 6; i++) {
+      newDigits[i] = pasted[i] || "";
+    }
+    setOtpDigits(newDigits);
+    setOtpError("");
+    const nextIndex = Math.min(pasted.length, 5);
+    otpInputRefs.current[nextIndex]?.focus();
+  };
+
+  const handleResendOtp = async () => {
+    if (resendCooldown > 0 || resendingOtp) return;
+    try {
+      setResendingOtp(true);
+      setOtpError("");
+      const res = await fetch("/api/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: formData.email.trim().toLowerCase(),
+          purpose: "hire_us",
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to resend verification code.");
+      }
+      setResendCooldown(30);
+      setOtpDigits(["", "", "", "", "", ""]);
+      setTimeout(() => {
+        otpInputRefs.current[0]?.focus();
+      }, 50);
+    } catch (err) {
+      setOtpError(err.message || "Failed to resend verification code. Please try again.");
+    } finally {
+      setResendingOtp(false);
+    }
+  };
+
+  const handleEditEmail = () => {
+    if (verifyingOtp) return;
+    setShowVerification(false);
+    setOtpError("");
+    setTimeout(() => {
+      const emailInput = document.getElementById("field-email");
+      if (emailInput) {
+        emailInput.scrollIntoView({ behavior: "smooth", block: "center" });
+        emailInput.focus();
+      }
+    }, 150);
+  };
+
+  const handleContactStepSubmit = async (e) => {
+    if (e) e.preventDefault();
+    const newErrors = {};
+
+    if (!formData.fullName.trim()) {
+      newErrors.fullName = "Please enter your full name";
+    }
+    if (!formData.country) {
+      newErrors.country = "Please select your country";
+    }
+    if (!formData.email.trim()) {
+      newErrors.email = "Please enter your email address";
+    } else {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email.trim())) {
+        newErrors.email = "Please enter a valid email address";
+      }
+    }
+
+    const fullPhone = `${selectedCountryObj?.code ? `${selectedCountryObj.code} ` : ""}${phoneDigits.trim()}`.trim();
+    if (!phoneDigits.trim()) {
+      newErrors.phone = "Please enter your phone number";
+    } else if (formData.country) {
+      const phoneValidation = validatePhoneNumber(fullPhone, formData.country);
+      if (!phoneValidation.valid) {
+        newErrors.phone = phoneValidation.error;
+      }
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors((prev) => ({ ...prev, ...newErrors }));
+      const firstFieldKey = Object.keys(newErrors)[0];
+      const el = document.getElementById(`field-${firstFieldKey}`);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+        el.focus?.();
+      }
+      return;
+    }
+
+    try {
+      setIsSavingContact(true);
+      setContactStepError("");
+
+      // 1. Immediately save Contact Information as draft on admin side
+      const contactPayload = {
+        draftId: draftSubmissionId || undefined,
+        fullName: formData.fullName.trim(),
+        name: formData.fullName.trim(),
+        jobTitle: formData.jobTitle.trim(),
+        country: formData.country,
+        phone: fullPhone,
+        email: formData.email.trim().toLowerCase(),
+        whatsapp: formData.whatsapp.trim(),
+        preferredContactMethod: formData.preferredContactMethod,
+        bestTimeToContact: formData.bestTimeToContact,
+        status: "Draft",
+        isDraft: true,
+        source: "Hire Us Form (Step 1 Contact)",
+      };
+
+      const saveDraftPromise = fetch("/api/hire-submissions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(contactPayload),
+      }).then(async (res) => {
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Failed to save contact information.");
+        if (data.entry?.id) setDraftSubmissionId(data.entry.id);
+        return data;
+      });
+
+      // 2. Trigger email verification OTP concurrently
+      const sendOtpPromise = fetch("/api/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: formData.email.trim().toLowerCase(),
+          purpose: "hire_us",
+        }),
+      }).then(async (otpRes) => {
+        const otpData = await otpRes.json();
+        if (!otpRes.ok) throw new Error(otpData.error || "Failed to send verification code.");
+        return otpData;
+      });
+
+      await Promise.all([saveDraftPromise, sendOtpPromise]);
+
+      setResendCooldown(30);
+      setShowVerification(true);
+      setOtpDigits(["", "", "", "", "", ""]);
+      setOtpError("");
+    } catch (err) {
+      setContactStepError(err.message || "Failed to proceed. Please try again.");
+    } finally {
+      setIsSavingContact(false);
+    }
+  };
+
+  const handleVerifyOtp = async () => {
+    const otpCode = otpDigits.join("");
+    if (otpCode.length !== 6) {
+      setOtpError("Please enter the complete 6-digit verification code.");
+      return;
+    }
+
+    try {
+      setVerifyingOtp(true);
+      setOtpError("");
+
+      const res = await fetch("/api/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: formData.email.trim().toLowerCase(),
+          otp: otpCode,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Verification failed. Please check the code.");
+      }
+
+      // Verification succeeded!
+      setShowVerification(false);
+      setIsContactVerified(true);
+
+      // Smooth scroll to the newly revealed next section
+      setTimeout(() => {
+        const nextSection = document.getElementById("field-services") || document.getElementById("section-services");
+        if (nextSection) {
+          nextSection.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }, 200);
+    } catch (err) {
+      setOtpError(err.message || "Failed to verify code. Please try again.");
+    } finally {
+      setVerifyingOtp(false);
+    }
+  };
+
   const selectedCountryObj = useMemo(() => findCountry(formData.country), [formData.country]);
 
   const col1Services = useMemo(() => {
@@ -578,6 +841,7 @@ Attached Files: ${uploadedFiles.map(f => f.docType ? `${f.name} [${f.docType}]` 
       `.trim();
 
       const payload = {
+        draftId: draftSubmissionId || undefined,
         name: formData.fullName,
         fullName: formData.fullName,
         email: formData.email,
@@ -626,6 +890,9 @@ Attached Files: ${uploadedFiles.map(f => f.docType ? `${f.name} [${f.docType}]` 
         attachedFilesList: uploadedFiles.map(f => ({ name: f.name, size: f.size, type: f.type, docType: f.docType || "General" })),
         message: compiledMessage,
         source: "Hire Us Form",
+        status: "Pending",
+        isDraft: false,
+        emailVerified: true,
         details: {
           ...formData,
           phone: fullPhoneNumber,
@@ -658,6 +925,9 @@ Attached Files: ${uploadedFiles.map(f => f.docType ? `${f.name} [${f.docType}]` 
   const handleReset = () => {
     setSubmitSuccess(false);
     setSubmissionId("");
+    setDraftSubmissionId("");
+    setIsContactVerified(false);
+    setShowVerification(false);
     setDocAttachments({});
     setUploadedFiles([]);
     setPhoneDigits("");
@@ -674,7 +944,7 @@ Attached Files: ${uploadedFiles.map(f => f.docType ? `${f.name} [${f.docType}]` 
       {/* ========================================================================= */}
       {/* 1. CLEAN FORM PAGE HEADER (Home Hero Style & Typography, Centered)        */}
       {/* ========================================================================= */}
-      <header className="w-full bg-white border-b border-gray-100">
+      <header className="w-full bg-white">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-16">
           <div className="max-w-4xl mx-auto flex flex-col items-center text-center">
             <div className="mb-3.5 sm:mb-4">
@@ -758,18 +1028,432 @@ Attached Files: ${uploadedFiles.map(f => f.docType ? `${f.name} [${f.docType}]` 
         <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
           <form onSubmit={handleSubmit} noValidate>
 
-            {/* Unified Single Bordered Container for Entire Form */}
-            <div className="bg-white rounded-2xl sm:rounded-3xl border border-gray-200/90 shadow-[0_2px_12px_rgba(0,0,0,0.04)] p-6 sm:p-10 lg:p-12 divide-y divide-gray-100">
+            {/* Unified Single Container for Entire Form */}
+            <div className="bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-10 lg:p-12 divide-y divide-gray-100">
 
               {/* =================================================================== */}
-              {/* 1. RESOURCE / SERVICE REQUIRED                                      */}
+              {/* 1. CONTACT INFORMATION (REQUIRED FIRST STEP *)                     */}
               {/* =================================================================== */}
-              <div className="py-8 first:pt-0 last:pb-0">
-                <div className="flex items-start justify-between gap-3 mb-5">
+              <div
+                id="section-contact-info"
+                className="py-8 first:pt-0 last:pb-0"
+              >
+                <div className="flex items-start justify-between gap-3 mb-4">
                   <div className="flex items-start gap-3">
-                    <div className="w-7 h-7 rounded-full bg-[#41B349]/10 text-[#41B349] flex items-center justify-center font-bold text-xs shrink-0 border border-[#41B349]/20">
-                      1
+                    {isContactVerified && (
+                      <div className="w-7 h-7 rounded-full bg-[#41B349] text-white flex items-center justify-center font-bold text-xs shrink-0">
+                        1
+                      </div>
+                    )}
+                    <div>
+                      <div className="flex items-center gap-1.5">
+                        <h2 className="font-display uppercase tracking-tight text-[#0D0F12] text-base sm:text-lg leading-snug">
+                          Contact Information
+                        </h2>
+                        <span className="text-red-500 font-bold">*</span>
+                      </div>
+                      <p className="font-jakarta text-xs text-[#4A5568] mt-0.5">
+                        Please provide accurate details so our team can reach out
+                      </p>
                     </div>
+                  </div>
+                  {isContactVerified && (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-semibold font-jakarta">
+                      <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                      Verified
+                    </span>
+                  )}
+                </div>
+
+                <div className="space-y-3.5">
+                  {/* Row 1: Full Name * & Job Title */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-700 mb-1 font-jakarta">
+                        Full Name <span className="text-red-500 font-bold">*</span>
+                      </label>
+                      <input
+                        id="field-fullName"
+                        type="text"
+                        placeholder="Enter your name"
+                        value={formData.fullName}
+                        disabled={isContactVerified || showVerification}
+                        onChange={(e) => handleInputChange("fullName", e.target.value)}
+                        className={`w-full rounded-xl border ${
+                          errors.fullName ? "border-red-500 bg-red-50/20" : "border-gray-200 bg-white"
+                        } px-3.5 py-2 text-sm text-[#0D0F12] font-jakarta placeholder:text-gray-400 focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all disabled:bg-gray-50 disabled:text-gray-700`}
+                      />
+                      {errors.fullName && (
+                        <p className="text-xs text-red-500 mt-1 font-jakarta flex items-center gap-1">
+                          <AlertCircle className="w-3 h-3 shrink-0" /> {errors.fullName}
+                        </p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-700 mb-1 font-jakarta">
+                        Job Title <span className="text-gray-400 font-normal lowercase">(optional)</span>
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Enter job title"
+                        value={formData.jobTitle}
+                        disabled={isContactVerified || showVerification}
+                        onChange={(e) => handleInputChange("jobTitle", e.target.value)}
+                        className="w-full rounded-xl border border-gray-200 px-3.5 py-2 text-sm text-[#0D0F12] font-jakarta placeholder:text-gray-400 focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all bg-white disabled:bg-gray-50 disabled:text-gray-700"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Row 2: Country * & Phone Number * (Country first -> Phone Number second) */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-700 mb-1 font-jakarta">
+                        Country <span className="text-red-500 font-bold">*</span>
+                      </label>
+                      <div className="relative">
+                        <select
+                          id="field-country"
+                          name="country"
+                          value={formData.country}
+                          disabled={isContactVerified || showVerification}
+                          onChange={handleCountryChange}
+                          className={`w-full h-10 rounded-xl border ${
+                            errors.country ? "border-red-500 bg-red-50/20" : "border-gray-200 bg-white"
+                          } px-3.5 pr-8 text-xs sm:text-sm text-[#0D0F12] font-jakarta focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all cursor-pointer appearance-none shadow-xs hover:border-gray-300 disabled:bg-gray-50 disabled:text-gray-700 disabled:cursor-not-allowed`}
+                        >
+                          <option value="">Select your Country</option>
+                          {COUNTRY_DIAL_CODES.map((c) => (
+                            <option key={c.name} value={c.name}>
+                              {c.name}
+                            </option>
+                          ))}
+                        </select>
+                        <ChevronDown className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                      </div>
+                      {errors.country && (
+                        <p className="text-xs text-red-500 mt-1 font-jakarta flex items-center gap-1">
+                          <AlertCircle className="w-3 h-3 shrink-0" /> {errors.country}
+                        </p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-700 mb-1 font-jakarta">
+                        Phone Number <span className="text-red-500 font-bold">*</span>
+                      </label>
+                      <div
+                        className={`relative flex items-center rounded-xl border transition-all ${
+                          errors.phone
+                            ? "border-red-500 bg-red-50/20"
+                            : !formData.country
+                            ? "border-gray-200 bg-gray-50/70"
+                            : "border-gray-200 bg-white focus-within:border-[#41B349] focus-within:ring-1 focus-within:ring-[#41B349]"
+                        }`}
+                      >
+                        {selectedCountryObj?.code && (
+                          <div className="font-jakarta bg-gray-100 border-r border-gray-200 text-gray-900 font-bold text-xs sm:text-sm px-3.5 h-10 flex items-center justify-center rounded-l-[11px] shrink-0 select-none">
+                            {selectedCountryObj.code}
+                          </div>
+                        )}
+                        <input
+                          id="field-phone"
+                          type="tel"
+                          name="phoneDigits"
+                          value={phoneDigits}
+                          onChange={handlePhoneChange}
+                          disabled={!formData.country || isContactVerified || showVerification}
+                          maxLength={selectedCountryObj?.maxDigits || 15}
+                          placeholder={
+                            !formData.country
+                              ? "Select country first *"
+                              : selectedCountryObj?.sample
+                              ? `e.g. ${selectedCountryObj.sample}`
+                              : `Enter ${
+                                  selectedCountryObj?.minDigits === selectedCountryObj?.maxDigits
+                                    ? `${selectedCountryObj?.maxDigits} digits`
+                                    : "phone number"
+                                }`
+                          }
+                          className={`w-full h-10 text-xs sm:text-sm font-jakarta bg-transparent px-3.5 focus:outline-none ${
+                            selectedCountryObj?.code ? "rounded-r-[11px]" : "rounded-xl"
+                          } ${
+                            !formData.country || isContactVerified || showVerification
+                              ? "text-gray-500 cursor-not-allowed placeholder:text-gray-400"
+                              : "text-[#0D0F12] placeholder:text-gray-400"
+                          }`}
+                        />
+                      </div>
+                      {errors.phone && (
+                        <p className="text-xs text-red-500 mt-1 font-jakarta flex items-center gap-1">
+                          <AlertCircle className="w-3 h-3 shrink-0" /> {errors.phone}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Row 3: Email Address * & WhatsApp Number */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-700 mb-1 font-jakarta">
+                        Email Address <span className="text-red-500 font-bold">*</span>
+                      </label>
+                      <input
+                        id="field-email"
+                        type="email"
+                        placeholder="you@company.com"
+                        value={formData.email}
+                        disabled={isContactVerified || showVerification}
+                        onChange={(e) => handleInputChange("email", e.target.value)}
+                        className={`w-full h-10 rounded-xl border ${
+                          errors.email ? "border-red-500 bg-red-50/20" : "border-gray-200 bg-white"
+                        } px-3.5 text-xs sm:text-sm text-[#0D0F12] font-jakarta placeholder:text-gray-400 focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all disabled:bg-gray-50 disabled:text-gray-700`}
+                      />
+                      {errors.email && (
+                        <p className="text-xs text-red-500 mt-1 font-jakarta flex items-center gap-1">
+                          <AlertCircle className="w-3 h-3 shrink-0" /> {errors.email}
+                        </p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-700 mb-1 font-jakarta">
+                        WhatsApp Number <span className="text-gray-400 font-normal lowercase">(optional)</span>
+                      </label>
+                      <input
+                        type="tel"
+                        placeholder="+971 50 123 4567"
+                        value={formData.whatsapp}
+                        disabled={isContactVerified || showVerification}
+                        onChange={(e) => handleInputChange("whatsapp", e.target.value)}
+                        className="w-full h-10 rounded-xl border border-gray-200 px-3.5 text-xs sm:text-sm text-[#0D0F12] font-jakarta placeholder:text-gray-400 focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all bg-white disabled:bg-gray-50 disabled:text-gray-700"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Row 4: Preferred Contact Method & Best Time */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-700 mb-1 font-jakarta">
+                        Preferred Contact Method
+                      </label>
+                      <div className="relative">
+                        <select
+                          value={formData.preferredContactMethod}
+                          disabled={isContactVerified || showVerification}
+                          onChange={(e) => handleInputChange("preferredContactMethod", e.target.value)}
+                          className="w-full rounded-xl border border-gray-200 pl-3.5 pr-8 py-2 text-xs sm:text-sm text-[#0D0F12] font-jakarta bg-white focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all cursor-pointer appearance-none shadow-sm hover:border-gray-300 disabled:bg-gray-50 disabled:text-gray-700 disabled:cursor-not-allowed"
+                        >
+                          <option value="Email">Email</option>
+                          <option value="WhatsApp">WhatsApp</option>
+                          <option value="Phone Call">Phone Call</option>
+                          <option value="Video Meeting">Video Meeting</option>
+                        </select>
+                        <ChevronDown className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-700 mb-1 font-jakarta">
+                        Best Time to Contact
+                      </label>
+                      <div className="relative">
+                        <select
+                          value={formData.bestTimeToContact}
+                          disabled={isContactVerified || showVerification}
+                          onChange={(e) => handleInputChange("bestTimeToContact", e.target.value)}
+                          className="w-full rounded-xl border border-gray-200 pl-3.5 pr-8 py-2 text-xs sm:text-sm text-[#0D0F12] font-jakarta bg-white focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all cursor-pointer appearance-none shadow-sm hover:border-gray-300 disabled:bg-gray-50 disabled:text-gray-700 disabled:cursor-not-allowed"
+                        >
+                          <option value="Any Time">Any Time</option>
+                          <option value="Morning (9 AM - 12 PM)">Morning (9 AM - 12 PM)</option>
+                          <option value="Afternoon (12 PM - 5 PM)">Afternoon (12 PM - 5 PM)</option>
+                          <option value="Evening (5 PM - 8 PM)">Evening (5 PM - 8 PM)</option>
+                        </select>
+                        <ChevronDown className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Step Action / Inline Email Verification Flow */}
+                  {!isContactVerified ? (
+                    <>
+                      {!showVerification ? (
+                        <div className="pt-4 flex flex-col items-end gap-2.5 border-t border-gray-100">
+                          {contactStepError && (
+                            <div className="p-3 rounded-xl bg-red-50 border border-red-200 flex items-center gap-2 text-xs text-red-600 font-jakarta max-w-md">
+                              <AlertCircle className="w-4 h-4 shrink-0 text-red-500" />
+                              <span>{contactStepError}</span>
+                            </div>
+                          )}
+                          <button
+                            type="button"
+                            onClick={handleContactStepSubmit}
+                            disabled={isSavingContact}
+                            className="inline-flex items-center justify-center gap-2 px-8 py-3 rounded-xl bg-[#41B349] hover:bg-[#36963d] text-white font-jakarta font-semibold text-xs sm:text-sm transition-all shadow-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+                          >
+                            {isSavingContact ? (
+                              <>
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                                <span>Saving...</span>
+                              </>
+                            ) : (
+                              <>
+                                <span>Continue</span>
+                                <ArrowRight className="w-4 h-4" />
+                              </>
+                            )}
+                          </button>
+                        </div>
+                      ) : (
+                        <div id="inline-email-verification" className="pt-6 border-t border-gray-100 animate-in fade-in duration-300">
+                          <div className="bg-gray-50/80 rounded-2xl p-5 sm:p-7 border border-gray-200/80 space-y-4">
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                              <div>
+                                <div className="flex items-center gap-2">
+                                  <ShieldCheck className="w-5 h-5 text-[#41B349]" />
+                                  <h3 className="font-display uppercase tracking-tight text-base sm:text-lg text-[#0D0F12]">
+                                    Email Verification
+                                  </h3>
+                                </div>
+                                <p className="font-jakarta text-xs sm:text-sm text-[#4A5568] mt-1">
+                                  Please enter the 6-digit verification code sent to <strong className="text-[#0D0F12] font-semibold">{formData.email}</strong>
+                                </p>
+                              </div>
+                              <button
+                                type="button"
+                                onClick={handleEditEmail}
+                                disabled={verifyingOtp}
+                                className="text-xs font-semibold text-[#41B349] hover:underline inline-flex items-center gap-1 self-start sm:self-auto cursor-pointer font-jakarta"
+                              >
+                                <Edit2 className="w-3 h-3" />
+                                <span>Change Email</span>
+                              </button>
+                            </div>
+
+                            {/* 6-Digit Code Inputs */}
+                            <div>
+                              <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2.5 font-jakarta">
+                                Enter 6-Digit Code
+                              </label>
+                              <div className="flex items-center gap-2 sm:gap-2.5" onPaste={handleOtpPaste}>
+                                {otpDigits.map((digit, idx) => (
+                                  <input
+                                    key={idx}
+                                    ref={(el) => (otpInputRefs.current[idx] = el)}
+                                    type="text"
+                                    inputMode="numeric"
+                                    autoComplete="one-time-code"
+                                    maxLength={1}
+                                    value={digit}
+                                    onChange={(e) => handleOtpChange(idx, e.target.value)}
+                                    onKeyDown={(e) => handleOtpKeyDown(idx, e)}
+                                    disabled={verifyingOtp}
+                                    className={`w-10 sm:w-12 h-11 sm:h-13 text-xl sm:text-2xl font-black text-center font-mono rounded-xl border ${
+                                      otpError
+                                        ? "border-red-400 bg-red-50/40 text-red-700"
+                                        : digit
+                                        ? "border-[#41B349] bg-emerald-50/30 text-[#0D0F12]"
+                                        : "border-gray-200 bg-white text-[#0D0F12]"
+                                    } focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] outline-none transition-all disabled:opacity-50 shadow-xs`}
+                                  />
+                                ))}
+                              </div>
+                            </div>
+
+                            {/* Error Message */}
+                            {otpError && (
+                              <div className="p-3 rounded-xl bg-red-50 border border-red-200 flex items-center gap-2 text-xs text-red-600 font-jakarta">
+                                <AlertCircle className="w-4 h-4 shrink-0 text-red-500" />
+                                <span>{otpError}</span>
+                              </div>
+                            )}
+
+                            {/* Resend Timer & Action Button */}
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
+                              <div className="text-xs text-gray-500 font-jakarta">
+                                <span>Didn&apos;t receive code? </span>
+                                {resendCooldown > 0 ? (
+                                  <span className="font-semibold text-gray-600">Resend in {resendCooldown}s</span>
+                                ) : (
+                                  <button
+                                    type="button"
+                                    onClick={handleResendOtp}
+                                    disabled={resendingOtp || verifyingOtp}
+                                    className="font-bold text-[#41B349] hover:text-[#36963d] hover:underline inline-flex items-center gap-1 cursor-pointer disabled:opacity-50"
+                                  >
+                                    {resendingOtp ? (
+                                      <>
+                                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                        <span>Sending...</span>
+                                      </>
+                                    ) : (
+                                      <>
+                                        <RotateCw className="w-3.5 h-3.5" />
+                                        <span>Resend Code</span>
+                                      </>
+                                    )}
+                                  </button>
+                                )}
+                              </div>
+
+                              <button
+                                type="button"
+                                onClick={handleVerifyOtp}
+                                disabled={verifyingOtp || otpDigits.some((d) => !d)}
+                                className="inline-flex items-center justify-center gap-2 px-7 py-2.5 rounded-xl bg-[#41B349] hover:bg-[#36963d] text-white font-jakarta font-semibold text-xs sm:text-sm transition-all shadow-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+                              >
+                                {verifyingOtp ? (
+                                  <>
+                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                    <span>Verifying Code...</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    <span>Verify Code</span>
+                                    <ArrowRight className="w-4 h-4" />
+                                  </>
+                                )}
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <div className="pt-3.5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 border-t border-gray-100 bg-emerald-50/50 -mx-2 px-4 py-2.5 rounded-xl">
+                      <div className="flex items-center gap-2 text-xs font-medium text-emerald-800 font-jakarta">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                        <span>Contact information verified. Continue with the sections below.</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsContactVerified(false);
+                          setShowVerification(false);
+                        }}
+                        className="text-xs font-semibold text-emerald-700 hover:text-emerald-900 underline self-start sm:self-auto cursor-pointer"
+                      >
+                        Edit details
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* =================================================================== */}
+              {/* REMAINING SECTIONS: Revealed only after Contact Information verified */}
+              {/* =================================================================== */}
+              {isContactVerified && (
+                <>
+                  {/* =================================================================== */}
+                  {/* 2. RESOURCE / SERVICE REQUIRED                                      */}
+                  {/* =================================================================== */}
+                  <div id="section-services" className="py-8 first:pt-0 last:pb-0">
+                    <div className="flex items-start justify-between gap-3 mb-5">
+                      <div className="flex items-start gap-3">
+                        <div className="w-7 h-7 rounded-full bg-[#41B349]/10 text-[#41B349] flex items-center justify-center font-bold text-xs shrink-0 border border-[#41B349]/20">
+                          2
+                        </div>
                     <div>
                       <div className="flex items-center gap-1.5">
                         <h2 className="font-display uppercase tracking-tight text-[#0D0F12] text-base sm:text-lg leading-snug">
@@ -898,13 +1582,13 @@ Attached Files: ${uploadedFiles.map(f => f.docType ? `${f.name} [${f.docType}]` 
               </div>
 
               {/* =================================================================== */}
-              {/* 2. RESOURCE TYPE                                                    */}
+              {/* 3. RESOURCE SPECIFICATIONS & HEADCOUNT                              */}
               {/* =================================================================== */}
               <div className="py-8 first:pt-0 last:pb-0">
                 <div className="flex items-start justify-between gap-3 mb-5">
                   <div className="flex items-start gap-3">
                     <div className="w-7 h-7 rounded-full bg-[#41B349]/10 text-[#41B349] flex items-center justify-center font-bold text-xs shrink-0 border border-[#41B349]/20">
-                      2
+                      3
                     </div>
                     <div>
                       <div className="flex items-center gap-1.5">
@@ -1030,12 +1714,12 @@ Attached Files: ${uploadedFiles.map(f => f.docType ? `${f.name} [${f.docType}]` 
               </div>
 
               {/* =================================================================== */}
-              {/* 3. WORK ARRANGEMENT                                                 */}
+              {/* 4. WORK ARRANGEMENT & LOCATION                                      */}
               {/* =================================================================== */}
               <div className="py-8 first:pt-0 last:pb-0">
                 <div className="flex items-start gap-3 mb-4">
                   <div className="w-7 h-7 rounded-full bg-[#41B349]/10 text-[#41B349] flex items-center justify-center font-bold text-xs shrink-0 border border-[#41B349]/20">
-                    3
+                    4
                   </div>
                   <div>
                     <h2 className="font-display uppercase tracking-tight text-[#0D0F12] text-base sm:text-lg leading-snug">
@@ -1111,12 +1795,12 @@ Attached Files: ${uploadedFiles.map(f => f.docType ? `${f.name} [${f.docType}]` 
               </div>
 
               {/* =================================================================== */}
-              {/* 4. WORKING SCHEDULE                                                 */}
+              {/* 5. WORKING SCHEDULE & TIME ZONE                                     */}
               {/* =================================================================== */}
               <div className="py-8 first:pt-0 last:pb-0">
                 <div className="flex items-start gap-3 mb-4">
                   <div className="w-7 h-7 rounded-full bg-[#41B349]/10 text-[#41B349] flex items-center justify-center font-bold text-xs shrink-0 border border-[#41B349]/20">
-                    4
+                    5
                   </div>
                   <div>
                     <h2 className="font-display uppercase tracking-tight text-[#0D0F12] text-base sm:text-lg leading-snug">
@@ -1192,12 +1876,12 @@ Attached Files: ${uploadedFiles.map(f => f.docType ? `${f.name} [${f.docType}]` 
               </div>
 
               {/* =================================================================== */}
-              {/* 5. ENGAGEMENT DURATION                                              */}
+              {/* 6. ENGAGEMENT DURATION & TIMELINE                                   */}
               {/* =================================================================== */}
               <div className="py-8 first:pt-0 last:pb-0">
                 <div className="flex items-start gap-3 mb-4">
                   <div className="w-7 h-7 rounded-full bg-[#41B349]/10 text-[#41B349] flex items-center justify-center font-bold text-xs shrink-0 border border-[#41B349]/20">
-                    5
+                    6
                   </div>
                   <div>
                     <h2 className="font-display uppercase tracking-tight text-[#0D0F12] text-base sm:text-lg leading-snug">
@@ -1263,12 +1947,12 @@ Attached Files: ${uploadedFiles.map(f => f.docType ? `${f.name} [${f.docType}]` 
               </div>
 
               {/* =================================================================== */}
-              {/* 6. ESTIMATED BUDGET                                                 */}
+              {/* 7. ESTIMATED BUDGET & COMPENSATION                                  */}
               {/* =================================================================== */}
               <div className="py-8 first:pt-0 last:pb-0">
                 <div className="flex items-start gap-3 mb-4">
                   <div className="w-7 h-7 rounded-full bg-[#41B349]/10 text-[#41B349] flex items-center justify-center font-bold text-xs shrink-0 border border-[#41B349]/20">
-                    6
+                    7
                   </div>
                   <div>
                     <h2 className="font-display uppercase tracking-tight text-[#0D0F12] text-base sm:text-lg leading-snug">
@@ -1342,12 +2026,12 @@ Attached Files: ${uploadedFiles.map(f => f.docType ? `${f.name} [${f.docType}]` 
               </div>
 
               {/* =================================================================== */}
-              {/* 7. EXISTING RESOURCES & TEAM                                        */}
+              {/* 8. EXISTING RESOURCES & INTERNAL TEAM                               */}
               {/* =================================================================== */}
               <div className="py-8 first:pt-0 last:pb-0">
                 <div className="flex items-start gap-3 mb-4">
                   <div className="w-7 h-7 rounded-full bg-[#41B349]/10 text-[#41B349] flex items-center justify-center font-bold text-xs shrink-0 border border-[#41B349]/20">
-                    7
+                    8
                   </div>
                   <div>
                     <h2 className="font-display uppercase tracking-tight text-[#0D0F12] text-base sm:text-lg leading-snug">
@@ -1432,12 +2116,12 @@ Attached Files: ${uploadedFiles.map(f => f.docType ? `${f.name} [${f.docType}]` 
               </div>
 
               {/* =================================================================== */}
-              {/* 8. COMMUNICATION & MANAGEMENT                                       */}
+              {/* 9. COMMUNICATION & MANAGEMENT PREFERENCES                           */}
               {/* =================================================================== */}
               <div className="py-8 first:pt-0 last:pb-0">
                 <div className="flex items-start gap-3 mb-4">
                   <div className="w-7 h-7 rounded-full bg-[#41B349]/10 text-[#41B349] flex items-center justify-center font-bold text-xs shrink-0 border border-[#41B349]/20">
-                    8
+                    9
                   </div>
                   <div>
                     <h2 className="font-display uppercase tracking-tight text-[#0D0F12] text-base sm:text-lg leading-snug">
@@ -1516,12 +2200,12 @@ Attached Files: ${uploadedFiles.map(f => f.docType ? `${f.name} [${f.docType}]` 
               </div>
 
               {/* =================================================================== */}
-              {/* 9. AVAILABLE DOCUMENTATION & RESOURCES                              */}
+              {/* 10. AVAILABLE DOCUMENTATION & PROJECT RESOURCES                     */}
               {/* =================================================================== */}
               <div className="py-8 first:pt-0 last:pb-0">
                 <div className="flex items-start gap-3 mb-4">
                   <div className="w-7 h-7 rounded-full bg-[#41B349]/10 text-[#41B349] flex items-center justify-center font-bold text-xs shrink-0 border border-[#41B349]/20">
-                    9
+                    10
                   </div>
                   <div>
                     <h2 className="font-display uppercase tracking-tight text-[#0D0F12] text-base sm:text-lg leading-snug">
@@ -1683,238 +2367,6 @@ Attached Files: ${uploadedFiles.map(f => f.docType ? `${f.name} [${f.docType}]` 
                 </div>
               </div>
 
-              {/* =================================================================== */}
-              {/* 10. CONTACT INFORMATION (REQUIRED SECTION *)                       */}
-              {/* =================================================================== */}
-              <div
-                id="section-contact-info"
-                className="py-8 first:pt-0 last:pb-0"
-              >
-                <div className="flex items-start justify-between gap-3 mb-4">
-                  <div className="flex items-start gap-3">
-                    <div className="w-7 h-7 rounded-full bg-[#41B349] text-white flex items-center justify-center font-bold text-xs shrink-0">
-                      10
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-1.5">
-                        <h2 className="font-display uppercase tracking-tight text-[#0D0F12] text-base sm:text-lg leading-snug">
-                          Contact Information
-                        </h2>
-                        <span className="text-red-500 font-bold">*</span>
-                      </div>
-                      <p className="font-jakarta text-xs text-[#4A5568] mt-0.5">
-                        Please provide accurate details so our team can reach out
-                      </p>
-                    </div>
-                  </div>
-                  <span className="px-2.5 py-0.5 rounded-full bg-[#41B349]/10 text-[#2C9434] text-[11px] font-semibold uppercase tracking-wider font-jakarta">
-                    Required *
-                  </span>
-                </div>
-
-                <div className="space-y-3.5">
-                  {/* Row 1: Full Name * & Job Title */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                    <div>
-                      <label className="block text-xs font-semibold text-gray-700 mb-1 font-jakarta">
-                        Full Name <span className="text-red-500 font-bold">*</span>
-                      </label>
-                      <input
-                        id="field-fullName"
-                        type="text"
-                        placeholder="Enter your name"
-                        value={formData.fullName}
-                        onChange={(e) => handleInputChange("fullName", e.target.value)}
-                        className={`w-full rounded-xl border ${errors.fullName ? "border-red-500 bg-red-50/20" : "border-gray-200 bg-white"
-                          } px-3.5 py-2 text-sm text-[#0D0F12] font-jakarta placeholder:text-gray-400 focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all`}
-                      />
-                      {errors.fullName && (
-                        <p className="text-xs text-red-500 mt-1 font-jakarta flex items-center gap-1">
-                          <AlertCircle className="w-3 h-3 shrink-0" /> {errors.fullName}
-                        </p>
-                      )}
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-semibold text-gray-700 mb-1 font-jakarta">
-                        Job Title <span className="text-gray-400 font-normal lowercase">(optional)</span>
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="Enter job title"
-                        value={formData.jobTitle}
-                        onChange={(e) => handleInputChange("jobTitle", e.target.value)}
-                        className="w-full rounded-xl border border-gray-200 px-3.5 py-2 text-sm text-[#0D0F12] font-jakarta placeholder:text-gray-400 focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all bg-white"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Row 2: Country * & Phone Number * (Country first -> Phone Number second) */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                    <div>
-                      <label className="block text-xs font-semibold text-gray-700 mb-1 font-jakarta">
-                        Country <span className="text-red-500 font-bold">*</span>
-                      </label>
-                      <div className="relative">
-                        <select
-                          id="field-country"
-                          name="country"
-                          value={formData.country}
-                          onChange={handleCountryChange}
-                          className={`w-full h-10 rounded-xl border ${
-                            errors.country ? "border-red-500 bg-red-50/20" : "border-gray-200 bg-white"
-                          } px-3.5 pr-8 text-xs sm:text-sm text-[#0D0F12] font-jakarta focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all cursor-pointer appearance-none shadow-xs hover:border-gray-300`}
-                        >
-                          <option value="">Select your Country</option>
-                          {COUNTRY_DIAL_CODES.map((c) => (
-                            <option key={c.name} value={c.name}>
-                              {c.name}
-                            </option>
-                          ))}
-                        </select>
-                        <ChevronDown className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-                      </div>
-                      {errors.country && (
-                        <p className="text-xs text-red-500 mt-1 font-jakarta flex items-center gap-1">
-                          <AlertCircle className="w-3 h-3 shrink-0" /> {errors.country}
-                        </p>
-                      )}
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-semibold text-gray-700 mb-1 font-jakarta">
-                        Phone Number <span className="text-red-500 font-bold">*</span>
-                      </label>
-                      <div
-                        className={`relative flex items-center rounded-xl border transition-all ${
-                          errors.phone
-                            ? "border-red-500 bg-red-50/20"
-                            : !formData.country
-                            ? "border-gray-200 bg-gray-50/70"
-                            : "border-gray-200 bg-white focus-within:border-[#41B349] focus-within:ring-1 focus-within:ring-[#41B349]"
-                        }`}
-                      >
-                        {/* Uneditable Country Dial Code Badge */}
-                        {selectedCountryObj?.code && (
-                          <div className="font-jakarta bg-gray-100 border-r border-gray-200 text-gray-900 font-bold text-xs sm:text-sm px-3.5 h-10 flex items-center justify-center rounded-l-[11px] shrink-0 select-none">
-                            {selectedCountryObj.code}
-                          </div>
-                        )}
-                        <input
-                          id="field-phone"
-                          type="tel"
-                          name="phoneDigits"
-                          value={phoneDigits}
-                          onChange={handlePhoneChange}
-                          disabled={!formData.country}
-                          maxLength={selectedCountryObj?.maxDigits || 15}
-                          placeholder={
-                            !formData.country
-                              ? "Select country first *"
-                              : selectedCountryObj?.sample
-                              ? `e.g. ${selectedCountryObj.sample}`
-                              : `Enter ${
-                                  selectedCountryObj?.minDigits === selectedCountryObj?.maxDigits
-                                    ? `${selectedCountryObj?.maxDigits} digits`
-                                    : "phone number"
-                                }`
-                          }
-                          className={`w-full h-10 text-xs sm:text-sm font-jakarta bg-transparent px-3.5 focus:outline-none ${
-                            selectedCountryObj?.code ? "rounded-r-[11px]" : "rounded-xl"
-                          } ${
-                            !formData.country
-                              ? "text-gray-400 cursor-not-allowed placeholder:text-gray-400"
-                              : "text-[#0D0F12] placeholder:text-gray-400"
-                          }`}
-                        />
-                      </div>
-                      {errors.phone && (
-                        <p className="text-xs text-red-500 mt-1 font-jakarta flex items-center gap-1">
-                          <AlertCircle className="w-3 h-3 shrink-0" /> {errors.phone}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Row 3: Email Address * & WhatsApp Number */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                    <div>
-                      <label className="block text-xs font-semibold text-gray-700 mb-1 font-jakarta">
-                        Email Address <span className="text-red-500 font-bold">*</span>
-                      </label>
-                      <input
-                        id="field-email"
-                        type="email"
-                        placeholder="you@company.com"
-                        value={formData.email}
-                        onChange={(e) => handleInputChange("email", e.target.value)}
-                        className={`w-full h-10 rounded-xl border ${
-                          errors.email ? "border-red-500 bg-red-50/20" : "border-gray-200 bg-white"
-                        } px-3.5 text-xs sm:text-sm text-[#0D0F12] font-jakarta placeholder:text-gray-400 focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all`}
-                      />
-                      {errors.email && (
-                        <p className="text-xs text-red-500 mt-1 font-jakarta flex items-center gap-1">
-                          <AlertCircle className="w-3 h-3 shrink-0" /> {errors.email}
-                        </p>
-                      )}
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-semibold text-gray-700 mb-1 font-jakarta">
-                        WhatsApp Number <span className="text-gray-400 font-normal lowercase">(optional)</span>
-                      </label>
-                      <input
-                        type="tel"
-                        placeholder="+971 50 123 4567"
-                        value={formData.whatsapp}
-                        onChange={(e) => handleInputChange("whatsapp", e.target.value)}
-                        className="w-full h-10 rounded-xl border border-gray-200 px-3.5 text-xs sm:text-sm text-[#0D0F12] font-jakarta placeholder:text-gray-400 focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all bg-white"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Row 4: Preferred Contact Method & Best Time */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                    <div>
-                      <label className="block text-xs font-semibold text-gray-700 mb-1 font-jakarta">
-                        Preferred Contact Method
-                      </label>
-                      <div className="relative">
-                        <select
-                          value={formData.preferredContactMethod}
-                          onChange={(e) => handleInputChange("preferredContactMethod", e.target.value)}
-                          className="w-full rounded-xl border border-gray-200 pl-3.5 pr-8 py-2 text-xs sm:text-sm text-[#0D0F12] font-jakarta bg-white focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all cursor-pointer appearance-none shadow-sm hover:border-gray-300"
-                        >
-                          <option value="Email">Email</option>
-                          <option value="WhatsApp">WhatsApp</option>
-                          <option value="Phone Call">Phone Call</option>
-                          <option value="Video Meeting">Video Meeting</option>
-                        </select>
-                        <ChevronDown className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-semibold text-gray-700 mb-1 font-jakarta">
-                        Best Time to Contact
-                      </label>
-                      <div className="relative">
-                        <select
-                          value={formData.bestTimeToContact}
-                          onChange={(e) => handleInputChange("bestTimeToContact", e.target.value)}
-                          className="w-full rounded-xl border border-gray-200 pl-3.5 pr-8 py-2 text-xs sm:text-sm text-[#0D0F12] font-jakarta bg-white focus:outline-none focus:border-[#41B349] focus:ring-1 focus:ring-[#41B349] transition-all cursor-pointer appearance-none shadow-sm hover:border-gray-300"
-                        >
-                          <option value="Any Time">Any Time</option>
-                          <option value="Morning (9 AM - 12 PM)">Morning (9 AM - 12 PM)</option>
-                          <option value="Afternoon (12 PM - 5 PM)">Afternoon (12 PM - 5 PM)</option>
-                          <option value="Evening (5 PM - 8 PM)">Evening (5 PM - 8 PM)</option>
-                        </select>
-                        <ChevronDown className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
 
               {/* =================================================================== */}
               {/* 11. HOW DID YOU FIND TECH SOLUTIONOR?                               */}
@@ -2065,6 +2517,8 @@ Attached Files: ${uploadedFiles.map(f => f.docType ? `${f.name} [${f.docType}]` 
                   </p>
                 </div>
               </div>
+                </>
+              )}
 
             </div>
           </form>

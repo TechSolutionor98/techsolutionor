@@ -30,6 +30,7 @@ import {
 
 const STATUS_OPTIONS = [
   { value: 'Pending', label: 'Pending', color: 'bg-amber-100 text-amber-900 border-amber-300' },
+  { value: 'Draft', label: 'Draft (Incomplete)', color: 'bg-orange-100 text-orange-900 border-orange-300' },
   { value: 'In Review', label: 'In Review', color: 'bg-blue-100 text-blue-900 border-blue-300' },
   { value: 'Contacted', label: 'Contacted', color: 'bg-purple-100 text-purple-900 border-purple-300' },
   { value: 'Proposal Sent', label: 'Proposal Sent', color: 'bg-indigo-100 text-indigo-900 border-indigo-300' },
@@ -80,6 +81,7 @@ export default function HireUsTableClient({ initialData = [], apiBase = process.
   const counts = useMemo(() => {
     const unreadCount = sorted.filter(r => !r.isRead).length;
     const pendingCount = sorted.filter(r => (r.status || 'Pending').toLowerCase() === 'pending').length;
+    const draftCount = sorted.filter(r => (r.status || '').toLowerCase() === 'draft').length;
     const inReviewCount = sorted.filter(r => (r.status || '').toLowerCase() === 'in review').length;
     const contactedCount = sorted.filter(r => (r.status || '').toLowerCase() === 'contacted').length;
     const convertedCount = sorted.filter(r => (r.status || '').toLowerCase() === 'converted').length;
@@ -87,6 +89,7 @@ export default function HireUsTableClient({ initialData = [], apiBase = process.
       all: sorted.length,
       unread: unreadCount,
       pending: pendingCount,
+      draft: draftCount,
       inReview: inReviewCount,
       contacted: contactedCount,
       converted: convertedCount,
@@ -459,6 +462,7 @@ export default function HireUsTableClient({ initialData = [], apiBase = process.
             { key: 'all', label: 'All Submissions', count: counts.all },
             { key: 'unread', label: 'Unread', count: counts.unread, isHighlight: counts.unread > 0 },
             { key: 'Pending', label: 'Pending', count: counts.pending },
+            { key: 'Draft', label: 'Drafts', count: counts.draft },
             { key: 'In Review', label: 'In Review', count: counts.inReview },
             { key: 'Contacted', label: 'Contacted', count: counts.contacted },
             { key: 'Converted', label: 'Converted', count: counts.converted },

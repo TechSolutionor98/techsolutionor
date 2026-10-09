@@ -7,7 +7,15 @@ export async function GET(request, context) {
 }
 
 export async function POST(request, context) {
-  return dispatchApiRoute('POST', request, context?.params);
+  try {
+    return await dispatchApiRoute('POST', request, context?.params);
+  } catch (err) {
+    console.error('[route.js POST ERROR]:', err);
+    return new Response(JSON.stringify({ error: err.message, stack: err.stack }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
 }
 
 export async function PUT(request, context) {
