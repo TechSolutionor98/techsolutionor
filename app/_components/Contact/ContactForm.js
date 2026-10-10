@@ -1,8 +1,11 @@
 "use client"
 import React, { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import ContactImg from "../../../components/Images/contactimg1.jpg";
 import { FaCheckCircle, FaSpinner, FaChevronDown, FaArrowRight } from 'react-icons/fa';
+import { Sparkles, Users, Briefcase } from 'lucide-react';
+import { useQuote } from "@/app/_context/QuoteContext";
 import { 
     SectionBadge, 
     CardHeading, 
@@ -11,6 +14,7 @@ import {
 } from "@/components/Typography";
 
 const ContactForm = () => {
+    const { openQuote } = useQuote();
     const [formData, setFormData] = useState({
         name: '',
         phone: '',
@@ -136,7 +140,35 @@ const ContactForm = () => {
                     </div>
 
                     {/* Right Side: Form */}
-                    <div className="w-full lg:w-1/2 p-6 sm:p-8 lg:p-10 bg-[#FAFAFA] border-t lg:border-t-0 lg:border-l border-gray-100 flex flex-col justify-center">
+                    <div className="w-full lg:w-1/2 p-6 sm:p-8 lg:p-10 bg-white border-t lg:border-t-0 lg:border-l border-gray-100 flex flex-col justify-center">
+                        {/* Form Navigation Buttons directly above "Send Us a Message" */}
+                        <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 mb-5">
+                            <Link
+                                href="/hire-resources"
+                                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs sm:text-sm font-semibold font-jakarta bg-white hover:bg-[#41B349] text-gray-700 hover:text-white border border-gray-200 hover:border-[#41B349] transition-all duration-200 shadow-2xs hover:shadow-xs active:scale-95 cursor-pointer group"
+                            >
+                                <Users className="w-3.5 h-3.5 text-[#41B349] group-hover:text-white transition-colors" />
+                                <span>Hire Us</span>
+                            </Link>
+
+                            <Link
+                                href="/career#application-form"
+                                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs sm:text-sm font-semibold font-jakarta bg-white hover:bg-[#41B349] text-gray-700 hover:text-white border border-gray-200 hover:border-[#41B349] transition-all duration-200 shadow-2xs hover:shadow-xs active:scale-95 cursor-pointer group"
+                            >
+                                <Briefcase className="w-3.5 h-3.5 text-[#41B349] group-hover:text-white transition-colors" />
+                                <span>Career</span>
+                            </Link>
+
+                            <button
+                                type="button"
+                                onClick={openQuote}
+                                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs sm:text-sm font-semibold font-jakarta bg-white hover:bg-[#41B349] text-gray-700 hover:text-white border border-gray-200 hover:border-[#41B349] transition-all duration-200 shadow-2xs hover:shadow-xs active:scale-95 cursor-pointer group"
+                            >
+                                <Sparkles className="w-3.5 h-3.5 text-[#41B349] group-hover:text-white transition-colors" />
+                                <span>Book Now</span>
+                            </button>
+                        </div>
+
                         <div className="mb-4">
                             <CardHeading as="h3" size="sm" theme="dark" className="text-xl sm:text-2xl mb-1">
                                 Send Us a Message
