@@ -25,8 +25,80 @@ import {
   ExternalLink,
   ShieldCheck,
   Sparkles,
-  Link2
+  Link2,
+  Eye,
+  Upload,
+  Paperclip,
+  FileSpreadsheet,
+  Image as ImageIcon,
+  Archive,
+  AlertTriangle,
+  Loader2,
+  ArrowLeft,
+  Send,
+  CheckCircle2,
+  AlertCircle
 } from 'lucide-react';
+
+function formatBytes(bytes) {
+  if (!bytes || isNaN(bytes)) return '';
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+  return (bytes / 1048576).toFixed(2) + ' MB';
+}
+
+function getFileBadge(filename) {
+  const ext = (filename || '').split('.').pop()?.toLowerCase() || '';
+  if (['pdf'].includes(ext)) {
+    return { ext: 'PDF', bg: 'bg-rose-50 text-rose-700 border-rose-200', iconColor: 'text-rose-600', isPdf: true, isViewable: true };
+  }
+  if (['doc', 'docx'].includes(ext)) {
+    return { ext: ext.toUpperCase(), bg: 'bg-blue-50 text-blue-700 border-blue-200', iconColor: 'text-blue-600', isWord: true, isViewable: false };
+  }
+  if (['xls', 'xlsx', 'csv'].includes(ext)) {
+    return { ext: ext.toUpperCase(), bg: 'bg-emerald-50 text-emerald-700 border-emerald-200', iconColor: 'text-emerald-600', isExcel: true, isViewable: false };
+  }
+  if (['ppt', 'pptx'].includes(ext)) {
+    return { ext: ext.toUpperCase(), bg: 'bg-amber-50 text-amber-700 border-amber-200', iconColor: 'text-amber-600', isPpt: true, isViewable: false };
+  }
+  if (['jpg', 'jpeg', 'png', 'webp', 'gif', 'svg'].includes(ext)) {
+    return { ext: ext.toUpperCase(), bg: 'bg-purple-50 text-purple-700 border-purple-200', iconColor: 'text-purple-600', isImage: true, isViewable: true };
+  }
+  if (['zip', 'rar', '7z', 'tar', 'gz'].includes(ext)) {
+    return { ext: ext.toUpperCase(), bg: 'bg-orange-50 text-orange-700 border-orange-200', iconColor: 'text-orange-600', isArchive: true, isViewable: false };
+  }
+  if (['fig'].includes(ext)) {
+    return { ext: 'FIGMA', bg: 'bg-indigo-50 text-indigo-700 border-indigo-200', iconColor: 'text-indigo-600', isFigma: true, isViewable: false };
+  }
+  return { ext: (ext || 'DOC').toUpperCase(), bg: 'bg-gray-100 text-gray-700 border-gray-200', iconColor: 'text-gray-600', isViewable: false };
+}
+
+function parseReferenceLinks(rawText) {
+  if (!rawText) return [];
+  const items = String(rawText).split(/[\r\n,;]+/).map(s => s.trim()).filter(Boolean);
+  return items.map(link => {
+    let url = link;
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      url = 'https://' + url;
+    }
+    let tag = 'External Link';
+    let tagColor = 'bg-gray-100 text-gray-700 border-gray-200';
+    if (url.includes('figma.com')) {
+      tag = 'Figma';
+      tagColor = 'bg-pink-50 text-pink-700 border-pink-200';
+    } else if (url.includes('drive.google.com') || url.includes('docs.google.com')) {
+      tag = 'Google Drive';
+      tagColor = 'bg-blue-50 text-blue-700 border-blue-200';
+    } else if (url.includes('github.com')) {
+      tag = 'GitHub';
+      tagColor = 'bg-slate-100 text-slate-800 border-slate-300';
+    } else if (url.includes('dropbox.com')) {
+      tag = 'Dropbox';
+      tagColor = 'bg-sky-50 text-sky-700 border-sky-200';
+    }
+    return { original: link, url, tag, tagColor };
+  });
+}
 
 const STATUS_OPTIONS = [
   { value: 'Pending', label: 'Pending', color: 'bg-amber-100 text-amber-900 border-amber-300' },
@@ -43,6 +115,86 @@ function getStatusBadge(status) {
   return found || { value: status || 'Pending', label: status || 'Pending', color: 'bg-gray-100 text-gray-800 border-gray-300' };
 }
 
+function getCompiledSummaryText(row) {
+  if (!row) return '';
+  if (row.message && typeof row.message === 'string' && row.message.trim().length > 0) {
+    return row.message.trim();
+  }
+
+  const rawServices = row.services || row.details?.services;
+  const servicesList = Array.isArray(rawServices) ? rawServices.join(', ') : (rawServices || 'Not specified');
+  const otherSrv = row.otherService || row.details?.otherService;
+  const servicesText = servicesList + (otherSrv ? ` (Other: ${otherSrv})` : '');
+  const budgetSummary = row.budget || `${row.budgetType || 'Estimated'}: ${row.currency || 'USD'} ${row.minBudget || 'N/A'} - ${row.maxBudget || 'N/A'}`;
+
+  const rawRoles = row.existingTeamRoles || row.details?.existingTeamRoles;
+  const teamRoles = Array.isArray(rawRoles) ? rawRoles.join(', ') : (rawRoles || 'None');
+  const otherRole = row.otherTeamRole || row.details?.otherTeamRole;
+
+  const rawDocs = row.documentationTypes || row.details?.documentationTypes;
+  const docTypes = Array.isArray(rawDocs) ? rawDocs.join(', ') : (rawDocs || 'None');
+
+  const rawComm = row.communicationMethods || row.details?.communicationMethods;
+  const commMethods = Array.isArray(rawComm) ? rawComm.join(', ') : (rawComm || 'Not specified');
+
+  const rawReferrals = row.referralSources || row.details?.referralSources;
+  const referrals = Array.isArray(rawReferrals) ? rawReferrals.join(', ') : (rawReferrals || 'Direct');
+  const otherRef = row.otherReferral || row.details?.otherReferral;
+
+  const filesList = (Array.isArray(row.attachedFilesList) ? row.attachedFilesList : (Array.isArray(row.files) ? row.files : []))
+    .map(f => f.docType ? `${f.name || f.fileName || f.filename} [${f.docType}]` : (f.name || f.fileName || f.filename))
+    .join(', ') || 'None';
+
+  const exactCount = row.exactResourceCount || row.details?.exactResourceCount;
+  const reqLoc = row.requiredLocation || row.city || row.details?.requiredLocation;
+
+  return `
+--- HIRE RESOURCES SPECIFICATIONS ---
+Requirement Type: ${row.requirementType || 'Dedicated Resource'}
+Selected Services: ${servicesText}
+Resources Count: ${row.resourceCount || '1'}${exactCount ? ` (Exact: ${exactCount})` : ''}
+Experience Level: ${row.experienceLevel || 'Not specified'}
+
+--- ARRANGEMENT & SCHEDULE ---
+Arrangement: ${row.workArrangement || 'Remote'}${reqLoc ? ` (${reqLoc})` : ''} (TZ: ${row.timeZone || 'Client Local Time'})
+Schedule: ${row.workingHours || 'Full-Time (8h/day)'} | ${row.workingDays || 'Monday - Friday'} (${row.hoursPerDay || '8'}h/day, ${row.hoursPerWeek || '40'}h/week)
+Duration: ${row.duration || 'Flexible'} (Start: ${row.startDate || 'Immediate'}, End: ${row.endDate || 'Flexible'})
+Budget: ${budgetSummary}
+
+--- TEAM & DOCUMENTATION ---
+Internal Team: ${row.hasInternalTeam || 'No'}${teamRoles && teamRoles !== 'None' ? ` (${teamRoles}${otherRole ? ` - Other: ${otherRole}` : ''})` : ''}
+Management: ${row.teamManager || 'Client'} (Meeting: ${row.meetingFrequency || 'Weekly Review'})
+Preferred Communication: ${commMethods}
+Documentation: ${row.hasDocumentation || 'No'}${docTypes && docTypes !== 'None' ? ` (${docTypes})` : ''}
+Reference Links: ${row.referenceLinks || 'None'}
+
+--- CONTACT DETAILS ---
+Name: ${row.fullName || row.name || 'Anonymous Client'}
+Job Title: ${row.jobTitle || 'N/A'}
+Email: ${row.email || 'N/A'}
+Phone: ${row.phone || 'N/A'}
+WhatsApp: ${row.whatsapp || 'N/A'}
+Country: ${row.country || 'N/A'}
+Contact Method: ${row.preferredContactMethod || 'Email'} | Best Time: ${row.bestTimeToContact || 'Any Time'}
+Found Us Via: ${referrals}${otherRef ? ` (Other: ${otherRef})` : ''}
+Attached Files: ${filesList}
+  `.trim();
+}
+
+function SummaryKeyValueRow({ label, children, value, className = '' }) {
+  return (
+    <div className={`px-5 py-2.5 flex flex-col sm:flex-row sm:items-start gap-1 sm:gap-4 hover:bg-gray-50/60 transition-colors ${className}`}>
+      <div className="w-full sm:w-56 md:w-60 shrink-0 text-gray-500 font-semibold text-xs flex items-center justify-between sm:justify-start pt-0.5">
+        <span>{label}</span>
+        <span className="text-gray-300 font-bold ml-1 sm:ml-auto sm:mr-3">:</span>
+      </div>
+      <div className="flex-1 text-xs text-gray-900 font-medium break-words leading-relaxed min-w-0">
+        {children !== undefined ? children : (value ?? '—')}
+      </div>
+    </div>
+  );
+}
+
 export default function HireUsTableClient({ initialData = [], apiBase = process.env.NEXT_PUBLIC_API_URL || '' }) {
   const [rows, setRows] = useState(initialData || []);
   const [query, setQuery] = useState('');
@@ -51,6 +203,7 @@ export default function HireUsTableClient({ initialData = [], apiBase = process.
   const [pageSize, setPageSize] = useState(10);
   const [loading, setLoading] = useState(false);
   const [viewRow, setViewRow] = useState(null);
+  const [modalView, setModalView] = useState('details'); // 'details' | 'summary'
 
   // Status & Notes editing in modal
   const [updatingStatusId, setUpdatingStatusId] = useState(null);
@@ -61,6 +214,217 @@ export default function HireUsTableClient({ initialData = [], apiBase = process.
   // Deletion state
   const [deleteCandidate, setDeleteCandidate] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  // File management state
+  const [isUploadingFile, setIsUploadingFile] = useState(false);
+  const [uploadError, setUploadError] = useState('');
+  const [previewImage, setPreviewImage] = useState(null);
+  const [deletingFileIdx, setDeletingFileIdx] = useState(null);
+
+  // Email Reply State & Handlers
+  const [showReplyComposer, setShowReplyComposer] = useState(false);
+  const [replyTo, setReplyTo] = useState('');
+  const [replyToName, setReplyToName] = useState('');
+  const [replySubject, setReplySubject] = useState('');
+  const [replyMessage, setReplyMessage] = useState('');
+  const [isSendingEmail, setIsSendingEmail] = useState(false);
+  const [emailSendSuccess, setEmailSendSuccess] = useState('');
+  const [emailSendError, setEmailSendError] = useState('');
+
+  const replyTemplates = useMemo(() => {
+    if (!viewRow) return [];
+    const clientName = viewRow.name || viewRow.fullName || 'Client';
+    const rawServices = viewRow.services || viewRow.details?.services;
+    const servicesStr = Array.isArray(rawServices) ? rawServices.join(', ') : (rawServices || 'Hire Resources');
+    const exp = viewRow.experienceLevel || 'specified';
+
+    return [
+      {
+        id: 'discovery',
+        label: 'Discovery Call',
+        subject: `Re: Hire Resources Requirement - ${clientName}`,
+        body: `Dear ${clientName},\n\nThank you for reaching out to Tech Solutionor regarding your hire resources requirement for ${servicesStr}.\n\nWe have received your detailed specifications and our talent acquisition team is actively reviewing your criteria. We would like to schedule a brief 15-minute consultation to discuss your project timeline and candidate availability.\n\nPlease let us know what days and times work best for you this week, or feel free to reply directly to this email.\n\nBest regards,\nTech Solutionor Team\nhr@techsolutionor.com`,
+      },
+      {
+        id: 'shortlist',
+        label: 'Profiles Shortlisted',
+        subject: `Candidate Profiles Shortlisted for Your ${servicesStr} Requirement`,
+        body: `Dear ${clientName},\n\nRegarding your requirement for ${servicesStr} (${exp} experience level), our team has shortlisted qualified, pre-vetted specialists ready for deployment.\n\nWe would love to share their verified technical portfolios and coordinate introductory interviews at your earliest convenience.\n\nPlease reply with any specific schedule preferences.\n\nBest regards,\nTech Solutionor Team\nhr@techsolutionor.com`,
+      },
+      {
+        id: 'clarify',
+        label: 'Scope Clarification',
+        subject: `Follow-up: Scope Clarification for ${servicesStr}`,
+        body: `Dear ${clientName},\n\nThank you for submitting your talent requirement with Tech Solutionor.\n\nTo ensure our team matches the exact skill set and framework proficiencies required for your ${servicesStr} initiative, could you please provide a few additional details regarding your primary tech stack, development workflow, and targeted start date?\n\nLooking forward to your reply.\n\nBest regards,\nTech Solutionor Team\nhr@techsolutionor.com`,
+      },
+    ];
+  }, [viewRow]);
+
+  const handleToggleReplyComposer = () => {
+    if (!showReplyComposer && viewRow) {
+      setReplyTo(viewRow.email || '');
+      setReplyToName(viewRow.name || viewRow.fullName || '');
+      setReplySubject(`Re: Hire Resources Requirement - ${viewRow.name || viewRow.fullName || 'Tech Solutionor'}`);
+      if (!replyMessage) {
+        setReplyMessage(`Dear ${viewRow.name || viewRow.fullName || 'Client'},\n\nThank you for reaching out to Tech Solutionor regarding your hire resources requirement.\n\n`);
+      }
+      setEmailSendSuccess('');
+      setEmailSendError('');
+    }
+    setShowReplyComposer(prev => !prev);
+  };
+
+  const handleApplyReplyTemplate = (tmpl) => {
+    if (!tmpl) return;
+    setReplySubject(tmpl.subject);
+    setReplyMessage(tmpl.body);
+    setEmailSendError('');
+    setEmailSendSuccess('');
+  };
+
+  const handleSendEmailReply = async () => {
+    setEmailSendError('');
+    setEmailSendSuccess('');
+
+    const targetEmail = (replyTo || '').trim();
+    if (!targetEmail) {
+      setEmailSendError('Recipient email address is required.');
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(targetEmail)) {
+      setEmailSendError('Please provide a valid recipient email address.');
+      return;
+    }
+
+    const targetSubject = (replySubject || '').trim();
+    if (!targetSubject) {
+      setEmailSendError('Email subject is required.');
+      return;
+    }
+
+    const targetBody = (replyMessage || '').trim();
+    if (!targetBody || targetBody.length < 5) {
+      setEmailSendError('Please write your response message before sending.');
+      return;
+    }
+
+    setIsSendingEmail(true);
+
+    try {
+      const response = await fetch('/api/emails', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          to: targetEmail,
+          toName: (replyToName || '').trim() || targetEmail.split('@')[0],
+          subject: targetSubject,
+          bodyText: targetBody,
+          bodyHtml: `<p>${targetBody.replace(/\r\n/g, '\n').replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br/>')}</p>`,
+        }),
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok || data.success === false) {
+        throw new Error(data.deliveryError || data.error || 'Failed to send email. Please check SMTP settings or try again.');
+      }
+
+      setEmailSendSuccess(`Reply email successfully delivered to ${targetEmail}.`);
+
+      // Record note in submission audit trail
+      const auditNote = `[Email Sent on ${new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}] Subject: "${targetSubject}"`;
+      const currentNotes = viewRow?.adminNotes || '';
+      const updatedNotes = currentNotes ? `${currentNotes}\n${auditNote}` : auditNote;
+      setViewRow(prev => prev ? { ...prev, adminNotes: updatedNotes } : prev);
+      setAdminNoteInput(updatedNotes);
+
+      // Persist note to MongoDB in background
+      if (viewRow) {
+        try {
+          await fetch('/api/hire-submissions', {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              id: viewRow.id || viewRow._id,
+              adminNotes: updatedNotes,
+            }),
+          });
+        } catch (_) {}
+      }
+    } catch (err) {
+      setEmailSendError(err.message || 'An error occurred while sending the email.');
+    } finally {
+      setIsSendingEmail(false);
+    }
+  };
+
+  const handleAdminFileUpload = async (submissionId, files, replaceIndex = null, docType = null) => {
+    if (!submissionId || !files || files.length === 0) return;
+    setIsUploadingFile(true);
+    setUploadError('');
+    try {
+      const fd = new FormData();
+      Array.from(files).forEach(f => fd.append('files', f));
+      fd.append('docType', docType || 'Admin Document');
+      if (replaceIndex !== null && replaceIndex !== undefined) {
+        fd.append('replaceIndex', String(replaceIndex));
+      }
+
+      const res = await fetch(`/api/hire-submissions/${submissionId}/files`, {
+        method: 'POST',
+        body: fd,
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to upload file');
+      }
+
+      const updatedList = data.attachedFilesList || [];
+      setViewRow(prev => prev ? { ...prev, attachedFilesList: updatedList } : prev);
+      setRows(prevRows => prevRows.map(r => {
+        if ((r.id || r._id) === submissionId) {
+          return { ...r, attachedFilesList: updatedList };
+        }
+        return r;
+      }));
+    } catch (err) {
+      console.error('Error uploading file:', err);
+      setUploadError(err.message || 'File upload failed');
+    } finally {
+      setIsUploadingFile(false);
+    }
+  };
+
+  const handleAdminFileDelete = async (submissionId, fileIdx, fileId) => {
+    if (!window.confirm('Are you sure you want to remove this attached file?')) return;
+    setDeletingFileIdx(fileIdx);
+    try {
+      const queryParam = fileId ? `fileId=${fileId}` : `index=${fileIdx}`;
+      const res = await fetch(`/api/hire-submissions/${submissionId}/files?${queryParam}`, {
+        method: 'DELETE',
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to delete file');
+      }
+      const updatedList = data.attachedFilesList || [];
+      setViewRow(prev => prev ? { ...prev, attachedFilesList: updatedList } : prev);
+      setRows(prevRows => prevRows.map(r => {
+        if ((r.id || r._id) === submissionId) {
+          return { ...r, attachedFilesList: updatedList };
+        }
+        return r;
+      }));
+    } catch (err) {
+      console.error('Error deleting file:', err);
+      alert(err.message || 'Failed to remove file');
+    } finally {
+      setDeletingFileIdx(null);
+    }
+  };
 
   useEffect(() => {
     if (!initialData || initialData.length === 0) {
@@ -311,7 +675,12 @@ export default function HireUsTableClient({ initialData = [], apiBase = process.
   async function handleOpenView(row, idx) {
     const inquiryNo = getGlobalIndex(idx);
     setViewRow({ ...row, inquiryNo });
+    setModalView('details');
     setAdminNoteInput(row.adminNotes || row.statusNote || '');
+    setShowReplyComposer(false);
+    setEmailSendSuccess('');
+    setEmailSendError('');
+    setReplyMessage('');
 
     if (!row.isRead) {
       const targetId = row.id || row._id;
@@ -633,6 +1002,28 @@ export default function HireUsTableClient({ initialData = [], apiBase = process.
                           </span>
                           {s.experienceLevel && <span className="text-gray-400">• {s.experienceLevel}</span>}
                         </div>
+
+                        {/* File & Links indicator badges */}
+                        <div className="flex items-center gap-1.5 pt-0.5 flex-wrap">
+                          {Array.isArray(s.attachedFilesList) && s.attachedFilesList.length > 0 && (
+                            <span
+                              className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200"
+                              title={`${s.attachedFilesList.length} file(s) attached`}
+                            >
+                              <Paperclip className="w-2.5 h-2.5 text-emerald-600" />
+                              <span>{s.attachedFilesList.length} {s.attachedFilesList.length === 1 ? 'file' : 'files'}</span>
+                            </span>
+                          )}
+                          {s.referenceLinks && (
+                            <span
+                              className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200"
+                              title="External documentation links provided"
+                            >
+                              <Link2 className="w-2.5 h-2.5 text-blue-600" />
+                              <span>Links</span>
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </td>
 
@@ -741,10 +1132,10 @@ export default function HireUsTableClient({ initialData = [], apiBase = process.
                 </div>
                 <div>
                   <h2 className="text-white text-base sm:text-lg font-bold leading-tight">
-                    Hire Requirement Details
+                    {modalView === 'summary' ? 'Compiled Requirement Summary' : 'Hire Requirement Details'}
                   </h2>
                   <p className="text-white/80 text-[11px] font-medium">
-                    Inquiry #{viewRow.inquiryNo} &bull; {viewRow.requirementType || 'Dedicated Resource'}
+                    Inquiry #{viewRow.inquiryNo} &bull; {viewRow.requirementType || 'Dedicated Resource'}{modalView === 'summary' ? ' • Summary View' : ''}
                   </p>
                 </div>
               </div>
@@ -825,35 +1216,252 @@ export default function HireUsTableClient({ initialData = [], apiBase = process.
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 shrink-0">
-                  {viewRow.email && (
-                    <a
-                      href={`mailto:${viewRow.email}`}
-                      className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 bg-white hover:bg-gray-100 border border-gray-300 rounded-lg text-xs font-semibold text-gray-700 shadow-2xs transition-all cursor-pointer"
+                <div className="flex flex-col items-stretch sm:items-end gap-2 shrink-0">
+                  <div className="flex items-center gap-2">
+                    {viewRow.email && (
+                      <button
+                        type="button"
+                        onClick={handleToggleReplyComposer}
+                        className={`inline-flex items-center justify-center gap-1.5 px-3.5 py-2 border rounded-lg text-xs font-semibold shadow-2xs transition-all cursor-pointer flex-1 sm:flex-initial ${
+                          showReplyComposer
+                            ? 'bg-[#34953C] text-white border-[#34953C] shadow-xs'
+                            : 'bg-white hover:bg-gray-100 border-gray-300 text-gray-700'
+                        }`}
+                        title="Reply directly via email without leaving the admin panel"
+                      >
+                        <Mail className={`w-3.5 h-3.5 ${showReplyComposer ? 'text-white' : 'text-gray-500'}`} />
+                        <span>Reply Email</span>
+                      </button>
+                    )}
+                    {viewRow.whatsapp && (
+                      <a
+                        href={`https://wa.me/${viewRow.whatsapp.replace(/[^0-9]/g, '')}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-800 rounded-lg text-xs font-semibold shadow-2xs transition-all cursor-pointer flex-1 sm:flex-initial"
+                      >
+                        <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />
+                        <span>WhatsApp</span>
+                      </a>
+                    )}
+                  </div>
+
+                  {/* Dedicated View Summary / Back to Details Button (Positioned at bottom of Reply Email section) */}
+                  {modalView === 'details' ? (
+                    <button
+                      type="button"
+                      onClick={() => setModalView('summary')}
+                      className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-[#34953C] hover:bg-[#2b7e32] text-white rounded-lg text-xs font-bold shadow-xs hover:shadow-md transition-all cursor-pointer w-full sm:w-auto"
+                      title="View Complete Compiled Requirement Summary"
                     >
-                      <Mail className="w-3.5 h-3.5 text-gray-500" />
-                      <span>Reply via Email</span>
-                    </a>
-                  )}
-                  {viewRow.whatsapp && (
-                    <a
-                      href={`https://wa.me/${viewRow.whatsapp.replace(/[^0-9]/g, '')}`}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-800 rounded-lg text-xs font-semibold shadow-2xs transition-all cursor-pointer"
+                      <FileText className="w-3.5 h-3.5" />
+                      <span>View Summary</span>
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setModalView('details')}
+                      className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-gray-900 hover:bg-gray-800 text-white rounded-lg text-xs font-bold shadow-xs transition-all cursor-pointer w-full sm:w-auto"
+                      title="Return to details"
                     >
-                      <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />
-                      <span>WhatsApp</span>
-                    </a>
+                      <ArrowLeft className="w-3.5 h-3.5" />
+                      <span>Back to Details</span>
+                    </button>
                   )}
                 </div>
               </div>
 
-              {/* 2. Structured Key Info Grid (All Client Form Fields cleanly presented) */}
-              <div>
-                <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400 block mb-2.5">
-                  Client Talent Specifications
-                </span>
+              {/* INTERACTIVE REPLY EMAIL COMPOSER */}
+              {showReplyComposer && (
+                <div className="p-4 sm:p-5 bg-white rounded-2xl border-2 border-[#34953C]/30 shadow-md space-y-4 animate-in fade-in slide-in-from-top-2 duration-150">
+                  <div className="flex items-start justify-between gap-3 border-b border-gray-100 pb-3">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-lg bg-[#34953C]/10 text-[#34953C] flex items-center justify-center shrink-0">
+                        <Mail className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <h4 className="text-xs font-bold text-gray-900 font-jakarta flex items-center gap-2">
+                          <span>Reply Email</span>
+                          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            Direct Outbound Mail
+                          </span>
+                        </h4>
+                        <p className="text-[11px] text-gray-500 font-jakarta mt-0.5">
+                          Recipient auto-populated from submission: <strong className="text-gray-800">{replyTo}</strong>
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setShowReplyComposer(false)}
+                      className="p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer"
+                      title="Close reply composer"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                  {/* Feedback Banners */}
+                  {emailSendError && (
+                    <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl flex items-start gap-2.5 text-xs text-rose-700 animate-in fade-in">
+                      <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+                      <div className="flex-1">
+                        <span className="font-semibold block">Failed to send reply:</span>
+                        <span>{emailSendError}</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setEmailSendError('')}
+                        className="text-rose-400 hover:text-rose-700 cursor-pointer p-0.5"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  )}
+
+                  {emailSendSuccess && (
+                    <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl flex items-start gap-2.5 text-xs text-emerald-800 animate-in fade-in">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                      <div className="flex-1">
+                        <span className="font-semibold block">Success:</span>
+                        <span>{emailSendSuccess}</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setEmailSendSuccess('')}
+                        className="text-emerald-500 hover:text-emerald-800 cursor-pointer p-0.5"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Form fields */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {/* Recipient */}
+                    <div>
+                      <label className="block text-[11px] font-bold text-gray-700 uppercase tracking-wider mb-1">
+                        To (Recipient Email)
+                      </label>
+                      <input
+                        type="email"
+                        value={replyTo}
+                        onChange={(e) => setReplyTo(e.target.value)}
+                        disabled={isSendingEmail}
+                        className="w-full px-3 py-2 text-xs text-gray-900 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-[#34953C] focus:bg-white disabled:opacity-60"
+                        placeholder="recipient@example.com"
+                      />
+                    </div>
+
+                    {/* Recipient Name */}
+                    <div>
+                      <label className="block text-[11px] font-bold text-gray-700 uppercase tracking-wider mb-1">
+                        Recipient Name
+                      </label>
+                      <input
+                        type="text"
+                        value={replyToName}
+                        onChange={(e) => setReplyToName(e.target.value)}
+                        disabled={isSendingEmail}
+                        className="w-full px-3 py-2 text-xs text-gray-900 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-[#34953C] focus:bg-white disabled:opacity-60"
+                        placeholder="Client Name"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Subject Line & Templates */}
+                  <div className="space-y-1.5">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
+                      <label className="block text-[11px] font-bold text-gray-700 uppercase tracking-wider">
+                        Subject Line
+                      </label>
+                      {/* Quick Template pills */}
+                      <div className="flex items-center gap-1.5 overflow-x-auto text-[11px]">
+                        <span className="text-gray-400 font-medium text-[10px]">Templates:</span>
+                        {replyTemplates.map((tmpl) => (
+                          <button
+                            key={tmpl.id}
+                            type="button"
+                            onClick={() => handleApplyReplyTemplate(tmpl)}
+                            disabled={isSendingEmail}
+                            className="px-2 py-0.5 bg-gray-100 hover:bg-[#34953C]/10 hover:text-[#34953C] border border-gray-200 rounded text-[10px] font-semibold text-gray-600 transition-colors cursor-pointer shrink-0 disabled:opacity-50"
+                            title={`Apply: ${tmpl.label}`}
+                          >
+                            {tmpl.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <input
+                      type="text"
+                      value={replySubject}
+                      onChange={(e) => setReplySubject(e.target.value)}
+                      disabled={isSendingEmail}
+                      className="w-full px-3 py-2 text-xs text-gray-900 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-[#34953C] focus:ring-1 focus:ring-[#34953C] disabled:opacity-60"
+                      placeholder="Email subject..."
+                    />
+                  </div>
+
+                  {/* Message Body */}
+                  <div>
+                    <label className="block text-[11px] font-bold text-gray-700 uppercase tracking-wider mb-1">
+                      Email Message
+                    </label>
+                    <textarea
+                      rows={7}
+                      value={replyMessage}
+                      onChange={(e) => setReplyMessage(e.target.value)}
+                      disabled={isSendingEmail}
+                      className="w-full p-3 text-xs text-gray-900 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-[#34953C] focus:ring-1 focus:ring-[#34953C] leading-relaxed custom-scrollbar disabled:opacity-60"
+                      placeholder="Type your response to the user here..."
+                    />
+                  </div>
+
+                  {/* Actions Bar */}
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 pt-2 border-t border-gray-100">
+                    <span className="text-[11px] text-gray-400">
+                      Dispatched from official mail service. Logged in communication history.
+                    </span>
+                    <div className="flex items-center gap-2 self-end sm:self-auto">
+                      <button
+                        type="button"
+                        onClick={() => setShowReplyComposer(false)}
+                        disabled={isSendingEmail}
+                        className="px-3.5 py-2 text-xs font-semibold text-gray-600 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors cursor-pointer disabled:opacity-50"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleSendEmailReply}
+                        disabled={isSendingEmail}
+                        className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-[#34953C] hover:bg-[#2b7e32] disabled:opacity-60 disabled:cursor-not-allowed text-white rounded-lg text-xs font-bold shadow-xs hover:shadow-md transition-all cursor-pointer min-w-[110px]"
+                      >
+                        {isSendingEmail ? (
+                          <>
+                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                            <span>Sending...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Send className="w-3.5 h-3.5" />
+                            <span>Send Email</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* VIEW 1: Standard Details (Summary hidden by default) */}
+              {modalView === 'details' && (
+                <>
+                  {/* 2. Structured Key Info Grid (All Client Form Fields cleanly presented) */}
+                  <div>
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400 block mb-2.5">
+                      Client Talent Specifications
+                    </span>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
 
@@ -1076,94 +1684,269 @@ export default function HireUsTableClient({ initialData = [], apiBase = process.
                 </div>
               </div>
 
-              {/* Reference Links & Attached Files (if any) */}
-              {(viewRow.referenceLinks || (Array.isArray(viewRow.attachedFilesList) && viewRow.attachedFilesList.length > 0)) && (
-                <div className="p-4 sm:p-5 bg-white rounded-xl border border-gray-200 shadow-2xs space-y-3">
-                  <div className="flex items-center gap-1.5 text-gray-400">
+              {/* Reference Links & Attached Files Section */}
+              <div className="p-4 sm:p-5 bg-white rounded-xl border border-gray-200 shadow-2xs space-y-4">
+                <div className="flex items-center justify-between flex-wrap gap-2">
+                  <div className="flex items-center gap-1.5 text-gray-700">
                     <FileCheck className="w-4 h-4 text-[#34953C]" />
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400">
-                      Documentation Links & Attachments
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-gray-700">
+                      Documentation, Attachments & Reference Links
                     </span>
                   </div>
+                  {/* Admin File Upload Trigger */}
+                  <label className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-[#2b7e32] rounded-lg text-xs font-bold transition cursor-pointer shadow-2xs">
+                    {isUploadingFile ? (
+                      <Loader2 className="w-3.5 h-3.5 animate-spin text-emerald-700" />
+                    ) : (
+                      <Upload className="w-3.5 h-3.5 text-emerald-700" />
+                    )}
+                    <span>{isUploadingFile ? 'Uploading...' : 'Attach Document'}</span>
+                    <input
+                      type="file"
+                      multiple
+                      disabled={isUploadingFile}
+                      className="hidden"
+                      onChange={(e) => {
+                        const files = e.target.files;
+                        if (files && files.length > 0) {
+                          handleAdminFileUpload(viewRow.id || viewRow._id, files);
+                        }
+                        e.target.value = '';
+                      }}
+                      accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip,.rar,.7z,.tar,.gz,.jpg,.jpeg,.png,.webp,.fig,.txt,.csv,.rtf"
+                    />
+                  </label>
+                </div>
 
-                  {viewRow.referenceLinks && (
-                    <div className="text-xs">
-                      <span className="text-gray-500 block mb-0.5">Reference Links:</span>
-                      <a
-                        href={viewRow.referenceLinks.startsWith('http') ? viewRow.referenceLinks : `https://${viewRow.referenceLinks}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-blue-600 hover:underline inline-flex items-center gap-1 font-semibold break-all"
-                      >
-                        <Link2 className="w-3.5 h-3.5 shrink-0" />
-                        <span>{viewRow.referenceLinks}</span>
-                        <ExternalLink className="w-3 h-3 shrink-0" />
-                      </a>
-                    </div>
-                  )}
+                {uploadError && (
+                  <div className="p-2.5 bg-red-50 border border-red-200 text-red-700 rounded-lg text-xs font-medium flex items-center gap-2">
+                    <AlertTriangle className="w-4 h-4 shrink-0 text-red-600" />
+                    <span>{uploadError}</span>
+                  </div>
+                )}
 
-                  {Array.isArray(viewRow.attachedFilesList) && viewRow.attachedFilesList.length > 0 && (
-                    <div>
-                      <span className="text-gray-500 text-xs block mb-1.5">Attached Files ({viewRow.attachedFilesList.length}):</span>
+                {/* Reference Links List */}
+                {(() => {
+                  const parsedRefLinks = parseReferenceLinks(viewRow.referenceLinks);
+                  if (parsedRefLinks.length === 0) return null;
+
+                  return (
+                    <div className="space-y-1.5">
+                      <span className="text-gray-500 text-xs font-semibold block">
+                        External Reference Links ({parsedRefLinks.length}):
+                      </span>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        {viewRow.attachedFilesList.map((file, fIdx) => (
-                          <div key={fIdx} className="p-2.5 rounded-lg border border-gray-200 bg-gray-50/70 flex items-center justify-between text-xs">
-                            <div className="flex items-center gap-2 truncate">
-                              <FileText className="w-4 h-4 text-[#34953C] shrink-0" />
-                              <div className="truncate">
-                                <span className="font-semibold text-gray-800 block truncate">{file.name}</span>
-                                {file.docType && <span className="text-[10px] text-gray-500">[{file.docType}]</span>}
+                        {parsedRefLinks.map((item, lIdx) => (
+                          <div
+                            key={lIdx}
+                            className="p-2.5 rounded-lg border border-gray-200 bg-gray-50/70 flex items-center justify-between gap-2 text-xs"
+                          >
+                            <div className="flex items-center gap-2 truncate min-w-0">
+                              <Link2 className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                              <div className="truncate min-w-0">
+                                <span className="font-semibold text-gray-800 block truncate" title={item.url}>
+                                  {item.original}
+                                </span>
+                                <span className={`inline-block px-1.5 py-0.5 rounded text-[9px] font-bold border ${item.tagColor}`}>
+                                  {item.tag}
+                                </span>
                               </div>
                             </div>
-                            {file.size && (
-                              <span className="text-[10px] text-gray-400 shrink-0 ml-2">
-                                {(file.size / 1024).toFixed(0)} KB
-                              </span>
-                            )}
+                            <div className="flex items-center gap-1 shrink-0">
+                              <button
+                                type="button"
+                                onClick={() => copyToClipboard(item.url, `ref-${lIdx}`)}
+                                className="p-1 hover:bg-gray-200 rounded text-gray-500 hover:text-gray-700 transition"
+                                title="Copy URL"
+                              >
+                                {copiedKey === `ref-${lIdx}` ? (
+                                  <Check className="w-3.5 h-3.5 text-emerald-600" />
+                                ) : (
+                                  <Copy className="w-3.5 h-3.5" />
+                                )}
+                              </button>
+                              <a
+                                href={item.url}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-white hover:bg-blue-50 border border-gray-200 text-blue-600 font-bold text-[11px] transition shadow-2xs"
+                                title="Open in new tab"
+                              >
+                                <span>Open</span>
+                                <ExternalLink className="w-3 h-3" />
+                              </a>
+                            </div>
                           </div>
                         ))}
                       </div>
                     </div>
-                  )}
-                </div>
-              )}
+                  );
+                })()}
 
-              {/* 3. Compiled Specifications Message Box (Matching Contact Submissions Message Box) */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400">
-                    Compiled Requirement Summary
-                  </span>
-                  <div className="flex items-center gap-2">
-                    {viewRow.message && (
-                      <span className="text-[11px] text-gray-400 font-medium">
-                        {viewRow.message.length} characters
-                      </span>
-                    )}
-                    <button
-                      onClick={() => copyToClipboard(viewRow.message, 'specMessage')}
-                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded text-xs font-semibold bg-gray-100 hover:bg-gray-200 text-gray-700 transition cursor-pointer"
-                    >
-                      {copiedKey === 'specMessage' ? (
-                        <>
-                          <Check className="w-3.5 h-3.5 text-emerald-600" />
-                          <span>Copied</span>
-                        </>
-                      ) : (
-                        <>
-                          <Copy className="w-3.5 h-3.5" />
-                          <span>Copy</span>
-                        </>
-                      )}
-                    </button>
+                {/* Attached Files List */}
+                {Array.isArray(viewRow.attachedFilesList) && viewRow.attachedFilesList.length > 0 ? (
+                  <div className="space-y-2">
+                    <span className="text-gray-500 text-xs font-semibold block">
+                      Attached Documents ({viewRow.attachedFilesList.length}):
+                    </span>
+                    <div className="grid grid-cols-1 gap-2.5">
+                      {viewRow.attachedFilesList.map((file, fIdx) => {
+                        const targetSubmissionId = viewRow.id || viewRow._id;
+                        const originalName = file.name || file.fileName || 'Untitled Document';
+                        const badgeInfo = getFileBadge(originalName);
+                        const hasStorage = Boolean(file.url || file.fileUrl || file.localPath || file.cloudinaryUrl);
+                        const fileQuery = file.id ? `fileId=${encodeURIComponent(file.id)}` : `index=${fIdx}`;
+                        const previewUrl = `/api/hire-submissions/${targetSubmissionId}/files?${fileQuery}`;
+                        const downloadUrl = `/api/hire-submissions/${targetSubmissionId}/files?${fileQuery}&download=1`;
+                        const isDeleting = deletingFileIdx === fIdx;
+
+                        return (
+                          <div
+                            key={fIdx}
+                            className="p-3 rounded-xl border border-gray-200 bg-gray-50/60 hover:bg-white hover:border-gray-300 transition flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs shadow-2xs"
+                          >
+                            {/* File info */}
+                            <div className="flex items-start sm:items-center gap-3 min-w-0 flex-1">
+                              <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 border ${badgeInfo.bg}`}>
+                                {badgeInfo.isPdf ? (
+                                  <FileText className={`w-4 h-4 ${badgeInfo.iconColor}`} />
+                                ) : badgeInfo.isImage ? (
+                                  <ImageIcon className={`w-4 h-4 ${badgeInfo.iconColor}`} />
+                                ) : badgeInfo.isExcel ? (
+                                  <FileSpreadsheet className={`w-4 h-4 ${badgeInfo.iconColor}`} />
+                                ) : badgeInfo.isArchive ? (
+                                  <Archive className={`w-4 h-4 ${badgeInfo.iconColor}`} />
+                                ) : (
+                                  <FileText className={`w-4 h-4 ${badgeInfo.iconColor}`} />
+                                )}
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <div className="flex items-center gap-2 flex-wrap">
+                                  <span className="font-bold text-gray-900 truncate max-w-[260px] sm:max-w-[340px]" title={originalName}>
+                                    {originalName}
+                                  </span>
+                                  <span className={`px-1.5 py-0.5 rounded text-[10px] font-extrabold border uppercase tracking-wider ${badgeInfo.bg}`}>
+                                    {badgeInfo.ext}
+                                  </span>
+                                  {file.docType && (
+                                    <span className="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-gray-100 text-gray-600 border border-gray-200">
+                                      {file.docType}
+                                    </span>
+                                  )}
+                                </div>
+                                <div className="flex items-center gap-2 mt-1 text-[11px] text-gray-400 flex-wrap">
+                                  {file.size && <span>{formatBytes(file.size)}</span>}
+                                  {file.uploadedAt && <span>• Uploaded {new Date(file.uploadedAt).toLocaleDateString()}</span>}
+                                  {!hasStorage && (
+                                    <span className="inline-flex items-center gap-1 text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200 font-semibold text-[10px]">
+                                      <AlertTriangle className="w-3 h-3 text-amber-600" />
+                                      <span>Legacy metadata only (content not stored on server)</span>
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Actions */}
+                            <div className="flex items-center gap-1.5 shrink-0 self-end sm:self-center">
+                              {hasStorage ? (
+                                <>
+                                  <a
+                                    href={previewUrl}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-white hover:bg-gray-100 border border-gray-300 text-gray-700 font-bold text-xs transition shadow-2xs cursor-pointer"
+                                    title="Open or preview file in new tab"
+                                  >
+                                    <Eye className="w-3.5 h-3.5 text-gray-500" />
+                                    <span>Preview</span>
+                                  </a>
+
+                                  <a
+                                    href={downloadUrl}
+                                    download={originalName}
+                                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#34953C] hover:bg-[#2b7e32] text-white font-bold text-xs transition shadow-2xs cursor-pointer"
+                                    title="Download file directly"
+                                  >
+                                    <Download className="w-3.5 h-3.5" />
+                                    <span>Download</span>
+                                  </a>
+
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      const fullUrl = window.location.origin + downloadUrl;
+                                      copyToClipboard(fullUrl, `file-${file.id || fIdx}`);
+                                    }}
+                                    className="p-1.5 hover:bg-gray-200 rounded-lg text-gray-500 transition cursor-pointer"
+                                    title="Copy download URL"
+                                  >
+                                    {copiedKey === `file-${file.id || fIdx}` ? (
+                                      <Check className="w-3.5 h-3.5 text-emerald-600" />
+                                    ) : (
+                                      <Copy className="w-3.5 h-3.5" />
+                                    )}
+                                  </button>
+                                </>
+                              ) : (
+                                <div className="flex items-center gap-2 flex-wrap">
+                                  <span
+                                    className="text-[11px] text-amber-700 bg-amber-50 px-2 py-1 rounded border border-amber-200 italic"
+                                    title="Original file was submitted as metadata before file storage was active on server."
+                                  >
+                                    File content unavailable
+                                  </span>
+
+                                  <label
+                                    className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#34953C] hover:bg-[#2b7e32] text-white font-bold text-xs transition shadow-2xs cursor-pointer"
+                                    title="Upload the document file for this entry"
+                                  >
+                                    <Upload className="w-3.5 h-3.5 text-white" />
+                                    <span>Upload File</span>
+                                    <input
+                                      type="file"
+                                      disabled={isUploadingFile}
+                                      className="hidden"
+                                      onChange={(e) => {
+                                        const fls = e.target.files;
+                                        if (fls && fls.length > 0) {
+                                          handleAdminFileUpload(targetSubmissionId, fls, fIdx, file.docType);
+                                        }
+                                        e.target.value = '';
+                                      }}
+                                      accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip,.rar,.7z,.tar,.gz,.jpg,.jpeg,.png,.webp,.fig,.txt,.csv,.rtf"
+                                    />
+                                  </label>
+                                </div>
+                              )}
+
+                              <button
+                                type="button"
+                                disabled={isDeleting}
+                                onClick={() => handleAdminFileDelete(targetSubmissionId, fIdx, file.id)}
+                                className="p-1.5 text-gray-400 hover:text-red-600 rounded-lg transition hover:bg-red-50 cursor-pointer"
+                                title="Remove file"
+                              >
+                                {isDeleting ? (
+                                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                ) : (
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                )}
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
-                <div className="bg-gray-50/90 rounded-xl p-4 sm:p-5 text-xs sm:text-sm text-gray-800 whitespace-pre-wrap break-words border border-gray-200/80 leading-relaxed font-mono min-h-[90px]">
-                  {viewRow.message || <span className="text-gray-400 italic">No message summary compiled.</span>}
-                </div>
+                ) : (
+                  <div className="p-3 bg-gray-50 rounded-lg border border-dashed border-gray-200 text-center text-xs text-gray-400">
+                    No files attached to this submission. Click &quot;Attach Document&quot; above to add files.
+                  </div>
+                )}
               </div>
 
-              {/* 4. Internal Admin Notes & Audit Trail */}
+              {/* 3. Internal Admin Notes & Audit Trail */}
               <div className="p-4 sm:p-5 bg-white rounded-xl border border-gray-200 shadow-2xs space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400">
@@ -1202,52 +1985,256 @@ export default function HireUsTableClient({ initialData = [], apiBase = process.
                   </button>
                 </div>
               </div>
+            </>
+          )}
 
-            </div>
+          {/* VIEW 2: Complete Compiled Requirement Summary View (Displayed only upon clicking View Summary) */}
+          {modalView === 'summary' && (() => {
+            const rawServices = viewRow.services || viewRow.details?.services;
+            const servicesArr = Array.isArray(rawServices) ? rawServices : (rawServices ? [rawServices] : []);
+            const otherSrv = viewRow.otherService || viewRow.details?.otherService;
+            const allServices = [...servicesArr, ...(otherSrv ? [`Other: ${otherSrv}`] : [])];
+            const servicesText = allServices.length > 0 ? allServices.join(', ') : 'None';
 
-            {/* Modal Footer - Structured like Contact Submissions */}
-            <div className="px-6 sm:px-8 py-3.5 bg-gray-50 border-t border-gray-200 flex items-center justify-between gap-3 shrink-0">
-              <div className="flex items-center gap-3">
-                <span className="text-xs text-gray-400 font-medium hidden sm:inline">
-                  Inquiry #{viewRow.inquiryNo} &bull; {viewRow.status || 'Pending'}
-                </span>
-                <button
-                  onClick={() => setDeleteCandidate(viewRow)}
-                  className="text-xs font-semibold text-red-600 hover:text-red-700 hover:underline flex items-center gap-1 cursor-pointer"
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                  <span>Delete</span>
-                </button>
+            const exactCount = viewRow.exactResourceCount || viewRow.details?.exactResourceCount;
+            const resourceCountText = `${viewRow.resourceCount || '1'} (Exact: ${exactCount || 'N/A'})`;
+
+            const workArr = viewRow.workArrangement || 'Remote';
+            const loc = viewRow.requiredLocation || viewRow.city || (viewRow.arrangementCountry ? `${viewRow.city ? viewRow.city + ', ' : ''}${viewRow.arrangementCountry}` : '');
+            const tz = viewRow.timeZone || '';
+            const arrDetails = [loc, tz].filter(Boolean).join(', ');
+            const arrangementText = arrDetails ? `${workArr} (${arrDetails})` : workArr;
+
+            const workingHours = viewRow.workingHours || 'Full-Time';
+            const hDay = viewRow.hoursPerDay || '8';
+            const hWeek = viewRow.hoursPerWeek || '40';
+            const days = viewRow.workingDays || 'Monday–Friday';
+            const scheduleText = `${workingHours} (${hDay} Hours/Day – ${hWeek}h/week), ${days}`;
+
+            const dur = viewRow.duration || 'Flexible';
+            const start = viewRow.startDate || 'Immediate';
+            const end = viewRow.endDate || 'Flexible';
+            const durationText = `${dur} (Start: ${start}, End: ${end})`;
+
+            let budgetText = viewRow.budget || '';
+            if (!budgetText) {
+              const bType = viewRow.budgetType ? `${viewRow.budgetType}: ` : '';
+              const curr = viewRow.currency || 'USD';
+              const min = viewRow.minBudget || 'N/A';
+              const max = viewRow.maxBudget || 'N/A';
+              budgetText = `${bType}${curr} ${min} – ${max}`;
+            }
+
+            const hasTeam = viewRow.hasInternalTeam || 'No';
+            const rawRoles = viewRow.existingTeamRoles || viewRow.details?.existingTeamRoles;
+            const rolesArr = Array.isArray(rawRoles) ? rawRoles : [];
+            const otherRole = viewRow.otherTeamRole || viewRow.details?.otherTeamRole;
+            const allRoles = [...rolesArr, ...(otherRole ? [`Other: ${otherRole}`] : [])];
+            const teamRolesStr = allRoles.join(', ');
+            const internalTeamText = teamRolesStr ? `${hasTeam} (${teamRolesStr})` : hasTeam;
+
+            const mgr = viewRow.teamManager || 'Client';
+            const freq = viewRow.meetingFrequency || 'Weekly Review';
+            const managementText = `${mgr} (${freq})`;
+
+            const rawComm = viewRow.communicationMethods || viewRow.details?.communicationMethods;
+            const commText = Array.isArray(rawComm) && rawComm.length > 0 ? rawComm.join(', ') : (rawComm || 'None');
+
+            const hasDoc = viewRow.hasDocumentation || 'No';
+            const rawDocs = viewRow.documentationTypes || viewRow.details?.documentationTypes;
+            const docsArr = Array.isArray(rawDocs) ? rawDocs : [];
+            const docsStr = docsArr.join(', ');
+            const documentationText = docsStr ? `${hasDoc} (${docsStr})` : hasDoc;
+
+            const rawRefs = viewRow.referralSources || viewRow.details?.referralSources;
+            const refsStr = Array.isArray(rawRefs) ? rawRefs.join(', ') : (rawRefs || 'Direct');
+            const otherRef = viewRow.otherReferral || viewRow.details?.otherReferral;
+            const foundUsText = otherRef ? `${refsStr} (${otherRef})` : refsStr;
+
+            const parsedLinks = parseReferenceLinks(viewRow.referenceLinks);
+            const attachedFiles = Array.isArray(viewRow.attachedFilesList) ? viewRow.attachedFilesList : (Array.isArray(viewRow.files) ? viewRow.files : []);
+
+            return (
+              <div className="animate-in fade-in duration-150">
+                {/* Continuous Simple Key: Value List (No separate cards or section blocks) */}
+                <div className="bg-white rounded-xl border border-gray-200 shadow-2xs overflow-hidden">
+                  <div className="divide-y divide-gray-100 text-xs">
+                    <SummaryKeyValueRow label="Requirement Type" value={viewRow.requirementType || 'Dedicated Resource'} />
+                    <SummaryKeyValueRow label="Selected Services" value={servicesText} />
+                    <SummaryKeyValueRow label="Resources Count" value={resourceCountText} />
+                    <SummaryKeyValueRow label="Experience Level" value={viewRow.experienceLevel || 'Not specified'} />
+                    <SummaryKeyValueRow label="Arrangement" value={arrangementText} />
+                    <SummaryKeyValueRow label="Schedule" value={scheduleText} />
+                    <SummaryKeyValueRow label="Duration" value={durationText} />
+                    <SummaryKeyValueRow label="Budget" value={budgetText} />
+                    <SummaryKeyValueRow label="Internal Team" value={internalTeamText} />
+                    <SummaryKeyValueRow label="Management" value={managementText} />
+                    <SummaryKeyValueRow label="Preferred Communication" value={commText} />
+                    <SummaryKeyValueRow label="Documentation" value={documentationText} />
+                    <SummaryKeyValueRow label="Reference Links">
+                      {parsedLinks.length > 0 ? (
+                        <div className="flex flex-wrap items-center gap-2">
+                          {parsedLinks.map((item, idx) => (
+                            <span key={idx} className="inline-flex items-center gap-1.5">
+                              <a
+                                href={item.url}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-blue-600 hover:underline font-semibold"
+                              >
+                                {item.original}
+                              </a>
+                              {idx < parsedLinks.length - 1 && <span className="text-gray-300">,</span>}
+                            </span>
+                          ))}
+                        </div>
+                      ) : (
+                        <span>{viewRow.referenceLinks ? viewRow.referenceLinks.trim() : 'None'}</span>
+                      )}
+                    </SummaryKeyValueRow>
+                    <SummaryKeyValueRow label="Name" value={viewRow.fullName || viewRow.name || 'Anonymous Client'} />
+                    <SummaryKeyValueRow label="Job Title" value={viewRow.jobTitle || 'N/A'} />
+                    <SummaryKeyValueRow label="Email">
+                      {viewRow.email ? (
+                        <a href={`mailto:${viewRow.email}`} className="text-[#34953C] hover:underline font-mono">
+                          {viewRow.email}
+                        </a>
+                      ) : (
+                        <span>N/A</span>
+                      )}
+                    </SummaryKeyValueRow>
+                    <SummaryKeyValueRow label="Phone">
+                      {viewRow.phone ? (
+                        <a href={`tel:${viewRow.phone}`} className="text-gray-900 hover:text-[#34953C] font-semibold">
+                          {viewRow.phone}
+                        </a>
+                      ) : (
+                        <span>N/A</span>
+                      )}
+                    </SummaryKeyValueRow>
+                    <SummaryKeyValueRow label="WhatsApp">
+                      {viewRow.whatsapp ? (
+                        <a
+                          href={`https://wa.me/${viewRow.whatsapp.replace(/[^0-9]/g, '')}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-emerald-700 hover:underline font-semibold"
+                        >
+                          {viewRow.whatsapp}
+                        </a>
+                      ) : (
+                        <span>N/A</span>
+                      )}
+                    </SummaryKeyValueRow>
+                    <SummaryKeyValueRow label="Country" value={viewRow.country || 'N/A'} />
+                    <SummaryKeyValueRow label="Contact Method" value={viewRow.preferredContactMethod || 'Email'} />
+                    <SummaryKeyValueRow label="Best Time" value={viewRow.bestTimeToContact || 'Any Time'} />
+                    <SummaryKeyValueRow label="Found Us Via" value={foundUsText} />
+                    <SummaryKeyValueRow label="Attached Files">
+                      {attachedFiles.length > 0 ? (
+                        <div className="flex flex-wrap items-center gap-2">
+                          {attachedFiles.map((f, fIdx) => {
+                            const targetSubmissionId = viewRow.id || viewRow._id;
+                            const fileQuery = f.id ? `fileId=${encodeURIComponent(f.id)}` : `index=${fIdx}`;
+                            const downloadUrl = `/api/hire-submissions/${targetSubmissionId}/files?${fileQuery}&download=1`;
+                            const hasStorage = Boolean(f.url || f.fileUrl || f.localPath || f.cloudinaryUrl);
+                            const fileName = f.name || f.fileName || f.filename || `Document_${fIdx + 1}`;
+                            const docTypeStr = f.docType ? ` [${f.docType}]` : '';
+                            return (
+                              <span key={fIdx} className="inline-flex items-center gap-1.5">
+                                {hasStorage ? (
+                                  <a
+                                    href={downloadUrl}
+                                    download={fileName}
+                                    className="text-[#34953C] hover:underline font-semibold"
+                                    title="Download file"
+                                  >
+                                    {fileName}{docTypeStr}
+                                  </a>
+                                ) : (
+                                  <span>{fileName}{docTypeStr}</span>
+                                )}
+                                {fIdx < attachedFiles.length - 1 && <span className="text-gray-300">,</span>}
+                              </span>
+                            );
+                          })}
+                        </div>
+                      ) : (
+                        <span>None</span>
+                      )}
+                    </SummaryKeyValueRow>
+                  </div>
+                </div>
               </div>
+            );
+          })()}
 
-              <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end">
-                {viewRow.phone && (
-                  <a
-                    href={`tel:${viewRow.phone}`}
-                    className="px-3.5 py-2 rounded-lg border border-gray-300 bg-white hover:bg-gray-100 text-gray-700 text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer"
-                  >
-                    <Phone className="w-3.5 h-3.5 text-gray-500" />
-                    <span>Call</span>
-                  </a>
-                )}
-                {viewRow.email && (
-                  <a
-                    href={`mailto:${viewRow.email}`}
-                    className="px-3.5 py-2 rounded-lg border border-gray-300 bg-white hover:bg-gray-100 text-gray-700 text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer"
-                  >
-                    <Mail className="w-3.5 h-3.5 text-gray-500" />
-                    <span>Email</span>
-                  </a>
-                )}
-                <button
-                  type="button"
-                  onClick={() => setViewRow(null)}
-                  className="px-6 py-2 bg-[#34953C] hover:bg-[#2b7e32] text-white rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-xs"
-                >
-                  Close
-                </button>
-              </div>
-            </div>
+        </div>
+
+        {/* Modal Footer - Structured like Contact Submissions */}
+        <div className="px-6 sm:px-8 py-3.5 bg-gray-50 border-t border-gray-200 flex items-center justify-between gap-3 shrink-0">
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-gray-400 font-medium hidden sm:inline">
+              Inquiry #{viewRow.inquiryNo} &bull; {viewRow.status || 'Pending'}
+            </span>
+            <button
+              onClick={() => setDeleteCandidate(viewRow)}
+              className="text-xs font-semibold text-red-600 hover:text-red-700 hover:underline flex items-center gap-1 cursor-pointer"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              <span>Delete</span>
+            </button>
+          </div>
+
+          <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end">
+            {modalView === 'details' ? (
+              <button
+                type="button"
+                onClick={() => setModalView('summary')}
+                className="px-3.5 py-2 rounded-lg border border-emerald-300 bg-emerald-50 hover:bg-emerald-100 text-[#2b7e32] text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                title="View complete compiled requirement summary"
+              >
+                <FileText className="w-3.5 h-3.5 text-emerald-700" />
+                <span>View Summary</span>
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setModalView('details')}
+                className="px-3.5 py-2 rounded-lg border border-gray-300 bg-white hover:bg-gray-100 text-gray-700 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                title="Return to details"
+              >
+                <ArrowLeft className="w-3.5 h-3.5 text-gray-500" />
+                <span>Back to Details</span>
+              </button>
+            )}
+            {viewRow.phone && (
+              <a
+                href={`tel:${viewRow.phone}`}
+                className="px-3.5 py-2 rounded-lg border border-gray-300 bg-white hover:bg-gray-100 text-gray-700 text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer"
+              >
+                <Phone className="w-3.5 h-3.5 text-gray-500" />
+                <span>Call</span>
+              </a>
+            )}
+            {viewRow.email && (
+              <a
+                href={`mailto:${viewRow.email}`}
+                className="px-3.5 py-2 rounded-lg border border-gray-300 bg-white hover:bg-gray-100 text-gray-700 text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer"
+              >
+                <Mail className="w-3.5 h-3.5 text-gray-500" />
+                <span>Email</span>
+              </a>
+            )}
+            <button
+              type="button"
+              onClick={() => setViewRow(null)}
+              className="px-6 py-2 bg-[#34953C] hover:bg-[#2b7e32] text-white rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-xs"
+            >
+              Close
+            </button>
+          </div>
+        </div>
 
           </div>
         </div>
@@ -1288,6 +2275,36 @@ export default function HireUsTableClient({ initialData = [], apiBase = process.
               >
                 {isDeleting ? 'Deleting...' : 'Yes, Delete'}
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Image Preview Lightbox */}
+      {previewImage && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
+          onClick={() => setPreviewImage(null)}
+        >
+          <div
+            className="relative max-w-4xl max-h-[90vh] bg-white rounded-2xl overflow-hidden shadow-2xl p-2"
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between p-3 border-b border-gray-100">
+              <span className="font-bold text-sm text-gray-800">{previewImage.name}</span>
+              <button
+                onClick={() => setPreviewImage(null)}
+                className="p-1 rounded-full hover:bg-gray-100 text-gray-500 transition"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="p-4 flex items-center justify-center max-h-[75vh] overflow-auto">
+              <img
+                src={previewImage.url}
+                alt={previewImage.name}
+                className="max-w-full max-h-[70vh] object-contain rounded"
+              />
             </div>
           </div>
         </div>

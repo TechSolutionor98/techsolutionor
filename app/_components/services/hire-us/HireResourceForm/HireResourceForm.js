@@ -245,6 +245,8 @@ const CURRENCIES = [
   { code: "SAR", symbol: "SAR" },
 ];
 
+const MAX_FILE_SIZE = 25 * 1024 * 1024; // 25 MB
+
 export default function HireResourceForm() {
   // Form state - exactly matching the 12 active sections
   const [formData, setFormData] = useState({
@@ -307,6 +309,9 @@ export default function HireResourceForm() {
 
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [docAttachments, setDocAttachments] = useState({});
+  const [isDraggingGeneral, setIsDraggingGeneral] = useState(false);
+  const [generalUploadError, setGeneralUploadError] = useState("");
+  const [docUploadError, setDocUploadError] = useState("");
   const [serviceSearch, setServiceSearch] = useState("");
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -664,11 +669,64 @@ export default function HireResourceForm() {
     }
   };
 
+  const filterAndValidateFiles = (fileList, onError) => {
+    const validFiles = [];
+    const oversizedFiles = [];
+
+    fileList.forEach((file) => {
+      if (file.size > MAX_FILE_SIZE) {
+        oversizedFiles.push(file);
+      } else {
+        validFiles.push(file);
+      }
+    });
+
+    if (oversizedFiles.length > 0) {
+      const details = oversizedFiles
+        .map((f) => `• "${f.name}" (${(f.size / (1024 * 1024)).toFixed(2)} MB)`)
+        .join("\n");
+      const msg = `The following file(s) exceed the 25 MB size limit and cannot be uploaded:\n\n${details}\n\nPlease select files smaller than 25 MB.`;
+
+      if (typeof window !== "undefined" && typeof window.alert === "function") {
+        window.alert(msg);
+      }
+      if (onError) {
+        onError(`File(s) exceed 25 MB limit: ${oversizedFiles.map((f) => f.name).join(", ")}`);
+      }
+    }
+
+    return validFiles;
+  };
+
+  const handleGeneralFiles = (files) => {
+    setGeneralUploadError("");
+    const validFiles = filterAndValidateFiles(files, (errMsg) => {
+      setGeneralUploadError(errMsg);
+    });
+    if (validFiles.length === 0) return;
+
+    const tagged = validFiles.map((f) => {
+      f.docType = "General Document";
+      return f;
+    });
+    setUploadedFiles((prev) => [...prev, ...tagged]);
+  };
+
   const handleDocFileChange = (docType, e) => {
     const files = Array.from(e.target.files || []);
     if (files.length === 0) return;
 
-    const taggedFiles = files.map((f) => {
+    setDocUploadError("");
+    const validFiles = filterAndValidateFiles(files, (errMsg) => {
+      setDocUploadError(`${docType}: ${errMsg}`);
+    });
+
+    if (validFiles.length === 0) {
+      e.target.value = "";
+      return;
+    }
+
+    const taggedFiles = validFiles.map((f) => {
       f.docType = docType;
       return f;
     });
@@ -714,7 +772,7 @@ export default function HireResourceForm() {
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files || []);
     if (files.length > 0) {
-      setUploadedFiles((prev) => [...prev, ...files]);
+      handleGeneralFiles(files);
     }
   };
 
@@ -900,11 +958,39 @@ Attached Files: ${uploadedFiles.map(f => f.docType ? `${f.name} [${f.docType}]` 
         },
       };
 
-      const res = await fetch("/api/hire-submissions", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+      // Gather all attached binary files from both uploadedFiles and docAttachments
+      const filesToUpload = [...uploadedFiles];
+      Object.entries(docAttachments).forEach(([dt, fList]) => {
+        if (Array.isArray(fList)) {
+          fList.forEach((fileObj) => {
+            if (!filesToUpload.includes(fileObj)) {
+              if (!fileObj.docType) fileObj.docType = dt;
+              filesToUpload.push(fileObj);
+            }
+          });
+        }
       });
+
+      let res;
+      if (filesToUpload.length > 0) {
+        const formDataToSend = new FormData();
+        formDataToSend.append("payload", JSON.stringify(payload));
+        filesToUpload.forEach((file) => {
+          formDataToSend.append("files", file);
+          formDataToSend.append("docTypes", file.docType || "General");
+        });
+
+        res = await fetch("/api/hire-submissions", {
+          method: "POST",
+          body: formDataToSend,
+        });
+      } else {
+        res = await fetch("/api/hire-submissions", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+      }
 
       const data = await res.json();
       if (!res.ok) {
@@ -930,6 +1016,9 @@ Attached Files: ${uploadedFiles.map(f => f.docType ? `${f.name} [${f.docType}]` 
     setShowVerification(false);
     setDocAttachments({});
     setUploadedFiles([]);
+    setGeneralUploadError("");
+    setDocUploadError("");
+    setIsDraggingGeneral(false);
     setPhoneDigits("");
     setFormData((prev) => ({
       ...prev,
@@ -2251,6 +2340,117 @@ Attached Files: ${uploadedFiles.map(f => f.docType ? `${f.name} [${f.docType}]` 
                   {/* Documentation Type Attachment Interface */}
                   {formData.hasDocumentation === "Yes" ? (
                     <div className="space-y-4 pt-1">
+                      {/* General Document Upload Dropzone */}
+                      <div
+                        onDragEnter={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setIsDraggingGeneral(true);
+                        }}
+                        onDragOver={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          e.dataTransfer.dropEffect = "copy";
+                          setIsDraggingGeneral(true);
+                        }}
+                        onDragLeave={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          if (!e.currentTarget.contains(e.relatedTarget)) {
+                            setIsDraggingGeneral(false);
+                          }
+                        }}
+                        onDrop={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setIsDraggingGeneral(false);
+                          const droppedFiles = Array.from(e.dataTransfer.files || []);
+                          if (droppedFiles.length > 0) {
+                            handleGeneralFiles(droppedFiles);
+                          }
+                        }}
+                        className={`p-3.5 sm:p-4 rounded-xl border border-dashed transition-all ${
+                          isDraggingGeneral
+                            ? "border-[#41B349] bg-[#41B349]/10 shadow-md ring-2 ring-[#41B349]/30"
+                            : "border-gray-300 bg-gray-50/70 hover:bg-gray-50 hover:border-[#41B349]/50"
+                        }`}
+                        aria-label="General documents upload dropzone"
+                        role="region"
+                      >
+                        <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+                          <div className="flex items-center gap-3">
+                            <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
+                              isDraggingGeneral ? "bg-[#41B349] text-white" : "bg-[#41B349]/10 text-[#41B349]"
+                            }`}>
+                              <UploadCloud className="w-5 h-5" />
+                            </div>
+                            <div>
+                              <div className="text-xs font-bold text-gray-800 font-jakarta">
+                                {isDraggingGeneral ? "Drop files here to attach" : "Attach Documents, Brief, or Resume"}
+                              </div>
+                              <div className="text-[11px] text-gray-500 font-jakarta">
+                                PDF, DOC, DOCX, XLS, PPT, ZIP, Images, Figma files up to 25MB • Drag & drop or browse
+                              </div>
+                            </div>
+                          </div>
+                          <label className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-jakarta font-semibold bg-[#41B349] hover:bg-[#369c3d] text-white shadow-2xs transition-all cursor-pointer shrink-0">
+                            <Plus className="w-3.5 h-3.5" />
+                            <span>Browse Files</span>
+                            <input
+                              type="file"
+                              multiple
+                              className="hidden"
+                              onChange={(e) => {
+                                const files = Array.from(e.target.files || []);
+                                if (files.length > 0) {
+                                  handleGeneralFiles(files);
+                                }
+                                e.target.value = "";
+                              }}
+                              accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip,.rar,.7z,.tar,.gz,.jpg,.jpeg,.png,.webp,.fig,.txt,.csv,.rtf"
+                            />
+                          </label>
+                        </div>
+
+                        {/* General upload error notice */}
+                        {generalUploadError && (
+                          <div className="mt-2.5 px-3 py-1.5 bg-red-50 border border-red-200 rounded-lg flex items-center justify-between text-xs text-red-700 font-jakarta">
+                            <span>{generalUploadError}</span>
+                            <button
+                              type="button"
+                              onClick={() => setGeneralUploadError("")}
+                              className="text-red-400 hover:text-red-600 p-0.5 ml-2 cursor-pointer"
+                              title="Dismiss error"
+                            >
+                              <X className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        )}
+
+                        {/* General uploaded files list */}
+                        {uploadedFiles.filter(f => f.docType === "General Document").length > 0 && (
+                          <div className="mt-3 pt-3 border-t border-gray-200/80 space-y-1.5">
+                            {uploadedFiles.filter(f => f.docType === "General Document").map((file, idx) => (
+                              <div key={idx} className="flex items-center justify-between px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-xs font-jakarta">
+                                <div className="flex items-center gap-2 truncate min-w-0">
+                                  <FileText className="w-3.5 h-3.5 text-[#41B349] shrink-0" />
+                                  <span className="font-semibold text-gray-800 truncate">{file.name}</span>
+                                  <span className="text-gray-400 text-[10px] shrink-0">({(file.size / 1024).toFixed(1)} KB)</span>
+                                </div>
+                                <button
+                                  type="button"
+                                  onClick={() => removeFile(uploadedFiles.indexOf(file))}
+                                  className="text-gray-400 hover:text-red-500 p-0.5 ml-2 cursor-pointer transition-colors shrink-0"
+                                  title="Remove attachment"
+                                >
+                                  <X className="w-3.5 h-3.5" />
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+
                       <div>
                         <div className="flex items-center justify-between mb-2">
                           <label className="block text-xs font-semibold text-gray-700 font-jakarta">
@@ -2260,6 +2460,21 @@ Attached Files: ${uploadedFiles.map(f => f.docType ? `${f.name} [${f.docType}]` 
                             Click <strong className="text-[#41B349] font-bold">+</strong> to attach files
                           </span>
                         </div>
+
+                        {/* Specific documentation upload error notice */}
+                        {docUploadError && (
+                          <div className="mb-2 px-3 py-1.5 bg-red-50 border border-red-200 rounded-lg flex items-center justify-between text-xs text-red-700 font-jakarta">
+                            <span>{docUploadError}</span>
+                            <button
+                              type="button"
+                              onClick={() => setDocUploadError("")}
+                              className="text-red-400 hover:text-red-600 p-0.5 ml-2 cursor-pointer"
+                              title="Dismiss error"
+                            >
+                              <X className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        )}
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[360px] overflow-y-auto pr-1.5 custom-scrollbar">
                           {DOCUMENTATION_TYPES.map((dt) => {
@@ -2305,7 +2520,7 @@ Attached Files: ${uploadedFiles.map(f => f.docType ? `${f.name} [${f.docType}]` 
                                       multiple
                                       className="hidden"
                                       onChange={(e) => handleDocFileChange(dt, e)}
-                                      accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip,.jpg,.jpeg,.png,.fig"
+                                      accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip,.rar,.7z,.tar,.gz,.jpg,.jpeg,.png,.webp,.fig,.txt,.csv,.rtf"
                                     />
                                   </label>
                                 </div>
