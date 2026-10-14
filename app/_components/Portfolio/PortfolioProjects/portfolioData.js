@@ -13,6 +13,10 @@ import p1 from '@/components/Images/portfolioimg1.png';
 import p2 from '@/components/Images/portfolioimg2.png';
 import p3 from '@/components/Images/portfolioimg3.png';
 import p4 from '@/components/Images/portfolioimg4.png';
+import pMubayaa from '@/components/Images/portfolioimg_mubayaa.png';
+import pOptimumFusion from '@/components/Images/portfolioimg_optimum_fusion.png';
+import pClickSlice from '@/components/Images/portfolioimg_click_slice.png';
+import pSeenAlif from '@/components/Images/portfolioimg_seen_alif.png';
 
 export const portfolioCategories = [
   { id: 'all', label: 'All Projects', count: 12 },
@@ -26,6 +30,7 @@ export const portfolioProjects = [
   {
     id: 1,
     slug: 'grabatoz',
+    blogUrl: '/blog/grabatoz',
     name: 'Grabatoz',
     category: 'ecommerce',
     categoryLabel: 'E-Commerce & Tech Retail',
@@ -56,6 +61,7 @@ export const portfolioProjects = [
   {
     id: 2,
     slug: 'baytal-protein',
+    blogUrl: '/blog/baytal-protein',
     name: 'Baytal Protein',
     category: 'ecommerce',
     categoryLabel: 'Sports Nutrition & Health E-Commerce',
@@ -86,6 +92,7 @@ export const portfolioProjects = [
   {
     id: 3,
     slug: 'clix-pos',
+    blogUrl: '/blog/clix-pos',
     name: 'Clix POS',
     category: 'pos-cloud',
     categoryLabel: 'Cloud Point of Sale Software',
@@ -116,6 +123,7 @@ export const portfolioProjects = [
   {
     id: 4,
     slug: 'just-appliances',
+    blogUrl: '/blog/just-appliances',
     name: 'Just Appliances',
     category: 'pos-cloud',
     categoryLabel: 'On-Demand Field Service & Booking',
@@ -146,12 +154,13 @@ export const portfolioProjects = [
   {
     id: 5,
     slug: 'mubayaa-real-estate',
+    blogUrl: '/blog/mubayaa-real-estate',
     name: 'Mubayaa Real Estate',
     category: 'realestate',
     categoryLabel: 'Government Registration & Legal Trustee',
     location: 'Dubai, UAE',
     logo: Mubayya,
-    image: null,
+    image: pMubayaa,
     accentColor: '#D97706',
     gradient: 'from-amber-600 via-orange-600 to-yellow-500',
     description:
@@ -176,6 +185,7 @@ export const portfolioProjects = [
   {
     id: 6,
     slug: 'albasit',
+    blogUrl: '/blog/albasit',
     name: 'ALBasit',
     category: 'realestate',
     categoryLabel: 'Construction & Real Estate Group',
@@ -206,12 +216,13 @@ export const portfolioProjects = [
   {
     id: 7,
     slug: 'optimum-fusion',
+    blogUrl: '/blog/optimum-fusion',
     name: 'Optimum Fusion',
     category: 'ecommerce',
     categoryLabel: 'Premium Sports Nutrition Brand',
     location: 'UAE Nationwide',
     logo: null,
-    image: null,
+    image: pOptimumFusion,
     accentColor: '#EF4444',
     gradient: 'from-red-600 via-rose-600 to-orange-500',
     description:
@@ -236,12 +247,13 @@ export const portfolioProjects = [
   {
     id: 8,
     slug: 'click-slice',
+    blogUrl: '/blog/click-slice',
     name: 'Click Slice',
     category: 'growth-seo',
     categoryLabel: 'SEO & Growth Marketing Agency',
     location: 'London, United Kingdom',
     logo: Clickslice,
-    image: null,
+    image: pClickSlice,
     accentColor: '#8B5CF6',
     gradient: 'from-purple-600 via-violet-600 to-indigo-600',
     description:
@@ -266,12 +278,13 @@ export const portfolioProjects = [
   {
     id: 9,
     slug: 'seen-alif',
+    blogUrl: '/blog/seen-alif',
     name: 'Seen Alif',
     category: 'ecommerce',
     categoryLabel: 'Consumer Electronics & Gadgets',
     location: 'Dubai, UAE',
     logo: null,
-    image: null,
+    image: pSeenAlif,
     accentColor: '#06B6D4',
     gradient: 'from-cyan-600 via-sky-600 to-teal-500',
     description:
@@ -296,6 +309,7 @@ export const portfolioProjects = [
   {
     id: 10,
     slug: 'crown-excel',
+    blogUrl: '/blog/crown-excel',
     name: 'Crown Excel',
     category: 'ecommerce',
     categoryLabel: 'IT Hardware & Wholesale Trading',
@@ -326,6 +340,7 @@ export const portfolioProjects = [
   {
     id: 11,
     slug: 'smart-max-it',
+    blogUrl: '/blog/smart-max-it',
     name: 'Smart Max IT',
     category: 'pos-cloud',
     categoryLabel: 'Enterprise IT & Cloud Infrastructure',
@@ -356,6 +371,7 @@ export const portfolioProjects = [
   {
     id: 12,
     slug: 'osum-enterprises',
+    blogUrl: '/blog/osum-enterprises',
     name: 'Osum Enterprises',
     category: 'ecommerce',
     categoryLabel: 'Industrial & B2B Spare Parts Trading',

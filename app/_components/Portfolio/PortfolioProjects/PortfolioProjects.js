@@ -1,53 +1,63 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
-  X,
   ArrowRight,
-  Check,
-  Lightbulb,
-  AlertTriangle,
-  Cpu,
-  TrendingUp,
-  Zap,
-  ShoppingCart,
   Globe,
-  CheckCircle2
+  CheckCircle2,
+  Sparkles,
 } from 'lucide-react';
 import { portfolioProjects } from './portfolioData';
 import {
-  SectionBadge,
-  SectionHeading,
-  HighlightWord,
-  SectionParagraph,
   CardHeading,
   CardParagraph,
   ButtonText,
 } from '@/components/Typography';
 
-const PortfolioProjects = () => {
-  const [activeModalProject, setActiveModalProject] = useState(null);
+const PORTFOLIO_LEGACY_IMAGE_KEYS = {
+  grabatoz: ['image_p1'],
+  baytal_protein: ['image_p2'],
+  clix_pos: ['image_p3'],
+  just_appliances: ['image_p4'],
+  mubayaa_real_estate: ['image_pmubayaa', 'image_mubayya'],
+  optimum_fusion: ['image_poptimumfusion'],
+  click_slice: ['image_pclickslice'],
+  seen_alif: ['image_pseenalif'],
+};
 
-  // Close modal on Escape key and handle body scroll locking
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        setActiveModalProject(null);
-      }
-    };
-    if (activeModalProject) {
-      document.body.style.overflow = 'hidden';
-      window.addEventListener('keydown', handleKeyDown);
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.body.style.overflow = '';
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [activeModalProject]);
+const PORTFOLIO_LEGACY_LOGO_KEYS = {
+  grabatoz: ['image_grab'],
+  baytal_protein: ['image_protein'],
+  clix_pos: ['image_clickpos'],
+  just_appliances: ['image_appliances'],
+  mubayaa_real_estate: ['image_mubayya'],
+  albasit: ['image_albasit'],
+  click_slice: ['image_clickslice'],
+  crown_excel: ['image_crown'],
+  smart_max_it: ['image_smart'],
+  osum_enterprises: ['image_traders'],
+};
+
+const isValidImageUrl = (val) => {
+  if (!val || typeof val !== 'string') return false;
+  const trimmed = val.trim();
+  if (trimmed.startsWith('@/')) return false; // Raw code import path string, ignore and use static import
+  if (trimmed.startsWith('http://') || trimmed.startsWith('https://') || trimmed.startsWith('/') || trimmed.startsWith('data:')) {
+    return true;
+  }
+  return false;
+};
+
+const PortfolioProjects = ({ cmsContent }) => {
+  const section = cmsContent?.sections?.find(
+    (s) =>
+      s.sectionId === 'portfolioprojects' ||
+      s.sectionName === 'Portfolio Projects' ||
+      s.sectionName === 'Portfolio Projects Section'
+  );
+  const fields = section?.fields || {};
 
   return (
     <section id="portfolio-showcase" className="relative py-16 md:py-24 bg-[#FBFDFC] text-[#111827] overflow-hidden">
@@ -61,7 +71,51 @@ const PortfolioProjects = () => {
         <div className="space-y-16 sm:space-y-24">
           {portfolioProjects.map((project, index) => {
             const isOdd = index % 2 === 0; // Project 1, 3, 5... (0-indexed)
-            const numberFormatted = String(project.id).padStart(2, '0');
+            const slugKey = (project.slug || project.name).toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+
+            // 1. Resolve Project Image (CMS image -> legacy CMS image -> static import)
+            let resolvedImage = project.image;
+            const cmsImgVal = fields[`project_${slugKey}_image`]?.value;
+            if (isValidImageUrl(cmsImgVal)) {
+              resolvedImage = cmsImgVal.trim();
+            } else {
+              const legacyImgKeys = PORTFOLIO_LEGACY_IMAGE_KEYS[slugKey] || [];
+              for (const lk of legacyImgKeys) {
+                if (isValidImageUrl(fields[lk]?.value)) {
+                  resolvedImage = fields[lk].value.trim();
+                  break;
+                }
+              }
+            }
+
+            // 2. Resolve Project Logo (CMS logo -> legacy CMS logo -> static import)
+            let resolvedLogo = project.logo;
+            const cmsLogoVal = fields[`project_${slugKey}_logo`]?.value;
+            if (isValidImageUrl(cmsLogoVal)) {
+              resolvedLogo = cmsLogoVal.trim();
+            } else {
+              const legacyLogoKeys = PORTFOLIO_LEGACY_LOGO_KEYS[slugKey] || [];
+              for (const lk of legacyLogoKeys) {
+                if (isValidImageUrl(fields[lk]?.value)) {
+                  resolvedLogo = fields[lk].value.trim();
+                  break;
+                }
+              }
+            }
+
+            // 3. Resolve Project Name, Description, and Category
+            const resolvedName = fields[`project_${slugKey}_name`]?.value?.trim() || project.name;
+            const resolvedDescription = fields[`project_${slugKey}_description`]?.value?.trim() || project.description;
+            const resolvedCategory = fields[`project_${slugKey}_category`]?.value?.trim() || project.categoryLabel;
+
+            const resolvedProject = {
+              ...project,
+              name: resolvedName,
+              description: resolvedDescription,
+              categoryLabel: resolvedCategory,
+              image: resolvedImage,
+              logo: resolvedLogo,
+            };
 
             return (
               <article
@@ -72,64 +126,40 @@ const PortfolioProjects = () => {
                 {/* DESKTOP 3-PART ALTERNATING LAYOUT (lg and above) */}
                 <div className="hidden lg:grid lg:grid-cols-12 gap-8 items-stretch">
                   
-                  {/* PROJECT 1, 3, 5: LEFT IMAGE | CENTER NUMBER | RIGHT CONTENT */}
+                  {/* PROJECT 1, 3, 5: LEFT IMAGE | CENTER LINE & LABEL | RIGHT CONTENT */}
                   {isOdd ? (
                     <>
                       {/* Left: Project Image (5 cols) */}
                       <div className="lg:col-span-5 h-full">
-                        <ProjectImageComponent project={project} />
+                        <ProjectImageComponent project={resolvedProject} />
                       </div>
 
-                      {/* Center: Number 01, 03... (2 cols) */}
+                      {/* Center: Creative Design Node & Line (2 cols) */}
                       <div className="lg:col-span-2 flex flex-col items-center justify-center text-center relative py-4">
-                        <div className="w-0.5 flex-1 bg-gradient-to-b from-transparent via-[#41B349]/30 to-[#41B349] mb-3 min-h-[30px]" />
-                        <div className="relative group-hover:scale-110 transition-transform duration-300 shrink-0">
-                          <span className="text-6xl xl:text-7xl font-display font-black tracking-tight text-[#41B349] select-none block drop-shadow-sm leading-none">
-                            {numberFormatted}
-                          </span>
-                          <span className="block font-jakarta text-[11px] font-semibold tracking-wider text-[#2C9434] uppercase mt-1.5">
-                            Case Study
-                          </span>
-                        </div>
-                        <div className="w-0.5 flex-1 bg-gradient-to-b from-[#41B349] via-[#41B349]/30 to-transparent mt-3 min-h-[30px]" />
+                        <CenterConnectorNode />
                       </div>
 
                       {/* Right: Project Content (5 cols, Equal Height) */}
                       <div className="lg:col-span-5 h-full">
-                        <ProjectContentComponent
-                          project={project}
-                          onOpenModal={() => setActiveModalProject(project)}
-                        />
+                        <ProjectContentComponent project={resolvedProject} />
                       </div>
                     </>
                   ) : (
-                    /* PROJECT 2, 4, 6: LEFT CONTENT | CENTER NUMBER | RIGHT IMAGE */
+                    /* PROJECT 2, 4, 6: LEFT CONTENT | CENTER LINE & LABEL | RIGHT IMAGE */
                     <>
                       {/* Left: Project Content (5 cols, Equal Height) */}
                       <div className="lg:col-span-5 h-full">
-                        <ProjectContentComponent
-                          project={project}
-                          onOpenModal={() => setActiveModalProject(project)}
-                        />
+                        <ProjectContentComponent project={resolvedProject} />
                       </div>
 
-                      {/* Center: Number 02, 04... (2 cols) */}
+                      {/* Center: Creative Design Node & Line (2 cols) */}
                       <div className="lg:col-span-2 flex flex-col items-center justify-center text-center relative py-4">
-                        <div className="w-0.5 flex-1 bg-gradient-to-b from-transparent via-[#41B349]/30 to-[#41B349] mb-3 min-h-[30px]" />
-                        <div className="relative group-hover:scale-110 transition-transform duration-300 shrink-0">
-                          <span className="text-6xl xl:text-7xl font-display font-black tracking-tight text-[#41B349] select-none block drop-shadow-sm leading-none">
-                            {numberFormatted}
-                          </span>
-                          <span className="block font-jakarta text-[11px] font-semibold tracking-wider text-[#2C9434] uppercase mt-1.5">
-                            Case Study
-                          </span>
-                        </div>
-                        <div className="w-0.5 flex-1 bg-gradient-to-b from-[#41B349] via-[#41B349]/30 to-transparent mt-3 min-h-[30px]" />
+                        <CenterConnectorNode />
                       </div>
 
                       {/* Right: Project Image (5 cols) */}
                       <div className="lg:col-span-5 h-full">
-                        <ProjectImageComponent project={project} />
+                        <ProjectImageComponent project={resolvedProject} />
                       </div>
                     </>
                   )}
@@ -137,27 +167,23 @@ const PortfolioProjects = () => {
 
                 {/* MOBILE / TABLET STACKED LAYOUT (< lg) */}
                 <div className="block lg:hidden space-y-6">
-                  {/* Top Badge with Large Center Number */}
-                  <div className="flex items-center gap-3 border-b border-gray-200/60 pb-3">
-                    <span className="text-4xl sm:text-5xl font-display font-black text-[#41B349] tracking-tight">
-                      {numberFormatted}
-                    </span>
-                    <div className="font-jakarta text-xs font-semibold tracking-wider text-[#2C9434] uppercase">
-                      Case Study #{numberFormatted}
+                  {/* Creative Modern Top Accent Divider */}
+                  <div className="flex items-center gap-3 py-1">
+                    <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#41B349]/25 to-[#41B349]/50" />
+                    <div className="w-7 h-7 rounded-lg bg-[#F0FDF4] border border-[#41B349]/25 flex items-center justify-center shadow-xs">
+                      <Sparkles className="w-3.5 h-3.5 text-[#2C9434]" />
                     </div>
+                    <div className="h-px flex-1 bg-gradient-to-r from-[#41B349]/50 via-[#41B349]/25 to-transparent" />
                   </div>
 
                   {/* Project Image */}
                   <div className="w-full">
-                    <ProjectImageComponent project={project} />
+                    <ProjectImageComponent project={resolvedProject} />
                   </div>
 
                   {/* Project Content */}
                   <div className="pt-2">
-                    <ProjectContentComponent
-                      project={project}
-                      onOpenModal={() => setActiveModalProject(project)}
-                    />
+                    <ProjectContentComponent project={resolvedProject} />
                   </div>
                 </div>
               </article>
@@ -165,15 +191,46 @@ const PortfolioProjects = () => {
           })}
         </div>
       </div>
-
-      {/* Modern Detail Modal with All Remaining Project Details */}
-      {activeModalProject && (
-        <ProjectDetailModal
-          project={activeModalProject}
-          onClose={() => setActiveModalProject(null)}
-        />
-      )}
     </section>
+  );
+};
+
+/* -------------------------------------------------------------
+ * REUSABLE COMPONENT: Center Creative Connector Node
+ * Replaces the old "Case Study" label with a sophisticated,
+ * glowing emerald focal node and smooth vertical gradients.
+ * ------------------------------------------------------------- */
+const CenterConnectorNode = () => {
+  return (
+    <div className="h-full w-full flex flex-col items-center justify-center relative py-4 select-none pointer-events-none">
+      {/* Top Vertical Guide Line */}
+      <div className="w-[1.5px] flex-1 bg-gradient-to-b from-transparent via-[#41B349]/25 to-[#41B349]/80 min-h-[48px] relative">
+        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-[#41B349]/40 group-hover:bg-[#41B349] group-hover:scale-125 transition-all duration-300" />
+      </div>
+
+      {/* Center Decorative Creative Node */}
+      <div className="relative my-3 shrink-0 group-hover:scale-110 transition-transform duration-500">
+        {/* Soft Ambient Emerald Glow Aura */}
+        <div className="absolute inset-0 rounded-2xl bg-[#41B349]/20 blur-md scale-150 pointer-events-none group-hover:bg-[#41B349]/35 transition-all duration-500" />
+
+        {/* Outer Premium White/Glass Container */}
+        <div className="relative w-12 h-12 rounded-2xl bg-white/95 backdrop-blur-md border border-[#41B349]/30 shadow-[0_4px_20px_rgba(65,179,73,0.15)] flex items-center justify-center group-hover:border-[#41B349] group-hover:shadow-[0_8px_28px_rgba(65,179,73,0.28)] transition-all duration-500">
+          {/* Inner Layered Badge */}
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#F0FDF4] via-white to-[#DCFCE7] flex items-center justify-center border border-[#41B349]/25 shadow-xs">
+            <Sparkles className="w-4 h-4 text-[#2C9434] transition-all duration-500 group-hover:rotate-45 group-hover:scale-110" />
+          </div>
+
+          {/* Micro Geometric Corner Accents */}
+          <span className="absolute -top-1 -right-1 w-1.5 h-1.5 rounded-full bg-[#41B349]/50 group-hover:bg-[#41B349] transition-colors" />
+          <span className="absolute -bottom-1 -left-1 w-1.5 h-1.5 rounded-full bg-[#41B349]/50 group-hover:bg-[#41B349] transition-colors" />
+        </div>
+      </div>
+
+      {/* Bottom Vertical Guide Line */}
+      <div className="w-[1.5px] flex-1 bg-gradient-to-b from-[#41B349]/80 via-[#41B349]/25 to-transparent min-h-[48px] relative">
+        <div className="absolute top-2 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-[#41B349]/40 group-hover:bg-[#41B349] group-hover:scale-125 transition-all duration-300" />
+      </div>
+    </div>
   );
 };
 
@@ -203,6 +260,8 @@ const ProjectImageComponent = ({ project }) => {
             src={project.image}
             alt={`${project.name} Portfolio Showcase`}
             fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
+            unoptimized={typeof project.image === 'string' && !project.image.startsWith('/') && !project.image.includes('res.cloudinary.com')}
             className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
           />
         ) : (
@@ -229,6 +288,7 @@ const ProjectImageComponent = ({ project }) => {
                     alt={project.name}
                     width={180}
                     height={60}
+                    unoptimized={typeof project.logo === 'string' && !project.logo.startsWith('/') && !project.logo.includes('res.cloudinary.com')}
                     className="max-h-12 w-auto object-contain mx-auto"
                   />
                 </div>
@@ -275,9 +335,11 @@ const ProjectImageComponent = ({ project }) => {
 /* -------------------------------------------------------------
  * REUSABLE COMPONENT: Clean Content Section (Seamless & Borderless)
  * Shows: Project Name, Paragraph Description (max 7 lines clamped with "..."), and "More Details" button.
- * Blends naturally with the main page background (#FBFDFC).
+ * Navigates directly to the project's relevant blog post.
  * ------------------------------------------------------------- */
-const ProjectContentComponent = ({ project, onOpenModal }) => {
+const ProjectContentComponent = ({ project }) => {
+  const blogHref = project.blogUrl || `/blog/${project.slug}`;
+
   return (
     <div className="flex flex-col justify-center h-full min-h-[390px] lg:min-h-[420px] text-left py-4 px-2 sm:px-6 lg:px-8">
       <div>
@@ -301,221 +363,17 @@ const ProjectContentComponent = ({ project, onOpenModal }) => {
       </div>
 
       <div className="pt-6">
-        <button
-          onClick={onOpenModal}
+        <Link
+          href={blogHref}
           className="group inline-flex items-center gap-2.5 px-6 py-3 rounded-full bg-[#41B349] hover:bg-[#389e40] text-white shadow-md shadow-[#41B349]/20 hover:shadow-[#41B349]/35 transition-all duration-300 active:scale-95 cursor-pointer"
         >
           <ButtonText className="text-xs sm:text-sm">More Details</ButtonText>
           <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
-        </button>
-      </div>
-    </div>
-  );
-};
-
-/* -------------------------------------------------------------
- * REUSABLE COMPONENT: Modern Project Details Modal
- * Opens on "More Details" click with complete project data:
- * - Full Project Description
- * - Services
- * - The Challenge
- * - The Solution
- * - Tech Stack
- * - Results & Features
- * ------------------------------------------------------------- */
-const ProjectDetailModal = ({ project, onClose }) => {
-  return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 md:p-10 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200"
-      onClick={onClose}
-    >
-      {/* Modal Container */}
-      <div
-        className="relative w-full max-w-4xl max-h-[90vh] bg-white rounded-3xl shadow-2xl border border-gray-100 flex flex-col overflow-hidden text-left animate-in zoom-in-95 duration-200 font-jakarta"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Modal Top Sticky Header */}
-        <div className="flex items-center justify-between px-6 sm:px-8 py-5 border-b border-gray-100 bg-[#FBFDFC] shrink-0">
-          <div className="flex items-center gap-3">
-            <SectionBadge variant="light">
-              CASE STUDY #{String(project.id).padStart(2, '0')}
-            </SectionBadge>
-            <span className="font-jakarta text-xs text-gray-500 font-medium hidden sm:inline-block">
-              {project.categoryLabel} • {project.location}
-            </span>
-          </div>
-
-          <button
-            onClick={onClose}
-            className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 hover:text-[#111827] flex items-center justify-center transition-colors cursor-pointer"
-            aria-label="Close modal"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
-
-        {/* Modal Scrollable Body with All Project Details */}
-        <div className="p-6 sm:p-8 md:p-10 overflow-y-auto space-y-7">
-          {/* Title & Brand Logo */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-              <SectionHeading as="h2" size="sm" theme="dark" className="text-2xl sm:text-3xl md:text-4xl">
-                {project.name}
-              </SectionHeading>
-              <div className="font-jakarta text-xs text-[#2C9434] font-semibold uppercase tracking-wider mt-1">
-                {project.categoryLabel}
-              </div>
-            </div>
-
-            {project.logo && (
-              <div className="h-12 w-32 bg-white border border-gray-200 rounded-xl p-2 flex items-center justify-center shadow-xs shrink-0">
-                <Image
-                  src={project.logo}
-                  alt={project.name}
-                  width={120}
-                  height={40}
-                  className="max-h-8 w-auto object-contain"
-                />
-              </div>
-            )}
-          </div>
-
-          {/* Services Delivered */}
-          <div>
-            <div className="font-jakarta text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2.5">
-              Services
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {project.services.map((service, idx) => (
-                <span
-                  key={idx}
-                  className="font-jakarta inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-50 border border-gray-200 text-xs font-semibold text-[#1F2937] tracking-[-0.01em]"
-                >
-                  <Check className="w-3.5 h-3.5 text-[#41B349]" />
-                  {service}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {/* Full Project Description */}
-          <div>
-            <div className="font-jakarta text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">
-              Project Description
-            </div>
-            <SectionParagraph size="md" theme="slate">
-              {project.description}
-            </SectionParagraph>
-          </div>
-
-          {/* The Challenge & The Solution Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* The Challenge */}
-            <div className="rounded-2xl bg-[#FFFBEB] border border-[#FDE68A] p-5">
-              <div className="font-jakarta flex items-center gap-1.5 text-[#B45309] text-xs font-semibold uppercase tracking-wider mb-2">
-                <AlertTriangle className="w-4 h-4 text-[#D97706] shrink-0" />
-                <span>The Challenge</span>
-              </div>
-              <p className="font-jakarta text-xs sm:text-sm text-[#78350F] leading-relaxed font-normal tracking-[-0.01em]">
-                {project.challenge}
-              </p>
-            </div>
-
-            {/* The Solution */}
-            <div className="rounded-2xl bg-[#F0FDF4] border border-[#BBF7D0] p-5">
-              <div className="font-jakarta flex items-center gap-1.5 text-[#15803D] text-xs font-semibold uppercase tracking-wider mb-2">
-                <Lightbulb className="w-4 h-4 text-[#41B349] shrink-0" />
-                <span>The Solution</span>
-              </div>
-              <p className="font-jakarta text-xs sm:text-sm text-[#14532D] leading-relaxed font-normal tracking-[-0.01em]">
-                {project.solution}
-              </p>
-            </div>
-          </div>
-
-          {/* Tech Stack */}
-          <div>
-            <div className="font-jakarta text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2.5 flex items-center gap-1.5">
-              <Cpu className="w-3.5 h-3.5 text-[#41B349]" />
-              <span>Tech Stack</span>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {project.techStack.map((tech, idx) => (
-                <span
-                  key={idx}
-                  className="font-jakarta px-3 py-1 rounded-md bg-[#41B349]/10 border border-[#41B349]/20 text-xs font-semibold text-[#2C9434] tracking-[-0.01em]"
-                >
-                  {tech}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {/* Results & Features */}
-          <div className="rounded-2xl bg-gray-50 border border-gray-200/90 p-5 space-y-3 font-jakarta">
-            <div className="font-jakarta text-xs font-semibold uppercase tracking-wider text-[#2C9434] flex items-center gap-1.5">
-              <TrendingUp className="w-4 h-4 text-[#41B349]" />
-              <span>Results &amp; Features</span>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              {/* Performance */}
-              <div className="bg-white border border-gray-200 rounded-xl p-3 shadow-xs">
-                <div className="font-jakarta flex items-center gap-1.5 text-gray-500 text-[11px] font-semibold uppercase tracking-wider">
-                  <Zap className="w-3.5 h-3.5 text-[#41B349]" />
-                  <span>Performance</span>
-                </div>
-                <div className="text-xs sm:text-sm font-display font-black text-[#2C9434] mt-1">
-                  {project.metrics.performance}
-                </div>
-              </div>
-
-              {/* Features */}
-              <div className="bg-white border border-gray-200 rounded-xl p-3 shadow-xs">
-                <div className="font-jakarta flex items-center gap-1.5 text-gray-500 text-[11px] font-semibold uppercase tracking-wider">
-                  <ShoppingCart className="w-3.5 h-3.5 text-[#111827]" />
-                  <span>Features</span>
-                </div>
-                <div className="text-xs sm:text-sm font-display font-black text-[#111827] mt-1">
-                  {project.metrics.features}
-                </div>
-              </div>
-
-              {/* Sales */}
-              <div className="bg-white border border-gray-200 rounded-xl p-3 shadow-xs">
-                <div className="font-jakarta flex items-center gap-1.5 text-gray-500 text-[11px] font-semibold uppercase tracking-wider">
-                  <TrendingUp className="w-3.5 h-3.5 text-[#41B349]" />
-                  <span>Sales</span>
-                </div>
-                <div className="text-xs sm:text-sm font-display font-black text-[#2C9434] mt-1">
-                  {project.metrics.sales}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Modal Bottom Actions */}
-        <div className="px-6 sm:px-8 py-4 bg-gray-50 border-t border-gray-100 flex flex-wrap items-center justify-between gap-3 shrink-0">
-          <Link
-            href={`/contact-us?subject=Inquiry regarding project similar to ${encodeURIComponent(project.name)}`}
-            onClick={onClose}
-            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#41B349] hover:bg-[#389e40] text-white shadow-md shadow-[#41B349]/20 transition-all duration-300"
-          >
-            <ButtonText className="text-xs sm:text-sm">Discuss Similar Project</ButtonText>
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-
-          <button
-            onClick={onClose}
-            className="px-5 py-2.5 rounded-full bg-white hover:bg-gray-100 border border-gray-200 text-gray-700 cursor-pointer transition-colors"
-          >
-            <ButtonText className="text-xs sm:text-sm">Close</ButtonText>
-          </button>
-        </div>
+        </Link>
       </div>
     </div>
   );
 };
 
 export default PortfolioProjects;
+

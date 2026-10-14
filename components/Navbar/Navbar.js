@@ -73,24 +73,35 @@ const techSubLinks = [
     { Image: Angular, label: 'Angular', href: '/technologies/angular', desc: 'Scalable Web Platforms' },
 ];
 
-// Services sublinks
-const servicesSubLinks = [
-    { icon: WebDevIcon, label: 'Web Development', href: '/services/web-development', desc: 'Custom websites & web apps' },
-    { icon: AppDevIcon, label: 'App Development', href: '/services/app-development', desc: 'iOS & Android mobile apps' },
-    { icon: SoftwareDevIcon, label: 'Software Development', href: '/services/software-development', desc: 'Enterprise custom systems' },
-    { icon: EcommerceDevIcon, label: 'Ecommerce Development', href: '/services/ecommerce-development', desc: 'Scalable online stores' },
-    { icon: GraphicsDevIcon, label: 'Graphics & UI/UX', href: '/services/graphic-design', desc: 'Brand identity & product design' },
-    { icon: SocialMediaDevIcon, label: 'Social Media', href: '/services/social-media', desc: 'Audience growth & engagement' },
-    { icon: DigitalMarketingDevIcon, label: 'Digital Marketing', href: '/services/digital-marketing', desc: 'Full-funnel marketing strategy' },
-    { icon: LeadGenIcon, label: 'Lead Generation', href: '/services/lead-generation', desc: 'High-converting B2B & B2C leads' },
-    { icon: PpcAmazonDevIcon, label: 'PPC & Amazon', href: '/services/ppc-amazon-ads', desc: 'Targeted ads & campaign ROI' },
-    { Image: GoogleAds, label: 'Google Ads', href: '/services/google-ads', desc: 'PPC & Search Campaigns' },
-    { Image: Meta, label: 'Meta', href: '/services/meta', desc: 'Social Ads & Marketing' },
-    { icon: SeoDevIcon, label: 'Search Engine Optimization', href: '/services/search-engine-optimization', desc: 'Organic ranking & visibility' },
-    { icon: ContentWritingDevIcon, label: 'Content Writing', href: '/services/content-writing', desc: 'SEO copywriting & articles' },
-    { icon: CallCenterDevIcon, label: 'Call Center', href: '/services/call-center', desc: '24/7 inbound & support' },
-    { icon: HireUsDevIcon, label: 'Hire Us', href: '/hire-us', desc: 'Dedicated developer teams' },
+// Services sublinks organized by column
+const servicesColumns = [
+    // Column 1: Development Services
+    [
+        { icon: WebDevIcon, label: 'Web Development', href: '/services/web-development', desc: 'Custom websites & web apps' },
+        { icon: AppDevIcon, label: 'App Development', href: '/services/app-development', desc: 'iOS & Android mobile apps' },
+        { icon: SoftwareDevIcon, label: 'Software Development', href: '/services/software-development', desc: 'Enterprise custom systems' },
+        { icon: EcommerceDevIcon, label: 'Ecommerce Development', href: '/services/ecommerce-development', desc: 'Scalable online stores' },
+        { icon: HireUsDevIcon, label: 'Hire Us', href: '/hire-us', desc: 'Dedicated developer teams' },
+    ],
+    // Column 2: Social Media Marketing & Related Marketing Services
+    [
+        { icon: SocialMediaDevIcon, label: 'Social Media', href: '/services/social-media', desc: 'Audience growth & engagement' },
+        { icon: DigitalMarketingDevIcon, label: 'Digital Marketing', href: '/services/digital-marketing', desc: 'Full-funnel marketing strategy' },
+        { icon: SeoDevIcon, label: 'Search Engine Optimization', href: '/services/search-engine-optimization', desc: 'Organic ranking & visibility' },
+        { icon: LeadGenIcon, label: 'Lead Generation', href: '/services/lead-generation', desc: 'High-converting B2B & B2C leads' },
+        { icon: ContentWritingDevIcon, label: 'Content Writing', href: '/services/content-writing', desc: 'SEO copywriting & articles' },
+    ],
+    // Column 3: Paid Advertising, Creative & Support Services
+    [
+        { Image: GoogleAds, label: 'Google Ads', href: '/services/google-ads', desc: 'PPC & Search Campaigns' },
+        { Image: Meta, label: 'Meta', href: '/services/meta', desc: 'Social Ads & Marketing' },
+        { icon: PpcAmazonDevIcon, label: 'PPC & Amazon', href: '/services/ppc-amazon-ads', desc: 'Targeted ads & campaign ROI' },
+        { icon: GraphicsDevIcon, label: 'Graphics & UI/UX', href: '/services/graphic-design', desc: 'Brand identity & product design' },
+        { icon: CallCenterDevIcon, label: 'Call Center', href: '/services/call-center', desc: '24/7 inbound & support' },
+    ],
 ];
+
+const servicesSubLinks = servicesColumns.flat();
 
 // Navlinks data
 const navLinks = [
@@ -307,61 +318,65 @@ const Navbar = () => {
                                                 }`}
                                             >
                                                 <div className="bg-white rounded-2xl p-5 sm:p-6 relative shadow-[0_25px_60px_rgba(0,0,0,0.18)] border border-gray-100 max-h-[calc(100vh-96px)] overflow-y-auto">
-                                                    <div className="grid grid-cols-3 gap-x-5 gap-y-2.5">
-                                                        {servicesSubLinks.map((sub) => (
-                                                            <Link
-                                                                key={sub.label}
-                                                                href={sub.href}
-                                                                onClick={() => setDropdownIndex(null)}
-                                                                className="group/item relative flex items-center gap-3.5 p-2.5 rounded-xl bg-white hover:bg-[#41B349] border border-gray-200/80 hover:border-transparent hover:shadow-lg hover:shadow-[#41B349]/25 transition-all duration-300 ease-in-out cursor-pointer overflow-hidden"
-                                                            >
-                                                                {/* SVG Animated Moving Border Line on Hover */}
-                                                                <div className="absolute inset-0 pointer-events-none opacity-0 group-hover/item:opacity-100 transition-opacity duration-300 z-20">
-                                                                    <svg className="w-full h-full overflow-visible">
-                                                                        {/* Subtle base border track with pure white */}
-                                                                        <rect
-                                                                            x="1"
-                                                                            y="1"
-                                                                            width="calc(100% - 2px)"
-                                                                            height="calc(100% - 2px)"
-                                                                            rx="11"
-                                                                            fill="none"
-                                                                            stroke="#FFFFFF"
-                                                                            strokeWidth="1.5"
-                                                                            strokeOpacity="0.4"
-                                                                        />
-                                                                        {/* Animated moving border line with pure white */}
-                                                                        <rect
-                                                                            x="1"
-                                                                            y="1"
-                                                                            width="calc(100% - 2px)"
-                                                                            height="calc(100% - 2px)"
-                                                                            rx="11"
-                                                                            fill="none"
-                                                                            stroke="#FFFFFF"
-                                                                            strokeWidth="2"
-                                                                            strokeLinecap="round"
-                                                                            pathLength="100"
-                                                                            className="dropdown-btn-svg-border-line"
-                                                                        />
-                                                                    </svg>
-                                                                </div>
-                                                                <div className="w-11 h-11 rounded-xl bg-white border border-gray-200/80 flex items-center justify-center flex-shrink-0 group-hover/item:bg-white group-hover/item:border-transparent group-hover/item:scale-105 transition-all duration-300 p-2 shadow-xs relative z-10">
-                                                                    {sub.icon ? (
-                                                                        <sub.icon className="w-7 h-7 dropdown-icon-bounce" />
-                                                                    ) : (
-                                                                        <Image src={sub.Image} alt={sub.label} width={28} height={28} className="object-contain dropdown-icon-bounce" />
-                                                                    )}
-                                                                </div>
-                                                                <div className="flex flex-col min-w-0 relative z-10">
-                                                                    <span className="font-jakarta text-[13.5px] xl:text-[14px] font-semibold tracking-[-0.01em] text-gray-900 group-hover/item:text-white transition-colors duration-200 truncate">
-                                                                        {sub.label}
-                                                                    </span>
-                                                                    <span className="font-jakarta text-[11.5px] text-gray-500 group-hover/item:text-white/85 tracking-[-0.005em] transition-colors duration-200 truncate leading-snug">
-                                                                        {sub.desc}
-                                                                    </span>
-                                                                </div>
-                                                            </Link>
+                                                    <div className="grid grid-cols-3 gap-5">
+                                                        {servicesColumns.map((col, colIdx) => (
+                                                            <div key={colIdx} className="flex flex-col gap-2.5">
+                                                                {col.map((sub) => (
+                                                                    <Link
+                                                                        key={sub.label}
+                                                                        href={sub.href}
+                                                                        onClick={() => setDropdownIndex(null)}
+                                                                        className="group/item relative flex items-center gap-3.5 p-2.5 rounded-xl bg-white hover:bg-[#41B349] border border-gray-200/80 hover:border-transparent hover:shadow-lg hover:shadow-[#41B349]/25 transition-all duration-300 ease-in-out cursor-pointer overflow-hidden"
+                                                                    >
+                                                                        {/* SVG Animated Moving Border Line on Hover */}
+                                                                        <div className="absolute inset-0 pointer-events-none opacity-0 group-hover/item:opacity-100 transition-opacity duration-300 z-20">
+                                                                            <svg className="w-full h-full overflow-visible">
+                                                                                {/* Subtle base border track with pure white */}
+                                                                                <rect
+                                                                                    x="1"
+                                                                                    y="1"
+                                                                                    width="calc(100% - 2px)"
+                                                                                    height="calc(100% - 2px)"
+                                                                                    rx="11"
+                                                                                    fill="none"
+                                                                                    stroke="#FFFFFF"
+                                                                                    strokeWidth="1.5"
+                                                                                    strokeOpacity="0.4"
+                                                                                />
+                                                                                {/* Animated moving border line with pure white */}
+                                                                                <rect
+                                                                                    x="1"
+                                                                                    y="1"
+                                                                                    width="calc(100% - 2px)"
+                                                                                    height="calc(100% - 2px)"
+                                                                                    rx="11"
+                                                                                    fill="none"
+                                                                                    stroke="#FFFFFF"
+                                                                                    strokeWidth="2"
+                                                                                    strokeLinecap="round"
+                                                                                    pathLength="100"
+                                                                                    className="dropdown-btn-svg-border-line"
+                                                                                />
+                                                                            </svg>
+                                                                        </div>
+                                                                        <div className="w-11 h-11 rounded-xl bg-white border border-gray-200/80 flex items-center justify-center flex-shrink-0 group-hover/item:bg-white group-hover/item:border-transparent group-hover/item:scale-105 transition-all duration-300 p-2 shadow-xs relative z-10">
+                                                                            {sub.icon ? (
+                                                                                <sub.icon className="w-7 h-7 dropdown-icon-bounce" />
+                                                                            ) : (
+                                                                                <Image src={sub.Image} alt={sub.label} width={28} height={28} className="object-contain dropdown-icon-bounce" />
+                                                                            )}
+                                                                        </div>
+                                                                        <div className="flex flex-col min-w-0 relative z-10">
+                                                                            <span className="font-jakarta text-[13.5px] xl:text-[14px] font-semibold tracking-[-0.01em] text-gray-900 group-hover/item:text-white transition-colors duration-200 truncate">
+                                                                                {sub.label}
+                                                                            </span>
+                                                                            <span className="font-jakarta text-[11.5px] text-gray-500 group-hover/item:text-white/85 tracking-[-0.005em] transition-colors duration-200 truncate leading-snug">
+                                                                                {sub.desc}
+                                                                            </span>
+                                                                        </div>
+                                                                    </Link>
+                                                                ))}
+                                                            </div>
                                                         ))}
                                                     </div>
                                                 </div>
@@ -420,13 +435,11 @@ const Navbar = () => {
                     <div className="flex-1 flex items-center justify-end min-w-0">
                         {/* Desktop action buttons */}
                         <div className="hidden lg:flex items-center gap-2.5 xl:gap-3 flex-shrink-0">
-                            <Link href="/pos-development" className="inline-block flex-shrink-0">
-                                <button
-                                    className="font-jakarta whitespace-nowrap bg-[#41B349] text-white text-[13px] xl:text-[13.5px] font-semibold tracking-[-0.01em] px-4 xl:px-5 h-[38px] xl:h-[40px] rounded-full hover:bg-white hover:text-black transition-all duration-200 cursor-pointer flex-shrink-0 shadow-sm active:scale-95"
-                                >
-                                    <ButtonText className="text-[13px] xl:text-[13.5px]">Get POS</ButtonText>
-                                </button>
-                            </Link>
+                            <button
+                                className="font-jakarta whitespace-nowrap bg-[#41B349] text-white text-[13px] xl:text-[13.5px] font-semibold tracking-[-0.01em] px-4 xl:px-5 h-[38px] xl:h-[40px] rounded-full hover:bg-white hover:text-black transition-all duration-200 cursor-pointer flex-shrink-0 shadow-sm active:scale-95"
+                            >
+                                <ButtonText className="text-[13px] xl:text-[13.5px]">Get POS</ButtonText>
+                            </button>
                             <button
                                 onClick={openQuote}
                                 className="font-jakarta whitespace-nowrap bg-[#41B349] text-white text-[13px] xl:text-[13.5px] font-semibold tracking-[-0.01em] px-4.5 xl:px-5.5 h-[38px] xl:h-[40px] rounded-full hover:bg-white hover:text-black transition-all duration-200 cursor-pointer flex-shrink-0 shadow-sm active:scale-95"
