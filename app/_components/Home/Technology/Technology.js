@@ -207,14 +207,14 @@ const Technology = ({ cmsContent }) => {
 
             return (
               <Link key={i} href={item.link} className="block group shrink-0">
-                <div 
-                  className={`w-[240px] min-[380px]:w-[270px] sm:w-[320px] md:w-[350px] h-[350px] min-[380px]:h-[380px] sm:h-[430px] rounded-3xl border border-transparent p-5 min-[380px]:p-6 sm:p-7 flex flex-col justify-between transform group-hover:-translate-y-2.5 transition-all duration-300 relative overflow-hidden shadow-md ${cfg.borderHover}`}
+                <div
+                  className={`w-[240px] min-[380px]:w-[270px] sm:w-[320px] md:w-[350px] h-[310px] min-[380px]:h-[340px] sm:h-[385px] rounded-3xl border border-transparent p-5 min-[380px]:p-6 sm:p-7 flex flex-col justify-between transform group-hover:-translate-y-2.5 transition-all duration-300 relative overflow-hidden shadow-md ${cfg.borderHover}`}
                   style={{ backgroundColor: cfg.bgColor }}
                   onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = cfg.hoverBg; }}
                   onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = cfg.bgColor; }}
                 >
                   {/* Card Background Pattern Image */}
-                  <div 
+                  <div
                     className="absolute inset-0 z-0 bg-no-repeat bg-cover bg-bottom pointer-events-none opacity-100"
                     style={{ backgroundImage: "url('/images/ines.png')" }}
                   />
@@ -237,9 +237,9 @@ const Technology = ({ cmsContent }) => {
                   </div>
 
                   <div className={`absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-transparent ${cfg.topAccent} to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
-                  
+
                   <div className="relative z-10">
-                    <CardHeading 
+                    <CardHeading
                       as="h3"
                       size="md"
                       theme="inherit"
@@ -250,7 +250,7 @@ const Technology = ({ cmsContent }) => {
                     </CardHeading>
                   </div>
 
-                  <div className="my-2 min-[380px]:my-3 sm:my-4 w-full h-[145px] min-[380px]:h-[170px] sm:h-[200px] flex items-center justify-center p-2 min-[380px]:p-3 sm:p-4 relative z-10">
+                  <div className="my-2 min-[380px]:my-3 sm:my-4 w-full h-[125px] min-[380px]:h-[145px] sm:h-[170px] flex items-center justify-center p-2 min-[380px]:p-3 sm:p-4 relative z-10">
                     {isImgDynamic ? (
                       <img
                         alt={item.title}
