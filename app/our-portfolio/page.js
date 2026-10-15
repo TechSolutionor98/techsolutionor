@@ -6,8 +6,7 @@ import Newsletter from '../_components/Home/Newsletter/Newsletter';
 import { generateCmsMetadata, getCmsData } from '@/lib/cms-fetch';
 import CmsJsonLd from '@/components/CmsJsonLd';
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+export const revalidate = 60;
 
 export async function generateMetadata() {
   return generateCmsMetadata('/our-portfolio', {

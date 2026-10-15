@@ -3,7 +3,6 @@ import Protein from '@/components/Images/protein.png';
 import Clickpos from '@/components/Images/clickpos.png';
 import Appliances from '@/components/Images/appliances.png';
 import Mubayya from '@/components/Images/mubayya.png';
-import Albasit from '@/components/Images/albasit.png';
 import Crown from '@/components/Images/crownexcel.png';
 import Clickslice from '@/components/Images/clickslice.png';
 import Smart from '@/components/Images/smart.png';
@@ -17,12 +16,14 @@ import pMubayaa from '@/components/Images/portfolioimg_mubayaa.png';
 import pOptimumFusion from '@/components/Images/portfolioimg_optimum_fusion.png';
 import pClickSlice from '@/components/Images/portfolioimg_click_slice.png';
 import pSeenAlif from '@/components/Images/portfolioimg_seen_alif.png';
+import pVoltaria from '@/components/Images/portfolioimg_voltaria.png';
+import pOsumFix from '@/components/Images/portfolioimg_osumfix.png';
 
 export const portfolioCategories = [
-  { id: 'all', label: 'All Projects', count: 12 },
-  { id: 'ecommerce', label: 'E-Commerce & Retail', count: 6 },
-  { id: 'pos-cloud', label: 'POS & Cloud Systems', count: 3 },
-  { id: 'realestate', label: 'Corporate & Real Estate', count: 2 },
+  { id: 'all', label: 'All Projects', count: 13 },
+  { id: 'ecommerce', label: 'E-Commerce & Retail', count: 7 },
+  { id: 'pos-cloud', label: 'POS & Cloud Systems', count: 4 },
+  { id: 'realestate', label: 'Corporate & Real Estate', count: 1 },
   { id: 'growth-seo', label: 'SEO & Growth Agency', count: 1 },
 ];
 
@@ -182,36 +183,37 @@ export const portfolioProjects = [
     },
     highlights: ['DLD Integration Ready', 'Ejara & Oqoodi Workflows', 'Client Document Vault'],
   },
-  {
+    {
     id: 6,
-    slug: 'albasit',
-    blogUrl: '/blog/albasit',
-    name: 'ALBasit',
-    category: 'realestate',
-    categoryLabel: 'Construction & Real Estate Group',
-    location: 'Islamabad, Pakistan',
-    logo: Albasit,
-    image: null,
-    accentColor: '#10B981',
-    gradient: 'from-emerald-700 via-teal-700 to-green-600',
+    slug: 'voltaria-global',
+    blogUrl: '/blog/voltaria-global',
+    websiteUrl: 'https://voltariaglobal.com/',
+    name: 'Voltaria Global',
+    category: 'ecommerce',
+    categoryLabel: 'Clean Energy & Power Equipment',
+    location: 'Dubai, UAE',
+    logo: null,
+    image: pVoltaria,
+    accentColor: '#16A34A',
+    gradient: 'from-emerald-600 via-teal-600 to-green-500',
     description:
-      'Al Basit Group of Companies is a well-established construction and real estate development firm based in Islamabad, Pakistan, with over two decades of industry experience. The company specializes in delivering high-quality real estate projects and investment opportunities, serving both residential and commercial markets with a customer-centric approach. Known for its commitment to excellence and strategic growth, Al Basit Group combines professional project execution with strong market insights, helping clients achieve their property and investment goals with confidence.',
+      'Voltaria Global is an electrical product brand and wholesale energy solutions distributor based in Dubai, UAE. The company specializes in delivering reliable, intelligent power solutions for homes, businesses, and industrial facilities across the region. Their comprehensive product portfolio includes hybrid MPPT solar inverters, deep-cycle and energy storage batteries, high-safety circuit breakers and fuses, automatic changeover systems, and energy-efficient ventilation appliances. With a focus on performance, safety, and a sustainable tomorrow, Voltaria empowers communities with dependable energy equipment engineered for modern power demands.',
     services: [
+      'Web Development',
       'E-commerce Development',
-      'Mobile App Development',
       'UI/UX Design',
     ],
     challenge:
-      'Creating a strong online presence that effectively showcases the company’s diverse property portfolio and construction expertise, while making complex real estate and investment information easy for potential clients to explore and understand.',
+      'Structuring an extensive technical catalog for wholesale buyers, electrical contractors, and regional distributors while presenting complex power specifications in a clear, accessible digital format.',
     solution:
-      'Developed a professional, user-friendly website that highlights Al Basit’s services, projects, and company strengths with clear messaging and intuitive navigation, improving customer engagement and supporting lead generation in a competitive market.',
-    techStack: ['HTML', 'CSS', 'React', 'JavaScript', 'Interactive Blueprints', 'Lead Capture Engine'],
+      'Engineered a modern, responsive web showcase featuring detailed technical specifications, interactive categorization across solar inverters and energy storage devices, and streamlined B2B inquiry workflows.',
+    techStack: ['HTML', 'CSS', 'React', 'JavaScript', 'Interactive Catalog', 'B2B Inquiry Engine'],
     metrics: {
-      performance: '95+ PageSpeed score',
-      features: 'Fully Integrated Checkout',
-      sales: '45% increase in organic traffic',
+      performance: '98+ PageSpeed score',
+      features: 'Interactive Spec Sheets',
+      sales: '55% increase in B2B inquiries',
     },
-    highlights: ['Virtual Property Tours', 'Dynamic Project Timelines', 'Investor ROI Calculator'],
+    highlights: ['Hybrid Inverter Specs', 'Deep-Cycle Battery Matrix', 'Rapid Wholesale RFQ'],
   },
   {
     id: 7,
@@ -398,5 +400,37 @@ export const portfolioProjects = [
       sales: '45% increase in organic traffic',
     },
     highlights: ['Part Number Catalog Match', 'Fast RFQ Cart Dispatch', 'Distributor Portal Ready'],
+  },
+  {
+    id: 13,
+    slug: 'osumfix',
+    blogUrl: '/blog/osumfix',
+    websiteUrl: 'https://www.osumfix.com/',
+    name: 'OsumFix',
+    category: 'pos-cloud',
+    categoryLabel: 'On-Demand Property Maintenance & Repair',
+    location: 'Deira, Dubai, UAE',
+    logo: null,
+    image: pOsumFix,
+    accentColor: '#EA580C',
+    gradient: 'from-orange-500 via-amber-500 to-yellow-500',
+    description:
+      'OsumFix Technical Services LLC is a premier property maintenance and repair solutions provider in Dubai, UAE, offering comprehensive residential and commercial technical assistance with 24/7 emergency support. Serving major areas across Dubai including Dubai Marina, Downtown, Palm Jumeirah, and JLT, their certified technicians deliver expert AC repair and maintenance, plumbing, electrical troubleshooting, handyman installations, painting, and gypsum works. Built on reliability, prompt on-time service, and customer satisfaction, OsumFix provides trusted maintenance solutions tailored for modern living.',
+    services: [
+      'Web Development',
+      'On-Demand Booking Engine',
+      'UI/UX Design',
+    ],
+    challenge:
+      'Creating an intuitive on-demand booking experience in Dubai’s competitive property maintenance sector that enables users to book emergency repairs instantly with full pricing transparency.',
+    solution:
+      'Built a mobile-first, conversion-focused service portal featuring streamlined category booking, instant emergency WhatsApp routing, localized technician dispatch, and clear upfront pricing.',
+    techStack: ['HTML', 'CSS', 'React', 'JavaScript', 'Emergency Dispatch Engine', 'Direct Booking API'],
+    metrics: {
+      performance: '96+ PageSpeed score',
+      features: 'Instant 24/7 Booking Dispatch',
+      sales: '50% boost in direct booking conversions',
+    },
+    highlights: ['24/7 Emergency Dispatch', 'Multi-Service Booking Flow', 'Transparent Upfront Pricing'],
   },
 ];

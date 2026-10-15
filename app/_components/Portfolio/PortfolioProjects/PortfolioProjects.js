@@ -25,6 +25,8 @@ const PORTFOLIO_LEGACY_IMAGE_KEYS = {
   optimum_fusion: ['image_poptimumfusion'],
   click_slice: ['image_pclickslice'],
   seen_alif: ['image_pseenalif'],
+  voltaria_global: ['image_pvoltaria'],
+  osumfix: ['image_posumfix'],
 };
 
 const PORTFOLIO_LEGACY_LOGO_KEYS = {
@@ -33,7 +35,6 @@ const PORTFOLIO_LEGACY_LOGO_KEYS = {
   clix_pos: ['image_clickpos'],
   just_appliances: ['image_appliances'],
   mubayaa_real_estate: ['image_mubayya'],
-  albasit: ['image_albasit'],
   click_slice: ['image_clickslice'],
   crown_excel: ['image_crown'],
   smart_max_it: ['image_smart'],
@@ -247,8 +248,8 @@ const ProjectImageComponent = ({ project }) => {
           <span className="w-2.5 h-2.5 rounded-full bg-amber-400/80" />
           <span className="w-2.5 h-2.5 rounded-full bg-emerald-400/80" />
         </div>
-        <div className="px-3 py-0.5 rounded-md bg-white border border-gray-200 text-[11px] text-gray-500 font-mono">
-          https://{project.slug}.techsolutionor.live
+        <div className="px-3 py-0.5 rounded-md bg-white border border-gray-200 text-[11px] text-gray-500 font-mono truncate max-w-[220px] sm:max-w-[280px]">
+          {project.websiteUrl ? project.websiteUrl.replace(/\/$/, '') : `https://${project.slug}.techsolutionor.live`}
         </div>
         <div className="w-6" />
       </div>
