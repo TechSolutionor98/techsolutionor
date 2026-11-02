@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import BlogHero from '../_components/Blog/BlogHero';
 import BlogList from '../_components/Blog/BlogList';
 import { generateCmsMetadata, getCmsData } from '@/lib/cms-fetch';
@@ -13,7 +13,11 @@ export async function generateMetadata() {
   });
 }
 
-export default async function BlogPage() {
+export default async function BlogPage({ searchParams }) {
+  const resolvedSearchParams = await searchParams;
+  const initialCategory = resolvedSearchParams?.category || 'all';
+  const initialSearch = resolvedSearchParams?.search || '';
+
   let blogs = [];
   try {
     const list = await getBlogsList(false);
@@ -27,7 +31,7 @@ export default async function BlogPage() {
   // Calculate dynamic categories and counts
   const categoryMap = {};
   blogs.forEach((b) => {
-    const cat = (b.category || 'General').trim();
+    const cat = (b.category && b.category.trim()) ? b.category.trim() : 'General';
     categoryMap[cat] = (categoryMap[cat] || 0) + 1;
   });
 
@@ -42,11 +46,15 @@ export default async function BlogPage() {
   return (
     <main className="min-h-screen bg-white">
       <BlogHero cmsContent={cmsContent} />
-      <BlogList
-        posts={blogs}
-        categories={categories}
-        recentPosts={recentPosts}
-      />
+      <Suspense fallback={null}>
+        <BlogList
+          posts={blogs}
+          categories={categories}
+          recentPosts={recentPosts}
+          initialCategory={initialCategory}
+          initialSearch={initialSearch}
+        />
+      </Suspense>
     </main>
   );
 }

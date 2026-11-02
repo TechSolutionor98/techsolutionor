@@ -1,22 +1,57 @@
 "use client";
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
 import { FaSearch } from 'react-icons/fa';
 import { resolveImageUrl, formatDate } from './BlogCard';
 import { CardHeading, ButtonText } from '@/components/Typography';
 
 export const BlogSearchForm = ({ 
   searchQuery = '', 
-  onSearchChange = () => {}, 
+  onSearchChange, 
   className = '' 
 }) => {
+  const router = useRouter();
+  const pathname = usePathname();
+  const [internalValue, setInternalValue] = useState(searchQuery);
+
+  useEffect(() => {
+    setInternalValue(searchQuery);
+  }, [searchQuery]);
+
+  const handleChange = (e) => {
+    const val = e.target.value;
+    setInternalValue(val);
+    if (onSearchChange) {
+      onSearchChange(val);
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const q = internalValue.trim();
+    if (pathname !== '/blog') {
+      if (q) {
+        router.push(`/blog?search=${encodeURIComponent(q)}`);
+      } else {
+        router.push('/blog');
+      }
+    } else {
+      if (q) {
+        router.push(`/blog?search=${encodeURIComponent(q)}`, { scroll: false });
+      } else {
+        router.push('/blog', { scroll: false });
+      }
+    }
+  };
+
   return (
     <div className={className}>
-      <form onSubmit={(e) => e.preventDefault()} className="flex items-center border border-gray-200 rounded-xl overflow-hidden bg-white shadow-xs focus-within:border-[#41B349] focus-within:ring-1 focus-within:ring-[#41B349] transition-all">
+      <form onSubmit={handleSubmit} className="flex items-center border border-gray-200 rounded-xl overflow-hidden bg-white shadow-xs focus-within:border-[#41B349] focus-within:ring-1 focus-within:ring-[#41B349] transition-all">
         <input
           type="text"
-          value={searchQuery}
-          onChange={(e) => onSearchChange(e.target.value)}
+          value={internalValue}
+          onChange={handleChange}
           placeholder="Search articles & guides..."
           className="font-jakarta w-full px-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 outline-none bg-transparent"
         />
@@ -36,11 +71,30 @@ const BlogSidebar = ({
   categories = [], 
   recentPosts = [],
   selectedCategory = 'all',
-  onSelectCategory = () => {},
+  onSelectCategory,
   searchQuery = '',
-  onSearchChange = () => {},
+  onSearchChange,
   hideSearchOnMobile = false
 }) => {
+  const pathname = usePathname();
+  const isBlogListingPage = pathname === '/blog';
+
+  const isCategorySelected = (cat) => {
+    if (!selectedCategory || selectedCategory.toLowerCase() === 'all') return false;
+    const current = selectedCategory.toLowerCase().trim();
+    const currentSlug = current.replace(/[^a-z0-9]+/g, '-');
+    const name = (cat.name || '').toLowerCase().trim();
+    const slug = (cat.slug || name.replace(/[^a-z0-9]+/g, '-')).toLowerCase().trim();
+    return current === name || current === slug || currentSlug === slug;
+  };
+
+  const getCategoryHref = (cat, isSelected) => {
+    if (isSelected) {
+      return '/blog';
+    }
+    return `/blog?category=${encodeURIComponent(cat.name)}`;
+  };
+
   const sidebarTechServices = [
     { name: "Web Development", href: "/services" },
     { name: "App Development", href: "/services" },
@@ -69,11 +123,25 @@ const BlogSidebar = ({
         </CardHeading>
         <ul className="space-y-2 font-jakarta text-sm">
           {categories.map((cat, idx) => {
-            const isSelected = selectedCategory.toLowerCase() === (cat.name || '').toLowerCase();
+            const isSelected = isCategorySelected(cat);
             return (
-              <li key={idx}>
-                <button
-                  onClick={() => onSelectCategory(isSelected ? 'all' : cat.name)}
+              <li key={cat.slug || cat.name || idx}>
+                <Link
+                  href={getCategoryHref(cat, isSelected)}
+                  scroll={isBlogListingPage ? false : true}
+                  onClick={(e) => {
+                    if (
+                      isBlogListingPage &&
+                      onSelectCategory &&
+                      !e.metaKey &&
+                      !e.ctrlKey &&
+                      !e.shiftKey &&
+                      !e.altKey &&
+                      e.button === 0
+                    ) {
+                      onSelectCategory(isSelected ? 'all' : cat.name);
+                    }
+                  }}
                   className={`w-full flex items-center justify-between py-1.5 px-3 rounded-xl transition-all cursor-pointer text-left ${
                     isSelected
                       ? 'bg-[#41B349]/10 text-[#2C9434] font-bold shadow-xs'
@@ -86,7 +154,7 @@ const BlogSidebar = ({
                   }`}>
                     {cat.count}
                   </span>
-                </button>
+                </Link>
               </li>
             );
           })}

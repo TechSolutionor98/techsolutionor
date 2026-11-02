@@ -1,25 +1,71 @@
 "use client";
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
+import { useSearchParams, useRouter } from 'next/navigation';
 import BlogCard, { resolveImageUrl } from './BlogCard';
 import BlogSidebar, { BlogSearchForm } from './BlogSidebar';
 import { CardHeading, CardParagraph, ButtonText, SectionBadge } from '@/components/Typography';
 
-const BlogList = ({ posts = [], categories = [], recentPosts = [] }) => {
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [searchQuery, setSearchQuery] = useState('');
+const BlogList = ({ 
+  posts = [], 
+  categories = [], 
+  recentPosts = [],
+  initialCategory = 'all',
+  initialSearch = ''
+}) => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const categoryFromUrl = searchParams?.get('category') || initialCategory || 'all';
+  const searchFromUrl = searchParams?.get('search') || initialSearch || '';
+
+  const [selectedCategory, setSelectedCategory] = useState(categoryFromUrl);
+  const [searchQuery, setSearchQuery] = useState(searchFromUrl);
+
+  // Sync state whenever the URL searchParams change
+  useEffect(() => {
+    const cat = searchParams?.get('category') || 'all';
+    setSelectedCategory(cat);
+  }, [searchParams]);
+
+  useEffect(() => {
+    const q = searchParams?.get('search') || '';
+    setSearchQuery(q);
+  }, [searchParams]);
+
+  const handleSelectCategory = (catName) => {
+    const nextCat = catName || 'all';
+    setSelectedCategory(nextCat);
+  };
+
+  const handleResetFilters = () => {
+    setSearchQuery('');
+    setSelectedCategory('all');
+    router.push('/blog', { scroll: false });
+  };
 
   // Filter posts by category and search
   const filteredPosts = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
     return posts.filter((post) => {
-      const matchCat =
-        selectedCategory === 'all' ||
-        (post.category && post.category.toLowerCase() === selectedCategory.toLowerCase());
+      const matchCat = (() => {
+        if (!selectedCategory || selectedCategory.toLowerCase() === 'all') return true;
+        if (!post.category) return false;
+        const postCat = post.category.toLowerCase().trim();
+        const selCat = selectedCategory.toLowerCase().trim();
+        const postCatSlug = postCat.replace(/[^a-z0-9]+/g, '-');
+        const selCatSlug = selCat.replace(/[^a-z0-9]+/g, '-');
+        return (
+          postCat === selCat ||
+          postCatSlug === selCat ||
+          postCatSlug === selCatSlug
+        );
+      })();
+
       const matchSearch =
-        !searchQuery.trim() ||
-        post.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        post.excerpt?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (Array.isArray(post.tags) && post.tags.some((t) => t.toLowerCase().includes(searchQuery.toLowerCase())));
+        !query ||
+        post.title?.toLowerCase().includes(query) ||
+        post.excerpt?.toLowerCase().includes(query) ||
+        (Array.isArray(post.tags) && post.tags.some((t) => typeof t === 'string' && t.toLowerCase().includes(query)));
       return matchCat && matchSearch;
     });
   }, [posts, selectedCategory, searchQuery]);
@@ -27,7 +73,7 @@ const BlogList = ({ posts = [], categories = [], recentPosts = [] }) => {
   // The latest published blog is the first post in the full list
   const latestPost = posts[0] || null;
   // If search/category filter is active, show matching results in grid; otherwise show remaining posts after latestPost
-  const isFiltering = searchQuery.trim() !== '' || selectedCategory !== 'all';
+  const isFiltering = searchQuery.trim() !== '' || (selectedCategory && selectedCategory.toLowerCase() !== 'all');
   const gridPosts = isFiltering ? filteredPosts : filteredPosts.slice(1);
 
   return (
@@ -104,10 +150,7 @@ const BlogList = ({ posts = [], categories = [], recentPosts = [] }) => {
                 </CardParagraph>
                 {isFiltering && (
                   <button
-                    onClick={() => {
-                      setSearchQuery('');
-                      setSelectedCategory('all');
-                    }}
+                    onClick={handleResetFilters}
                     className="px-6 py-2.5 bg-[#41B349] hover:bg-[#369c3d] text-white rounded-full transition-colors cursor-pointer shadow-xs"
                   >
                     <ButtonText className="text-xs">Reset Filters</ButtonText>
@@ -129,7 +172,7 @@ const BlogList = ({ posts = [], categories = [], recentPosts = [] }) => {
               categories={categories}
               recentPosts={recentPosts}
               selectedCategory={selectedCategory}
-              onSelectCategory={setSelectedCategory}
+              onSelectCategory={handleSelectCategory}
               searchQuery={searchQuery}
               onSearchChange={setSearchQuery}
               hideSearchOnMobile={true}
