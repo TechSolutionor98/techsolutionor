@@ -4,7 +4,8 @@ import BlogList from '../_components/Blog/BlogList';
 import { generateCmsMetadata, getCmsData } from '@/lib/cms-fetch';
 import { getBlogsList } from '@/lib/cms-service';
 
-export const dynamic = 'force-dynamic';
+// 5-minute Incremental Static Regeneration (ISR)
+export const revalidate = 300;
 
 export async function generateMetadata() {
   return generateCmsMetadata('/blog', {
@@ -13,10 +14,7 @@ export async function generateMetadata() {
   });
 }
 
-export default async function BlogPage({ searchParams }) {
-  const resolvedSearchParams = await searchParams;
-  const initialCategory = resolvedSearchParams?.category || 'all';
-  const initialSearch = resolvedSearchParams?.search || '';
+export default async function BlogPage() {
 
   let blogs = [];
   try {
@@ -51,8 +49,6 @@ export default async function BlogPage({ searchParams }) {
           posts={blogs}
           categories={categories}
           recentPosts={recentPosts}
-          initialCategory={initialCategory}
-          initialSearch={initialSearch}
         />
       </Suspense>
     </main>

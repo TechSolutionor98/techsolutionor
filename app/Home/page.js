@@ -11,8 +11,8 @@ export async function generateMetadata() {
   });
 }
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+// 5-minute Incremental Static Regeneration (ISR) ensures static serving from Vercel Edge CDN
+export const revalidate = 300;
 
 export default async function HomePage() {
   let cmsData = null;

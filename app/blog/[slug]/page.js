@@ -8,7 +8,17 @@ import BlogCommentForm from './BlogCommentForm';
 import { FaCalendarAlt, FaUser, FaClock, FaComment, FaTag, FaArrowLeft } from 'react-icons/fa';
 import { SectionBadge, SectionHeading, CardHeading, ButtonText } from '@/components/Typography';
 
-export const dynamic = 'force-dynamic';
+// 5-minute Incremental Static Regeneration (ISR)
+export const revalidate = 300;
+
+export async function generateStaticParams() {
+  try {
+    const blogs = await getBlogsList(false);
+    return (blogs || []).filter((b) => b?.slug).map((b) => ({ slug: b.slug }));
+  } catch (err) {
+    return [];
+  }
+}
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;

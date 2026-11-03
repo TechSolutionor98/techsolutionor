@@ -3,6 +3,9 @@ import { generateCmsMetadata, getCmsData } from '@/lib/cms-fetch';
 import { getCmsVal } from '@/lib/api-helper';
 import CmsJsonLd from '@/components/CmsJsonLd';
 
+// 1-hour Incremental Static Regeneration (ISR)
+export const revalidate = 3600;
+
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   return generateCmsMetadata(`/technologies/${slug}`, {

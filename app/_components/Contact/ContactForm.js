@@ -22,7 +22,8 @@ const ContactForm = () => {
         service: '',
         date: '',
         budget: '',
-        message: ''
+        message: '',
+        _hp_val: ''
     });
 
     const [loading, setLoading] = useState(false);
@@ -65,7 +66,8 @@ const ContactForm = () => {
                     budget: formData.budget,
                     preferredDate: formData.date,
                     message: formData.message.trim(),
-                    source: 'Contact Us Form'
+                    source: 'Contact Us Form',
+                    _hp_val: formData._hp_val || ''
                 })
             });
 
@@ -87,7 +89,8 @@ const ContactForm = () => {
                 service: '',
                 date: '',
                 budget: '',
-                message: ''
+                message: '',
+                _hp_val: ''
             });
 
         } catch (err) {
@@ -190,6 +193,17 @@ const ContactForm = () => {
                         )}
 
                         <form onSubmit={handleSubmit} className="space-y-4">
+                            {/* Hidden Honeypot Field to trap automated spambots */}
+                            <input
+                                type="text"
+                                name="_hp_val"
+                                tabIndex={-1}
+                                autoComplete="off"
+                                value={formData._hp_val || ''}
+                                onChange={handleChange}
+                                style={{ display: 'none', position: 'absolute', left: '-9999px', opacity: 0 }}
+                                aria-hidden="true"
+                            />
                             <div className="grid grid-cols-1 gap-4">
                                 <div>
                                     <label className="font-jakarta block text-xs font-semibold uppercase tracking-wider text-gray-700 mb-1.5">

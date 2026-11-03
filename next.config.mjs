@@ -6,6 +6,13 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  serverExternalPackages: [
+    'imapflow',
+    'mailparser',
+    'mongodb',
+    'cloudinary',
+    'nodemailer',
+  ],
   experimental: {
     optimizePackageImports: [
       'lucide-react',
@@ -13,6 +20,26 @@ const nextConfig = {
       'swiper',
       '@tsparticles/react',
       'tsparticles',
+    ],
+  },
+  outputFileTracingExcludes: {
+    '*': [
+      'public/**',
+      'src/Components/Images/**',
+      'content/**',
+      'scripts/**',
+      'scratch/**',
+      'node_modules/@img/sharp-win32-x64/**',
+      'node_modules/@img/sharp-libvips-win32-x64/**',
+    ],
+    '**': [
+      'public/**',
+      'src/Components/Images/**',
+      'content/**',
+      'scripts/**',
+      'scratch/**',
+      'node_modules/@img/sharp-win32-x64/**',
+      'node_modules/@img/sharp-libvips-win32-x64/**',
     ],
   },
   env: {
