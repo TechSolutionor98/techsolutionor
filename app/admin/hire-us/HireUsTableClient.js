@@ -220,6 +220,34 @@ export default function HireUsTableClient({ initialData = [], apiBase = process.
   const [uploadError, setUploadError] = useState('');
   const [previewImage, setPreviewImage] = useState(null);
   const [deletingFileIdx, setDeletingFileIdx] = useState(null);
+  const [downloadingFileIdx, setDownloadingFileIdx] = useState(null);
+
+  const handleDownloadFile = async (e, url, fileName, fileIdx) => {
+    e.preventDefault();
+    e.stopPropagation();
+    try {
+      if (fileIdx !== undefined) setDownloadingFileIdx(fileIdx);
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('File download failed');
+      const blob = await res.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.style.display = 'none';
+      link.href = blobUrl;
+      link.download = fileName || 'download';
+      document.body.appendChild(link);
+      link.click();
+      setTimeout(() => {
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(blobUrl);
+      }, 200);
+    } catch (err) {
+      console.warn('In-memory download failed, falling back to direct navigation:', err);
+      window.open(url, '_blank');
+    } finally {
+      if (fileIdx !== undefined) setDownloadingFileIdx(null);
+    }
+  };
 
   // Email Reply State & Handlers
   const [showReplyComposer, setShowReplyComposer] = useState(false);
@@ -1862,15 +1890,16 @@ export default function HireUsTableClient({ initialData = [], apiBase = process.
                                     <span>Preview</span>
                                   </a>
 
-                                  <a
-                                    href={downloadUrl}
-                                    download={originalName}
-                                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#34953C] hover:bg-[#2b7e32] text-white font-bold text-xs transition shadow-2xs cursor-pointer"
+                                  <button
+                                    type="button"
+                                    onClick={(e) => handleDownloadFile(e, downloadUrl, originalName, fIdx)}
+                                    disabled={downloadingFileIdx === fIdx}
+                                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#34953C] hover:bg-[#2b7e32] disabled:opacity-50 text-white font-bold text-xs transition shadow-2xs cursor-pointer"
                                     title="Download file directly"
                                   >
-                                    <Download className="w-3.5 h-3.5" />
-                                    <span>Download</span>
-                                  </a>
+                                    <Download className={`w-3.5 h-3.5 ${downloadingFileIdx === fIdx ? 'animate-bounce' : ''}`} />
+                                    <span>{downloadingFileIdx === fIdx ? 'Downloading...' : 'Download'}</span>
+                                  </button>
 
                                   <button
                                     type="button"
@@ -2145,8 +2174,8 @@ export default function HireUsTableClient({ initialData = [], apiBase = process.
                                 {hasStorage ? (
                                   <a
                                     href={downloadUrl}
-                                    download={fileName}
-                                    className="text-[#34953C] hover:underline font-semibold"
+                                    onClick={(e) => handleDownloadFile(e, downloadUrl, fileName)}
+                                    className="text-[#34953C] hover:underline font-semibold cursor-pointer"
                                     title="Download file"
                                   >
                                     {fileName}{docTypeStr}
