@@ -326,7 +326,7 @@ export default function EmailInboxClient() {
 
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || 'Failed to send reply');
+        throw new Error(data.deliveryError || data.error || 'Failed to send reply');
       }
 
       setReplyBody('');
