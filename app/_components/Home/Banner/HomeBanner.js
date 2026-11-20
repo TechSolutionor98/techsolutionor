@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
-import Link from "next/link";
 import { FaArrowRight } from "react-icons/fa6";
 import { RiDoubleQuotesL, RiDoubleQuotesR } from "react-icons/ri";
 import { motion, AnimatePresence } from "framer-motion";
+import { useQuote } from "@/app/_context/QuoteContext";
 import { getCmsVal } from "@/lib/api-helper";
 import HeroConstellation from "./HeroConstellation";
 
@@ -73,6 +73,7 @@ const charVariants = {
 };
 
 const HomeBanner = ({ content, cmsContent, locations, countries }) => {
+  const { openQuote } = useQuote();
   const [countryIndex, setCountryIndex] = useState(0);
 
   const heroContent = useMemo(
@@ -116,7 +117,6 @@ const HomeBanner = ({ content, cmsContent, locations, countries }) => {
   const bannerTitle = getCmsVal(cmsContent, rawTitle, "homebanner") || getCmsVal(cmsContent, rawTitle, "hero");
   const bannerDescription = getCmsVal(cmsContent, rawDescription, "homebanner") || getCmsVal(cmsContent, rawDescription, "hero");
   const bannerButtonText = getCmsVal(cmsContent, rawButtonText, "homebanner") || getCmsVal(cmsContent, rawButtonText, "hero");
-  const bannerButtonLink = "/claim-your-free-seo-audit";
 
   const descriptionLines = typeof bannerDescription === "string"
     ? bannerDescription.split("\n").filter(Boolean)
@@ -312,12 +312,14 @@ const HomeBanner = ({ content, cmsContent, locations, countries }) => {
         <div
           className="mt-4 sm:mt-4.5 md:mt-5 flex flex-col items-center gap-4 w-full sm:w-auto"
         >
-          <Link href={bannerButtonLink} className="w-full sm:w-auto group">
-            <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 sm:gap-3 bg-[#41B349] text-[#FCFCFC] font-jakarta font-semibold text-sm sm:text-base md:text-[16.5px] tracking-[-0.01em] px-8 sm:px-10 md:px-11 py-3.5 sm:py-4 rounded-full shadow-[0_10px_30px_rgba(65,179,73,0.35)] hover:shadow-[0_15px_40px_rgba(65,179,73,0.5)] hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer border-2 border-[#FFE7A8]/60 shine-btn relative overflow-hidden">
-              <span>{bannerButtonText}</span>
-              <FaArrowRight size={16} className="transition-transform group-hover:translate-x-1.5" />
-            </button>
-          </Link>
+          <button
+            type="button"
+            onClick={openQuote}
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 sm:gap-3 bg-[#41B349] text-[#FCFCFC] font-jakarta font-semibold text-sm sm:text-base md:text-[16.5px] tracking-[-0.01em] px-8 sm:px-10 md:px-11 py-3.5 sm:py-4 rounded-full shadow-[0_10px_30px_rgba(65,179,73,0.35)] hover:shadow-[0_15px_40px_rgba(65,179,73,0.5)] hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer border-2 border-[#FFE7A8]/60 shine-btn relative overflow-hidden group"
+          >
+            <span>{bannerButtonText}</span>
+            <FaArrowRight size={16} className="transition-transform group-hover:translate-x-1.5" />
+          </button>
         </div>
 
       </div>
