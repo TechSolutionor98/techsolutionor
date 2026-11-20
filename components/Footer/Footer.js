@@ -51,13 +51,13 @@ const Footer = () => {
         "Company": [
             { name: "About Us", href: "/about-us" },
             { name: "Contact Us", href: "/contact-us" },
+            { name: "Blogs", href: "/blog" },
             { name: "Our Projects", href: "/our-portfolio" },
             { name: "Hire Resources", href: "/hire-resources" },
             { name: "Career", href: "/career" },
             { name: "Become a Partner", href: "/become-a-partner" },
             { name: "Privacy Policy", href: "/privacy-policy" },
-            { name: "Terms and Conditions", href: "/terms-and-conditions" },
-            { name: "Blogs", href: "/blog" }
+            { name: "Terms and Conditions", href: "/terms-and-conditions" }
         ]
     };
 
@@ -67,7 +67,7 @@ const Footer = () => {
             <div className="absolute top-1/2 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] bg-[#41B349]/10 blur-[150px] rounded-full pointer-events-none" />
             <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[#41B349]/5 blur-[120px] rounded-full pointer-events-none" />
 
-            <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-12 md:py-16">
+            <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-12 md:py-16 pb-24 lg:pb-16">
                 
                 {/* ================= 4 EQUAL COLUMNS ================= */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12 items-start">
@@ -87,7 +87,7 @@ const Footer = () => {
 
                             {/* Links List */}
                             <ul className="space-y-1.5">
-                                {links.slice(0, 8).map((linkItem, index) => {
+                                {links.map((linkItem, index) => {
                                     const isObj = typeof linkItem === 'object';
                                     const label = isObj ? linkItem.name : linkItem;
                                     const href = isObj ? linkItem.href : '#';
@@ -95,14 +95,14 @@ const Footer = () => {
                                     return (
                                         <li key={index} className="flex items-center">
                                             <Link 
-                                                href={href} 
-                                                className="group relative inline-flex items-center gap-2 text-xs sm:text-[13px] text-gray-300 hover:text-white transition-colors duration-200 py-0.5"
+                                                 href={href} 
+                                                className="group relative inline-flex items-center gap-2 font-jakarta font-normal sm:font-medium tracking-[-0.01em] text-xs sm:text-[13px] text-gray-300 hover:text-white transition-colors duration-200 py-0.5 leading-snug"
                                             >
                                                 {/* Dot / Icon next to link */}
                                                 <span className="w-1.5 h-1.5 rounded-full bg-[#41B349] opacity-70 group-hover:opacity-100 group-hover:scale-125 group-hover:shadow-[0_0_6px_rgba(65,179,73,0.9)] transition-all duration-200 flex-shrink-0" />
                                                 
                                                 {/* Label with smooth animated bottom border/underline */}
-                                                <span className="relative inline-block leading-snug">
+                                                <span className="relative inline-block">
                                                     {label}
                                                     <span className="absolute left-0 -bottom-0.5 w-0 h-[1.5px] bg-[#41B349] transition-all duration-300 ease-out group-hover:w-full" />
                                                 </span>
@@ -116,10 +116,10 @@ const Footer = () => {
                 </div>
 
                 {/* ================= BOTTOM BAR WITH CENTERED SOCIAL ICONS ================= */}
-                <div className="border-t border-white/10 mt-12 pt-6 flex flex-col md:flex-row items-center justify-between text-xs text-gray-400 gap-4 text-center md:text-left">
+                <div className="border-t border-white/10 mt-12 pt-6 flex flex-col md:flex-row items-center justify-between font-jakarta text-xs sm:text-[13px] text-gray-400 gap-4 text-center md:text-left tracking-[-0.01em]">
                     {/* Left: Copyright */}
-                    <div>
-                        © {new Date().getFullYear()} <span className="text-white font-semibold">TECH SOLUTIONOR</span>. All rights reserved.
+                    <div className="font-normal">
+                        © {new Date().getFullYear()} <span className="text-white font-semibold tracking-normal">TECH SOLUTIONOR</span>. All rights reserved.
                     </div>
 
                     {/* Center: Social Media Icons */}
@@ -182,7 +182,7 @@ const Footer = () => {
                     </div>
 
                     {/* Right: Tagline */}
-                    <div>
+                    <div className="font-medium text-gray-400">
                         Empowering Global Technology Solutions
                     </div>
                 </div>

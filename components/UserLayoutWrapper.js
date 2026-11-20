@@ -15,18 +15,20 @@ import GetInTouch from '@/app/_components/Home/GetInTouch/GetInTouch';
 export default function UserLayoutWrapper({ children }) {
   const pathname = usePathname();
   const isAdmin = Boolean(pathname && pathname.startsWith('/admin'));
+  const isWAMarketing = Boolean(pathname && (pathname.startsWith('/wamarketing-tool') || pathname.startsWith('/wamarketingtool')));
+  const hideGlobalLayout = isAdmin || isWAMarketing;
 
   return (
     <LanguageProvider>
       <QuoteProvider>
-        {!isAdmin && <Navbar />}
-        {!isAdmin && <SideIcons />}
-        {!isAdmin && <ScrollToTopButton />}
+        {!hideGlobalLayout && <Navbar />}
+        {!hideGlobalLayout && <SideIcons />}
+        {!hideGlobalLayout && <ScrollToTopButton />}
         <main>{children}</main>
-        {!isAdmin && <GetQuoteForm />}
-        {!isAdmin && <GetInTouch />}
-        {!isAdmin && <Footer />}
-        {!isAdmin && <MobileBottomNav />}
+        {!hideGlobalLayout && <GetQuoteForm />}
+        {!hideGlobalLayout && <GetInTouch />}
+        {!hideGlobalLayout && <Footer />}
+        {!hideGlobalLayout && <MobileBottomNav />}
       </QuoteProvider>
     </LanguageProvider>
   );

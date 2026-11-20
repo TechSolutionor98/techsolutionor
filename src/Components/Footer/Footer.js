@@ -51,13 +51,13 @@ const Footer = () => {
         "Company": [
             { name: "About Us", href: "/about-us" },
             { name: "Contact Us", href: "/contact-us" },
+            { name: "Blogs", href: "/blog" },
             { name: "Our Projects", href: "/our-portfolio" },
             { name: "Hire Resources", href: "/hire-resources" },
             { name: "Career", href: "/career" },
             { name: "Become a Partner", href: "/become-a-partner" },
             { name: "Privacy Policy", href: "/privacy-policy" },
-            { name: "Terms and Conditions", href: "/terms-and-conditions" },
-            { name: "Blogs", href: "/blog" }
+            { name: "Terms and Conditions", href: "/terms-and-conditions" }
         ]
     };
 
@@ -87,7 +87,7 @@ const Footer = () => {
 
                             {/* Links List */}
                             <ul className="space-y-1.5">
-                                {links.slice(0, 8).map((linkItem, index) => {
+                                {links.map((linkItem, index) => {
                                     const isObj = typeof linkItem === 'object';
                                     const label = isObj ? linkItem.name : linkItem;
                                     const href = isObj ? linkItem.href : '#';

@@ -123,14 +123,6 @@ const navLinks = [
         label: 'Portfolio',
         href: '/our-portfolio',
     },
-    {
-        label: 'Blog',
-        href: '/blog',
-    },
-    {
-        label: 'Contact Us',
-        href: '/contact-us',
-    },
 ];
 
 const Navbar = () => {
@@ -434,16 +426,22 @@ const Navbar = () => {
                     {/* Right Zone: Action Buttons (Desktop) or Hamburger (Mobile/Tablet) */}
                     <div className="flex-1 flex items-center justify-end min-w-0">
                         {/* Desktop action buttons */}
-                        <div className="hidden lg:flex items-center gap-2.5 xl:gap-3 flex-shrink-0">
+                        <div className="hidden lg:flex items-center gap-2 xl:gap-2.5 flex-shrink-0">
+                            <Link
+                                href="/wamarketing-tool"
+                                className="font-jakarta whitespace-nowrap bg-[#41B349] text-white text-[13px] xl:text-[13.5px] font-semibold tracking-[-0.01em] px-3.5 xl:px-4.5 h-[38px] xl:h-[40px] rounded-full hover:bg-white hover:text-black transition-all duration-200 cursor-pointer flex-shrink-0 shadow-sm active:scale-95 inline-flex items-center justify-center"
+                            >
+                                <ButtonText className="text-[13px] xl:text-[13.5px]">WA Tool</ButtonText>
+                            </Link>
                             <Link
                                 href="https://erp.techsolutionor.com/"
-                                className="font-jakarta whitespace-nowrap bg-[#41B349] text-white text-[13px] xl:text-[13.5px] font-semibold tracking-[-0.01em] px-4 xl:px-5 h-[38px] xl:h-[40px] rounded-full hover:bg-white hover:text-black transition-all duration-200 cursor-pointer flex-shrink-0 shadow-sm active:scale-95 inline-flex items-center justify-center"
+                                className="font-jakarta whitespace-nowrap bg-[#41B349] text-white text-[13px] xl:text-[13.5px] font-semibold tracking-[-0.01em] px-3.5 xl:px-4.5 h-[38px] xl:h-[40px] rounded-full hover:bg-white hover:text-black transition-all duration-200 cursor-pointer flex-shrink-0 shadow-sm active:scale-95 inline-flex items-center justify-center"
                             >
                                 <ButtonText className="text-[13px] xl:text-[13.5px]">Get POS</ButtonText>
                             </Link>
                             <button
                                 onClick={openQuote}
-                                className="font-jakarta whitespace-nowrap bg-[#41B349] text-white text-[13px] xl:text-[13.5px] font-semibold tracking-[-0.01em] px-4.5 xl:px-5.5 h-[38px] xl:h-[40px] rounded-full hover:bg-white hover:text-black transition-all duration-200 cursor-pointer flex-shrink-0 shadow-sm active:scale-95"
+                                className="font-jakarta whitespace-nowrap bg-[#41B349] text-white text-[13px] xl:text-[13.5px] font-semibold tracking-[-0.01em] px-4 xl:px-5 h-[38px] xl:h-[40px] rounded-full hover:bg-white hover:text-black transition-all duration-200 cursor-pointer flex-shrink-0 shadow-sm active:scale-95"
                             >
                                 <ButtonText className="text-[13px] xl:text-[13.5px]">Book Now</ButtonText>
                             </button>
@@ -519,6 +517,13 @@ const Navbar = () => {
 
                     {/* Mobile Action Button at bottom of scroll */}
                     <div className="flex flex-col gap-3 mt-8 pt-6 border-t border-white/10">
+                        <Link
+                            href="/wamarketing-tool"
+                            onClick={() => setMobileOpen(false)}
+                            className="font-jakarta flex items-center justify-center bg-[#41B349] text-white text-[15.5px] font-semibold tracking-[-0.01em] w-full h-[46px] rounded-full hover:bg-white hover:text-black transition-all duration-200 cursor-pointer shadow-lg active:scale-95"
+                        >
+                            <ButtonText className="text-[15.5px]">WA Tool</ButtonText>
+                        </Link>
                         <Link
                             href="https://erp.techsolutionor.com/"
                             onClick={() => setMobileOpen(false)}

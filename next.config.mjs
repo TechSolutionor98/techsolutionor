@@ -95,6 +95,11 @@ const nextConfig = {
         destination: '/hire-us',
         permanent: true,
       },
+      {
+        source: '/wamarketingtool',
+        destination: '/wamarketing-tool',
+        permanent: true,
+      },
     ];
   },
 };
