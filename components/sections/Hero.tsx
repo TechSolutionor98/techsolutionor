@@ -8,12 +8,14 @@ import { ButtonLink, Container, easeOut } from "@/components/ui";
 import { DashboardMock } from "@/components/mock/DashboardMock";
 import { PhoneChat } from "@/components/mock/PhoneChat";
 import { site } from "@/lib/site";
+import { useQuote } from "@/app/_context/QuoteContext";
 
 const HeroScene = dynamic(() => import("@/components/three/HeroScene"), { ssr: false });
 
 const headline = "Sell more on WhatsApp, with an AI that knows your products.";
 
 export function Hero() {
+  const { openQuote } = useQuote();
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { amount: 0.05 });
   const reduced = useReducedMotion();
@@ -92,7 +94,14 @@ export function Hero() {
             transition={{ duration: 0.7, delay: 0.9, ease: easeOut }}
             className="mt-8 flex flex-col gap-3 sm:flex-row"
           >
-            <ButtonLink href={site.demoLink} size="lg">
+            <ButtonLink 
+              href={site.demoLink} 
+              size="lg"
+              onClick={(e) => {
+                e.preventDefault();
+                openQuote();
+              }}
+            >
               <CalendarCheck className="size-5" aria-hidden />
               Book a demo
             </ButtonLink>

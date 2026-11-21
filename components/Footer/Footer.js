@@ -24,9 +24,7 @@ const Footer = () => {
             { name: "Shopify Development", href: "/technologies/shopify" },
             { name: "JavaScript Development", href: "/technologies/javascript" },
             { name: "PHP Development", href: "/technologies/php" },
-            { name: "Angular Development", href: "/technologies/angular" },
-            { name: "Go Development", href: "/technologies/go" },
-            { name: "C++ Development", href: "/technologies/c-plus-plus" }
+            { name: "Angular Development", href: "/technologies/angular" }
         ],
         "Services": [
             { name: "Web Development", href: "/services/web-development" },

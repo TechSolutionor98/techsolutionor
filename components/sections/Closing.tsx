@@ -19,6 +19,7 @@ import {
 import { ButtonLink, Container, Reveal, SectionHeading, easeOut } from "@/components/ui";
 import { cn } from "@/lib/cn";
 import { navLinks, site } from "@/lib/site";
+import { useQuote } from "@/app/_context/QuoteContext";
 
 /* ---------- Security ---------- */
 
@@ -83,6 +84,7 @@ export function Security() {
 /* ---------- Pricing ---------- */
 
 export function Pricing() {
+  const { openQuote } = useQuote();
   return (
     <section id="pricing" className="py-20 sm:py-28">
       <Container>
@@ -95,7 +97,15 @@ export function Pricing() {
           <p className="mx-auto mt-4 max-w-xl text-xl leading-relaxed text-muted-strong text-pretty">
             Plans for single businesses and agencies. Talk to us for pricing.
           </p>
-          <ButtonLink href={site.demoLink} size="lg" className="mt-8">
+          <ButtonLink 
+            href={site.demoLink} 
+            size="lg" 
+            className="mt-8"
+            onClick={(e) => {
+              e.preventDefault();
+              openQuote();
+            }}
+          >
             <CalendarCheck className="size-5" aria-hidden />
             Book a demo
           </ButtonLink>
@@ -256,6 +266,7 @@ export function FAQ() {
 /* ---------- Final call to action ---------- */
 
 export function FinalCTA() {
+  const { openQuote } = useQuote();
   return (
     <section id="book-demo" className="on-dark px-4 py-20 sm:px-6 sm:py-24">
       <Reveal className="relative isolate mx-auto max-w-6xl overflow-hidden rounded-[2rem] bg-linear-to-br from-brand-700 via-brand-800 to-brand-950 px-6 py-16 text-center shadow-lift sm:px-12 sm:py-20">
@@ -292,7 +303,16 @@ export function FinalCTA() {
         <p className="mx-auto mt-4 max-w-xl text-lg text-brand-100/90">
           See Tech Watsapi with your own numbers, contacts and products.
         </p>
-        <ButtonLink href={site.demoLink} variant="light" size="lg" className="mt-9">
+        <ButtonLink 
+          href={site.demoLink} 
+          variant="light" 
+          size="lg" 
+          className="mt-9"
+          onClick={(e) => {
+            e.preventDefault();
+            openQuote();
+          }}
+        >
           <CalendarCheck className="size-5" aria-hidden />
           Book a demo
         </ButtonLink>

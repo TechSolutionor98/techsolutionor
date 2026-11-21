@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect } from "react";
+import { useQuote } from "@/app/_context/QuoteContext";
 import { Header } from "@/components/sections/Header";
 import { Hero } from "@/components/sections/Hero";
 import { TrustStrip } from "@/components/sections/TrustStrip";
@@ -11,6 +15,21 @@ import { Team } from "@/components/sections/Team";
 import { FAQ, FinalCTA, Footer, Pricing, Security } from "@/components/sections/Closing";
 
 export default function WAMarketingPage() {
+  const { openQuote } = useQuote();
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.location.hash === "#book-demo") {
+      openQuote();
+    }
+    const handleHashChange = () => {
+      if (window.location.hash === "#book-demo") {
+        openQuote();
+      }
+    };
+    window.addEventListener("hashchange", handleHashChange);
+    return () => window.removeEventListener("hashchange", handleHashChange);
+  }, [openQuote]);
+
   return (
     <>
       <Header />

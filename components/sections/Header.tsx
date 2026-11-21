@@ -7,8 +7,10 @@ import { Menu, X } from "lucide-react";
 import { ButtonLink, Container } from "@/components/ui";
 import { cn } from "@/lib/cn";
 import { navLinks, site } from "@/lib/site";
+import { useQuote } from "@/app/_context/QuoteContext";
 
 export function Header() {
+  const { openQuote } = useQuote();
   const { scrollY } = useScroll();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -51,7 +53,15 @@ export function Header() {
           >
             Sign in
           </a>
-          <ButtonLink href={site.demoLink}>Book a demo</ButtonLink>
+          <ButtonLink 
+            href={site.demoLink}
+            onClick={(e) => {
+              e.preventDefault();
+              openQuote();
+            }}
+          >
+            Book a demo
+          </ButtonLink>
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
