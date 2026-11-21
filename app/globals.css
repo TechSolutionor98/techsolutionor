@@ -231,3 +231,44 @@ img {
   animation: iconBounce 0.55s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
+/* ==========================================================================
+   WA Marketing Tool Scoped Typography (/wamarketing-tool only)
+   Headings: Plus Jakarta Sans
+   Everything else (body, buttons, nav, mock screens): Inter
+   ========================================================================== */
+.wamarketing-scope {
+  font-family: var(--font-inter), 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.wamarketing-scope p,
+.wamarketing-scope button,
+.wamarketing-scope a,
+.wamarketing-scope input,
+.wamarketing-scope textarea,
+.wamarketing-scope select,
+.wamarketing-scope table,
+.wamarketing-scope th,
+.wamarketing-scope td,
+.wamarketing-scope li,
+.wamarketing-scope label,
+.wamarketing-scope nav,
+.wamarketing-scope .font-sans {
+  font-family: var(--font-inter), 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.wamarketing-scope h1,
+.wamarketing-scope h2,
+.wamarketing-scope h3,
+.wamarketing-scope h4,
+.wamarketing-scope h5,
+.wamarketing-scope h6,
+.wamarketing-scope .font-display,
+.wamarketing-scope .font-jakarta {
+  font-family: var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif !important;
+}
+
+.wamarketing-scope .font-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+}
+
+

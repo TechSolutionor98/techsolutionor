@@ -50,9 +50,8 @@ export function DashboardMock() {
   return (
     <div aria-hidden className="flex h-full w-full bg-white text-left leading-[1.35] text-ink">
       <aside className="flex w-[14.5em] shrink-0 flex-col gap-[0.25em] border-r border-slate-100 bg-brand-50 p-[1em]">
-        <div className="mb-[1em] flex items-center gap-[0.5em]">
-          <Image src="/favicon.png" alt="" width={64} height={64} className="size-[2.2em]" />
-          <span className="font-display text-[1.15em] font-extrabold tracking-tight">Tech Watsapi</span>
+        <div className="mb-[1em] flex items-center">
+          <Image src="/logo.png" alt="Tech Watsapi" width={900} height={353} className="h-[2.2em] w-auto object-contain" />
         </div>
         {nav.map((item) => (
           <div

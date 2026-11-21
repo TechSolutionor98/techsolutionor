@@ -141,11 +141,11 @@ function InboxMock() {
       >
         <motion.div animate={{ y: [0, -8, 0] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}>
           <Image
-            src="/favicon.png"
-            alt=""
-            width={256}
-            height={256}
-            className="size-24 drop-shadow-[0_14px_18px_rgb(6_78_59/0.3)] sm:size-28"
+            src="/logo.png"
+            alt="Tech Watsapi"
+            width={900}
+            height={353}
+            className="h-14 sm:h-16 w-auto drop-shadow-[0_14px_18px_rgb(6_78_59/0.3)] object-contain"
           />
         </motion.div>
       </motion.div>

@@ -290,11 +290,11 @@ export function FinalCTA() {
           className="mx-auto mb-6 w-fit"
         >
           <Image
-            src="/favicon.png"
-            alt=""
-            width={256}
-            height={256}
-            className="size-24 drop-shadow-[0_16px_24px_rgb(0_0_0/0.35)]"
+            src="/logo.png"
+            alt="Tech Watsapi"
+            width={900}
+            height={353}
+            className="h-16 sm:h-20 w-auto drop-shadow-[0_16px_24px_rgb(0_0_0/0.35)] object-contain"
           />
         </motion.div>
         <h2 className="mx-auto max-w-2xl font-display text-4xl font-extrabold leading-[1.08] tracking-tight text-white text-balance sm:text-5xl">

@@ -1,6 +1,21 @@
 import type { Metadata, Viewport } from "next";
+import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import { Providers } from "@/components/Providers";
 import { site } from "@/lib/site";
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-plus-jakarta",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: site.title,
@@ -29,7 +44,7 @@ export const viewport: Viewport = {
 
 export default function WAMarketingLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-white text-[#111827]">
+    <div className={`${inter.variable} ${plusJakarta.variable} wamarketing-scope min-h-screen bg-white text-[#111827]`}>
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-white focus:px-4 focus:py-3 focus:font-semibold focus:text-brand-800 focus:shadow-lift"

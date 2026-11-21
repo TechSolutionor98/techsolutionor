@@ -20,13 +20,7 @@ function Diagram() {
       className="mx-auto w-full max-w-2xl"
     >
       <div aria-hidden>
-        <motion.div
-          initial={{ opacity: 0, y: -20, scale: 0.9 }}
-          whileInView={{ opacity: 1, y: 0, scale: 1 }}
-          viewport={{ once: true, margin: "0px 0px -80px 0px" }}
-          transition={{ type: "spring", stiffness: 220, damping: 18 }}
-          className="relative mx-auto flex w-fit items-center gap-3 rounded-2xl bg-white px-5 py-3.5 shadow-[0_0_60px_-8px_rgb(52_211_153/0.7)]"
-        >
+        <div className="relative mx-auto flex w-fit items-center gap-3 rounded-2xl bg-white px-5 py-3.5 shadow-[0_0_60px_-8px_rgb(52_211_153/0.7)]">
           <span className="grid size-10 place-items-center rounded-xl bg-brand-700 text-white">
             <Crown className="size-5" />
           </span>
@@ -34,15 +28,10 @@ function Diagram() {
             <span className="block font-display text-lg font-extrabold leading-tight text-ink">Super Admin</span>
             <span className="block text-xs text-muted">Every workspace, user and rule</span>
           </span>
-        </motion.div>
+        </div>
 
         {/* Connectors: centre to the middle of each of the three equal columns */}
-        <motion.div
-          initial={{ clipPath: "inset(0 0 100% 0)" }}
-          whileInView={{ clipPath: "inset(0 0 0% 0)" }}
-          viewport={{ once: true, margin: "0px 0px -80px 0px" }}
-          transition={{ duration: 0.8, delay: 0.35, ease: "easeInOut" }}
-        >
+        <div>
           <svg viewBox="0 0 300 56" preserveAspectRatio="none" className="block h-14 w-full" fill="none">
             {[50, 150, 250].map((x) => (
               <path
@@ -55,16 +44,12 @@ function Diagram() {
               />
             ))}
           </svg>
-        </motion.div>
+        </div>
 
         <div className="grid grid-cols-3">
-          {workspaces.map((name, i) => (
-            <motion.div
+          {workspaces.map((name) => (
+            <div
               key={name}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "0px 0px -80px 0px" }}
-              transition={{ duration: 0.6, delay: 0.9 + i * 0.12, ease: easeOut }}
               className="px-1 sm:px-2"
             >
               <div className="h-full rounded-2xl border border-dashed border-brand-300/60 bg-white/[0.07] p-2.5 backdrop-blur sm:p-4">
@@ -84,7 +69,7 @@ function Diagram() {
                   ))}
                 </ul>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
         <p className="mt-4 text-center text-sm text-brand-100/80">No business can see another&apos;s data.</p>
