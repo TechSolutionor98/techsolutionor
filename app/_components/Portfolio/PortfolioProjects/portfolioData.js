@@ -9,9 +9,9 @@ import Smart from '@/components/Images/smart.png';
 import Traders from '@/components/Images/traders.png';
 
 import p1 from '@/components/Images/portfolioimg1.png';
-import p2 from '@/components/Images/portfolioimg2.png';
+import p2 from '@/components/Images/portfolioimg2.jpg';
 import p3 from '@/components/Images/portfolioimg3.png';
-import p4 from '@/components/Images/portfolioimg4.png';
+import p4 from '@/components/Images/portfolioimg4.jpg';
 import pMubayaa from '@/components/Images/portfolioimg_mubayaa.png';
 import pOptimumFusion from '@/components/Images/portfolioimg_optimum_fusion.png';
 import pClickSlice from '@/components/Images/portfolioimg_click_slice.png';
