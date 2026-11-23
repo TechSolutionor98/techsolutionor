@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FiPlus, FiTrash2, FiCalendar, FiEdit2, FiUpload, FiX, FiCheck } from 'react-icons/fi';
 import { FaLinkedinIn, FaTwitter, FaFacebookF, FaInstagram } from 'react-icons/fa';
 
@@ -27,7 +27,7 @@ export default function AppointmentsClient({ initialLinks = [], apiBase = '' }) 
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!initialLinks || initialLinks.length === 0) {
       fetch(`${apiBase || ''}/api/appointments`).then(r => r.json()).then(data => {
         if (Array.isArray(data)) setLinks(normalize(data));

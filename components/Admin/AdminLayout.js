@@ -35,77 +35,7 @@ import {
   ChevronDown,
   UserCheck
 } from 'lucide-react';
-
-const ROLE_ALLOWED_ROUTES = {
-  super_admin: ["*"],
-  admin: [
-    "/admin",
-    "/admin/emails",
-    "/admin/hire-us",
-    "/admin/applications",
-    "/admin/contact-submissions",
-    "/admin/reviews",
-    "/admin/settings",
-    "/admin/pages",
-    "/admin/seo",
-    "/admin/redirects",
-    "/admin/media",
-    "/admin/logos",
-    "/admin/activity",
-    "/admin/blogs",
-    "/admin/appointments",
-    "/admin/users",
-    "/admin/quote-submissions"
-  ],
-  client: [
-    "/admin",
-    "/admin/emails",
-    "/admin/hire-us",
-    "/admin/applications",
-    "/admin/contact-submissions",
-    "/admin/reviews",
-    "/admin/settings",
-    "/admin/pages",
-    "/admin/seo",
-    "/admin/redirects",
-    "/admin/media",
-    "/admin/logos",
-    "/admin/blogs",
-    "/admin/appointments",
-    "/admin/quote-submissions"
-  ],
-  blog: [
-    "/admin",
-    "/admin/applications",
-    "/admin/blogs"
-  ],
-  seo: [
-    "/admin",
-    "/admin/applications",
-    "/admin/pages",
-    "/admin/seo",
-    "/admin/redirects"
-  ],
-  editor: [
-    "/admin",
-    "/admin/hire-us",
-    "/admin/applications",
-    "/admin/contact-submissions",
-    "/admin/pages",
-    "/admin/redirects",
-    "/admin/media",
-    "/admin/logos"
-  ],
-  viewer: [
-    "/admin",
-    "/admin/hire-us",
-    "/admin/applications",
-    "/admin/contact-submissions",
-    "/admin/pages",
-    "/admin/seo",
-    "/admin/redirects"
-  ]
-};
+import { isRouteAllowed as checkRouteAllowed } from '@/lib/admin-permissions';
 
 // Logical navigation structure grouped into exactly 4 functional dropdown sections
 const NAV_GROUPS = [
@@ -184,14 +114,31 @@ function AdminLayoutContent({ children, title = '' }) {
       const userStr = localStorage.getItem("user");
       if (userStr) {
         try {
-          setCurrentUser(JSON.parse(userStr));
+          const parsed = JSON.parse(userStr);
+          setCurrentUser(parsed);
+          // Sync fresh allowedPages from API in background if not super_admin
+          if (parsed.email && parsed.role !== "super_admin") {
+            fetch("/api/cms/users")
+              .then(res => res.ok ? res.json() : null)
+              .then(data => {
+                if (data?.users) {
+                  const me = data.users.find(u => u.email?.toLowerCase() === parsed.email?.toLowerCase());
+                  if (me && Array.isArray(me.allowedPages)) {
+                    const updated = { ...parsed, role: me.role, allowedPages: me.allowedPages };
+                    setCurrentUser(updated);
+                    localStorage.setItem("user", JSON.stringify(updated));
+                  }
+                }
+              })
+              .catch(() => {});
+          }
         } catch (e) {
           console.error("Failed to parse user details:", e);
         }
       } else {
         const token = localStorage.getItem("jwt");
         if (token) {
-          setCurrentUser({ name: "Super Admin", role: "super_admin" });
+          setCurrentUser({ name: "Super Admin", role: "super_admin", allowedPages: ["*"] });
         }
       }
     }
@@ -223,17 +170,7 @@ function AdminLayoutContent({ children, title = '' }) {
   const role = currentUser?.role || 'super_admin';
 
   const isRouteAllowed = (path) => {
-    if (path === "/admin/applications" || path.startsWith("/admin/applications")) {
-      return true;
-    }
-    const allowed = ROLE_ALLOWED_ROUTES[role] || ROLE_ALLOWED_ROUTES.admin || ["*"];
-    if (allowed.includes("*")) return true;
-    return allowed.some(allowedPath => {
-      if (allowedPath === "/admin") {
-        return path === "/admin" || path === "/admin/";
-      }
-      return path.startsWith(allowedPath);
-    });
+    return checkRouteAllowed(path, currentUser);
   };
 
   const isAllowed = loading || isRouteAllowed(pathname);

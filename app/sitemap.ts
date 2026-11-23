@@ -41,8 +41,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/technologies/html',
     '/technologies/dotnet',
     '/technologies/angular',
-    '/technologies/c-plus-plus',
-    '/technologies/go',
   ];
 
   // Service URLs
