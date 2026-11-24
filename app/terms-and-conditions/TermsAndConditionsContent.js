@@ -2,6 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import TechBg from "@/components/Images/technologybannerbg.svg";
+import TechHeroConstellation from "@/app/_components/Technologies/TechHeroConstellation";
 import {
   FileText,
   CheckCircle2,
@@ -84,27 +87,52 @@ export default function TermsAndConditionsContent({ cmsContent }) {
   return (
     <div className="w-full bg-[#FFFFFF] text-[#111827] min-h-screen">
       {/* Hero Header Section */}
-      <section className="relative w-full bg-[#FFFFFF] overflow-hidden py-16 sm:py-20 md:py-24">
-        {/* Ambient Top Glow & Dot Pattern */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[radial-gradient(circle_at_top,_rgba(65,179,73,0.12)_0%,_transparent_70%)] pointer-events-none" />
-        <div className="absolute inset-0 bg-[radial-gradient(#41B34912_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none opacity-60" />
+      <section className="relative w-full bg-white text-[#0D0F12] overflow-hidden pt-8 sm:pt-12 md:pt-14 lg:pt-16 pb-16 sm:pb-24 md:pb-28 lg:pb-32 select-none border-b border-gray-100/80">
+        {/* Ambient Multi-Layer Lighting Mesh */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] lg:w-[1250px] h-[460px] lg:h-[580px] bg-[radial-gradient(circle_at_top,_rgba(46,130,52,0.13)_0%,_rgba(46,130,52,0.03)_50%,_transparent_75%)] pointer-events-none" />
+        <div className="absolute top-0 left-0 w-[450px] h-[360px] bg-[radial-gradient(ellipse_at_top_left,_rgba(36,117,41,0.22)_0%,_rgba(46,130,52,0.05)_50%,_transparent_75%)] pointer-events-none" />
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[650px] sm:w-[850px] h-[320px] bg-[radial-gradient(ellipse_at_center,_rgba(197,160,89,0.06)_0%,_transparent_70%)] pointer-events-none" />
+        <div className="absolute inset-0 bg-[radial-gradient(#2E823410_1.2px,transparent_1.2px)] [background-size:28px_28px] pointer-events-none opacity-50" />
 
-        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          {/* Eyebrow Pill */}
-          <div className="mb-4 sm:mb-5 flex justify-center">
-            <SectionBadge variant="light">
-              <Scale className="w-4 h-4 text-[#41B349]" />
-              <span>{getCmsVal(cmsContent, "TERMS OF ENGAGEMENT & SERVICE", "termshero")}</span>
-            </SectionBadge>
+        {/* Subtle Geometric Background Corner Accent */}
+        <div className="absolute top-0 left-0 opacity-75 sm:opacity-80 pointer-events-none [mask-image:linear-gradient(135deg,black_70%,transparent_100%)]">
+          <Image
+            src={TechBg}
+            alt="Terms Geometric Background"
+            width={420}
+            height={420}
+            className="w-[340px] object-contain"
+          />
+        </div>
+
+        {/* Animated Constellation Graph Network (Green & Black on White Background) */}
+        <TechHeroConstellation />
+
+        <div className="relative z-10 max-w-[1340px] mx-auto px-5 sm:px-8 md:px-12 lg:px-16 text-center flex flex-col items-center justify-center">
+          {/* Modern Pill Badge */}
+          <div className="mb-6 sm:mb-8 flex justify-center">
+            <div className="inline-flex items-center gap-2.5 px-4 sm:px-5 py-1.5 sm:py-2 rounded-full bg-[#41B349]/[0.08] border border-[#41B349]/25 text-[#247B2A] text-xs sm:text-[13px] font-jakarta font-semibold tracking-wider uppercase shadow-xs">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#41B349] opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#2E8234]"></span>
+              </span>
+              <span>{getCmsVal(cmsContent, "TERMS OF ENGAGEMENT & SERVICE • GLOBAL", "termshero")}</span>
+            </div>
           </div>
 
-          {/* Main Title */}
-          <h1 className="font-display uppercase tracking-tight text-3xl sm:text-4xl md:text-5xl lg:text-[54px] xl:text-[60px] leading-[1.08] sm:leading-[1.02] text-[#0D0F12] text-center mb-5 sm:mb-6">
-            Terms & <HighlightWord>Conditions</HighlightWord>
-          </h1>
+          {/* --- Monumental Headline Architecture matching Services --- */}
+          <div className="w-full max-w-5xl xl:max-w-6xl mx-auto flex flex-col items-center justify-center text-center">
+            <h1 className="font-display uppercase tracking-[-0.035em] text-[#0D0F12] text-3xl min-[360px]:text-4xl min-[420px]:text-5xl sm:text-6xl md:text-7xl lg:text-[76px] xl:text-[84px] leading-[0.95] sm:leading-[0.92] text-center w-full">
+              <span className="block text-[#0D0F12]">Tech Solutionor</span>
+              <span className="block mt-1.5 sm:mt-2.5 text-[#0D0F12]/95">Official Terms &amp;</span>
+              <span className="block mt-2 sm:mt-3.5 text-transparent bg-clip-text bg-gradient-to-r from-[#247529] via-[#41B349] to-[#2E8234] italic font-display">
+                Conditions of Service.
+              </span>
+            </h1>
+          </div>
 
-          {/* Subtitle */}
-          <p className="text-[#4A5568] text-sm sm:text-base md:text-[17px] max-w-3xl mx-auto leading-relaxed font-normal sm:font-medium text-center font-jakarta tracking-[-0.01em]">
+          {/* Crisp, Concise Description */}
+          <p className="font-jakarta font-normal text-[#525F72] text-base sm:text-lg md:text-[19px] max-w-2xl sm:max-w-3xl mx-auto leading-relaxed mt-6 sm:mt-8 text-center tracking-[-0.01em]">
             {getCmsVal(
               cmsContent,
               "These Terms and Conditions govern your access to and use of Tech Solutionor's website, software engineering services, technical consultations, SEO audits, and digital solutions. Please review them carefully.",

@@ -8,6 +8,7 @@ import { Sparkles } from "lucide-react";
 import { useQuote } from "@/app/_context/QuoteContext";
 import { getCmsVal } from "@/lib/api-helper";
 import { ButtonText } from "@/components/Typography";
+import TechHeroConstellation from "./TechHeroConstellation";
 
 const TechnologiesHero = ({ cmsContent }) => {
   const { openQuote } = useQuote();
@@ -27,12 +28,13 @@ const TechnologiesHero = ({ cmsContent }) => {
   return (
     <section className="relative w-full bg-white text-[#0D0F12] overflow-hidden pt-8 sm:pt-12 md:pt-14 lg:pt-16 pb-16 sm:pb-24 md:pb-28 lg:pb-32 select-none">
       {/* Ambient Multi-Layer Lighting Mesh */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] lg:w-[1250px] h-[460px] lg:h-[580px] bg-[radial-gradient(circle_at_top,_rgba(65,179,73,0.13)_0%,_rgba(65,179,73,0.03)_50%,_transparent_75%)] pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] lg:w-[1250px] h-[460px] lg:h-[580px] bg-[radial-gradient(circle_at_top,_rgba(46,130,52,0.13)_0%,_rgba(46,130,52,0.03)_50%,_transparent_75%)] pointer-events-none" />
+      <div className="absolute top-0 left-0 w-[450px] h-[360px] bg-[radial-gradient(ellipse_at_top_left,_rgba(36,117,41,0.22)_0%,_rgba(46,130,52,0.05)_50%,_transparent_75%)] pointer-events-none" />
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[650px] sm:w-[850px] h-[320px] bg-[radial-gradient(ellipse_at_center,_rgba(197,160,89,0.06)_0%,_transparent_70%)] pointer-events-none" />
-      <div className="absolute inset-0 bg-[radial-gradient(#41B34910_1.2px,transparent_1.2px)] [background-size:28px_28px] pointer-events-none opacity-50" />
+      <div className="absolute inset-0 bg-[radial-gradient(#2E823410_1.2px,transparent_1.2px)] [background-size:28px_28px] pointer-events-none opacity-50" />
 
       {/* Background Subtle Geometric Polygons & Ambient Accent */}
-      <div className="absolute top-0 left-0 opacity-15 pointer-events-none">
+      <div className="absolute top-0 left-0 opacity-75 sm:opacity-80 pointer-events-none [mask-image:linear-gradient(135deg,black_70%,transparent_100%)]">
         <Image
           src={TechBg}
           alt="Tech Geometric Background"
@@ -41,6 +43,9 @@ const TechnologiesHero = ({ cmsContent }) => {
           className="w-[340px] object-contain"
         />
       </div>
+
+      {/* Animated Constellation Graph Network (Green & Black on White Background) */}
+      <TechHeroConstellation />
 
       <div className="relative z-10 max-w-[1340px] mx-auto px-5 sm:px-8 md:px-12 lg:px-16 text-center flex flex-col items-center justify-center">
         {/* Modern Eyebrow Pill Badge */}
