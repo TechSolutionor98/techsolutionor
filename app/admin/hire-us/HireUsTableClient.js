@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
+import AdminEmailReplyComposer from '@/components/Admin/AdminEmailReplyComposer';
 import {
   Search,
   X,
@@ -35,6 +36,7 @@ import {
   AlertTriangle,
   Loader2,
   ArrowLeft,
+  CornerUpLeft,
   Send,
   CheckCircle2,
   AlertCircle
@@ -705,7 +707,7 @@ export default function HireUsTableClient({ initialData = [], apiBase = process.
     setViewRow({ ...row, inquiryNo });
     setModalView('details');
     setAdminNoteInput(row.adminNotes || row.statusNote || '');
-    setShowReplyComposer(false);
+    setShowReplyComposer(true);
     setEmailSendSuccess('');
     setEmailSendError('');
     setReplyMessage('');
@@ -966,7 +968,7 @@ export default function HireUsTableClient({ initialData = [], apiBase = process.
               <th className="px-4 py-2.5 text-left font-semibold min-w-[200px] max-w-[240px]">Services Requested</th>
               <th className="px-4 py-2.5 text-left font-semibold w-28">Status</th>
               <th className="px-4 py-2.5 text-left font-semibold w-36">Submitted At</th>
-              <th className="px-4 py-2.5 text-right font-semibold w-20">Action</th>
+              <th className="px-4 py-2.5 text-right font-semibold w-32">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100 bg-white">
@@ -1105,12 +1107,13 @@ export default function HireUsTableClient({ initialData = [], apiBase = process.
                     </td>
 
                     {/* 8. Action Column */}
-                    <td className="px-4 py-2.5 text-right align-middle whitespace-nowrap">
+                    <td className="px-4 py-2.5 text-right align-middle whitespace-nowrap w-32">
                       <button
+                        type="button"
                         onClick={() => handleOpenView(s, idx)}
-                        className="px-3 py-1 bg-[#34953C] hover:bg-[#2b7e32] text-white text-[11px] font-bold rounded-md transition cursor-pointer shadow-2xs"
+                        className="px-3.5 py-1.5 bg-[#34953C] hover:bg-[#2b7e32] text-white text-[11px] font-bold rounded-md transition-all cursor-pointer text-center shadow-2xs"
                       >
-                        View
+                        View & Reply
                       </button>
                     </td>
                   </tr>
@@ -1160,15 +1163,47 @@ export default function HireUsTableClient({ initialData = [], apiBase = process.
                 </div>
                 <div>
                   <h2 className="text-white text-base sm:text-lg font-bold leading-tight">
-                    {modalView === 'summary' ? 'Compiled Requirement Summary' : 'Hire Requirement Details'}
+                    {modalView === 'summary' ? 'Compiled Requirement Summary' : modalView === 'email' ? 'Email Conversation & Reply' : 'Hire Requirement Details'}
                   </h2>
                   <p className="text-white/80 text-[11px] font-medium">
-                    Inquiry #{viewRow.inquiryNo} &bull; {viewRow.requirementType || 'Dedicated Resource'}{modalView === 'summary' ? ' • Summary View' : ''}
+                    Inquiry #{viewRow.inquiryNo} &bull; {viewRow.requirementType || 'Dedicated Resource'}{modalView === 'summary' ? ' • Summary View' : modalView === 'email' ? ' • Email View' : ''}
                   </p>
                 </div>
               </div>
 
               <div className="flex items-center gap-2.5">
+                <div className="flex items-center bg-black/20 p-0.5 rounded-lg text-xs font-semibold">
+                  <button
+                    type="button"
+                    onClick={() => setModalView('details')}
+                    className={`px-3 py-1 rounded-md transition cursor-pointer text-xs ${
+                      modalView === 'details' ? 'bg-white text-gray-900 shadow-2xs font-bold' : 'text-white/80 hover:text-white'
+                    }`}
+                  >
+                    📋 Client Data
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setModalView('summary')}
+                    className={`px-3 py-1 rounded-md transition cursor-pointer text-xs ${
+                      modalView === 'summary' ? 'bg-white text-[#34953C] shadow-2xs font-bold' : 'text-white/80 hover:text-white'
+                    }`}
+                  >
+                    📄 Summary
+                  </button>
+                  {viewRow.email && (
+                    <button
+                      type="button"
+                      onClick={() => setModalView('email')}
+                      className={`px-3 py-1 rounded-md transition cursor-pointer text-xs ${
+                        modalView === 'email' ? 'bg-white text-[#34953C] shadow-2xs font-bold' : 'text-white/80 hover:text-white'
+                      }`}
+                    >
+                      ✉️ Reply via Email
+                    </button>
+                  )}
+                </div>
+
                 <span className={`px-3 py-1 rounded-full text-xs font-bold shadow-2xs ${getStatusBadge(viewRow.status).color}`}>
                   {viewRow.status || 'Pending'}
                 </span>
@@ -1184,307 +1219,141 @@ export default function HireUsTableClient({ initialData = [], apiBase = process.
 
             {/* Modal Scrollable Body */}
             <div className="p-6 sm:p-8 space-y-5 overflow-y-auto flex-1 text-left">
-
-              {/* 1. Author / Client Profile Card */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 sm:p-5 rounded-xl bg-gray-50/90 border border-gray-200/80">
-                <div className="flex items-center gap-3.5 min-w-0">
-                  <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xl sm:text-2xl border-2 border-emerald-200/80 shrink-0">
-                    {viewRow.name ? viewRow.name.trim().charAt(0).toUpperCase() : (viewRow.email ? viewRow.email.trim().charAt(0).toUpperCase() : 'C')}
-                  </div>
-                  <div className="min-w-0">
-                    <h3 className="text-base sm:text-lg font-bold text-gray-900 leading-snug truncate">
-                      {viewRow.name || viewRow.fullName || 'Anonymous Client'}
-                    </h3>
-                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1 text-xs text-gray-500">
-                      {viewRow.jobTitle && (
-                        <span className="font-semibold text-gray-700 flex items-center gap-1">
-                          <Briefcase className="w-3.5 h-3.5 text-gray-400" />
-                          <span>{viewRow.jobTitle}</span>
-                        </span>
-                      )}
-                      {viewRow.country && (
-                        <span className="flex items-center gap-1 text-gray-600">
-                          <MapPin className="w-3.5 h-3.5 text-gray-400" />
-                          <span>{viewRow.country}</span>
-                        </span>
-                      )}
-                      {viewRow.email && (
-                        <a
-                          href={`mailto:${viewRow.email}`}
-                          className="flex items-center gap-1.5 font-mono text-gray-600 hover:text-[#34953C] transition-colors"
-                          title="Send email"
-                        >
-                          <Mail className="w-3.5 h-3.5 text-gray-400" />
-                          <span className="truncate">{viewRow.email}</span>
-                        </a>
-                      )}
-                      {viewRow.phone && (
-                        <a
-                          href={`tel:${viewRow.phone}`}
-                          className="flex items-center gap-1.5 font-semibold text-gray-600 hover:text-[#34953C] transition-colors"
-                          title="Call phone"
-                        >
-                          <Phone className="w-3.5 h-3.5 text-gray-400" />
-                          <span>{viewRow.phone}</span>
-                        </a>
-                      )}
-                      {viewRow.whatsapp && (
-                        <a
-                          href={`https://wa.me/${viewRow.whatsapp.replace(/[^0-9]/g, '')}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="flex items-center gap-1.5 font-semibold text-emerald-700 hover:underline"
-                          title="WhatsApp chat"
-                        >
-                          <MessageSquare className="w-3.5 h-3.5" />
-                          <span>{viewRow.whatsapp}</span>
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex flex-col items-stretch sm:items-end gap-2 shrink-0">
-                  <div className="flex items-center gap-2">
-                    {viewRow.email && (
-                      <button
-                        type="button"
-                        onClick={handleToggleReplyComposer}
-                        className={`inline-flex items-center justify-center gap-1.5 px-3.5 py-2 border rounded-lg text-xs font-semibold shadow-2xs transition-all cursor-pointer flex-1 sm:flex-initial ${
-                          showReplyComposer
-                            ? 'bg-[#34953C] text-white border-[#34953C] shadow-xs'
-                            : 'bg-white hover:bg-gray-100 border-gray-300 text-gray-700'
-                        }`}
-                        title="Reply directly via email without leaving the admin panel"
-                      >
-                        <Mail className={`w-3.5 h-3.5 ${showReplyComposer ? 'text-white' : 'text-gray-500'}`} />
-                        <span>Reply Email</span>
-                      </button>
-                    )}
-                    {viewRow.whatsapp && (
-                      <a
-                        href={`https://wa.me/${viewRow.whatsapp.replace(/[^0-9]/g, '')}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-800 rounded-lg text-xs font-semibold shadow-2xs transition-all cursor-pointer flex-1 sm:flex-initial"
-                      >
-                        <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />
-                        <span>WhatsApp</span>
-                      </a>
-                    )}
-                  </div>
-
-                  {/* Dedicated View Summary / Back to Details Button (Positioned at bottom of Reply Email section) */}
-                  {modalView === 'details' ? (
-                    <button
-                      type="button"
-                      onClick={() => setModalView('summary')}
-                      className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-[#34953C] hover:bg-[#2b7e32] text-white rounded-lg text-xs font-bold shadow-xs hover:shadow-md transition-all cursor-pointer w-full sm:w-auto"
-                      title="View Complete Compiled Requirement Summary"
-                    >
-                      <FileText className="w-3.5 h-3.5" />
-                      <span>View Summary</span>
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => setModalView('details')}
-                      className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-gray-900 hover:bg-gray-800 text-white rounded-lg text-xs font-bold shadow-xs transition-all cursor-pointer w-full sm:w-auto"
-                      title="Return to details"
-                    >
-                      <ArrowLeft className="w-3.5 h-3.5" />
-                      <span>Back to Details</span>
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              {/* INTERACTIVE REPLY EMAIL COMPOSER */}
-              {showReplyComposer && (
-                <div className="p-4 sm:p-5 bg-white rounded-2xl border-2 border-[#34953C]/30 shadow-md space-y-4 animate-in fade-in slide-in-from-top-2 duration-150">
-                  <div className="flex items-start justify-between gap-3 border-b border-gray-100 pb-3">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-lg bg-[#34953C]/10 text-[#34953C] flex items-center justify-center shrink-0">
-                        <Mail className="w-4 h-4" />
-                      </div>
-                      <div>
-                        <h4 className="text-xs font-bold text-gray-900 font-jakarta flex items-center gap-2">
-                          <span>Reply Email</span>
-                          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
-                            Direct Outbound Mail
-                          </span>
-                        </h4>
-                        <p className="text-[11px] text-gray-500 font-jakarta mt-0.5">
-                          Recipient auto-populated from submission: <strong className="text-gray-800">{replyTo}</strong>
-                        </p>
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => setShowReplyComposer(false)}
-                      className="p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer"
-                      title="Close reply composer"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  </div>
-
-                  {/* Feedback Banners */}
-                  {emailSendError && (
-                    <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl flex items-start gap-2.5 text-xs text-rose-700 animate-in fade-in">
-                      <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
-                      <div className="flex-1">
-                        <span className="font-semibold block">Failed to send reply:</span>
-                        <span>{emailSendError}</span>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => setEmailSendError('')}
-                        className="text-rose-400 hover:text-rose-700 cursor-pointer p-0.5"
-                      >
-                        <X className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  )}
-
-                  {emailSendSuccess && (
-                    <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl flex items-start gap-2.5 text-xs text-emerald-800 animate-in fade-in">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                      <div className="flex-1">
-                        <span className="font-semibold block">Success:</span>
-                        <span>{emailSendSuccess}</span>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => setEmailSendSuccess('')}
-                        className="text-emerald-500 hover:text-emerald-800 cursor-pointer p-0.5"
-                      >
-                        <X className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  )}
-
-                  {/* Form fields */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {/* Recipient */}
-                    <div>
-                      <label className="block text-[11px] font-bold text-gray-700 uppercase tracking-wider mb-1">
-                        To (Recipient Email)
-                      </label>
-                      <input
-                        type="email"
-                        value={replyTo}
-                        onChange={(e) => setReplyTo(e.target.value)}
-                        disabled={isSendingEmail}
-                        className="w-full px-3 py-2 text-xs text-gray-900 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-[#34953C] focus:bg-white disabled:opacity-60"
-                        placeholder="recipient@example.com"
-                      />
-                    </div>
-
-                    {/* Recipient Name */}
-                    <div>
-                      <label className="block text-[11px] font-bold text-gray-700 uppercase tracking-wider mb-1">
-                        Recipient Name
-                      </label>
-                      <input
-                        type="text"
-                        value={replyToName}
-                        onChange={(e) => setReplyToName(e.target.value)}
-                        disabled={isSendingEmail}
-                        className="w-full px-3 py-2 text-xs text-gray-900 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-[#34953C] focus:bg-white disabled:opacity-60"
-                        placeholder="Client Name"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Subject Line & Templates */}
-                  <div className="space-y-1.5">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
-                      <label className="block text-[11px] font-bold text-gray-700 uppercase tracking-wider">
-                        Subject Line
-                      </label>
-                      {/* Quick Template pills */}
-                      <div className="flex items-center gap-1.5 overflow-x-auto text-[11px]">
-                        <span className="text-gray-400 font-medium text-[10px]">Templates:</span>
-                        {replyTemplates.map((tmpl) => (
-                          <button
-                            key={tmpl.id}
-                            type="button"
-                            onClick={() => handleApplyReplyTemplate(tmpl)}
-                            disabled={isSendingEmail}
-                            className="px-2 py-0.5 bg-gray-100 hover:bg-[#34953C]/10 hover:text-[#34953C] border border-gray-200 rounded text-[10px] font-semibold text-gray-600 transition-colors cursor-pointer shrink-0 disabled:opacity-50"
-                            title={`Apply: ${tmpl.label}`}
-                          >
-                            {tmpl.label}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                    <input
-                      type="text"
-                      value={replySubject}
-                      onChange={(e) => setReplySubject(e.target.value)}
-                      disabled={isSendingEmail}
-                      className="w-full px-3 py-2 text-xs text-gray-900 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-[#34953C] focus:ring-1 focus:ring-[#34953C] disabled:opacity-60"
-                      placeholder="Email subject..."
-                    />
-                  </div>
-
-                  {/* Message Body */}
-                  <div>
-                    <label className="block text-[11px] font-bold text-gray-700 uppercase tracking-wider mb-1">
-                      Email Message
-                    </label>
-                    <textarea
-                      rows={7}
-                      value={replyMessage}
-                      onChange={(e) => setReplyMessage(e.target.value)}
-                      disabled={isSendingEmail}
-                      className="w-full p-3 text-xs text-gray-900 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-[#34953C] focus:ring-1 focus:ring-[#34953C] leading-relaxed custom-scrollbar disabled:opacity-60"
-                      placeholder="Type your response to the user here..."
-                    />
-                  </div>
-
-                  {/* Actions Bar */}
-                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 pt-2 border-t border-gray-100">
-                    <span className="text-[11px] text-gray-400">
-                      Dispatched from official mail service. Logged in communication history.
-                    </span>
-                    <div className="flex items-center gap-2 self-end sm:self-auto">
-                      <button
-                        type="button"
-                        onClick={() => setShowReplyComposer(false)}
-                        disabled={isSendingEmail}
-                        className="px-3.5 py-2 text-xs font-semibold text-gray-600 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors cursor-pointer disabled:opacity-50"
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="button"
-                        onClick={handleSendEmailReply}
-                        disabled={isSendingEmail}
-                        className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-[#34953C] hover:bg-[#2b7e32] disabled:opacity-60 disabled:cursor-not-allowed text-white rounded-lg text-xs font-bold shadow-xs hover:shadow-md transition-all cursor-pointer min-w-[110px]"
-                      >
-                        {isSendingEmail ? (
-                          <>
-                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                            <span>Sending...</span>
-                          </>
-                        ) : (
-                          <>
-                            <Send className="w-3.5 h-3.5" />
-                            <span>Send Email</span>
-                          </>
-                        )}
-                      </button>
-                    </div>
-                  </div>
-                </div>
+              {modalView === 'email' && (
+                /* VIEW: Email Conversation & Reply Composer */
+                <AdminEmailReplyComposer
+                  recipientEmail={viewRow.email}
+                  recipientName={viewRow.fullName || viewRow.name || 'Client'}
+                  defaultSubject={`Re: Hire Resources Requirement - ${viewRow.requirementType || viewRow.services || 'Tech Solutionor'}`}
+                  category="hire"
+                  originalContext={getCompiledSummaryText(viewRow)}
+                  originalDate={viewRow.createdAt}
+                  currentStatus={viewRow.status || 'Pending'}
+                  statusOptions={STATUS_OPTIONS}
+                  sourceLabel="Hire Us"
+                  onBackToData={() => setModalView('details')}
+                  onStatusChange={async (newStatus) => {
+                    await handleStatusUpdate(viewRow.id || viewRow._id, newStatus);
+                  }}
+                  onSuccess={async ({ subject, statusUpdate }) => {
+                    const auditNote = `[Email Sent on ${new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}] Subject: "${subject}"`;
+                    const currentNotes = viewRow?.adminNotes || '';
+                    const updatedNotes = currentNotes ? `${currentNotes}\n${auditNote}` : auditNote;
+                    setViewRow(prev => prev ? { ...prev, adminNotes: updatedNotes, status: statusUpdate || prev.status } : prev);
+                    setAdminNoteInput(updatedNotes);
+                    try {
+                      await fetch('/api/hire-submissions', {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                          id: viewRow.id || viewRow._id,
+                          adminNotes: updatedNotes,
+                        }),
+                      });
+                    } catch (_) {}
+                  }}
+                />
               )}
 
-              {/* VIEW 1: Standard Details (Summary hidden by default) */}
               {modalView === 'details' && (
                 <>
+                  {/* 1. Author / Client Profile Card */}
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 sm:p-5 rounded-xl bg-gray-50/90 border border-gray-200/80">
+                    <div className="flex items-center gap-3.5 min-w-0">
+                      <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xl sm:text-2xl border-2 border-emerald-200/80 shrink-0">
+                        {viewRow.name ? viewRow.name.trim().charAt(0).toUpperCase() : (viewRow.email ? viewRow.email.trim().charAt(0).toUpperCase() : 'C')}
+                      </div>
+                      <div className="min-w-0">
+                        <h3 className="text-base sm:text-lg font-bold text-gray-900 leading-snug truncate">
+                          {viewRow.name || viewRow.fullName || 'Anonymous Client'}
+                        </h3>
+                        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1 text-xs text-gray-500">
+                          {viewRow.jobTitle && (
+                            <span className="font-semibold text-gray-700 flex items-center gap-1">
+                              <Briefcase className="w-3.5 h-3.5 text-gray-400" />
+                              <span>{viewRow.jobTitle}</span>
+                            </span>
+                          )}
+                          {viewRow.country && (
+                            <span className="flex items-center gap-1 text-gray-600">
+                              <MapPin className="w-3.5 h-3.5 text-gray-400" />
+                              <span>{viewRow.country}</span>
+                            </span>
+                          )}
+                          {viewRow.email && (
+                            <a
+                              href={`mailto:${viewRow.email}`}
+                              className="flex items-center gap-1.5 font-mono text-gray-600 hover:text-[#34953C] transition-colors"
+                              title="Send email"
+                            >
+                              <Mail className="w-3.5 h-3.5 text-gray-400" />
+                              <span className="truncate">{viewRow.email}</span>
+                            </a>
+                          )}
+                          {viewRow.phone && (
+                            <a
+                              href={`tel:${viewRow.phone}`}
+                              className="flex items-center gap-1.5 font-semibold text-gray-600 hover:text-[#34953C] transition-colors"
+                              title="Call phone"
+                            >
+                              <Phone className="w-3.5 h-3.5 text-gray-400" />
+                              <span>{viewRow.phone}</span>
+                            </a>
+                          )}
+                          {viewRow.whatsapp && (
+                            <a
+                              href={`https://wa.me/${viewRow.whatsapp.replace(/[^0-9]/g, '')}`}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="flex items-center gap-1.5 font-semibold text-emerald-700 hover:underline"
+                              title="WhatsApp chat"
+                            >
+                              <MessageSquare className="w-3.5 h-3.5" />
+                              <span>{viewRow.whatsapp}</span>
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col items-stretch sm:items-end gap-2 shrink-0">
+                      <div className="flex items-center gap-2">
+                        {viewRow.email && (
+                          <button
+                            type="button"
+                            onClick={() => setModalView('email')}
+                            className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 bg-[#34953C] hover:bg-[#2b7e32] text-white rounded-lg text-xs font-semibold shadow-2xs transition-all cursor-pointer flex-1 sm:flex-initial"
+                            title="Reply directly via email"
+                          >
+                            <CornerUpLeft className="w-3.5 h-3.5" />
+                            <span>Reply via Email</span>
+                          </button>
+                        )}
+                        {viewRow.whatsapp && (
+                          <a
+                            href={`https://wa.me/${viewRow.whatsapp.replace(/[^0-9]/g, '')}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-800 rounded-lg text-xs font-semibold shadow-2xs transition-all cursor-pointer flex-1 sm:flex-initial"
+                          >
+                            <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />
+                            <span>WhatsApp</span>
+                          </a>
+                        )}
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => setModalView('summary')}
+                        className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-gray-900 hover:bg-gray-800 text-white rounded-lg text-xs font-bold shadow-xs hover:shadow-md transition-all cursor-pointer w-full sm:w-auto"
+                        title="View Complete Compiled Requirement Summary"
+                      >
+                        <FileText className="w-3.5 h-3.5" />
+                        <span>View Summary</span>
+                      </button>
+                    </div>
+                  </div>
+
                   {/* 2. Structured Key Info Grid (All Client Form Fields cleanly presented) */}
                   <div>
                     <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400 block mb-2.5">
@@ -2216,16 +2085,38 @@ export default function HireUsTableClient({ initialData = [], apiBase = process.
           </div>
 
           <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end">
-            {modalView === 'details' ? (
+            {modalView === 'email' ? (
               <button
                 type="button"
-                onClick={() => setModalView('summary')}
-                className="px-3.5 py-2 rounded-lg border border-emerald-300 bg-emerald-50 hover:bg-emerald-100 text-[#2b7e32] text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs"
-                title="View complete compiled requirement summary"
+                onClick={() => setModalView('details')}
+                className="px-3.5 py-2 rounded-lg border border-gray-300 bg-white hover:bg-gray-100 text-gray-700 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                title="Return to client details"
               >
-                <FileText className="w-3.5 h-3.5 text-emerald-700" />
-                <span>View Summary</span>
+                <ArrowLeft className="w-3.5 h-3.5 text-gray-500" />
+                <span>Back to Client Data</span>
               </button>
+            ) : modalView === 'details' ? (
+              <>
+                <button
+                  type="button"
+                  onClick={() => setModalView('summary')}
+                  className="px-3.5 py-2 rounded-lg border border-emerald-300 bg-emerald-50 hover:bg-emerald-100 text-[#2b7e32] text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                  title="View complete compiled requirement summary"
+                >
+                  <FileText className="w-3.5 h-3.5 text-emerald-700" />
+                  <span>View Summary</span>
+                </button>
+                {viewRow.email && (
+                  <button
+                    type="button"
+                    onClick={() => setModalView('email')}
+                    className="px-3.5 py-2 rounded-lg border border-emerald-300 bg-emerald-50 hover:bg-emerald-100 text-[#2b7e32] text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                  >
+                    <Mail className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>Reply via Email</span>
+                  </button>
+                )}
+              </>
             ) : (
               <button
                 type="button"

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { 
   Search, 
   X, 
@@ -19,8 +19,12 @@ import {
   AlertCircle,
   ExternalLink,
   ChevronDown,
-  CheckCheck
+  CheckCheck,
+  CornerUpLeft,
+  ArrowLeft,
+  Eye
 } from 'lucide-react';
+import AdminEmailReplyComposer from '@/components/Admin/AdminEmailReplyComposer';
 
 function getCvViewUrl(app, index = 0, isDownload = false) {
   if (!app) return '#';
@@ -131,7 +135,9 @@ export default function ApplicationsTableClient({ initialData = [], apiBase = ''
   const [pageSize, setPageSize] = useState(10);
   const [loading, setLoading] = useState(false);
   const [viewRow, setViewRow] = useState(null);
+  const [modalTab, setModalTab] = useState('data'); // 'data' | 'email'
   const [statusNote, setStatusNote] = useState('');
+  const composerRef = useRef(null);
   const [actionLoading, setActionLoading] = useState(false);
   const [updatingStatusId, setUpdatingStatusId] = useState(null);
   const [toastMessage, setToastMessage] = useState(null);
@@ -209,6 +215,7 @@ export default function ApplicationsTableClient({ initialData = [], apiBase = ''
 
   async function handleOpenApp(app, idx) {
     setViewRow({ ...app, appNo: getGlobalIndex(idx) });
+    setModalTab('data');
     setStatusNote(app.statusNote || '');
     if (!app.isRead) {
       const appId = app.id || app._id;
@@ -599,7 +606,7 @@ export default function ApplicationsTableClient({ initialData = [], apiBase = ''
               <th className="px-4 py-2.5 text-left font-semibold w-[200px] max-w-[200px]">Cover Letter / Statement</th>
               <th className="px-4 py-2.5 text-left font-semibold w-[150px]">Status</th>
               <th className="px-4 py-2.5 text-left font-semibold w-36">Submitted At</th>
-              <th className="px-4 py-2.5 text-right font-semibold w-24">Actions</th>
+              <th className="px-4 py-2.5 text-right font-semibold w-28">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100 bg-white">
@@ -717,15 +724,15 @@ export default function ApplicationsTableClient({ initialData = [], apiBase = ''
                       <div className="text-gray-400 text-[10px] leading-tight">{formattedTime}</div>
                     </td>
 
-                    {/* 6. Actions: View & View CV Buttons stacked */}
+                    {/* 6. Actions: View & Reply & View CV Buttons stacked */}
                     <td className="px-4 py-2.5 text-right align-middle whitespace-nowrap">
-                      <div className="flex flex-col items-end gap-1.5 min-w-[80px]">
+                      <div className="flex flex-col items-end gap-1.5 min-w-[95px]">
                         <button
                           type="button"
                           onClick={() => handleOpenApp(app, idx)}
-                          className="w-20 px-2 py-1 bg-[#34953C] hover:bg-[#2b7e32] text-white text-[11px] font-bold rounded-md transition-all cursor-pointer text-center shadow-2xs"
+                          className="w-full px-2.5 py-1 bg-[#34953C] hover:bg-[#2b7e32] text-white text-[11px] font-bold rounded-md transition-all cursor-pointer text-center shadow-2xs"
                         >
-                          View
+                          View & Reply
                         </button>
                         {(() => {
                           const appCvList = getApplicationCvFiles(app);
@@ -803,15 +810,38 @@ export default function ApplicationsTableClient({ initialData = [], apiBase = ''
                   </div>
                   <div>
                     <h2 className="text-white text-base sm:text-lg font-bold leading-tight">
-                      Application Details
+                      {modalTab === 'email' ? 'Candidate Email Conversation & Reply' : 'Application Details'}
                     </h2>
                     <p className="text-white/80 text-[11px] font-medium">
-                      Candidate #{viewRow.appNo} &bull; {viewRow.position || 'Open Role'}
+                      Candidate #{viewRow.appNo} &bull; {viewRow.position || 'Open Role'}{modalTab === 'email' ? ' • Email View' : ''}
                     </p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2.5">
+                  <div className="flex items-center bg-black/20 p-0.5 rounded-lg text-xs font-semibold">
+                    <button
+                      type="button"
+                      onClick={() => setModalTab('data')}
+                      className={`px-3 py-1 rounded-md transition cursor-pointer text-xs ${
+                        modalTab === 'data' ? 'bg-white text-gray-900 shadow-2xs font-bold' : 'text-white/80 hover:text-white'
+                      }`}
+                    >
+                      📋 Application Data
+                    </button>
+                    {viewRow.email && (
+                      <button
+                        type="button"
+                        onClick={() => setModalTab('email')}
+                        className={`px-3 py-1 rounded-md transition cursor-pointer text-xs ${
+                          modalTab === 'email' ? 'bg-white text-[#34953C] shadow-2xs font-bold' : 'text-white/80 hover:text-white'
+                        }`}
+                      >
+                        ✉️ Reply via Email
+                      </button>
+                    )}
+                  </div>
+
                   <span className={`px-3 py-1 rounded-full text-xs font-bold shadow-2xs ${
                     (viewRow.status || '').toLowerCase() === 'approved'
                       ? 'bg-emerald-100 text-emerald-900 border border-emerald-300/60'
@@ -833,6 +863,8 @@ export default function ApplicationsTableClient({ initialData = [], apiBase = ''
 
               {/* Modal Scrollable Body */}
               <div className="p-6 sm:p-8 space-y-6 overflow-y-auto flex-1 text-left">
+                {modalTab === 'data' ? (
+                  <>
                 {/* 1. Candidate Profile Card */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 sm:p-5 rounded-xl bg-gray-50/90 border border-gray-200/80">
                   <div className="flex items-center gap-3.5 min-w-0">
@@ -883,13 +915,14 @@ export default function ApplicationsTableClient({ initialData = [], apiBase = ''
                       </a>
                     )}
                     {viewRow.email && (
-                      <a
-                        href={`mailto:${viewRow.email}`}
-                        className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 bg-white hover:bg-gray-100 border border-gray-300 rounded-lg text-xs font-semibold text-gray-700 shadow-2xs transition-all cursor-pointer"
+                      <button
+                        type="button"
+                        onClick={() => setModalTab('email')}
+                        className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 bg-[#34953C] hover:bg-[#2b7e32] text-white rounded-lg text-xs font-semibold shadow-2xs transition-all cursor-pointer"
                       >
-                        <Mail className="w-3.5 h-3.5 text-gray-500" />
+                        <CornerUpLeft className="w-3.5 h-3.5" />
                         <span>Reply via Email</span>
-                      </a>
+                      </button>
                     )}
                   </div>
                 </div>
@@ -1168,56 +1201,90 @@ export default function ApplicationsTableClient({ initialData = [], apiBase = ''
                   />
                 </div>
 
-                {/* 7. Recruitment Decision Actions */}
-                <div className="pt-2 border-t border-gray-200 space-y-2.5">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400 block">
-                    Application Decisions & Automated Email Dispatch
-                  </span>
+                    {/* 7. Recruitment Decision Actions */}
+                    <div className="pt-2 border-t border-gray-200 space-y-2.5">
+                      <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400 block">
+                        Application Decisions & Automated Email Dispatch
+                      </span>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                    <button
-                      type="button"
-                      disabled={actionLoading || (viewRow.status || '').toLowerCase() === 'approved'}
-                      onClick={() => handleStatusChange(viewRow.id || viewRow._id, 'Approved', statusNote)}
-                      className="bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white py-2.5 px-4 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs"
-                    >
-                      {actionLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5" />}
-                      <span>{(viewRow.status || '').toLowerCase() === 'approved' ? 'Already Approved' : 'Approve & Send Welcome Email'}</span>
-                    </button>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        <button
+                          type="button"
+                          disabled={actionLoading || (viewRow.status || '').toLowerCase() === 'approved'}
+                          onClick={() => handleStatusChange(viewRow.id || viewRow._id, 'Approved', statusNote)}
+                          className="bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white py-2.5 px-4 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs"
+                        >
+                          {actionLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5" />}
+                          <span>{(viewRow.status || '').toLowerCase() === 'approved' ? 'Already Approved' : 'Approve & Send Welcome Email'}</span>
+                        </button>
 
-                    <button
-                      type="button"
-                      disabled={actionLoading || (viewRow.status || '').toLowerCase() === 'rejected'}
-                      onClick={() => handleStatusChange(viewRow.id || viewRow._id, 'Rejected', statusNote)}
-                      className="bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white py-2.5 px-4 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs"
-                    >
-                      {actionLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <XCircle className="w-3.5 h-3.5" />}
-                      <span>{(viewRow.status || '').toLowerCase() === 'rejected' ? 'Already Rejected' : 'Reject & Send Update Email'}</span>
-                    </button>
+                        <button
+                          type="button"
+                          disabled={actionLoading || (viewRow.status || '').toLowerCase() === 'rejected'}
+                          onClick={() => handleStatusChange(viewRow.id || viewRow._id, 'Rejected', statusNote)}
+                          className="bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white py-2.5 px-4 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs"
+                        >
+                          {actionLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <XCircle className="w-3.5 h-3.5" />}
+                          <span>{(viewRow.status || '').toLowerCase() === 'rejected' ? 'Already Rejected' : 'Reject & Send Update Email'}</span>
+                        </button>
+                      </div>
+
+                      <div className="flex items-center justify-between pt-2 text-xs">
+                        {(viewRow.status || '').toLowerCase() !== 'pending' ? (
+                          <button
+                            type="button"
+                            disabled={actionLoading}
+                            onClick={() => handleStatusChange(viewRow.id || viewRow._id, 'Pending', statusNote || '')}
+                            className="text-gray-500 hover:text-gray-800 underline cursor-pointer"
+                          >
+                            Revert status to Pending Review & Send Update Email
+                          </button>
+                        ) : <span />}
+                        <button
+                          type="button"
+                          disabled={actionLoading}
+                          onClick={() => handleDeleteApplication(viewRow.id || viewRow._id, viewRow.name)}
+                          className="text-red-500 hover:text-red-700 font-semibold flex items-center gap-1 cursor-pointer ml-auto"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                          <span>Delete Application</span>
+                        </button>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  /* Email View with Thread History & Rich Reply Composer */
+                  <div>
+                    <AdminEmailReplyComposer
+                      recipientEmail={viewRow.email}
+                      recipientName={viewRow.name || 'Candidate'}
+                      defaultSubject={`Re: Application for ${viewRow.position || viewRow.jobTitle || 'Open Position'} - Tech Solutionor`}
+                      category="career"
+                      originalContext={viewRow.coverLetter || viewRow.statement || viewRow.message || ''}
+                      originalDate={viewRow.createdAt}
+                      currentStatus={viewRow.status || 'Pending'}
+                      statusOptions={[
+                        { value: 'Pending', label: 'Pending Review' },
+                        { value: 'In Review', label: 'Under Review' },
+                        { value: 'Interview', label: 'Interview Scheduled' },
+                        { value: 'Approved', label: 'Approved' },
+                        { value: 'Rejected', label: 'Rejected' },
+                      ]}
+                      sourceLabel="Job Application"
+                      onBackToData={() => setModalTab('data')}
+                      onStatusChange={async (newStatus) => {
+                        await handleStatusChange(viewRow.id || viewRow._id, newStatus, statusNote || 'Status updated via email reply');
+                      }}
+                      onSuccess={async ({ statusUpdate }) => {
+                        showToast(`Reply email sent to ${viewRow.email}`);
+                        if (statusUpdate && statusUpdate !== viewRow.status) {
+                          setViewRow(prev => prev ? { ...prev, status: statusUpdate } : prev);
+                          setRows(prev => prev.map(r => ((r.id === viewRow.id || r._id === viewRow.id) ? { ...r, status: statusUpdate } : r)));
+                        }
+                      }}
+                    />
                   </div>
-
-                  <div className="flex items-center justify-between pt-2 text-xs">
-                    {(viewRow.status || '').toLowerCase() !== 'pending' ? (
-                      <button
-                        type="button"
-                        disabled={actionLoading}
-                        onClick={() => handleStatusChange(viewRow.id || viewRow._id, 'Pending', statusNote || '')}
-                        className="text-gray-500 hover:text-gray-800 underline cursor-pointer"
-                      >
-                        Revert status to Pending Review & Send Update Email
-                      </button>
-                    ) : <span />}
-                    <button
-                      type="button"
-                      disabled={actionLoading}
-                      onClick={() => handleDeleteApplication(viewRow.id || viewRow._id, viewRow.name)}
-                      className="text-red-500 hover:text-red-700 font-semibold flex items-center gap-1 cursor-pointer ml-auto"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                      <span>Delete Application</span>
-                    </button>
-                  </div>
-                </div>
+                )}
               </div>
 
               {/* Modal Footer */}
@@ -1226,6 +1293,40 @@ export default function ApplicationsTableClient({ initialData = [], apiBase = ''
                   Application #{viewRow.appNo} &bull; {viewRow.position || 'Open Role'}
                 </span>
                 <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end">
+                  {modalTab === 'email' ? (
+                    <button
+                      type="button"
+                      onClick={() => setModalTab('data')}
+                      className="px-3.5 py-2 rounded-lg border border-gray-300 bg-white hover:bg-gray-100 text-gray-700 text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                    >
+                      <ArrowLeft className="w-3.5 h-3.5 text-gray-500" />
+                      <span>Back to Application Data</span>
+                    </button>
+                  ) : (
+                    <>
+                      {modalCvFiles.length > 0 && (
+                        <a
+                          href={getCvViewUrl(viewRow, 0, false)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="px-3.5 py-2 rounded-lg border border-gray-300 bg-white hover:bg-gray-100 text-gray-700 text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer"
+                        >
+                          <Eye className="w-3.5 h-3.5 text-gray-500" />
+                          <span>View CV</span>
+                        </a>
+                      )}
+                      {viewRow.email && (
+                        <button
+                          type="button"
+                          onClick={() => setModalTab('email')}
+                          className="px-3.5 py-2 rounded-lg border border-emerald-300 bg-emerald-50 hover:bg-emerald-100 text-[#2b7e32] text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                        >
+                          <Mail className="w-3.5 h-3.5 text-emerald-600" />
+                          <span>Reply via Email</span>
+                        </button>
+                      )}
+                    </>
+                  )}
                   {viewRow.phone && (
                     <a
                       href={`tel:${viewRow.phone}`}
@@ -1233,15 +1334,6 @@ export default function ApplicationsTableClient({ initialData = [], apiBase = ''
                     >
                       <Phone className="w-3.5 h-3.5 text-gray-500" />
                       <span>Call</span>
-                    </a>
-                  )}
-                  {viewRow.email && (
-                    <a
-                      href={`mailto:${viewRow.email}`}
-                      className="px-3.5 py-2 rounded-lg border border-gray-300 bg-white hover:bg-gray-100 text-gray-700 text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer"
-                    >
-                      <Mail className="w-3.5 h-3.5 text-gray-500" />
-                      <span>Email</span>
                     </a>
                   )}
                   <button

@@ -1,6 +1,7 @@
 "use client"
-import React, { useState, useMemo, useEffect } from 'react';
-import { Search, X, Phone, Mail, DollarSign, Calendar, Briefcase, MapPin, Clock, CheckCheck } from 'lucide-react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
+import { Search, X, Phone, Mail, DollarSign, Calendar, Briefcase, MapPin, Clock, CheckCheck, CornerUpLeft, ArrowLeft } from 'lucide-react';
+import AdminEmailReplyComposer from '@/components/Admin/AdminEmailReplyComposer';
 
 export default function ContactTableClient({ initialData = [], apiBase = process.env.NEXT_PUBLIC_API_URL }) {
   const [rows, setRows] = useState(initialData || []);
@@ -10,6 +11,8 @@ export default function ContactTableClient({ initialData = [], apiBase = process
   const [pageSize, setPageSize] = useState(10);
   const [loading, setLoading] = useState(false);
   const [viewRow, setViewRow] = useState(null);
+  const [modalTab, setModalTab] = useState('data'); // 'data' | 'email'
+  const composerRef = useRef(null);
 
   useEffect(() => {
     if (!initialData || initialData.length === 0) {
@@ -125,6 +128,7 @@ export default function ContactTableClient({ initialData = [], apiBase = process
 
   async function handleOpenView(row, idx) {
     setViewRow({ ...row, inquiryNo: getGlobalIndex(idx) });
+    setModalTab('data');
     if (!row.isRead) {
       setRows(prev => prev.map(r => ((r.id === row.id || r._id === row._id) ? { ...r, isRead: true } : r)));
       try {
@@ -285,7 +289,7 @@ export default function ContactTableClient({ initialData = [], apiBase = process
               <th className="px-4 py-2.5 text-left font-semibold w-[120px] max-w-[130px]">Service</th>
               <th className="px-4 py-2.5 text-left font-semibold w-28">Source</th>
               <th className="px-4 py-2.5 text-left font-semibold w-36">Submitted At</th>
-              <th className="px-4 py-2.5 text-right font-semibold w-20">Action</th>
+              <th className="px-4 py-2.5 text-right font-semibold w-32">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100 bg-white">
@@ -392,12 +396,13 @@ export default function ContactTableClient({ initialData = [], apiBase = process
                     </td>
 
                     {/* 6. Action */}
-                    <td className="px-4 py-2.5 text-right align-middle whitespace-nowrap">
+                    <td className="px-4 py-2.5 text-right align-middle whitespace-nowrap w-32">
                       <button
+                        type="button"
                         onClick={() => handleOpenView(s, idx)}
-                        className="px-3 py-1 bg-[#34953C] hover:bg-[#2b7e32] text-white text-[11px] font-bold rounded-md transition cursor-pointer shadow-2xs"
+                        className="px-3.5 py-1.5 bg-[#34953C] hover:bg-[#2b7e32] text-white text-[11px] font-bold rounded-md transition-all cursor-pointer text-center shadow-2xs"
                       >
-                        View
+                        View & Reply
                       </button>
                     </td>
                   </tr>
@@ -456,6 +461,29 @@ export default function ContactTableClient({ initialData = [], apiBase = process
               </div>
 
               <div className="flex items-center gap-2.5">
+                <div className="flex items-center bg-black/20 p-0.5 rounded-lg text-xs font-semibold">
+                  <button
+                    type="button"
+                    onClick={() => setModalTab('data')}
+                    className={`px-3 py-1 rounded-md transition cursor-pointer text-xs ${
+                      modalTab === 'data' ? 'bg-white text-gray-900 shadow-2xs font-bold' : 'text-white/80 hover:text-white'
+                    }`}
+                  >
+                    📋 Submission Data
+                  </button>
+                  {viewRow.email && (
+                    <button
+                      type="button"
+                      onClick={() => setModalTab('email')}
+                      className={`px-3 py-1 rounded-md transition cursor-pointer text-xs ${
+                        modalTab === 'email' ? 'bg-white text-[#34953C] shadow-2xs font-bold' : 'text-white/80 hover:text-white'
+                      }`}
+                    >
+                      ✉️ Reply via Email
+                    </button>
+                  )}
+                </div>
+
                 <span className={`px-3 py-1 rounded-full text-xs font-bold shadow-2xs ${
                   isQuoteSource(viewRow.source) 
                     ? 'bg-emerald-100 text-emerald-900 border border-emerald-300/60' 
@@ -475,158 +503,215 @@ export default function ContactTableClient({ initialData = [], apiBase = process
 
             {/* Modal Scrollable Body */}
             <div className="p-6 sm:p-8 space-y-5 overflow-y-auto flex-1 text-left">
-              {/* 1. Author Profile Card */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 sm:p-5 rounded-xl bg-gray-50/90 border border-gray-200/80">
-                <div className="flex items-center gap-3.5 min-w-0">
-                  <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xl sm:text-2xl border-2 border-emerald-200/80 shrink-0">
-                    {viewRow.name ? viewRow.name.trim().charAt(0).toUpperCase() : (viewRow.email ? viewRow.email.trim().charAt(0).toUpperCase() : 'U')}
-                  </div>
-                  <div className="min-w-0">
-                    <h3 className="text-base sm:text-lg font-bold text-gray-900 leading-snug truncate">
-                      {viewRow.name || 'Anonymous'}
-                    </h3>
-                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1 text-xs text-gray-500">
-                      {viewRow.email && (
-                        <a
-                          href={`mailto:${viewRow.email}`}
-                          className="flex items-center gap-1.5 font-mono text-gray-600 hover:text-[#34953C] transition-colors"
-                          title="Send email"
-                        >
-                          <Mail className="w-3.5 h-3.5 text-gray-400" />
-                          <span className="truncate">{viewRow.email}</span>
-                        </a>
-                      )}
-                      {viewRow.phone && (
-                        <a
-                          href={`tel:${viewRow.phone}`}
-                          className="flex items-center gap-1.5 font-semibold text-gray-600 hover:text-[#34953C] transition-colors"
-                          title="Call phone"
-                        >
-                          <Phone className="w-3.5 h-3.5 text-gray-400" />
-                          <span>{viewRow.phone}</span>
-                        </a>
-                      )}
+              {modalTab === 'data' ? (
+                <>
+                  {/* 1. Author Profile Card */}
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 sm:p-5 rounded-xl bg-gray-50/90 border border-gray-200/80">
+                    <div className="flex items-center gap-3.5 min-w-0">
+                      <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xl sm:text-2xl border-2 border-emerald-200/80 shrink-0">
+                        {viewRow.name ? viewRow.name.trim().charAt(0).toUpperCase() : (viewRow.email ? viewRow.email.trim().charAt(0).toUpperCase() : 'U')}
+                      </div>
+                      <div className="min-w-0">
+                        <h3 className="text-base sm:text-lg font-bold text-gray-900 leading-snug truncate">
+                          {viewRow.name || 'Anonymous'}
+                        </h3>
+                        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1 text-xs text-gray-500">
+                          {viewRow.email && (
+                            <a
+                              href={`mailto:${viewRow.email}`}
+                              className="flex items-center gap-1.5 font-mono text-gray-600 hover:text-[#34953C] transition-colors"
+                              title="Send email"
+                            >
+                              <Mail className="w-3.5 h-3.5 text-gray-400" />
+                              <span className="truncate">{viewRow.email}</span>
+                            </a>
+                          )}
+                          {viewRow.phone && (
+                            <a
+                              href={`tel:${viewRow.phone}`}
+                              className="flex items-center gap-1.5 font-semibold text-gray-600 hover:text-[#34953C] transition-colors"
+                              title="Call phone"
+                            >
+                              <Phone className="w-3.5 h-3.5 text-gray-400" />
+                              <span>{viewRow.phone}</span>
+                            </a>
+                          )}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
 
-                {viewRow.email && (
-                  <a
-                    href={`mailto:${viewRow.email}`}
-                    className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 bg-white hover:bg-gray-100 border border-gray-300 rounded-lg text-xs font-semibold text-gray-700 shadow-2xs transition-all shrink-0 cursor-pointer"
-                  >
-                    <Mail className="w-3.5 h-3.5 text-gray-500" />
-                    <span>Reply via Email</span>
-                  </a>
-                )}
-              </div>
-
-              {/* 2. Structured Key Info Grid (Phone, Budget, Preferred Date, Service, Location, Submitted At) */}
-              <div>
-                <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400 block mb-2.5">
-                  Inquiry Specifications
-                </span>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                  {/* Phone */}
-                  <div className="bg-white p-3.5 rounded-xl border border-gray-200 shadow-2xs flex flex-col justify-between">
-                    <div className="flex items-center gap-1.5 text-gray-400 mb-1.5">
-                      <Phone className="w-3.5 h-3.5 text-gray-400" />
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Phone Number</span>
-                    </div>
-                    {viewRow.phone ? (
-                      <a href={`tel:${viewRow.phone}`} className="text-xs font-bold text-[#34953C] hover:underline truncate">
-                        {viewRow.phone}
-                      </a>
-                    ) : (
-                      <span className="text-xs font-semibold text-gray-400">—</span>
+                    {viewRow.email && (
+                      <button
+                        type="button"
+                        onClick={() => setModalTab('email')}
+                        className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 bg-[#34953C] hover:bg-[#2b7e32] text-white rounded-lg text-xs font-semibold shadow-2xs transition-all shrink-0 cursor-pointer"
+                      >
+                        <CornerUpLeft className="w-3.5 h-3.5" />
+                        <span>Reply via Email</span>
+                      </button>
                     )}
                   </div>
 
-                  {/* Budget */}
-                  <div className="bg-white p-3.5 rounded-xl border border-gray-200 shadow-2xs flex flex-col justify-between">
-                    <div className="flex items-center gap-1.5 text-gray-400 mb-1.5">
-                      <DollarSign className="w-3.5 h-3.5 text-emerald-600" />
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Estimated Budget</span>
-                    </div>
-                    <div>
-                      {viewRow.budget ? (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200/80">
-                          {viewRow.budget}
+                  {/* 2. Structured Key Info Grid (Phone, Budget, Preferred Date, Service, Location, Submitted At) */}
+                  <div>
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400 block mb-2.5">
+                      Inquiry Specifications
+                    </span>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                      {/* Phone */}
+                      <div className="bg-white p-3.5 rounded-xl border border-gray-200 shadow-2xs flex flex-col justify-between">
+                        <div className="flex items-center gap-1.5 text-gray-400 mb-1.5">
+                          <Phone className="w-3.5 h-3.5 text-gray-400" />
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Phone Number</span>
+                        </div>
+                        {viewRow.phone ? (
+                          <a href={`tel:${viewRow.phone}`} className="text-xs font-bold text-[#34953C] hover:underline truncate">
+                            {viewRow.phone}
+                          </a>
+                        ) : (
+                          <span className="text-xs font-semibold text-gray-400">—</span>
+                        )}
+                      </div>
+
+                      {/* Budget */}
+                      <div className="bg-white p-3.5 rounded-xl border border-gray-200 shadow-2xs flex flex-col justify-between">
+                        <div className="flex items-center gap-1.5 text-gray-400 mb-1.5">
+                          <DollarSign className="w-3.5 h-3.5 text-emerald-600" />
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Estimated Budget</span>
+                        </div>
+                        <div>
+                          {viewRow.budget ? (
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200/80">
+                              {viewRow.budget}
+                            </span>
+                          ) : (
+                            <span className="text-xs font-semibold text-gray-400">—</span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Preferred Date */}
+                      <div className="bg-white p-3.5 rounded-xl border border-gray-200 shadow-2xs flex flex-col justify-between">
+                        <div className="flex items-center gap-1.5 text-gray-400 mb-1.5">
+                          <Calendar className="w-3.5 h-3.5 text-blue-600" />
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Preferred Date</span>
+                        </div>
+                        <div>
+                          {viewRow.preferredDate ? (
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold bg-blue-50 text-blue-800 border border-blue-200/80">
+                              {viewRow.preferredDate}
+                            </span>
+                          ) : (
+                            <span className="text-xs font-semibold text-gray-400">—</span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Service Required */}
+                      <div className="bg-white p-3.5 rounded-xl border border-gray-200 shadow-2xs flex flex-col justify-between">
+                        <div className="flex items-center gap-1.5 text-gray-400 mb-1.5">
+                          <Briefcase className="w-3.5 h-3.5 text-gray-400" />
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Service Required</span>
+                        </div>
+                        <span className="text-xs font-bold text-gray-900 truncate">
+                          {viewRow.serviceRequired || '—'}
                         </span>
-                      ) : (
-                        <span className="text-xs font-semibold text-gray-400">—</span>
+                      </div>
+
+                      {/* Country / Location */}
+                      <div className="bg-white p-3.5 rounded-xl border border-gray-200 shadow-2xs flex flex-col justify-between">
+                        <div className="flex items-center gap-1.5 text-gray-400 mb-1.5">
+                          <MapPin className="w-3.5 h-3.5 text-gray-400" />
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Country / Location</span>
+                        </div>
+                        <span className="text-xs font-bold text-gray-900 truncate">
+                          {viewRow.country || viewRow.propertyLocation || '—'}
+                        </span>
+                      </div>
+
+                      {/* Submitted At */}
+                      <div className="bg-white p-3.5 rounded-xl border border-gray-200 shadow-2xs flex flex-col justify-between">
+                        <div className="flex items-center gap-1.5 text-gray-400 mb-1.5">
+                          <Clock className="w-3.5 h-3.5 text-gray-400" />
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Submitted At</span>
+                        </div>
+                        <span className="text-xs font-semibold text-gray-700">
+                          {viewRow.createdAt ? new Date(viewRow.createdAt).toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 3. Message / Project Details Box */}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400">
+                        Message / Project Details
+                      </span>
+                      {viewRow.message && (
+                        <span className="text-[11px] text-gray-400 font-medium">
+                          {viewRow.message.length} characters
+                        </span>
                       )}
                     </div>
-                  </div>
-
-                  {/* Preferred Date */}
-                  <div className="bg-white p-3.5 rounded-xl border border-gray-200 shadow-2xs flex flex-col justify-between">
-                    <div className="flex items-center gap-1.5 text-gray-400 mb-1.5">
-                      <Calendar className="w-3.5 h-3.5 text-blue-600" />
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Preferred Date</span>
-                    </div>
-                    <div>
-                      {viewRow.preferredDate ? (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold bg-blue-50 text-blue-800 border border-blue-200/80">
-                          {viewRow.preferredDate}
-                        </span>
-                      ) : (
-                        <span className="text-xs font-semibold text-gray-400">—</span>
-                      )}
+                    <div className="bg-gray-50/90 rounded-xl p-4 sm:p-5 text-xs sm:text-sm text-gray-800 whitespace-pre-wrap break-words border border-gray-200/80 leading-relaxed min-h-[100px]">
+                      {viewRow.message || <span className="text-gray-400 italic">No additional details or message provided with this submission.</span>}
                     </div>
                   </div>
-
-                  {/* Service Required */}
-                  <div className="bg-white p-3.5 rounded-xl border border-gray-200 shadow-2xs flex flex-col justify-between">
-                    <div className="flex items-center gap-1.5 text-gray-400 mb-1.5">
-                      <Briefcase className="w-3.5 h-3.5 text-gray-400" />
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Service Required</span>
-                    </div>
-                    <span className="text-xs font-bold text-gray-900 truncate">
-                      {viewRow.serviceRequired || '—'}
-                    </span>
-                  </div>
-
-                  {/* Country / Location */}
-                  <div className="bg-white p-3.5 rounded-xl border border-gray-200 shadow-2xs flex flex-col justify-between">
-                    <div className="flex items-center gap-1.5 text-gray-400 mb-1.5">
-                      <MapPin className="w-3.5 h-3.5 text-gray-400" />
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Country / Location</span>
-                    </div>
-                    <span className="text-xs font-bold text-gray-900 truncate">
-                      {viewRow.country || viewRow.propertyLocation || '—'}
-                    </span>
-                  </div>
-
-                  {/* Submitted At */}
-                  <div className="bg-white p-3.5 rounded-xl border border-gray-200 shadow-2xs flex flex-col justify-between">
-                    <div className="flex items-center gap-1.5 text-gray-400 mb-1.5">
-                      <Clock className="w-3.5 h-3.5 text-gray-400" />
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Submitted At</span>
-                    </div>
-                    <span className="text-xs font-semibold text-gray-700">
-                      {viewRow.createdAt ? new Date(viewRow.createdAt).toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—'}
-                    </span>
-                  </div>
+                </>
+              ) : (
+                /* Email View with Thread History & Rich Reply Composer */
+                <div>
+                  <AdminEmailReplyComposer
+                    recipientEmail={viewRow.email}
+                    recipientName={viewRow.name || 'Client'}
+                    defaultSubject={`Re: Inquiry regarding ${viewRow.serviceRequired || 'Services'} - Tech Solutionor`}
+                    category="contact"
+                    originalContext={viewRow.message}
+                    originalDate={viewRow.createdAt}
+                    currentStatus={viewRow.status || 'open'}
+                    statusOptions={[
+                      { value: 'open', label: 'Open' },
+                      { value: 'In Review', label: 'In Review' },
+                      { value: 'Contacted', label: 'Contacted' },
+                      { value: 'Proposal Sent', label: 'Proposal Sent' },
+                      { value: 'closed', label: 'Closed' },
+                    ]}
+                    sourceLabel={viewRow.source || 'Contact Form'}
+                    onBackToData={() => setModalTab('data')}
+                    onStatusChange={async (newStatus) => {
+                      try {
+                        await fetch('/api/contact-submissions', {
+                          method: 'PATCH',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({
+                            id: viewRow.id || viewRow._id,
+                            status: newStatus,
+                          }),
+                        });
+                        setViewRow(prev => prev ? { ...prev, status: newStatus } : prev);
+                        setRows(prev => prev.map(r => ((r.id === viewRow.id || r._id === viewRow.id) ? { ...r, status: newStatus } : r)));
+                      } catch (_) {}
+                    }}
+                    onSuccess={async ({ subject }) => {
+                      const auditNote = `[Email Sent on ${new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}] Subject: "${subject}"`;
+                      const currentNotes = viewRow?.adminNotes || '';
+                      const updatedNotes = currentNotes ? `${currentNotes}\n${auditNote}` : auditNote;
+                      setViewRow(prev => prev ? { ...prev, adminNotes: updatedNotes } : prev);
+                      try {
+                        await fetch('/api/contact-submissions', {
+                          method: 'PATCH',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({
+                            id: viewRow.id || viewRow._id,
+                            adminNotes: updatedNotes,
+                          }),
+                        });
+                      } catch (_) {}
+                    }}
+                  />
                 </div>
-              </div>
-
-              {/* 3. Message / Project Details Box */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400">
-                    Message / Project Details
-                  </span>
-                  {viewRow.message && (
-                    <span className="text-[11px] text-gray-400 font-medium">
-                      {viewRow.message.length} characters
-                    </span>
-                  )}
-                </div>
-                <div className="bg-gray-50/90 rounded-xl p-4 sm:p-5 text-xs sm:text-sm text-gray-800 whitespace-pre-wrap break-words border border-gray-200/80 leading-relaxed min-h-[100px]">
-                  {viewRow.message || <span className="text-gray-400 italic">No additional details or message provided with this submission.</span>}
-                </div>
-              </div>
+              )}
             </div>
 
             {/* Modal Footer */}
@@ -635,23 +720,37 @@ export default function ContactTableClient({ initialData = [], apiBase = process
                 Submission #{viewRow.inquiryNo} &bull; {viewRow.source || 'Contact Us Form'}
               </span>
               <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end">
-                {viewRow.phone && (
-                  <a
-                    href={`tel:${viewRow.phone}`}
-                    className="px-3.5 py-2 rounded-lg border border-gray-300 bg-white hover:bg-gray-100 text-gray-700 text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer"
+                {modalTab === 'email' ? (
+                  <button
+                    type="button"
+                    onClick={() => setModalTab('data')}
+                    className="px-3.5 py-2 rounded-lg border border-gray-300 bg-white hover:bg-gray-100 text-gray-700 text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs"
                   >
-                    <Phone className="w-3.5 h-3.5 text-gray-500" />
-                    <span>Call</span>
-                  </a>
-                )}
-                {viewRow.email && (
-                  <a
-                    href={`mailto:${viewRow.email}`}
-                    className="px-3.5 py-2 rounded-lg border border-gray-300 bg-white hover:bg-gray-100 text-gray-700 text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer"
-                  >
-                    <Mail className="w-3.5 h-3.5 text-gray-500" />
-                    <span>Email</span>
-                  </a>
+                    <ArrowLeft className="w-3.5 h-3.5 text-gray-500" />
+                    <span>Back to Submission Data</span>
+                  </button>
+                ) : (
+                  <>
+                    {viewRow.phone && (
+                      <a
+                        href={`tel:${viewRow.phone}`}
+                        className="px-3.5 py-2 rounded-lg border border-gray-300 bg-white hover:bg-gray-100 text-gray-700 text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer"
+                      >
+                        <Phone className="w-3.5 h-3.5 text-gray-500" />
+                        <span>Call</span>
+                      </a>
+                    )}
+                    {viewRow.email && (
+                      <button
+                        type="button"
+                        onClick={() => setModalTab('email')}
+                        className="px-3.5 py-2 rounded-lg border border-emerald-300 bg-emerald-50 hover:bg-emerald-100 text-[#2b7e32] text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                      >
+                        <Mail className="w-3.5 h-3.5 text-emerald-600" />
+                        <span>Reply via Email</span>
+                      </button>
+                    )}
+                  </>
                 )}
                 <button
                   type="button"
