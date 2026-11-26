@@ -26,8 +26,58 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: "Tech Solutioner | Technical Services & Engineering",
-  description: "Professional Technical Services and Engineering Solutions.",
+  metadataBase: new URL("https://techsolutionor.com"),
+  title: {
+    default: "TechSolutionor | Web Development, SEO & Digital Growth Services",
+    template: "%s | TechSolutionor",
+  },
+  description:
+    "TechSolutionor delivers cutting-edge web & mobile app development, Cloud POS & ERP systems, WhatsApp marketing tools, and SEO growth solutions to scale your business worldwide.",
+  applicationName: "TechSolutionor",
+  authors: [{ name: "TechSolutionor Team", url: "https://techsolutionor.com" }],
+  generator: "Next.js",
+  keywords: [
+    "TechSolutionor",
+    "web development",
+    "mobile app development",
+    "Cloud POS",
+    "Get POS",
+    "WA Marketing Tool",
+    "WhatsApp Marketing",
+    "SEO services",
+    "digital marketing",
+    "UI UX design",
+    "custom software",
+    "web development company Dubai",
+  ],
+  alternates: {
+    canonical: "https://techsolutionor.com",
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://techsolutionor.com",
+    siteName: "TechSolutionor",
+    title: "TechSolutionor | Web Development, POS, WA Tools & SEO Services",
+    description:
+      "TechSolutionor delivers cutting-edge web & mobile app development, Cloud POS & ERP systems, WhatsApp marketing tools, and SEO growth solutions to scale your business worldwide.",
+    images: [
+      {
+        url: "https://techsolutionor.com/og-image.png",
+        width: 1200,
+        height: 630,
+        type: "image/png",
+        alt: "TechSolutionor - Web Development, SEO & Digital Growth Services",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "TechSolutionor | Web Development, POS, WA Tools & SEO Services",
+    description:
+      "TechSolutionor delivers cutting-edge web & mobile app development, Cloud POS & ERP systems, WhatsApp marketing tools, and SEO growth solutions to scale your business worldwide.",
+    images: ["https://techsolutionor.com/og-image.png"],
+  },
   verification: {
     other: {
       "msvalidate.01": "FD0260234609FF418A3C532AF7A69169",
@@ -118,6 +168,13 @@ export default async function RootLayout({
         <link rel="icon" href="/favicon.png" type="image/png" sizes="any" />
         <link rel="shortcut icon" href="/favicon.png" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        {/* Open Graph & WhatsApp Preview Tags */}
+        <meta property="og:site_name" content="TechSolutionor" />
+        <meta property="og:type" content="website" />
+        <meta property="og:locale" content="en_US" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:type" content="image/png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700;800;900&family=Outfit:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />

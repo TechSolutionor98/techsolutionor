@@ -1,25 +1,28 @@
 {
   "seo": {
-    "metaTitle": "TechSolutionor | Web Development, SEO & Digital Growth Services",
-    "metaDescription": "TechSolutionor delivers web development, SEO, app development, and digital marketing solutions to help businesses scale with measurable growth.",
+    "metaTitle": "TechSolutionor | Web Development, POS, WA Tools & SEO Services",
+    "metaDescription": "TechSolutionor delivers cutting-edge web & mobile app development, Cloud POS & ERP systems, WhatsApp marketing tools, and SEO growth solutions to scale your business worldwide.",
     "metaKeywords": [
       "web development",
+      "Cloud POS",
+      "WA Tool",
+      "WhatsApp Marketing",
       "seo services",
       "digital marketing",
       "app development",
       "software solutions",
       "TechSolutionor"
     ],
-    "canonicalUrl": "",
+    "canonicalUrl": "https://techsolutionor.com",
     "robotsIndex": true,
     "robotsFollow": true,
-    "ogTitle": "TechSolutionor | Web Development, SEO & Digital Growth Services",
-    "ogDescription": "TechSolutionor delivers web development, SEO, app development, and digital marketing solutions to help businesses scale with measurable growth.",
-    "ogImage": "",
+    "ogTitle": "TechSolutionor | Web Development, POS, WA Tools & SEO Services",
+    "ogDescription": "TechSolutionor delivers cutting-edge web & mobile app development, Cloud POS & ERP systems, WhatsApp marketing tools, and SEO growth solutions to scale your business worldwide.",
+    "ogImage": "https://techsolutionor.com/og-image.png",
     "twitterCard": "summary_large_image",
-    "twitterTitle": "TechSolutionor | Web Development, SEO & Digital Growth Services",
-    "twitterDescription": "TechSolutionor delivers web development, SEO, app development, and digital marketing solutions to help businesses scale with measurable growth.",
-    "twitterImage": ""
+    "twitterTitle": "TechSolutionor | Web Development, POS, WA Tools & SEO Services",
+    "twitterDescription": "TechSolutionor delivers cutting-edge web & mobile app development, Cloud POS & ERP systems, WhatsApp marketing tools, and SEO growth solutions to scale your business worldwide.",
+    "twitterImage": "https://techsolutionor.com/og-image.png"
   },
   "hero": {
     "badge": "⚡ #1 Digital Marketing & Tech Agency in Dubai",
